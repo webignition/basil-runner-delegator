@@ -5,7 +5,22 @@ namespace webignition\BasilRunner\Bin;
 
 use webignition\BasilRunner\ApplicationBuilder;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+
+if (!file_exists($autoloadPath)) {
+    fwrite(
+        STDERR,
+        sprintf(
+                'Vendor autoloader not found at "%s".' . PHP_EOL . PHP_EOL .
+                'Have you installed dependencies with composer?' . PHP_EOL . PHP_EOL,
+                str_replace('/bin/..', '', $autoloadPath)
+        )
+    );
+
+    exit(1);
+}
+
+require_once $autoloadPath;
 
 $application = ApplicationBuilder::build();
 $application->run();

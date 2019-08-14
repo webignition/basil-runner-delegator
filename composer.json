@@ -25,7 +25,7 @@
     },
     "scripts": {
         "cs": "./vendor/bin/phpcs src tests --colors --standard=PSR2",
-        "static-analysis": "./vendor/bin/phpstan analyse src tests --level=7",
+        "static-analysis": "./vendor/bin/phpstan analyse bin src tests --level=7",
         "test": "./vendor/bin/phpunit -c phpunit.dev.xml --colors=always",
         "ci": [
             "@composer cs",
