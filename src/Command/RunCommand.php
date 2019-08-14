@@ -20,7 +20,13 @@ class RunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Run command output');
+        $execOutput = [];
+        $returnCode = 0;
+        $command = __DIR__ . '/../../vendor/bin/phpunit -c ' . __DIR__ . '/../../phpunit.run.xml --colors=always';
+
+        exec($command, $execOutput, $returnCode);
+
+        $output->writeln(implode("\n", $execOutput));
 
         return 0;
     }
