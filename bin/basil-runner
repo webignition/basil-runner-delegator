@@ -3,7 +3,10 @@
 
 namespace webignition\BasilRunner\Bin;
 
-use webignition\BasilRunner\ApplicationBuilder;
+use Symfony\Component\Console\Application;
+use webignition\BasilRunner\ApplicationConfiguration;
+use webignition\BasilRunner\Command\RunCommand;
+use webignition\BasilRunner\Kernel;
 
 $autoloadPath = __DIR__ . '/../vendor/autoload.php';
 
@@ -22,5 +25,20 @@ if (!file_exists($autoloadPath)) {
 
 require_once $autoloadPath;
 
-$application = ApplicationBuilder::build();
+$kernel = new Kernel('dev', true);
+$kernel->boot();
+
+$container = $kernel->getContainer();
+
+/* @var Application $application */
+$application = $container->get(Application::class);
+
+/* @var ApplicationConfiguration $applicationConfiguration */
+$applicationConfiguration = $container->get(ApplicationConfiguration::class);
+$applicationConfiguration->configureApplication($application);
+
+/* @var RunCommand $dummyCommand */
+$dummyCommand = $container->get(RunCommand::class);
+$application->setDefaultCommand($dummyCommand->getName());
+
 $application->run();

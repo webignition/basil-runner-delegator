@@ -1,0 +1,21 @@
+parameters:
+  application_name: Basil Runner
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  webignition\BasilRunner\:
+    resource: '../src'
+
+  webignition\BasilRunner\Command\RunCommand:
+    public: true
+
+  webignition\BasilRunner\ApplicationConfiguration:
+    arguments:
+      $name: '%application_name%'
+    public: true
+
+  Symfony\Component\Console\Application:
+    public: true
