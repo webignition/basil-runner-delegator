@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+namespace webignition\BasilRunner\Bin;
+
+use webignition\BasilRunner\ApplicationBuilder;
+
+require __DIR__ . '/autoload.php';
+
+$application = ApplicationBuilder::build();
+$application->run();
