@@ -1,0 +1,43 @@
+{
+    "name": "webignition/php-basil-runner",
+    "description": "Runs tests written in basil",
+    "keywords": [],
+    "homepage": "https://github.com/webignition/php-basil-runner",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jon Cram",
+            "email": "webignition@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "webignition\\BasilRunner\\": "src",
+            "webignition\\BasilRunner\\Generated\\": "generated"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "webignition\\BasilRunner\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "cs": "./vendor/bin/phpcs src tests --colors --standard=PSR2",
+        "static-analysis": "./vendor/bin/phpstan analyse src tests --level=7",
+        "test": "./vendor/bin/phpunit -c phpunit.dev.xml --colors=always",
+        "ci": [
+            "@composer cs",
+            "@composer static-analysis",
+            "@composer test"
+        ]
+    },
+    "require": {
+        "php": ">=7.2",
+        "phpunit/phpunit": "~8.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*",
+        "phpstan/phpstan": "^0.11.12"
+    }
+}
