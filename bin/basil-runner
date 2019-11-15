@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
@@ -37,8 +39,8 @@ $application = $container->get(Application::class);
 $applicationConfiguration = $container->get(ApplicationConfiguration::class);
 $applicationConfiguration->configureApplication($application);
 
-/* @var RunCommand $dummyCommand */
-$dummyCommand = $container->get(RunCommand::class);
-$application->setDefaultCommand($dummyCommand->getName());
+/* @var RunCommand $runCommand */
+$runCommand = $container->get(RunCommand::class);
+$application->setDefaultCommand($runCommand->getName());
 
 $application->run();
