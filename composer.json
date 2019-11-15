@@ -1,8 +1,8 @@
 {
-    "name": "webignition/php-basil-runner",
+    "name": "webignition/basil-runner",
     "description": "Runs tests written in basil",
     "keywords": [],
-    "homepage": "https://github.com/webignition/php-basil-runner",
+    "homepage": "https://github.com/webignition/basil-runner",
     "type": "library",
     "license": "MIT",
     "authors": [
