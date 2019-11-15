@@ -40,7 +40,9 @@
         "symfony/http-kernel": "^4.3",
         "symfony/config": "^4.3",
         "symfony/dependency-injection": "^4.3",
-        "symfony/yaml": "^4.3"
+        "symfony/yaml": "^4.3",
+        "webignition/basil-compiler": "^0.2.0",
+        "webignition/basil-loader": "^0.1.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.*",
