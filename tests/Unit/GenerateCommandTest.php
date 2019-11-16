@@ -38,7 +38,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
         $command = new GenerateCommand(
             TestLoader::createLoader(),
-            Compiler::create((new ExternalVariableIdentifiersFactory())->create()),
+            Compiler::create(ExternalVariableIdentifiersFactory::create()),
             $phpFileCreator,
             new ProjectRootPathProvider()
         );

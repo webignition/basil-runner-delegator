@@ -8,7 +8,7 @@ use webignition\BasilCompiler\ExternalVariableIdentifiers;
 
 class ExternalVariableIdentifiersFactory
 {
-    public function create(): ExternalVariableIdentifiers
+    public static function create(): ExternalVariableIdentifiers
     {
         return new ExternalVariableIdentifiers(
             '$this->navigator',
