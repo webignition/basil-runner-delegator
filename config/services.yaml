@@ -20,9 +20,6 @@ services:
   Symfony\Component\Console\Application:
     public: true
 
-  webignition\BasilLoader\TestSuiteLoader:
-    factory: ['webignition\BasilLoader\TestSuiteLoader', 'createLoader']
-
   webignition\BasilLoader\TestLoader:
     factory: ['webignition\BasilLoader\TestLoader', 'createLoader']
 
@@ -30,11 +27,4 @@ services:
     factory: ['webignition\BasilCompiler\Compiler', 'create']
 
   webignition\BasilCompiler\ExternalVariableIdentifiers:
-    arguments:
-      $domNavigatorCrawlerName: '$this-navigator'
-      $environmentVariableArrayName: '$_ENV'
-      $pantherClientName: 'self::$client'
-      $pantherCrawlerName: 'self::$crawler'
-      $phpUnitTestCaseName: '$this'
-      $webDriverElementInspectorName: 'self::$inspector'
-      $webDriverElementMutatorName: 'self::$mutator'
+    factory: ['webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory', 'create']
