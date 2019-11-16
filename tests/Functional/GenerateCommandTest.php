@@ -14,6 +14,8 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\VariableIdentifierGenerator;
 use webignition\BasilLoader\TestLoader;
 use webignition\BasilRunner\Command\GenerateCommand;
+use webignition\BasilRunner\Model\GenerateCommandOutput;
+use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -26,7 +28,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     public function testGenerate(
         array $input,
         string $generatedClassName,
-        array $expectedDecodedOutput,
+        GenerateCommandOutput $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
         /* @var ClassNameFactory|MockInterface $classNameFactory */
@@ -60,21 +62,23 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $commandTester->execute($input);
 
         $output = $commandTester->getDisplay();
-        $decodedOutput = json_decode($output, true);
 
-        $this->assertEquals($expectedDecodedOutput, $decodedOutput);
+        $commandOutput = GenerateCommandOutput::fromJson($output);
 
-        $outputConfig = $decodedOutput['config'];
-        $outputTarget = $outputConfig['target'];
-        $outputData = $decodedOutput['output'];
+        $this->assertEquals($expectedCommandOutput, $commandOutput);
 
-        foreach ($outputData as $sourcePath => $generatedFileName) {
-            $generatedFilePath = $outputTarget . '/' . $generatedFileName;
+        $outputTarget = $commandOutput->getTarget();
+
+        foreach ($commandOutput->getOutput() as $generatedTestOutput) {
+            $generatedFilePath = $outputTarget . '/' . $generatedTestOutput->getTarget();
 
             $this->assertFileExists($generatedFilePath);
             $this->assertFileIsReadable($generatedFilePath);
 
-            $this->assertEquals($expectedGeneratedCode[$sourcePath], file_get_contents($generatedFilePath));
+            $this->assertEquals(
+                $expectedGeneratedCode[$generatedTestOutput->getSource()],
+                file_get_contents($generatedFilePath)
+            );
 
             unlink($generatedFilePath);
         }
@@ -91,16 +95,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                 ],
                 'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
-                'expectedDecodedOutput' => [
-                    'config' => [
-                        'source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        'target' => $root . '/tests/build/target',
-                    ],
-                    'output' => [
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                            'ExampleComVerifyOpenLiteralTest.php',
-                    ],
-                ],
+                'expectedCommandOutput' => new GenerateCommandOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/build/target',
+                    [
+                        new GeneratedTestOutput(
+                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                            'ExampleComVerifyOpenLiteralTest.php'
+                        )
+                    ]
+                ),
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),

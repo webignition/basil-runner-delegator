@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\TestLoader;
+use webignition\BasilRunner\Model\GenerateCommandOutput;
+use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
@@ -127,11 +129,6 @@ class GenerateCommand extends Command
             exit('Fix in #24');
         }
 
-        $outputConfigData = [
-            'source' => $source,
-            'target' => $target,
-        ];
-
         $test = $this->testLoader->load($source);
         $className = $this->compiler->createClassName($test);
         $code = $this->compiler->compile($test, $fullyQualifiedBaseClass);
@@ -140,15 +137,12 @@ class GenerateCommand extends Command
         $filename = $this->phpFileCreator->create($className, $code);
 
         $generatedFiles = [
-            $source => $filename,
+            new GeneratedTestOutput($source, $filename),
         ];
 
-        $outputData = [
-            'config' => $outputConfigData,
-            'output' => $generatedFiles,
-        ];
+        $commandOutput = new GenerateCommandOutput($source, $target, $generatedFiles);
 
-        $output->writeln((string) json_encode($outputData, JSON_PRETTY_PRINT));
+        $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
 
         return 0;
     }
