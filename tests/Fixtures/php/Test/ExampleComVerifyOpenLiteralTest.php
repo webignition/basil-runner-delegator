@@ -4,7 +4,7 @@ namespace webignition\BasilRunner\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 
-class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
+class Generated1f4ee9e22fcf5ca51b84ef063278e205Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
