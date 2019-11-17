@@ -11,10 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\TestLoader;
-use webignition\BasilRunner\Model\GenerateCommandOutput;
+use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommand extends Command
@@ -25,12 +26,14 @@ class GenerateCommand extends Command
     private $compiler;
     private $phpFileCreator;
     private $projectRootPath;
+    private $generateCommandValidator;
 
     public function __construct(
         TestLoader $testLoader,
         Compiler $compiler,
         PhpFileCreator $phpFileCreator,
-        ProjectRootPathProvider $projectRootPathProvider
+        ProjectRootPathProvider $projectRootPathProvider,
+        GenerateCommandValidator $generateCommandValidator
     ) {
         parent::__construct();
 
@@ -38,6 +41,7 @@ class GenerateCommand extends Command
         $this->compiler = $compiler;
         $this->phpFileCreator = $phpFileCreator;
         $this->projectRootPath = $projectRootPathProvider->get();
+        $this->generateCommandValidator = $generateCommandValidator;
     }
 
     protected function configure()
@@ -49,7 +53,8 @@ class GenerateCommand extends Command
                 'source',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Path to the basil test source from which to generate tests',
+                'Path to the basil test source from which to generate tests. ' .
+                'Can be absolute or relative to this directory.',
                 ''
             )
             ->addOption(
@@ -101,16 +106,18 @@ class GenerateCommand extends Command
         $rawSource = (string) $typedInput->getStringOption('source');
         $source = $this->getAbsolutePath((string) $rawSource);
 
-        if (null === $source) {
-            // Source does not exist
-            // Check if source is a file, is readable
-            // Fail gracefully
-
-            exit('Fix in #22');
-        }
-
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
+
+        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $target, $rawSource);
+
+        if (false === $sourceValidationResult->getIsValid()) {
+            $output->writeln((string) json_encode($sourceValidationResult->getErrorOutput(), JSON_PRETTY_PRINT));
+
+            return $sourceValidationResult->getExitCode();
+        }
+
+        $source = (string) $source;
 
         if (null === $target) {
             // Target does not exist
@@ -140,7 +147,7 @@ class GenerateCommand extends Command
             new GeneratedTestOutput($source, $filename),
         ];
 
-        $commandOutput = new GenerateCommandOutput($source, $target, $generatedFiles);
+        $commandOutput = new GenerateCommandSuccessOutput($source, $target, $generatedFiles);
 
         $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
 
