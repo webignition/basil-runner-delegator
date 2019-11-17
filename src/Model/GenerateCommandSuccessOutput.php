@@ -4,29 +4,15 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model;
 
-use webignition\BasilCompiler\ExternalVariableIdentifiers;
-
-class GenerateCommandOutput implements \JsonSerializable
+class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
 {
-    private $source;
-    private $target;
     private $output;
 
     public function __construct(string $source, string $target, array $output)
     {
-        $this->source = $source;
-        $this->target = $target;
+        parent::__construct($source, $target);
+
         $this->output = $output;
-    }
-
-    public function getSource(): string
-    {
-        return $this->source;
-    }
-
-    public function getTarget(): string
-    {
-        return $this->target;
     }
 
     /**
@@ -41,14 +27,14 @@ class GenerateCommandOutput implements \JsonSerializable
     {
         return [
             'config' => [
-                'source' => $this->source,
-                'target' => $this->target,
+                'source' => $this->getSource(),
+                'target' => $this->getTarget(),
             ],
             'output' => $this->output,
         ];
     }
 
-    public static function fromJson(string $json): GenerateCommandOutput
+    public static function fromJson(string $json): GenerateCommandSuccessOutput
     {
         $data = json_decode($json, true);
         $configData = $data['config'];
@@ -60,6 +46,6 @@ class GenerateCommandOutput implements \JsonSerializable
             $output[] = GeneratedTestOutput::fromArray($generatedTestOutput);
         }
 
-        return new GenerateCommandOutput($configData['source'], $configData['target'], $output);
+        return new GenerateCommandSuccessOutput($configData['source'], $configData['target'], $output);
     }
 }

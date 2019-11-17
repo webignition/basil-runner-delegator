@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model;
 
-class GeneratedTestOutput implements \JsonSerializable
+abstract class AbstractGenerateCommandOutput implements \JsonSerializable
 {
     private $source;
     private $target;
@@ -28,13 +28,10 @@ class GeneratedTestOutput implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-           'source' => $this->source,
-           'target' => $this->target,
+            'config' => [
+                'source' => $this->source,
+                'target' => $this->target,
+            ],
         ];
-    }
-
-    public static function fromArray(array $data): GeneratedTestOutput
-    {
-        return new GeneratedTestOutput($data['source'], $data['target']);
     }
 }
