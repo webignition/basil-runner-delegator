@@ -10,7 +10,11 @@
     convertWarningsToExceptions = "true"
     processIsolation            = "false"
     stopOnFailure               = "false"
-    bootstrap                   = "vendor/autoload.php" >
+    bootstrap                   = "config/bootstrap.php" >
+
+    <php>
+        <env name="APP_ENV" value="prod"/>
+    </php>
 
     <testsuites>
         <testsuite name="Generated Test Suite">

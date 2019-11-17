@@ -10,24 +10,9 @@ use webignition\BasilRunner\ApplicationConfiguration;
 use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Kernel;
 
-$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+require dirname(__DIR__) . '/config/bootstrap.php';
 
-if (!file_exists($autoloadPath)) {
-    fwrite(
-        STDERR,
-        sprintf(
-                'Vendor autoloader not found at "%s".' . PHP_EOL . PHP_EOL .
-                'Have you installed dependencies with composer?' . PHP_EOL . PHP_EOL,
-                str_replace('/bin/..', '', $autoloadPath)
-        )
-    );
-
-    exit(1);
-}
-
-require_once $autoloadPath;
-
-$kernel = new Kernel('dev', true);
+$kernel = new Kernel($_SERVER['APP_ENV'], true);
 $kernel->boot();
 
 $container = $kernel->getContainer();

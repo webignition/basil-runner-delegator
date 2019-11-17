@@ -1,0 +1,13 @@
+parameters:
+  application_name: Basil Runner
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  webignition\BasilRunner\Command\GenerateCommand:
+    public: true
+
+  webignition\BasilRunner\Tests\Services\ObjectReflector:
+    public: true
