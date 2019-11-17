@@ -8,3 +8,6 @@ services:
 
   webignition\BasilRunner\Command\GenerateCommand:
     public: true
+
+  webignition\BasilRunner\Tests\Services\ObjectReflector:
+    public: true
