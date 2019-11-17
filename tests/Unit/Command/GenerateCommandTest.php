@@ -11,6 +11,7 @@ use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
+use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -38,7 +39,12 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('create')
             ->andReturn($generatedClassName . '.php');
 
-        $command = $this->createCommand($phpFileCreator);
+        $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
+        $generateCommandValidator
+            ->shouldReceive('validateSource')
+            ->andReturn(new GenerateCommandValidationResult(true));
+
+        $command = $this->createCommand($phpFileCreator, $generateCommandValidator);
 
         $commandTester = new CommandTester($command);
 
@@ -85,7 +91,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             'source empty; call with --source=SOURCE'
         );
 
-        $command = $this->createCommand();
+        $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
+        $generateCommandValidator
+            ->shouldReceive('validateSource')
+            ->andReturn(new GenerateCommandValidationResult(
+                false,
+                $expectedCommandOutput,
+                $expectedExitCode
+            ));
+
+        $command = $this->createCommand(new PhpFileCreator(), $generateCommandValidator);
 
         $commandTester = new CommandTester($command);
 
@@ -97,16 +112,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
-    private function createCommand(?PhpFileCreator $phpFileCreator = null): GenerateCommand
-    {
-        $phpFileCreator = $phpFileCreator ?? new PhpFileCreator();
-
+    private function createCommand(
+        PhpFileCreator $phpFileCreator,
+        GenerateCommandValidator $generateCommandValidator
+    ): GenerateCommand {
         return new GenerateCommand(
             TestLoader::createLoader(),
             Compiler::create(ExternalVariableIdentifiersFactory::create()),
             $phpFileCreator,
             new ProjectRootPathProvider(),
-            new GenerateCommandValidator()
+            $generateCommandValidator
         );
     }
 }

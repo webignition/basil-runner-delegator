@@ -117,6 +117,8 @@ class GenerateCommand extends Command
             return $sourceValidationResult->getExitCode();
         }
 
+        $source = (string) $source;
+
         if (null === $target) {
             // Target does not exist
             // Check if target is a directory, is writable

@@ -11,7 +11,9 @@ use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 use webignition\BasilRunner\Tests\Services\ObjectReflector;
 
@@ -35,6 +37,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
     public function testRunSuccess(array $input, string $generatedCodeClassName, array $expectedGeneratedCode)
     {
         $this->mockClassNameFactory($generatedCodeClassName);
+        $this->mockGenerateCommandValidator();
 
         $output = new BufferedOutput();
 
@@ -123,6 +126,24 @@ class GenerateCommandTest extends AbstractFunctionalTest
             GenerateCommand::class,
             'compiler',
             $compiler
+        );
+    }
+
+    private function mockGenerateCommandValidator()
+    {
+        /* @var ObjectReflector $objectReflector */
+        $objectReflector = self::$container->get(ObjectReflector::class);
+
+        $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
+        $generateCommandValidator
+            ->shouldReceive('validateSource')
+            ->andReturn(new GenerateCommandValidationResult(true));
+
+        $objectReflector->setProperty(
+            $this->command,
+            GenerateCommand::class,
+            'generateCommandValidator',
+            $generateCommandValidator
         );
     }
 }

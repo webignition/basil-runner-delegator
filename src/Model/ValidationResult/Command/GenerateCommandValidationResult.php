@@ -12,13 +12,16 @@ class GenerateCommandValidationResult
     private $errorOutput;
     private $exitCode;
 
-    public function __construct(bool $isValid, ?GenerateCommandErrorOutput $errorOutput = null, ?int $exitcode = 0)
+    public function __construct(bool $isValid, ?GenerateCommandErrorOutput $errorOutput = null, int $exitCode = 0)
     {
-        $errorOutput = $errorOutput ?? new GenerateCommandErrorOutput('', '', '');
-
         $this->isValid = $isValid;
-        $this->errorOutput = $errorOutput;
-        $this->exitCode = $exitcode;
+        $this->exitCode = $exitCode;
+
+        if ($errorOutput instanceof GenerateCommandErrorOutput) {
+            $this->errorOutput = $errorOutput;
+        } else {
+            $this->errorOutput = new GenerateCommandErrorOutput('', '', '');
+        }
     }
 
     public function getIsValid(): bool

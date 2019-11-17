@@ -118,5 +118,4 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
 
         \Mockery::close();
     }
-
 }
