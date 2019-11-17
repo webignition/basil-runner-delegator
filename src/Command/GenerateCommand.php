@@ -11,32 +11,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\TestLoader;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommand extends Command
 {
     private const NAME = 'generate-test';
 
-    private const EXIT_CODE_SOURCE_EMPTY = 1;
-    private const EXIT_CODE_SOURCE_INVALID_DOES_NOT_EXIST = 2;
-    private const EXIT_CODE_SOURCE_INVALID_NOT_A_FILE = 3;
-    private const EXIT_CODE_SOURCE_INVALID_NOT_READABLE = 4;
-
     private $testLoader;
     private $compiler;
     private $phpFileCreator;
     private $projectRootPath;
+    private $generateCommandValidator;
 
     public function __construct(
         TestLoader $testLoader,
         Compiler $compiler,
         PhpFileCreator $phpFileCreator,
-        ProjectRootPathProvider $projectRootPathProvider
+        ProjectRootPathProvider $projectRootPathProvider,
+        GenerateCommandValidator $generateCommandValidator
     ) {
         parent::__construct();
 
@@ -44,6 +41,7 @@ class GenerateCommand extends Command
         $this->compiler = $compiler;
         $this->phpFileCreator = $phpFileCreator;
         $this->projectRootPath = $projectRootPathProvider->get();
+        $this->generateCommandValidator = $generateCommandValidator;
     }
 
     protected function configure()
@@ -111,50 +109,13 @@ class GenerateCommand extends Command
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
 
-        if (null === $source) {
-            if ('' === $rawSource) {
-                $commandOutput = $this->createErrorOutput(
-                    $source,
-                    $target,
-                    'source empty; call with --source=SOURCE'
-                );
-                $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
+        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $target, $rawSource);
 
-                return self::EXIT_CODE_SOURCE_EMPTY;
-            }
+        if (false === $sourceValidationResult->getIsValid()) {
+            $output->writeln((string) json_encode($sourceValidationResult->getErrorOutput(), JSON_PRETTY_PRINT));
 
-            $commandOutput = $this->createErrorOutput(
-                $source,
-                $target,
-                'source invalid; does not exist'
-            );
-            $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
-
-            return self::EXIT_CODE_SOURCE_INVALID_DOES_NOT_EXIST;
+            return $sourceValidationResult->getExitCode();
         }
-
-        if (!is_file($source)) {
-            $commandOutput = $this->createErrorOutput(
-                $source,
-                $target,
-                'source invalid; is not a file (is it a directory?)'
-            );
-            $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
-
-            return self::EXIT_CODE_SOURCE_INVALID_NOT_A_FILE;
-        }
-
-        if (!is_readable($source)) {
-            $commandOutput = $this->createErrorOutput(
-                $source,
-                $target,
-                'source invalid; file is not readable'
-            );
-            $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
-
-            return self::EXIT_CODE_SOURCE_INVALID_NOT_READABLE;
-        }
-
 
         if (null === $target) {
             // Target does not exist
@@ -210,13 +171,5 @@ class GenerateCommand extends Command
         $path = realpath($path);
 
         return false === $path ? null : $path;
-    }
-
-    private function createErrorOutput(
-        ?string $source,
-        ?string $target,
-        string $errorMessage
-    ): GenerateCommandErrorOutput {
-        return new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
     }
 }
