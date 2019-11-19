@@ -14,6 +14,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST = 6;
     public const ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY = 7;
     public const ERROR_CODE_TARGET_INVALID_NOT_WRITABLE = 8;
+    public const ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST = 9;
 
     private $errorMessage;
 
