@@ -15,82 +15,54 @@ class GenerateCommandValidator
         ?string $target,
         string $rawTarget
     ): GenerateCommandValidationResult {
-        $sourceValidationResult = $this->validateSource($source, $rawSource);
-        if (false === $sourceValidationResult->getIsValid()) {
-            return $sourceValidationResult;
+        $sourceValidationErrorCode = $this->getSourceValidationErrorCode($source, $rawSource);
+        if (0 !== $sourceValidationErrorCode) {
+            return new GenerateCommandValidationResult(false, $sourceValidationErrorCode);
         }
 
-        $targetValidationResult = $this->validateTarget($target, $rawTarget);
-        if (false === $targetValidationResult->getIsValid()) {
-            return $targetValidationResult;
+        $targetValidationErrorCode = $this->getTargetValidationErrorCode($target, $rawTarget);
+        if (0 !== $targetValidationErrorCode) {
+            return new GenerateCommandValidationResult(false, $targetValidationErrorCode);
         }
 
         return new GenerateCommandValidationResult(true);
     }
 
-    private function validateSource(?string $source, string $rawSource): GenerateCommandValidationResult
+    private function getSourceValidationErrorCode(?string $source, string $rawSource): int
     {
         if (null === $source) {
-            if ('' === $rawSource) {
-                return new GenerateCommandValidationResult(
-                    false,
-                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
-                );
-            }
-
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
-            );
+            return '' === $rawSource
+                ? GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
+                : GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_file($source)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
-            );
+            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE;
         }
 
         if (!is_readable($source)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE
-            );
+            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE;
         }
 
-        return new GenerateCommandValidationResult(true);
+        return 0;
     }
 
-    private function validateTarget(?string $target, string $rawTarget): GenerateCommandValidationResult
+    private function getTargetValidationErrorCode(?string $target, string $rawTarget): int
     {
         if (null === $target) {
-            if ('' === $rawTarget) {
-                return new GenerateCommandValidationResult(
-                    false,
-                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
-                );
-            }
-
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST
-            );
+            return '' === $rawTarget
+                ? GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
+                : GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_dir($target)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY
-            );
+            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY;
         }
 
         if (!is_writable($target)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE
-            );
+            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE;
         }
 
-        return new GenerateCommandValidationResult(true);
+        return 0;
     }
 }
