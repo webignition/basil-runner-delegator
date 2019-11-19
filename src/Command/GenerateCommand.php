@@ -42,6 +42,7 @@ class GenerateCommand extends Command
             'target invalid; is not a directory (is it a file?)',
         GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE =>
             'target invalid; directory is not writable',
+        GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST => 'base class invalid: does not exist'
     ];
 
     public function __construct(
@@ -125,7 +126,16 @@ class GenerateCommand extends Command
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
 
-        $validationResult = $this->generateCommandValidator->validate($source, $rawSource, $target, $rawTarget);
+        $fullyQualifiedBaseClass = (string) $typedInput->getStringOption('base-class');
+
+        $validationResult = $this->generateCommandValidator->validate(
+            $source,
+            $rawSource,
+            $target,
+            $rawTarget,
+            $fullyQualifiedBaseClass
+        );
+
         if (false === $validationResult->getIsValid()) {
             $errorMessage = $this->errorMessages[$validationResult->getErrorCode()] ?? 'unknown';
             $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
@@ -137,8 +147,6 @@ class GenerateCommand extends Command
 
         $source = (string) $source;
         $target = (string) $target;
-
-        $fullyQualifiedBaseClass = (string) $typedInput->getStringOption('base-class');
 
         if (!class_exists($fullyQualifiedBaseClass)) {
             // Base class does not exist

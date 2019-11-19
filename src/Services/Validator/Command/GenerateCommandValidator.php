@@ -13,7 +13,8 @@ class GenerateCommandValidator
         ?string $source,
         string $rawSource,
         ?string $target,
-        string $rawTarget
+        string $rawTarget,
+        string $baseClass
     ): GenerateCommandValidationResult {
         $sourceValidationErrorCode = $this->getSourceValidationErrorCode($source, $rawSource);
         if (0 !== $sourceValidationErrorCode) {
@@ -23,6 +24,13 @@ class GenerateCommandValidator
         $targetValidationErrorCode = $this->getTargetValidationErrorCode($target, $rawTarget);
         if (0 !== $targetValidationErrorCode) {
             return new GenerateCommandValidationResult(false, $targetValidationErrorCode);
+        }
+
+        if (!class_exists($baseClass)) {
+            return new GenerateCommandValidationResult(
+                false,
+                GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST
+            );
         }
 
         return new GenerateCommandValidationResult(true);

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services\Validator\Command;
 
 use phpmock\mockery\PHPMockery;
+use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 
-class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
+class GenerateCommandValidatorTest extends TestCase
 {
     public function setUp(): void
     {
@@ -23,16 +24,18 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider validateSourceDataProvider
      * @dataProvider validateTargetDataProvider
+     * @dataProvider validateBaseClassDataProvider
      */
     public function testValidate(
         ?string $source,
         string $rawSource,
         ?string $target,
         string $rawTarget,
+        string $baseClass,
         GenerateCommandValidationResult $expectedResult
     ) {
         $validator = new GenerateCommandValidator();
-        $result = $validator->validate($source, $rawSource, $target, $rawTarget);
+        $result = $validator->validate($source, $rawSource, $target, $rawTarget, $baseClass);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -43,6 +46,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
 
         $target = $root . '/tests/build/target';
         $rawTarget = 'tests/build/target';
+        $baseClass = TestCase::class;
 
         return [
             'valid' => [
@@ -50,6 +54,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 'target' => $target,
                 'rawTarget' => $rawTarget,
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(true)
             ],
             'source empty' => [
@@ -57,6 +62,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => '',
                 'target' => $target,
                 'rawTarget' => $rawTarget,
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
@@ -67,6 +73,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
                 'target' => $target,
                 'rawTarget' => $rawTarget,
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
@@ -77,6 +84,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => '/tests/Fixtures/basil/Test/',
                 'target' => $target,
                 'rawTarget' => $rawTarget,
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
@@ -91,6 +99,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
 
         $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
         $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+        $baseClass = TestCase::class;
 
         return [
             'target empty' => [
@@ -98,6 +107,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => $rawSource,
                 'target' => null,
                 'rawTarget' => '',
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
@@ -108,6 +118,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => $rawSource,
                 'target' => null,
                 'rawTarget' => '/tests/build/target/non-existent',
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST
@@ -118,6 +129,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                 'rawSource' => $rawSource,
                 'target' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 'rawTarget' => '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY
@@ -125,6 +137,31 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
             ],
         ];
     }
+
+    public function validateBaseClassDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+        $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+        $target = $root . '/tests/build/target';
+        $rawTarget = 'tests/build/target';
+
+        return [
+            'base class does not exist' => [
+                'source' => $source,
+                'rawSource' => $rawSource,
+                'target' => $target,
+                'rawTarget' => $rawTarget,
+                'baseClass' => 'Foo',
+                'expectedResult' => new GenerateCommandValidationResult(
+                    false,
+                    GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST
+                )
+            ],
+        ];
+    }
+
 
     public function testValidateSourceFailureSourceNotReadable()
     {
@@ -139,7 +176,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
 
         PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_readable')->andReturn(false);
 
-        $result = $validator->validate($source, $rawSource, $target, $rawTarget);
+        $result = $validator->validate($source, $rawSource, $target, $rawTarget, TestCase::class);
 
         $expectedResult = new GenerateCommandValidationResult(
             false,
@@ -164,7 +201,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
 
         PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_writable')->andReturn(false);
 
-        $result = $validator->validate($source, $rawSource, $target, $rawTarget);
+        $result = $validator->validate($source, $rawSource, $target, $rawTarget, TestCase::class);
 
         $expectedResult = new GenerateCommandValidationResult(
             false,
