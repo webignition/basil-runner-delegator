@@ -41,4 +41,37 @@ class GenerateCommandValidator
 
         return new GenerateCommandValidationResult(true);
     }
+
+    public function validateTarget(?string $target, string $rawTarget)
+    {
+        if (null === $target) {
+            if ('' === $rawTarget) {
+                return new GenerateCommandValidationResult(
+                    false,
+                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
+                );
+            }
+
+            return new GenerateCommandValidationResult(
+                false,
+                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST
+            );
+        }
+
+        if (!is_dir($target)) {
+            return new GenerateCommandValidationResult(
+                false,
+                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY
+            );
+        }
+
+        if (!is_writable($target)) {
+            return new GenerateCommandValidationResult(
+                false,
+                GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE
+            );
+        }
+
+        return new GenerateCommandValidationResult(true);
+    }
 }

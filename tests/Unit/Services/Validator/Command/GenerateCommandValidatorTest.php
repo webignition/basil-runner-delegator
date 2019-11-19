@@ -17,6 +17,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         PHPMockery::define('webignition\BasilRunner\Services\Validator\Command', 'is_readable');
+        PHPMockery::define('webignition\BasilRunner\Services\Validator\Command', 'is_writable');
     }
 
     /**
@@ -51,7 +52,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
                 )
             ],
-            'source does not exist, target valid' => [
+            'source does not exist' => [
                 'source' => null,
                 'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
                 'expectedResult' => new GenerateCommandValidationResult(
@@ -61,7 +62,7 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
             ],
             'source not a file, is a directory' => [
                 'source' => $root . '/tests/Fixtures/basil/Test/',
-                'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
+                'rawSource' => '/tests/Fixtures/basil/Test/',
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
@@ -86,6 +87,80 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
         $expectedResult = new GenerateCommandValidationResult(
             false,
             GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE
+        );
+
+        $this->assertEquals($expectedResult, $result);
+
+        \Mockery::close();
+    }
+
+    /**
+     * @dataProvider validateTargetDataProvider
+     */
+    public function testValidateTarget(
+        ?string $target,
+        string $rawTarget,
+        GenerateCommandValidationResult $expectedResult
+    ) {
+        $validator = new GenerateCommandValidator();
+        $result = $validator->validateTarget($target, $rawTarget);
+
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function validateTargetDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'target exists, is a directory, is writable' => [
+                'target' => $root . '/tests/build/target',
+                'rawTarget' => 'tests/build/target',
+                'expectedResult' => new GenerateCommandValidationResult(true)
+            ],
+            'target empty' => [
+                'target' => null,
+                'rawTarget' => '',
+                'expectedResult' => new GenerateCommandValidationResult(
+                    false,
+                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
+                )
+            ],
+            'target does not exist' => [
+                'target' => null,
+                'rawTarget' => '/tests/build/target/non-existent',
+                'expectedResult' => new GenerateCommandValidationResult(
+                    false,
+                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST
+                ),
+            ],
+            'target not a directory, is a file' => [
+                'target' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'rawTarget' => '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'expectedResult' => new GenerateCommandValidationResult(
+                    false,
+                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY
+                ),
+            ],
+        ];
+    }
+
+    public function testValidateTargetFailureTargetNotWritable()
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $target = $root . '/tests/build/target';
+        $rawTarget = 'tests/build/target';
+
+        $validator = new GenerateCommandValidator();
+
+        PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_writable')->andReturn(false);
+
+        $result = $validator->validateTarget($target, $rawTarget);
+
+        $expectedResult = new GenerateCommandValidationResult(
+            false,
+            GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE
         );
 
         $this->assertEquals($expectedResult, $result);
