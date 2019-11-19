@@ -6,6 +6,11 @@ namespace webignition\BasilRunner\Model;
 
 class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
 {
+    public const ERROR_CODE_SOURCE_EMPTY = 1;
+    public const ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST = 2;
+    public const ERROR_CODE_SOURCE_INVALID_NOT_A_FILE = 3;
+    public const ERROR_CODE_SOURCE_INVALID_NOT_READABLE = 4;
+
     private $errorMessage;
 
     public function __construct(string $source, string $target, string $errorMessage)

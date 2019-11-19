@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\TestLoader;
+use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\PhpFileCreator;
@@ -27,6 +28,14 @@ class GenerateCommand extends Command
     private $phpFileCreator;
     private $projectRootPath;
     private $generateCommandValidator;
+
+    private $errorMessages = [
+        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY => 'source empty; call with --source=SOURCE',
+        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST => 'source invalid; does not exist',
+        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE =>
+            'source invalid; is not a file (is it a directory?)',
+        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
+    ];
 
     public function __construct(
         TestLoader $testLoader,
@@ -109,12 +118,15 @@ class GenerateCommand extends Command
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
 
-        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $target, $rawSource);
+        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $rawSource);
 
         if (false === $sourceValidationResult->getIsValid()) {
-            $output->writeln((string) json_encode($sourceValidationResult->getErrorOutput(), JSON_PRETTY_PRINT));
+            $errorMessage = $this->errorMessages[$sourceValidationResult->getErrorCode()] ?? 'unknown';
+            $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
 
-            return $sourceValidationResult->getExitCode();
+            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+            return $sourceValidationResult->getErrorCode();
         }
 
         $source = (string) $source;
