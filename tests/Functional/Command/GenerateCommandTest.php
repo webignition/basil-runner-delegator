@@ -136,7 +136,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validateSource')
+            ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(true));
 
         $objectReflector->setProperty(

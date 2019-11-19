@@ -9,7 +9,26 @@ use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValida
 
 class GenerateCommandValidator
 {
-    public function validateSource(?string $source, string $rawSource)
+    public function validate(
+        ?string $source,
+        string $rawSource,
+        ?string $target,
+        string $rawTarget
+    ): GenerateCommandValidationResult {
+        $sourceValidationResult = $this->validateSource($source, $rawSource);
+        if (false === $sourceValidationResult->getIsValid()) {
+            return $sourceValidationResult;
+        }
+
+        $targetValidationResult = $this->validateTarget($target, $rawTarget);
+        if (false === $targetValidationResult->getIsValid()) {
+            return $targetValidationResult;
+        }
+
+        return new GenerateCommandValidationResult(true);
+    }
+
+    private function validateSource(?string $source, string $rawSource): GenerateCommandValidationResult
     {
         if (null === $source) {
             if ('' === $rawSource) {
@@ -42,7 +61,7 @@ class GenerateCommandValidator
         return new GenerateCommandValidationResult(true);
     }
 
-    public function validateTarget(?string $target, string $rawTarget)
+    private function validateTarget(?string $target, string $rawTarget): GenerateCommandValidationResult
     {
         if (null === $target) {
             if ('' === $rawTarget) {

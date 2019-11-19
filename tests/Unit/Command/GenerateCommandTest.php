@@ -41,11 +41,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validateSource')
-            ->andReturn(new GenerateCommandValidationResult(true));
-
-        $generateCommandValidator
-            ->shouldReceive('validateTarget')
+            ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(true));
 
         $command = $this->createCommand($phpFileCreator, $generateCommandValidator);
@@ -95,7 +91,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     ) {
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validateSource')
+            ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(
                 false,
                 $validationErrorCode

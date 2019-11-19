@@ -125,37 +125,18 @@ class GenerateCommand extends Command
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
 
-        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $rawSource);
-
-        if (false === $sourceValidationResult->getIsValid()) {
-            $errorMessage = $this->errorMessages[$sourceValidationResult->getErrorCode()] ?? 'unknown';
+        $validationResult = $this->generateCommandValidator->validate($source, $rawSource, $target, $rawTarget);
+        if (false === $validationResult->getIsValid()) {
+            $errorMessage = $this->errorMessages[$validationResult->getErrorCode()] ?? 'unknown';
             $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $sourceValidationResult->getErrorCode();
+            return $validationResult->getErrorCode();
         }
 
         $source = (string) $source;
-
-        $targetValidationResult = $this->generateCommandValidator->validateTarget($target, $rawTarget);
-
-        if (false === $targetValidationResult->getIsValid()) {
-            $errorMessage = $this->errorMessages[$targetValidationResult->getErrorCode()] ?? 'unknown';
-            $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
-
-            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-            return $targetValidationResult->getErrorCode();
-        }
-
-        if (null === $target) {
-            // Target does not exist
-            // Check if target is a directory, is writable
-            // Fail gracefully
-
-            exit('Fix in #23');
-        }
+        $target = (string) $target;
 
         $fullyQualifiedBaseClass = (string) $typedInput->getStringOption('base-class');
 
