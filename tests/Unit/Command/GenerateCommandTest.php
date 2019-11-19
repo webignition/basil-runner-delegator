@@ -198,7 +198,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     'target invalid; is not a directory (is it a file?)'
                 ),
             ],
-
             'target not writable' => [
                 'input' => [
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
@@ -209,6 +208,19 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
                     'target invalid; directory is not writable'
+                ),
+            ],
+            'base class does not exist' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/build/target',
+                    '--base-class' => 'Foo',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/build/target',
+                    'base class invalid: does not exist'
                 ),
             ],
         ];
