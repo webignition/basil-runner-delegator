@@ -8,11 +8,13 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
 {
     private $source;
     private $target;
+    private $baseClass;
 
-    public function __construct(string $source, string $target)
+    public function __construct(string $source, string $target, string $baseClass)
     {
         $this->source = $source;
         $this->target = $target;
+        $this->baseClass = $baseClass;
     }
 
     public function getSource(): string
@@ -25,12 +27,18 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
         return $this->target;
     }
 
+    public function getBaseClass(): string
+    {
+        return $this->baseClass;
+    }
+
     public function jsonSerialize(): array
     {
         return [
             'config' => [
                 'source' => $this->source,
                 'target' => $this->target,
+                'base-class' => $this->baseClass,
             ],
         ];
     }

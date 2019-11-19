@@ -8,9 +8,9 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
 {
     private $output;
 
-    public function __construct(string $source, string $target, array $output)
+    public function __construct(string $source, string $target, string $baseClass, array $output)
     {
-        parent::__construct($source, $target);
+        parent::__construct($source, $target, $baseClass);
 
         $this->output = $output;
     }
@@ -29,6 +29,7 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
             'config' => [
                 'source' => $this->getSource(),
                 'target' => $this->getTarget(),
+                'base-class' => $this->getBaseClass(),
             ],
             'output' => $this->output,
         ];
@@ -46,6 +47,11 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
             $output[] = GeneratedTestOutput::fromArray($generatedTestOutput);
         }
 
-        return new GenerateCommandSuccessOutput($configData['source'], $configData['target'], $output);
+        return new GenerateCommandSuccessOutput(
+            $configData['source'],
+            $configData['target'],
+            $configData['base-class'],
+            $output
+        );
     }
 }

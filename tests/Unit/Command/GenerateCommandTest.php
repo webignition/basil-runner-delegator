@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\TestLoader;
 use webignition\BasilRunner\Command\GenerateCommand;
@@ -70,6 +71,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandSuccessOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     [
                         new GeneratedTestOutput(
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
@@ -123,6 +125,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     '',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     'source empty; call with --source=SOURCE'
                 ),
             ],
@@ -135,6 +138,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     '',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     'source invalid; does not exist'
                 ),
             ],
@@ -147,6 +151,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     'source invalid; is not a file (is it a directory?)'
                 ),
             ],
@@ -159,6 +164,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     'source invalid; file is not readable'
                 ),
             ],
@@ -171,6 +177,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '',
+                    AbstractBaseTest::class,
                     'target empty; call with --target=TARGET'
                 ),
             ],
@@ -183,6 +190,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '',
+                    AbstractBaseTest::class,
                     'target invalid; does not exist'
                 ),
             ],
@@ -195,6 +203,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    AbstractBaseTest::class,
                     'target invalid; is not a directory (is it a file?)'
                 ),
             ],
@@ -207,6 +216,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
+                    AbstractBaseTest::class,
                     'target invalid; directory is not writable'
                 ),
             ],
@@ -220,6 +230,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
+                    'Foo',
                     'base class invalid: does not exist'
                 ),
             ],
