@@ -138,7 +138,12 @@ class GenerateCommand extends Command
 
         if (false === $validationResult->getIsValid()) {
             $errorMessage = $this->errorMessages[$validationResult->getErrorCode()] ?? 'unknown';
-            $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
+            $errorOutput = new GenerateCommandErrorOutput(
+                (string) $source,
+                (string) $target,
+                $fullyQualifiedBaseClass,
+                $errorMessage
+            );
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
@@ -166,7 +171,12 @@ class GenerateCommand extends Command
             new GeneratedTestOutput($source, $filename),
         ];
 
-        $commandOutput = new GenerateCommandSuccessOutput($source, $target, $generatedFiles);
+        $commandOutput = new GenerateCommandSuccessOutput(
+            $source,
+            $target,
+            $fullyQualifiedBaseClass,
+            $generatedFiles
+        );
 
         $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
 

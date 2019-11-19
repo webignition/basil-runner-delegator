@@ -18,9 +18,9 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
 
     private $errorMessage;
 
-    public function __construct(string $source, string $target, string $errorMessage)
+    public function __construct(string $source, string $target, string $baseClass, string $errorMessage)
     {
-        parent::__construct($source, $target);
+        parent::__construct($source, $target, $baseClass);
 
         $this->errorMessage = $errorMessage;
     }
@@ -32,13 +32,10 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
 
     public function jsonSerialize(): array
     {
-        return [
-            'config' => [
-                'source' => $this->getSource(),
-                'target' => $this->getTarget(),
-            ],
-            'error' => $this->errorMessage,
-        ];
+        $serializedData = parent::jsonSerialize();
+        $serializedData['error'] = $this->errorMessage;
+
+        return $serializedData;
     }
 
     public static function fromJson(string $json): GenerateCommandErrorOutput
@@ -46,6 +43,11 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         $data = json_decode($json, true);
         $configData = $data['config'];
 
-        return new GenerateCommandErrorOutput($configData['source'], $configData['target'], $data['error']);
+        return new GenerateCommandErrorOutput(
+            $configData['source'],
+            $configData['target'],
+            $configData['base-class'],
+            $data['error']
+        );
     }
 }
