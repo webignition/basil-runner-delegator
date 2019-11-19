@@ -41,7 +41,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validateSource')
+            ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(true));
 
         $command = $this->createCommand($phpFileCreator, $generateCommandValidator);
@@ -91,7 +91,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     ) {
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validateSource')
+            ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(
                 false,
                 $validationErrorCode
@@ -126,7 +126,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     'source empty; call with --source=SOURCE'
                 ),
             ],
-            'source does not exist, target valid' => [
+            'source does not exist' => [
                 'input' => [
                     '--source' => 'tests/Fixtures/basil/Test/non-existent.yml',
                     '--target' => 'tests/build/target',
@@ -160,6 +160,55 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
                     'source invalid; file is not readable'
+                ),
+            ],
+            'target empty' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => '',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '',
+                    'target empty; call with --target=TARGET'
+                ),
+            ],
+            'target does not exist' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/build/target/non-existent',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '',
+                    'target invalid; does not exist'
+                ),
+            ],
+            'target not a directory, is a file' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'target invalid; is not a directory (is it a file?)'
+                ),
+            ],
+
+            'target not writable' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/build/target',
+                    'target invalid; directory is not writable'
                 ),
             ],
         ];

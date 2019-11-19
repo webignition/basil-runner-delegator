@@ -9,36 +9,60 @@ use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValida
 
 class GenerateCommandValidator
 {
-    public function validateSource(?string $source, string $rawSource)
-    {
-        if (null === $source) {
-            if ('' === $rawSource) {
-                return new GenerateCommandValidationResult(
-                    false,
-                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
-                );
-            }
-
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
-            );
+    public function validate(
+        ?string $source,
+        string $rawSource,
+        ?string $target,
+        string $rawTarget
+    ): GenerateCommandValidationResult {
+        $sourceValidationErrorCode = $this->getSourceValidationErrorCode($source, $rawSource);
+        if (0 !== $sourceValidationErrorCode) {
+            return new GenerateCommandValidationResult(false, $sourceValidationErrorCode);
         }
 
-        if (!is_file($source)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
-            );
-        }
-
-        if (!is_readable($source)) {
-            return new GenerateCommandValidationResult(
-                false,
-                GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE
-            );
+        $targetValidationErrorCode = $this->getTargetValidationErrorCode($target, $rawTarget);
+        if (0 !== $targetValidationErrorCode) {
+            return new GenerateCommandValidationResult(false, $targetValidationErrorCode);
         }
 
         return new GenerateCommandValidationResult(true);
+    }
+
+    private function getSourceValidationErrorCode(?string $source, string $rawSource): int
+    {
+        if (null === $source) {
+            return '' === $rawSource
+                ? GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
+                : GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST;
+        }
+
+        if (!is_file($source)) {
+            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE;
+        }
+
+        if (!is_readable($source)) {
+            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE;
+        }
+
+        return 0;
+    }
+
+    private function getTargetValidationErrorCode(?string $target, string $rawTarget): int
+    {
+        if (null === $target) {
+            return '' === $rawTarget
+                ? GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
+                : GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST;
+        }
+
+        if (!is_dir($target)) {
+            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY;
+        }
+
+        if (!is_writable($target)) {
+            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE;
+        }
+
+        return 0;
     }
 }

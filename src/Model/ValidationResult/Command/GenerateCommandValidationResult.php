@@ -9,10 +9,10 @@ class GenerateCommandValidationResult
     private $isValid;
     private $errorCode;
 
-    public function __construct(bool $isValid, int $exitCode = 0)
+    public function __construct(bool $isValid, int $errorCode = 0)
     {
         $this->isValid = $isValid;
-        $this->errorCode = $exitCode;
+        $this->errorCode = $errorCode;
     }
 
     public function getIsValid(): bool

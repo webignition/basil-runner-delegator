@@ -35,6 +35,13 @@ class GenerateCommand extends Command
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE =>
             'source invalid; is not a file (is it a directory?)',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
+
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY => 'target empty; call with --target=TARGET',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST => 'target invalid; does not exist',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY =>
+            'target invalid; is not a directory (is it a file?)',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE =>
+            'target invalid; directory is not writable',
     ];
 
     public function __construct(
@@ -118,26 +125,18 @@ class GenerateCommand extends Command
         $rawTarget = (string) $typedInput->getStringOption('target');
         $target = $this->getAbsolutePath($rawTarget);
 
-        $sourceValidationResult = $this->generateCommandValidator->validateSource($source, $rawSource);
-
-        if (false === $sourceValidationResult->getIsValid()) {
-            $errorMessage = $this->errorMessages[$sourceValidationResult->getErrorCode()] ?? 'unknown';
+        $validationResult = $this->generateCommandValidator->validate($source, $rawSource, $target, $rawTarget);
+        if (false === $validationResult->getIsValid()) {
+            $errorMessage = $this->errorMessages[$validationResult->getErrorCode()] ?? 'unknown';
             $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $sourceValidationResult->getErrorCode();
+            return $validationResult->getErrorCode();
         }
 
         $source = (string) $source;
-
-        if (null === $target) {
-            // Target does not exist
-            // Check if target is a directory, is writable
-            // Fail gracefully
-
-            exit('Fix in #23');
-        }
+        $target = (string) $target;
 
         $fullyQualifiedBaseClass = (string) $typedInput->getStringOption('base-class');
 
