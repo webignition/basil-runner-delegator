@@ -25,14 +25,10 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
 
     public function jsonSerialize(): array
     {
-        return [
-            'config' => [
-                'source' => $this->getSource(),
-                'target' => $this->getTarget(),
-                'base-class' => $this->getBaseClass(),
-            ],
-            'output' => $this->output,
-        ];
+        $serializedData = parent::jsonSerialize();
+        $serializedData['output'] = $this->output;
+
+        return $serializedData;
     }
 
     public static function fromJson(string $json): GenerateCommandSuccessOutput

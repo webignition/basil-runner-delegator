@@ -32,14 +32,10 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
 
     public function jsonSerialize(): array
     {
-        return [
-            'config' => [
-                'source' => $this->getSource(),
-                'target' => $this->getTarget(),
-                'base-class' => $this->getBaseClass(),
-            ],
-            'error' => $this->errorMessage,
-        ];
+        $serializedData = parent::jsonSerialize();
+        $serializedData['error'] = $this->errorMessage;
+
+        return $serializedData;
     }
 
     public static function fromJson(string $json): GenerateCommandErrorOutput
