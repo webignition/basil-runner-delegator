@@ -35,6 +35,13 @@ class GenerateCommand extends Command
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE =>
             'source invalid; is not a file (is it a directory?)',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
+
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY => 'target empty; call with --target=TARGET',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST => 'target invalid; does not exist',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY =>
+            'target invalid; is not a directory (is it a file?)',
+        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE =>
+            'target invalid; directory is not writable',
     ];
 
     public function __construct(
@@ -130,6 +137,17 @@ class GenerateCommand extends Command
         }
 
         $source = (string) $source;
+
+        $targetValidationResult = $this->generateCommandValidator->validateTarget($target, $rawTarget);
+
+        if (false === $targetValidationResult->getIsValid()) {
+            $errorMessage = $this->errorMessages[$targetValidationResult->getErrorCode()] ?? 'unknown';
+            $errorOutput = new GenerateCommandErrorOutput((string) $source, (string) $target, $errorMessage);
+
+            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+            return $targetValidationResult->getErrorCode();
+        }
 
         if (null === $target) {
             // Target does not exist
