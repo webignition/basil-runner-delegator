@@ -81,23 +81,20 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testRunFailure()
-    {
-        $input = [];
-        $expectedExitCode = 1;
-        $expectedCommandOutput = new GenerateCommandErrorOutput(
-            '',
-            '',
-            'source empty; call with --source=SOURCE'
-        );
-
+    /**
+     * @dataProvider runFailureDataProvider
+     */
+    public function testRunFailure(
+        array $input,
+        int $validationErrorCode,
+        GenerateCommandErrorOutput $expectedCommandOutput
+    ) {
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
             ->shouldReceive('validateSource')
             ->andReturn(new GenerateCommandValidationResult(
                 false,
-                $expectedCommandOutput,
-                $expectedExitCode
+                $validationErrorCode
             ));
 
         $command = $this->createCommand(new PhpFileCreator(), $generateCommandValidator);
@@ -105,11 +102,67 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $commandTester = new CommandTester($command);
 
         $exitCode = $commandTester->execute($input);
-        $this->assertSame($expectedExitCode, $exitCode);
+        $this->assertSame($validationErrorCode, $exitCode);
 
         $output = $commandTester->getDisplay();
         $commandOutput = GenerateCommandErrorOutput::fromJson($output);
         $this->assertEquals($expectedCommandOutput, $commandOutput);
+    }
+
+    public function runFailureDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'source empty' => [
+                'input' => [
+                    '--source' => '',
+                    '--target' => 'tests/build/target',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    '',
+                    $root . '/tests/build/target',
+                    'source empty; call with --source=SOURCE'
+                ),
+            ],
+            'source does not exist, target valid' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/non-existent.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    '',
+                    $root . '/tests/build/target',
+                    'source invalid; does not exist'
+                ),
+            ],
+            'source not a file, is a directory' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/',
+                    '--target' => 'tests/build/target',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test',
+                    $root . '/tests/build/target',
+                    'source invalid; is not a file (is it a directory?)'
+                ),
+            ],
+            'source not readable' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/build/target',
+                    'source invalid; file is not readable'
+                ),
+            ],
+        ];
     }
 
     private function createCommand(

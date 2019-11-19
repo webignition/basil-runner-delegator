@@ -4,24 +4,15 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ValidationResult\Command;
 
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
-
 class GenerateCommandValidationResult
 {
     private $isValid;
-    private $errorOutput;
-    private $exitCode;
+    private $errorCode;
 
-    public function __construct(bool $isValid, ?GenerateCommandErrorOutput $errorOutput = null, int $exitCode = 0)
+    public function __construct(bool $isValid, int $exitCode = 0)
     {
         $this->isValid = $isValid;
-        $this->exitCode = $exitCode;
-
-        if ($errorOutput instanceof GenerateCommandErrorOutput) {
-            $this->errorOutput = $errorOutput;
-        } else {
-            $this->errorOutput = new GenerateCommandErrorOutput('', '', '');
-        }
+        $this->errorCode = $exitCode;
     }
 
     public function getIsValid(): bool
@@ -29,13 +20,8 @@ class GenerateCommandValidationResult
         return $this->isValid;
     }
 
-    public function getErrorOutput(): GenerateCommandErrorOutput
+    public function getErrorCode(): int
     {
-        return $this->errorOutput;
-    }
-
-    public function getExitCode(): int
-    {
-        return $this->exitCode;
+        return $this->errorCode;
     }
 }

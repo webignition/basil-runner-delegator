@@ -24,12 +24,11 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
      */
     public function testValidateSource(
         ?string $source,
-        ?string $target,
         string $rawSource,
         GenerateCommandValidationResult $expectedResult
     ) {
         $validator = new GenerateCommandValidator();
-        $result = $validator->validateSource($source, $target, $rawSource);
+        $result = $validator->validateSource($source, $rawSource);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -41,50 +40,31 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
         return [
             'source exists, is a file, is readable' => [
                 'source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                'target' => $root . '/tests/build/target',
                 'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 'expectedResult' => new GenerateCommandValidationResult(true)
             ],
-            'source missing' => [
+            'source empty' => [
                 'source' => null,
-                'target' => $root . '/tests/build/target',
                 'rawSource' => '',
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    new GenerateCommandErrorOutput(
-                        '',
-                        $root . '/tests/build/target',
-                        'source empty; call with --source=SOURCE'
-                    ),
-                    1
+                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
                 )
             ],
             'source does not exist, target valid' => [
                 'source' => null,
-                'target' => $root . '/tests/build/target',
                 'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    new GenerateCommandErrorOutput(
-                        '',
-                        $root . '/tests/build/target',
-                        'source invalid; does not exist'
-                    ),
-                    2
+                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
             ],
             'source not a file, is a directory' => [
                 'source' => $root . '/tests/Fixtures/basil/Test/',
-                'target' => $root . '/tests/build/target',
                 'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    new GenerateCommandErrorOutput(
-                        $root . '/tests/Fixtures/basil/Test/',
-                        $root . '/tests/build/target',
-                        'source invalid; is not a file (is it a directory?)'
-                    ),
-                    3
+                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
                 ),
             ],
         ];
@@ -95,23 +75,17 @@ class GenerateCommandValidatorTest extends \PHPUnit\Framework\TestCase
         $root = (new ProjectRootPathProvider())->get();
 
         $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $target = $root . '/tests/build/target';
         $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
 
         $validator = new GenerateCommandValidator();
 
         PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_readable')->andReturn(false);
 
-        $result = $validator->validateSource($source, $target, $rawSource);
+        $result = $validator->validateSource($source, $rawSource);
 
         $expectedResult = new GenerateCommandValidationResult(
             false,
-            new GenerateCommandErrorOutput(
-                $source,
-                $target,
-                'source invalid; file is not readable'
-            ),
-            4
+            GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE
         );
 
         $this->assertEquals($expectedResult, $result);
