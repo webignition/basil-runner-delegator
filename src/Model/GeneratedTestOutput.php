@@ -25,6 +25,9 @@ class GeneratedTestOutput implements \JsonSerializable
         return $this->target;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function jsonSerialize(): array
     {
         return [
@@ -33,6 +36,11 @@ class GeneratedTestOutput implements \JsonSerializable
         ];
     }
 
+    /**
+     * @param array<string, string> $data
+     *
+     * @return GeneratedTestOutput
+     */
     public static function fromArray(array $data): GeneratedTestOutput
     {
         return new GeneratedTestOutput($data['source'], $data['target']);

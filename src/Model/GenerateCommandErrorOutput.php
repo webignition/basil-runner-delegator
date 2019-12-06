@@ -30,6 +30,9 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         return $this->errorMessage;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function jsonSerialize(): array
     {
         $serializedData = parent::jsonSerialize();

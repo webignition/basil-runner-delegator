@@ -33,7 +33,7 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
     }
 
     /**
-     * @return array<string, array|string>
+     * @return array<mixed>
      */
     public function jsonSerialize(): array
     {
