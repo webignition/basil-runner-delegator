@@ -9,8 +9,28 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
+use webignition\BasilLoader\Exception\InvalidPageException;
+use webignition\BasilLoader\Exception\InvalidTestException;
+use webignition\BasilLoader\Exception\NonRetrievableDataProviderException;
+use webignition\BasilLoader\Exception\NonRetrievablePageException;
+use webignition\BasilLoader\Exception\NonRetrievableStepException;
+use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilLoader\TestLoader;
+use webignition\BasilModelProvider\Exception\UnknownDataProviderException;
+use webignition\BasilModelProvider\Exception\UnknownPageException;
+use webignition\BasilModelProvider\Exception\UnknownStepException;
+use webignition\BasilParser\Exception\EmptyActionException;
+use webignition\BasilParser\Exception\EmptyAssertionComparisonException;
+use webignition\BasilParser\Exception\EmptyAssertionException;
+use webignition\BasilParser\Exception\EmptyAssertionIdentifierException;
+use webignition\BasilParser\Exception\EmptyAssertionValueException;
+use webignition\BasilParser\Exception\EmptyInputActionValueException;
+use webignition\BasilResolver\CircularStepImportException;
+use webignition\BasilResolver\UnknownElementException;
+use webignition\BasilResolver\UnknownPageElementException;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
@@ -94,27 +114,29 @@ class GenerateCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
      * @return int|null
      *
-     * @throws \webignition\BasilCodeGenerator\UnresolvedPlaceholderException
-     * @throws \webignition\BasilCompilableSourceFactory\Exception\UnknownObjectPropertyException
-     * @throws \webignition\BasilCompilableSourceFactory\Exception\UnsupportedModelException
-     * @throws \webignition\BasilLoader\Exception\NonRetrievableDataProviderException
-     * @throws \webignition\BasilLoader\Exception\NonRetrievablePageException
-     * @throws \webignition\BasilLoader\Exception\NonRetrievableStepException
-     * @throws \webignition\BasilLoader\Exception\YamlLoaderException
-     * @throws \webignition\BasilModelFactory\Exception\EmptyAssertionStringException
-     * @throws \webignition\BasilModelFactory\Exception\InvalidActionTypeException
-     * @throws \webignition\BasilModelFactory\Exception\InvalidIdentifierStringException
-     * @throws \webignition\BasilModelFactory\Exception\MissingValueException
-     * @throws \webignition\BasilModelFactory\InvalidPageElementIdentifierException
-     * @throws \webignition\BasilModelFactory\MalformedPageElementReferenceException
-     * @throws \webignition\BasilModelProvider\Exception\UnknownDataProviderException
-     * @throws \webignition\BasilModelProvider\Exception\UnknownPageException
-     * @throws \webignition\BasilModelProvider\Exception\UnknownStepException
-     * @throws \webignition\BasilModelResolver\CircularStepImportException
-     * @throws \webignition\BasilModelResolver\UnknownElementException
-     * @throws \webignition\BasilModelResolver\UnknownPageElementException
+     * @throws CircularStepImportException
+     * @throws EmptyActionException
+     * @throws EmptyAssertionComparisonException
+     * @throws EmptyAssertionException
+     * @throws EmptyAssertionIdentifierException
+     * @throws EmptyAssertionValueException
+     * @throws EmptyInputActionValueException
+     * @throws InvalidPageException
+     * @throws InvalidTestException
+     * @throws NonRetrievableDataProviderException
+     * @throws NonRetrievablePageException
+     * @throws NonRetrievableStepException
+     * @throws UnknownDataProviderException
+     * @throws UnknownElementException
+     * @throws UnknownPageElementException
+     * @throws UnknownPageException
+     * @throws UnknownStepException
+     * @throws UnresolvedPlaceholderException
+     * @throws UnsupportedStepException
+     * @throws YamlLoaderException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
