@@ -12,7 +12,7 @@ class RunCommand extends Command
 {
     private const NAME = 'basil-runner:run';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::NAME)

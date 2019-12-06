@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class AddCommandsToApplicationCompilerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $containerBuilder)
+    public function process(ContainerBuilder $containerBuilder): void
     {
         $applicationDefinition = $containerBuilder->getDefinition(Application::class);
 

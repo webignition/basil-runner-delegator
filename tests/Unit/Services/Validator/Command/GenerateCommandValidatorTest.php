@@ -33,7 +33,7 @@ class GenerateCommandValidatorTest extends TestCase
         string $rawTarget,
         string $baseClass,
         GenerateCommandValidationResult $expectedResult
-    ) {
+    ): void {
         $validator = new GenerateCommandValidator();
         $result = $validator->validate($source, $rawSource, $target, $rawTarget, $baseClass);
 
@@ -163,7 +163,7 @@ class GenerateCommandValidatorTest extends TestCase
     }
 
 
-    public function testValidateSourceFailureSourceNotReadable()
+    public function testValidateSourceFailureSourceNotReadable(): void
     {
         $root = (new ProjectRootPathProvider())->get();
 
@@ -188,7 +188,7 @@ class GenerateCommandValidatorTest extends TestCase
         \Mockery::close();
     }
 
-    public function testValidateTargetFailureTargetNotWritable()
+    public function testValidateTargetFailureTargetNotWritable(): void
     {
         $root = (new ProjectRootPathProvider())->get();
 

@@ -2,3 +2,6 @@ parameters:
   inferPrivatePropertyTypeFromConstructor: true
   excludes_analyse:
     - '*/tests/Fixtures/php/*'
+  ignoreErrors:
+    # Return type of 'array' of test data providers
+    - '#DataProvider\(\) return type has no value type specified in iterable type array#'

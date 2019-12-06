@@ -17,7 +17,7 @@ class ApplicationConfiguration
         $this->version = '0.1-beta';
     }
 
-    public function configureApplication(Application $application)
+    public function configureApplication(Application $application): void
     {
         $application->setName($this->name);
         $application->setVersion($this->version);

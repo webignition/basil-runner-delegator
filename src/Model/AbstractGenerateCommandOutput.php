@@ -32,6 +32,9 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
         return $this->baseClass;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

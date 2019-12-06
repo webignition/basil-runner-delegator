@@ -9,8 +9,6 @@ use webignition\BasilRunner\Kernel;
 
 abstract class AbstractFunctionalTest extends \PHPUnit\Framework\TestCase
 {
-    protected static $application;
-
     /**
      * @var ContainerInterface
      */

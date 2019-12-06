@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use webignition\BasilRunner\DependencyInjection\AddCommandsToApplicationCompilerPass;
@@ -13,12 +14,15 @@ final class Kernel extends BaseKernel
 {
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    /**
+     * @return array<BundleInterface>
+     */
     public function registerBundles(): array
     {
         return [];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $this->configureContainer($container, $loader);
@@ -32,7 +36,7 @@ final class Kernel extends BaseKernel
         $containerBuilder->addCompilerPass(new AddCommandsToApplicationCompilerPass());
     }
 
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->setParameter('container.dumper.inline_class_loader', true);
         $confDir = $this->getProjectDir() . '/config';
