@@ -37,17 +37,18 @@
         "php": ">=7.2",
         "ext-json": "*",
         "phpunit/phpunit": "~8.0",
-        "symfony/console": "^4.3",
-        "symfony/http-kernel": "^4.3",
         "symfony/config": "^4.3",
+        "symfony/console": "^4.3",
         "symfony/dependency-injection": "^4.3",
+        "symfony/dotenv": "^4.3",
+        "symfony/finder": "^5.0",
+        "symfony/http-kernel": "^4.3",
         "symfony/yaml": "^4.3",
+        "webignition/base-basil-test-case": "^0.1.0",
         "webignition/basil-compiler": "^0.4.0",
         "webignition/basil-loader": "^0.4.0",
-        "webignition/base-basil-test-case": "^0.1.0",
         "webignition/php-basil-compilable-source-factory": "^0.6.0",
-        "webignition/symfony-console-typed-input": "^0.3.0",
-        "symfony/dotenv": "^4.3"
+        "webignition/symfony-console-typed-input": "^0.3.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.2",
