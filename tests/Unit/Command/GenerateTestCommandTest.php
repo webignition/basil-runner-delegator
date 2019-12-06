@@ -21,6 +21,10 @@ use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @param array<string, string> $input
+     * @param string $generatedClassName
+     * @param GenerateCommandSuccessOutput $expectedCommandOutput
+     *
      * @dataProvider runSuccessDataProvider
      */
     public function testRunSuccess(
@@ -84,6 +88,10 @@ class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @param array<string, string> $input
+     * @param int $validationErrorCode
+     * @param GenerateCommandErrorOutput $expectedCommandOutput
+     *
      * @dataProvider runFailureDataProvider
      */
     public function testRunFailure(

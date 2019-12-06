@@ -32,6 +32,10 @@ class GenerateTestCommandTest extends AbstractFunctionalTest
     }
 
     /**
+     * @param array<string, string> $input
+     * @param string $generatedCodeClassName
+     * @param array<string, string> $expectedGeneratedCode
+     *
      * @dataProvider generateDataProvider
      */
     public function testRunSuccess(array $input, string $generatedCodeClassName, array $expectedGeneratedCode): void
