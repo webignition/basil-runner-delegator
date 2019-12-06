@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use webignition\BasilRunner\DependencyInjection\AddCommandsToApplicationCompilerPass;
@@ -13,6 +14,9 @@ final class Kernel extends BaseKernel
 {
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    /**
+     * @return array<BundleInterface>
+     */
     public function registerBundles(): array
     {
         return [];
