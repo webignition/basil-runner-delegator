@@ -39,7 +39,7 @@ use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
-class GenerateCommand extends Command
+class GenerateTestCommand extends Command
 {
     private const NAME = 'generate-test';
 

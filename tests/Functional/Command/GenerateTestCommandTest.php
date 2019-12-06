@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
-use webignition\BasilRunner\Command\GenerateCommand;
+use webignition\BasilRunner\Command\GenerateTestCommand;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -17,10 +17,10 @@ use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 use webignition\BasilRunner\Tests\Services\ObjectReflector;
 
-class GenerateCommandTest extends AbstractFunctionalTest
+class GenerateTestCommandTest extends AbstractFunctionalTest
 {
     /**
-     * @var GenerateCommand
+     * @var GenerateTestCommand
      */
     private $command;
 
@@ -28,7 +28,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         parent::setUp();
 
-        $this->command = self::$container->get(GenerateCommand::class);
+        $this->command = self::$container->get(GenerateTestCommand::class);
     }
 
     /**
@@ -123,7 +123,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
         $objectReflector->setProperty(
             $this->command,
-            GenerateCommand::class,
+            GenerateTestCommand::class,
             'compiler',
             $compiler
         );
@@ -141,7 +141,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
         $objectReflector->setProperty(
             $this->command,
-            GenerateCommand::class,
+            GenerateTestCommand::class,
             'generateCommandValidator',
             $generateCommandValidator
         );
