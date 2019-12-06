@@ -8,7 +8,7 @@ class PhpFileCreator
 {
     private $outputDirectory;
 
-    public function setOutputDirectory(string $outputDirectory)
+    public function setOutputDirectory(string $outputDirectory): void
     {
         $this->outputDirectory = $outputDirectory;
     }

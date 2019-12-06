@@ -34,7 +34,7 @@ class GenerateTestCommandTest extends AbstractFunctionalTest
     /**
      * @dataProvider generateDataProvider
      */
-    public function testRunSuccess(array $input, string $generatedCodeClassName, array $expectedGeneratedCode)
+    public function testRunSuccess(array $input, string $generatedCodeClassName, array $expectedGeneratedCode): void
     {
         $this->mockClassNameFactory($generatedCodeClassName);
         $this->mockGenerateCommandValidator();
@@ -94,7 +94,7 @@ class GenerateTestCommandTest extends AbstractFunctionalTest
      *
      * @param string $className
      */
-    private function mockClassNameFactory(string $className)
+    private function mockClassNameFactory(string $className): void
     {
         /* @var ObjectReflector $objectReflector */
         $objectReflector = self::$container->get(ObjectReflector::class);
@@ -129,7 +129,7 @@ class GenerateTestCommandTest extends AbstractFunctionalTest
         );
     }
 
-    private function mockGenerateCommandValidator()
+    private function mockGenerateCommandValidator(): void
     {
         /* @var ObjectReflector $objectReflector */
         $objectReflector = self::$container->get(ObjectReflector::class);

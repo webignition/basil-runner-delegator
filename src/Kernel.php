@@ -18,7 +18,7 @@ final class Kernel extends BaseKernel
         return [];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $this->configureContainer($container, $loader);
@@ -32,7 +32,7 @@ final class Kernel extends BaseKernel
         $containerBuilder->addCompilerPass(new AddCommandsToApplicationCompilerPass());
     }
 
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->setParameter('container.dumper.inline_class_loader', true);
         $confDir = $this->getProjectDir() . '/config';

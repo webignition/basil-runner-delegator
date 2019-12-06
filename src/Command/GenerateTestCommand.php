@@ -81,7 +81,7 @@ class GenerateTestCommand extends Command
         $this->generateCommandValidator = $generateCommandValidator;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName(self::NAME)

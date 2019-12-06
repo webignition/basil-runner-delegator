@@ -15,7 +15,7 @@ class ObjectReflector
         string $objectClass,
         string $propertyName,
         $propertyValue
-    ) {
+    ): void {
         try {
             $reflector = new \ReflectionClass($objectClass);
             $property = $reflector->getProperty($propertyName);

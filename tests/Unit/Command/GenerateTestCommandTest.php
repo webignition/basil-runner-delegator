@@ -27,7 +27,7 @@ class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
         array $input,
         string $generatedClassName,
         GenerateCommandSuccessOutput $expectedCommandOutput
-    ) {
+    ): void {
         $root = (new ProjectRootPathProvider())->get();
         $expectedPhpFileCreatorOutputDirectory = $root . '/' . $input['--target'];
 
@@ -90,7 +90,7 @@ class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
         array $input,
         int $validationErrorCode,
         GenerateCommandErrorOutput $expectedCommandOutput
-    ) {
+    ): void {
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
             ->shouldReceive('validate')
