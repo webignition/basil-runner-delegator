@@ -5,8 +5,10 @@ namespace webignition\BasilRunner\Tests\Services;
 class ObjectReflector
 {
     /**
+     * @template T
+     *
      * @param object $object
-     * @param string $objectClass
+     * @param class-string<T> $objectClass
      * @param string $propertyName
      * @param mixed $propertyValue
      */
