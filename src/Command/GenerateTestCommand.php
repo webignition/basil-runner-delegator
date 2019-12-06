@@ -49,6 +49,9 @@ class GenerateTestCommand extends Command
     private $projectRootPath;
     private $generateCommandValidator;
 
+    /**
+     * @var array<int, string>
+     */
     private $errorMessages = [
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY => 'source empty; call with --source=SOURCE',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST => 'source invalid; does not exist',
