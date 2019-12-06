@@ -6,7 +6,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  webignition\BasilRunner\Command\GenerateCommand:
+  webignition\BasilRunner\Command\GenerateTestCommand:
     public: true
 
   webignition\BasilRunner\Tests\Services\ObjectReflector:
