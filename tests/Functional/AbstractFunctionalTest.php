@@ -21,12 +21,6 @@ abstract class AbstractFunctionalTest extends \PHPUnit\Framework\TestCase
         $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
         $kernel->boot();
 
-        $container = $kernel->getContainer();
-
-        if ($container instanceof ContainerInterface) {
-            self::$container = $container;
-        } else {
-            self::fail('Failed to get container from kernel');
-        }
+        self::$container = $kernel->getContainer();
     }
 }
