@@ -1,0 +1,10 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  steps:
+    verify_open_literal: "../Step/verify-open-literal.yml"
+
+"verify page is open":
+  use: verify_open_literal
