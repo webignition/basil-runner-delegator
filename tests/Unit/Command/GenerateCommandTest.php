@@ -8,7 +8,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\SourceLoader;
-use webignition\BasilRunner\Command\GenerateTestCommand;
+use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
@@ -18,7 +18,7 @@ use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 
-class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
+class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array<string, string> $input
@@ -248,8 +248,8 @@ class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
     private function createCommand(
         PhpFileCreator $phpFileCreator,
         GenerateCommandValidator $generateCommandValidator
-    ): GenerateTestCommand {
-        return new GenerateTestCommand(
+    ): GenerateCommand {
+        return new GenerateCommand(
             SourceLoader::createLoader(),
             Compiler::create(ExternalVariableIdentifiersFactory::create()),
             $phpFileCreator,
