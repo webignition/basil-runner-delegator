@@ -20,8 +20,8 @@ services:
   Symfony\Component\Console\Application:
     public: true
 
-  webignition\BasilLoader\TestLoader:
-    factory: ['webignition\BasilLoader\TestLoader', 'createLoader']
+  webignition\BasilLoader\SourceLoader:
+    factory: ['webignition\BasilLoader\SourceLoader', 'createLoader']
 
   webignition\BasilCompiler\Compiler:
     factory: ['webignition\BasilCompiler\Compiler', 'create']

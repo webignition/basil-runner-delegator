@@ -17,8 +17,9 @@ use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableDataProviderException;
 use webignition\BasilLoader\Exception\NonRetrievablePageException;
 use webignition\BasilLoader\Exception\NonRetrievableStepException;
+use webignition\BasilLoader\Exception\UnknownTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
-use webignition\BasilLoader\TestLoader;
+use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModelProvider\Exception\UnknownDataProviderException;
 use webignition\BasilModelProvider\Exception\UnknownPageException;
 use webignition\BasilModelProvider\Exception\UnknownStepException;
@@ -44,7 +45,7 @@ class GenerateTestCommand extends Command
 {
     private const NAME = 'generate-test';
 
-    private $testLoader;
+    private $sourceLoader;
     private $compiler;
     private $phpFileCreator;
     private $projectRootPath;
@@ -70,7 +71,7 @@ class GenerateTestCommand extends Command
     ];
 
     public function __construct(
-        TestLoader $testLoader,
+        SourceLoader $sourceLoader,
         Compiler $compiler,
         PhpFileCreator $phpFileCreator,
         ProjectRootPathProvider $projectRootPathProvider,
@@ -78,7 +79,7 @@ class GenerateTestCommand extends Command
     ) {
         parent::__construct();
 
-        $this->testLoader = $testLoader;
+        $this->sourceLoader = $sourceLoader;
         $this->compiler = $compiler;
         $this->phpFileCreator = $phpFileCreator;
         $this->projectRootPath = $projectRootPathProvider->get();
@@ -139,6 +140,7 @@ class GenerateTestCommand extends Command
      * @throws UnknownPageElementException
      * @throws UnknownPageException
      * @throws UnknownStepException
+     * @throws UnknownTestException
      * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
      * @throws YamlLoaderException
@@ -187,16 +189,19 @@ class GenerateTestCommand extends Command
             exit('Fix in #24');
         }
 
-        $test = $this->testLoader->load($source);
-        $className = $this->compiler->createClassName($test);
-        $code = $this->compiler->compile($test, $fullyQualifiedBaseClass);
+        $testSuite = $this->sourceLoader->load($source);
 
-        $this->phpFileCreator->setOutputDirectory($target);
-        $filename = $this->phpFileCreator->create($className, $code);
+        $generatedFiles = [];
 
-        $generatedFiles = [
-            new GeneratedTestOutput($source, $filename),
-        ];
+        foreach ($testSuite->getTests() as $test) {
+            $className = $this->compiler->createClassName($test);
+            $code = $this->compiler->compile($test, $fullyQualifiedBaseClass);
+
+            $this->phpFileCreator->setOutputDirectory($target);
+            $filename = $this->phpFileCreator->create($className, $code);
+
+            $generatedFiles[] = new GeneratedTestOutput($source, $filename);
+        }
 
         $commandOutput = new GenerateCommandSuccessOutput(
             $source,
