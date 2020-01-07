@@ -35,7 +35,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
     /**
      * @param array<string, string> $input
-     * @param array $generatedCodeClassName
+     * @param array<string, string> $generatedCodeClassNames
      * @param array<string, string> $expectedGeneratedCode
      *
      * @dataProvider runSuccessDataProvider
@@ -106,7 +106,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      *       ClassDefinitionFactory::createClassDefinition() calls ClassNameFactory::create()
      *       -> need to mock ClassNameFactory::create() to make it deterministic
      *
-     * @param string $className
+     * @param array<string, string> $classNames
      */
     private function mockClassNameFactory(array $classNames): void
     {

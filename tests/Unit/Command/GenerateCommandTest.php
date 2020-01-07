@@ -21,7 +21,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array<string, string> $input
-     * @param string $generatedClassName
+     * @param TestGenerator $testGenerator
      * @param GenerateCommandSuccessOutput $expectedCommandOutput
      *
      * @dataProvider runSuccessDataProvider
@@ -83,14 +83,19 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    private function createTestGeneratorAndReturnUsingCallable(array $bar): callable
+    /**
+     * @param array<string, array<string, mixed>> $generatedTestOutputExpectations
+     *
+     * @return callable
+     */
+    private function createTestGeneratorAndReturnUsingCallable(array $generatedTestOutputExpectations): callable
     {
         return function (
             TestInterface $test,
             string $fullyQualifiedBaseClass,
             string $target
-        ) use ($bar) {
-            $instanceData = $bar[$test->getPath()] ?? null;
+        ) use ($generatedTestOutputExpectations) {
+            $instanceData = $generatedTestOutputExpectations[$test->getPath()] ?? null;
             if (null === $instanceData) {
                 return null;
             }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit;
+namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
