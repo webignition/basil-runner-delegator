@@ -7,7 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
-use webignition\BasilLoader\TestLoader;
+use webignition\BasilLoader\SourceLoader;
 use webignition\BasilRunner\Command\GenerateTestCommand;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
@@ -250,7 +250,7 @@ class GenerateTestCommandTest extends \PHPUnit\Framework\TestCase
         GenerateCommandValidator $generateCommandValidator
     ): GenerateTestCommand {
         return new GenerateTestCommand(
-            TestLoader::createLoader(),
+            SourceLoader::createLoader(),
             Compiler::create(ExternalVariableIdentifiersFactory::create()),
             $phpFileCreator,
             new ProjectRootPathProvider(),
