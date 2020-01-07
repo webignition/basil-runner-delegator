@@ -6,50 +6,37 @@ namespace webignition\BasilRunner\Tests\Unit\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\SourceLoader;
+use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
-use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
-use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 
 class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param array<string, string> $input
-     * @param string $generatedClassName
+     * @param TestGenerator $testGenerator
      * @param GenerateCommandSuccessOutput $expectedCommandOutput
      *
      * @dataProvider runSuccessDataProvider
      */
     public function testRunSuccess(
         array $input,
-        string $generatedClassName,
+        TestGenerator $testGenerator,
         GenerateCommandSuccessOutput $expectedCommandOutput
     ): void {
-        $root = (new ProjectRootPathProvider())->get();
-        $expectedPhpFileCreatorOutputDirectory = $root . '/' . $input['--target'];
-
-        $phpFileCreator = \Mockery::mock(PhpFileCreator::class);
-        $phpFileCreator
-            ->shouldReceive('setOutputDirectory')
-            ->with($expectedPhpFileCreatorOutputDirectory);
-
-        $phpFileCreator
-            ->shouldReceive('create')
-            ->andReturn($generatedClassName . '.php');
-
         $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
         $generateCommandValidator
             ->shouldReceive('validate')
             ->andReturn(new GenerateCommandValidationResult(true));
 
-        $command = $this->createCommand($phpFileCreator, $generateCommandValidator);
+        $command = $this->createCommand($generateCommandValidator, $testGenerator);
 
         $commandTester = new CommandTester($command);
 
@@ -71,7 +58,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
+                'testGenerator' => $this->createTestGenerator($this->createTestGeneratorAndReturnUsingCallable([
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' => [
+                        'expectedFullyQualifiedBaseClass' => AbstractBaseTest::class,
+                        'expectedTarget' => $root . '/tests/build/target',
+                        'generatedTestOutput' => new GeneratedTestOutput(
+                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                            'ExampleComVerifyOpenLiteralTest.php'
+                        ),
+                    ],
+                ])),
                 'expectedCommandOutput' => new GenerateCommandSuccessOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
@@ -85,6 +81,33 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 ),
             ],
         ];
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $generatedTestOutputExpectations
+     *
+     * @return callable
+     */
+    private function createTestGeneratorAndReturnUsingCallable(array $generatedTestOutputExpectations): callable
+    {
+        return function (
+            TestInterface $test,
+            string $fullyQualifiedBaseClass,
+            string $target
+        ) use ($generatedTestOutputExpectations) {
+            $instanceData = $generatedTestOutputExpectations[$test->getPath()] ?? null;
+            if (null === $instanceData) {
+                return null;
+            }
+
+            $expectedFullyQualifiedBaseClass = $instanceData['expectedFullyQualifiedBaseClass'] ?? null;
+            $this->assertSame($expectedFullyQualifiedBaseClass, $fullyQualifiedBaseClass);
+
+            $expectedTarget = $instanceData['expectedTarget'] ?? null;
+            $this->assertSame($expectedTarget, $target);
+
+            return $instanceData['generatedTestOutput'];
+        };
     }
 
     /**
@@ -107,7 +130,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 $validationErrorCode
             ));
 
-        $command = $this->createCommand(new PhpFileCreator(), $generateCommandValidator);
+        $command = $this->createCommand($generateCommandValidator, \Mockery::mock(TestGenerator::class));
 
         $commandTester = new CommandTester($command);
 
@@ -246,15 +269,25 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     }
 
     private function createCommand(
-        PhpFileCreator $phpFileCreator,
-        GenerateCommandValidator $generateCommandValidator
+        GenerateCommandValidator $generateCommandValidator,
+        TestGenerator $testGenerator
     ): GenerateCommand {
         return new GenerateCommand(
             SourceLoader::createLoader(),
-            Compiler::create(ExternalVariableIdentifiersFactory::create()),
-            $phpFileCreator,
+            $testGenerator,
             new ProjectRootPathProvider(),
             $generateCommandValidator
         );
+    }
+
+    private function createTestGenerator(callable $andReturnUsingCallable): TestGenerator
+    {
+        $testGenerator = \Mockery::mock(TestGenerator::class);
+
+        $testGenerator
+            ->shouldReceive('generate')
+            ->andReturnUsing($andReturnUsingCallable);
+
+        return $testGenerator;
     }
 }
