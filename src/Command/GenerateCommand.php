@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableDataProviderException;
@@ -35,9 +34,8 @@ use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
-use webignition\BasilRunner\Model\GeneratedTestOutput;
-use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
@@ -46,8 +44,7 @@ class GenerateCommand extends Command
     private const NAME = 'generate';
 
     private $sourceLoader;
-    private $compiler;
-    private $phpFileCreator;
+    private $testGenerator;
     private $projectRootPath;
     private $generateCommandValidator;
 
@@ -72,16 +69,14 @@ class GenerateCommand extends Command
 
     public function __construct(
         SourceLoader $sourceLoader,
-        Compiler $compiler,
-        PhpFileCreator $phpFileCreator,
+        TestGenerator $testGenerator,
         ProjectRootPathProvider $projectRootPathProvider,
         GenerateCommandValidator $generateCommandValidator
     ) {
         parent::__construct();
 
         $this->sourceLoader = $sourceLoader;
-        $this->compiler = $compiler;
-        $this->phpFileCreator = $phpFileCreator;
+        $this->testGenerator = $testGenerator;
         $this->projectRootPath = $projectRootPathProvider->get();
         $this->generateCommandValidator = $generateCommandValidator;
     }
@@ -192,15 +187,8 @@ class GenerateCommand extends Command
         $testSuite = $this->sourceLoader->load($source);
 
         $generatedFiles = [];
-
         foreach ($testSuite->getTests() as $test) {
-            $className = $this->compiler->createClassName($test);
-            $code = $this->compiler->compile($test, $fullyQualifiedBaseClass);
-
-            $this->phpFileCreator->setOutputDirectory($target);
-            $filename = $this->phpFileCreator->create($className, $code);
-
-            $generatedFiles[] = new GeneratedTestOutput($source, $filename);
+            $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
         }
 
         $commandOutput = new GenerateCommandSuccessOutput(
