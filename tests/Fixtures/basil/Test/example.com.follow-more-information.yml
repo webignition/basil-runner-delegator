@@ -1,0 +1,10 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+"follow more information":
+  actions:
+    - click $"a"
+
+  assertions:
+    - $page.url is "https://www.iana.org/domains/reserved"
