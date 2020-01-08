@@ -14,6 +14,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY = 105;
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
     public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
+    public const CODE_LOADER_EXCEPTION = 200;
 
     private $errorMessage;
     private $errorContext;
@@ -52,9 +53,6 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     {
         $data = json_decode($json, true);
         $configData = $data['config'];
-
-//        var_dump($json, $data, ErrorContext::fromData($data['context']));
-//        exit();
 
         return new GenerateCommandErrorOutput(
             $configData['source'],

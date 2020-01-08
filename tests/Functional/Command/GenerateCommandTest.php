@@ -6,11 +6,14 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
+use webignition\BasilRunner\Model\ErrorContext;
+use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -198,6 +201,120 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
                         file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * @param array<mixed> $input
+     * @param int $expectedExitCode
+     * @param GenerateCommandErrorOutput $expectedCommandOutput
+     *
+     * @dataProvider runFailureDataProvider
+     */
+    public function testRunFailure(
+        array $input,
+        int $expectedExitCode,
+        GenerateCommandErrorOutput $expectedCommandOutput
+    ) {
+        $output = new BufferedOutput();
+
+        $exitCode = $this->command->run(new ArrayInput($input), $output);
+        $this->assertSame($expectedExitCode, $exitCode);
+
+        $commandOutput = GenerateCommandErrorOutput::fromJson($output->fetch());
+
+        $this->assertEquals($expectedCommandOutput, $commandOutput);
+    }
+
+    public function runFailureDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'test contains invalid yaml' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                        ]
+                    )
+                ),
+            ],
+            'test suite imports test containing invalid yaml' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                        ]
+                    )
+                ),
+            ],
+            'test file contains non-array data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Data is not an array',
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                        ]
+                    )
+                ),
+            ],
+            'test suite imports test containing non-array data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Data is not an array',
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                        ]
+                    )
+                ),
             ],
         ];
     }

@@ -7,7 +7,9 @@ namespace webignition\BasilRunner\Model;
 class ErrorContext implements \JsonSerializable
 {
     public const CODE_COMMAND_CONFIG = 100;
+    public const CODE_LOADER = 101;
     public const COMMAND_CONFIG = 'command-config';
+    public const LOADER = 'loader';
 
     private $name = '';
     private $contextCode = 0;
