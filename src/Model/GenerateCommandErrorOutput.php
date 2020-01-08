@@ -8,13 +8,12 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
 {
     public const ERROR_CODE_SOURCE_EMPTY = 1;
     public const ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST = 2;
-    public const ERROR_CODE_SOURCE_INVALID_NOT_A_FILE = 3;
-    public const ERROR_CODE_SOURCE_INVALID_NOT_READABLE = 4;
-    public const ERROR_CODE_TARGET_EMPTY = 5;
-    public const ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST = 6;
-    public const ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY = 7;
-    public const ERROR_CODE_TARGET_INVALID_NOT_WRITABLE = 8;
-    public const ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST = 9;
+    public const ERROR_CODE_SOURCE_INVALID_NOT_READABLE = 3;
+    public const ERROR_CODE_TARGET_EMPTY = 4;
+    public const ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST = 5;
+    public const ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY = 6;
+    public const ERROR_CODE_TARGET_INVALID_NOT_WRITABLE = 7;
+    public const ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST = 8;
 
     private $errorMessage;
 

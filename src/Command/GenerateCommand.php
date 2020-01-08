@@ -54,8 +54,6 @@ class GenerateCommand extends Command
     private $errorMessages = [
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY => 'source empty; call with --source=SOURCE',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST => 'source invalid; does not exist',
-        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE =>
-            'source invalid; is not a file (is it a directory?)',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
 
         GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY => 'target empty; call with --target=TARGET',
@@ -184,11 +182,15 @@ class GenerateCommand extends Command
             exit('Fix in #24');
         }
 
-        $testSuite = $this->sourceLoader->load($source);
+        $sourcePaths = $this->createSourcePaths($source);
 
         $generatedFiles = [];
-        foreach ($testSuite->getTests() as $test) {
-            $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
+        foreach ($sourcePaths as $sourcePath) {
+            $testSuite = $this->sourceLoader->load($sourcePath);
+
+            foreach ($testSuite->getTests() as $test) {
+                $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
+            }
         }
 
         $commandOutput = new GenerateCommandSuccessOutput(
@@ -222,5 +224,47 @@ class GenerateCommand extends Command
         $path = realpath($path);
 
         return false === $path ? null : $path;
+    }
+
+    /**
+     * @param string $source
+     *
+     * @return string[]
+     */
+    private function createSourcePaths(string $source): array
+    {
+        $sourcePaths = [];
+
+        if (is_file($source)) {
+            $sourcePaths[] = $source;
+        }
+
+        if (is_dir($source)) {
+            return $this->findSourcePaths($source);
+        }
+
+        return $sourcePaths;
+    }
+
+    /**
+     * @param string $directorySource
+     *
+     * @return string[]
+     */
+    private function findSourcePaths(string $directorySource): array
+    {
+        $sourcePaths = [];
+
+        $directoryIterator = new \DirectoryIterator($directorySource);
+        foreach ($directoryIterator as $item) {
+            /* @var \DirectoryIterator $item */
+            if ($item->isFile() && 'yml' === $item->getExtension()) {
+                $sourcePaths[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
+            }
+        }
+
+        sort($sourcePaths);
+
+        return $sourcePaths;
     }
 }

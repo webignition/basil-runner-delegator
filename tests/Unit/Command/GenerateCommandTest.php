@@ -173,19 +173,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     'source invalid; does not exist'
                 ),
             ],
-            'source not a file, is a directory' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/',
-                    '--target' => 'tests/build/target',
-                ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/Test',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
-                    'source invalid; is not a file (is it a directory?)'
-                ),
-            ],
             'source not readable' => [
                 'input' => [
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',

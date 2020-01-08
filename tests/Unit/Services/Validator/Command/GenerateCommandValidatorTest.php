@@ -79,17 +79,6 @@ class GenerateCommandValidatorTest extends TestCase
                     GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
             ],
-            'source not a file, is a directory' => [
-                'source' => $root . '/tests/Fixtures/basil/Test/',
-                'rawSource' => '/tests/Fixtures/basil/Test/',
-                'target' => $target,
-                'rawTarget' => $rawTarget,
-                'baseClass' => $baseClass,
-                'expectedResult' => new GenerateCommandValidationResult(
-                    false,
-                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE
-                ),
-            ],
         ];
     }
 
