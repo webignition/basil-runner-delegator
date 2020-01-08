@@ -54,8 +54,6 @@ class GenerateCommand extends Command
     private $errorMessages = [
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY => 'source empty; call with --source=SOURCE',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST => 'source invalid; does not exist',
-        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE =>
-            'source invalid; is not a file (is it a directory?)',
         GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
 
         GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY => 'target empty; call with --target=TARGET',

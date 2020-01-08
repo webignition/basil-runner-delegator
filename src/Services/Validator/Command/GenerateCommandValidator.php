@@ -44,10 +44,6 @@ class GenerateCommandValidator
                 : GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST;
         }
 
-        if (!is_file($source)) {
-            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_A_FILE;
-        }
-
         if (!is_readable($source)) {
             return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE;
         }
