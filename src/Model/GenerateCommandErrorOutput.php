@@ -16,12 +16,19 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
 
     private $errorMessage;
+    private $errorContext;
 
-    public function __construct(string $source, string $target, string $baseClass, string $errorMessage)
-    {
+    public function __construct(
+        string $source,
+        string $target,
+        string $baseClass,
+        string $errorMessage,
+        ErrorContext $errorContext
+    ) {
         parent::__construct($source, $target, $baseClass);
 
         $this->errorMessage = $errorMessage;
+        $this->errorContext = $errorContext;
     }
 
     public function getErrorMessage(): string
@@ -30,12 +37,13 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     }
 
     /**
-     * @return array<mixed>
+     * @return array<string, int|string>
      */
     public function jsonSerialize(): array
     {
         $serializedData = parent::jsonSerialize();
         $serializedData['error'] = $this->errorMessage;
+        $serializedData['context'] = $this->errorContext->jsonSerialize();
 
         return $serializedData;
     }
@@ -45,11 +53,15 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         $data = json_decode($json, true);
         $configData = $data['config'];
 
+//        var_dump($json, $data, ErrorContext::fromData($data['context']));
+//        exit();
+
         return new GenerateCommandErrorOutput(
             $configData['source'],
             $configData['target'],
             $configData['base-class'],
-            $data['error']
+            $data['error'],
+            ErrorContext::fromData($data['context'])
         );
     }
 }

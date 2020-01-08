@@ -32,6 +32,7 @@ use webignition\BasilParser\Exception\InvalidActionIdentifierException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
+use webignition\BasilRunner\Model\ErrorContext;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -169,7 +170,12 @@ class GenerateCommand extends Command
                 (string) $source,
                 (string) $target,
                 $fullyQualifiedBaseClass,
-                $errorMessage
+                $errorMessage,
+                new ErrorContext(
+                    ErrorContext::COMMAND_CONFIG,
+                    ErrorContext::CODE_COMMAND_CONFIG,
+                    $validationResult->getErrorCode()
+                )
             );
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
