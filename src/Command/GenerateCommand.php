@@ -182,11 +182,15 @@ class GenerateCommand extends Command
             exit('Fix in #24');
         }
 
-        $testSuite = $this->sourceLoader->load($source);
+        $sourcePaths = $this->createSourcePaths($source);
 
         $generatedFiles = [];
-        foreach ($testSuite->getTests() as $test) {
-            $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
+        foreach ($sourcePaths as $sourcePath) {
+            $testSuite = $this->sourceLoader->load($sourcePath);
+
+            foreach ($testSuite->getTests() as $test) {
+                $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
+            }
         }
 
         $commandOutput = new GenerateCommandSuccessOutput(
@@ -220,5 +224,25 @@ class GenerateCommand extends Command
         $path = realpath($path);
 
         return false === $path ? null : $path;
+    }
+
+    /**
+     * @param string $source
+     *
+     * @return array<string>
+     */
+    private function createSourcePaths(string $source): array
+    {
+        $sourcePaths = [];
+
+        if (is_file($source)) {
+            $sourcePaths[] = $source;
+        }
+
+        if (is_dir($source)) {
+            // TODO: populate $sourcePaths from list of yml files in directory
+        }
+
+        return $sourcePaths;
     }
 }
