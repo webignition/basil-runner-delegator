@@ -58,9 +58,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
         $commandOutput = GenerateCommandSuccessOutput::fromJson($output->fetch());
 
         $outputData = $commandOutput->getOutput();
-        $this->assertCount(count($expectedGeneratedCode), $outputData);
+        $this->assertCount(count($expectedGeneratedTestOutputSources), $outputData);
 
         $generatedTestOutputIndex = 0;
+        $generatedTestsToRemove = [];
         foreach ($outputData as $generatedTestOutput) {
             $expectedGeneratedTestOutputSource = $expectedGeneratedTestOutputSources[$generatedTestOutputIndex] ?? null;
 
@@ -80,9 +81,17 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 file_get_contents($expectedCodePath)
             );
 
-            unlink($expectedCodePath);
-
+            $generatedTestsToRemove[] = $expectedCodePath;
             $generatedTestOutputIndex++;
+        }
+
+        $generatedTestsToRemove = array_unique($generatedTestsToRemove);
+
+        foreach ($generatedTestsToRemove as $path) {
+            $this->assertFileExists($path);
+            $this->assertFileIsReadable($path);
+
+            unlink($path);
         }
     }
 
@@ -125,6 +134,61 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                ],
+                'expectedGeneratedCode' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
+                ],
+            ],
+            'collection of tests by directory' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test',
+                    '--target' => 'tests/build/target',
+                ],
+                'generatedCodeClassNames' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        'ExampleComFollowMoreInformationTest',
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        'ExampleComImportVerifyOpenLiteralTest',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        'ExampleComVerifyOpenLiteralTest',
+                ],
+                'expectedGeneratedTestOutputSources' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                ],
+                'expectedGeneratedCode' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                ],
+            ],
+            'collection of test suites by directory' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/TestSuite',
+                    '--target' => 'tests/build/target',
+                ],
+                'generatedCodeClassNames' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        'ExampleComVerifyOpenLiteralTest',
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        'ExampleComImportVerifyOpenLiteralTest',
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        'ExampleComFollowMoreInformationTest',
+                ],
+                'expectedGeneratedTestOutputSources' => [
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>

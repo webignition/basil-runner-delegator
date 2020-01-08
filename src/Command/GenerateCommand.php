@@ -229,7 +229,7 @@ class GenerateCommand extends Command
     /**
      * @param string $source
      *
-     * @return array<string>
+     * @return string[]
      */
     private function createSourcePaths(string $source): array
     {
@@ -240,8 +240,30 @@ class GenerateCommand extends Command
         }
 
         if (is_dir($source)) {
-            // TODO: populate $sourcePaths from list of yml files in directory
+            return $this->findSourcePaths($source);
         }
+
+        return $sourcePaths;
+    }
+
+    /**
+     * @param string $directorySource
+     *
+     * @return string[]
+     */
+    private function findSourcePaths(string $directorySource): array
+    {
+        $sourcePaths = [];
+
+        $directoryIterator = new \DirectoryIterator($directorySource);
+        foreach ($directoryIterator as $item) {
+            /* @var \DirectoryIterator $item */
+            if ($item->isFile() && 'yml' === $item->getExtension()) {
+                $sourcePaths[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
+            }
+        }
+
+        sort($sourcePaths);
 
         return $sourcePaths;
     }
