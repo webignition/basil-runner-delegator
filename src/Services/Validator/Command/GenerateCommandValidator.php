@@ -29,7 +29,7 @@ class GenerateCommandValidator
         if (!class_exists($baseClass)) {
             return new GenerateCommandValidationResult(
                 false,
-                GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST
+                GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
             );
         }
 
@@ -40,12 +40,12 @@ class GenerateCommandValidator
     {
         if (null === $source) {
             return '' === $rawSource
-                ? GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
-                : GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST;
+                ? GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                : GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_readable($source)) {
-            return GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE;
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
         }
 
         return 0;
@@ -55,16 +55,16 @@ class GenerateCommandValidator
     {
         if (null === $target) {
             return '' === $rawTarget
-                ? GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
-                : GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST;
+                ? GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
+                : GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_dir($target)) {
-            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY;
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
         }
 
         if (!is_writable($target)) {
-            return GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE;
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
         }
 
         return 0;

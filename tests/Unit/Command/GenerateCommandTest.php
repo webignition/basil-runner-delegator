@@ -152,7 +152,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => '',
                     '--target' => 'tests/build/target',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     '',
                     $root . '/tests/build/target',
@@ -165,7 +165,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/non-existent.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     '',
                     $root . '/tests/build/target',
@@ -178,7 +178,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
@@ -191,7 +191,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => '',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '',
@@ -204,7 +204,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/build/target/non-existent',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '',
@@ -217,7 +217,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
@@ -230,7 +230,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
@@ -244,7 +244,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                     '--base-class' => 'Foo',
                 ],
-                'validationErrorCode' => GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST,
+                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',

@@ -52,17 +52,22 @@ class GenerateCommand extends Command
      * @var array<int, string>
      */
     private $errorMessages = [
-        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY => 'source empty; call with --source=SOURCE',
-        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST => 'source invalid; does not exist',
-        GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE => 'source invalid; file is not readable',
-
-        GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY => 'target empty; call with --target=TARGET',
-        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST => 'target invalid; does not exist',
-        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY =>
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
+            'source empty; call with --source=SOURCE',
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
+            'source invalid; does not exist',
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE =>
+            'source invalid; file is not readable',
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY =>
+            'target empty; call with --target=TARGET',
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST =>
+            'target invalid; does not exist',
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY =>
             'target invalid; is not a directory (is it a file?)',
-        GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE =>
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
             'target invalid; directory is not writable',
-        GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST => 'base class invalid: does not exist'
+        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST =>
+            'base class invalid: does not exist'
     ];
 
     public function __construct(
