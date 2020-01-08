@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableDataProviderException;
@@ -128,6 +129,7 @@ class GenerateCommand extends Command
      * @throws EmptyAssertionIdentifierException
      * @throws EmptyAssertionValueException
      * @throws EmptyInputActionValueException
+     * @throws EmptyTestException
      * @throws InvalidActionIdentifierException
      * @throws InvalidPageException
      * @throws InvalidTestException
@@ -142,7 +144,6 @@ class GenerateCommand extends Command
      * @throws UnknownTestException
      * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
-     * @throws YamlLoaderException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -197,7 +198,35 @@ class GenerateCommand extends Command
 
         $generatedFiles = [];
         foreach ($sourcePaths as $sourcePath) {
-            $testSuite = $this->sourceLoader->load($sourcePath);
+            try {
+                $testSuite = $this->sourceLoader->load($sourcePath);
+            } catch (YamlLoaderException $yamlLoaderException) {
+                $message = $yamlLoaderException->getMessage();
+                $previousException = $yamlLoaderException->getPrevious();
+
+                if ($previousException instanceof \Exception) {
+                    $message = $previousException->getMessage();
+                }
+
+                $errorOutput = new GenerateCommandErrorOutput(
+                    (string) $source,
+                    (string) $target,
+                    $fullyQualifiedBaseClass,
+                    $message,
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $yamlLoaderException->getPath()
+                        ]
+                    )
+                );
+
+                $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+                return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
+            }
 
             foreach ($testSuite->getTests() as $test) {
                 $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);

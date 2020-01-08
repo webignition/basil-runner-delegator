@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72aca4289ab6bc36654f8ac82dc2b46a",
+    "content-hash": "7de606e567bc49ba7c537656f2e69300",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3644,23 +3644,23 @@
         },
         {
             "name": "webignition/basil-loader",
-            "version": "0.8",
+            "version": "0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-loader.git",
-                "reference": "c57119feb64f126b927949a388efb1aac2ff5dc3"
+                "reference": "a8406b15c73a8efab55734154c3ae9ae3109ff92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/c57119feb64f126b927949a388efb1aac2ff5dc3",
-                "reference": "c57119feb64f126b927949a388efb1aac2ff5dc3",
+                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/a8406b15c73a8efab55734154c3ae9ae3109ff92",
+                "reference": "a8406b15c73a8efab55734154c3ae9ae3109ff92",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=7.2",
                 "symfony/yaml": "^4.4|^5.0",
-                "webignition/basil-data-validator": ">=0.3,<1",
+                "webignition/basil-data-validator": ">=0.4,<1",
                 "webignition/basil-models": ">=0.24,<1",
                 "webignition/basil-parser": ">=0.15,<1",
                 "webignition/basil-resolver": ">=0.3,<1",
@@ -3694,7 +3694,7 @@
             ],
             "description": "Loader for basil language files",
             "homepage": "https://github.com/webignition/basil-loader",
-            "time": "2020-01-07T18:34:06+00:00"
+            "time": "2020-01-08T17:09:13+00:00"
         },
         {
             "name": "webignition/basil-models",
