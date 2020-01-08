@@ -65,7 +65,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_EMPTY
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
                 )
             ],
             'source does not exist' => [
@@ -76,7 +76,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_DOES_NOT_EXIST
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
             ],
         ];
@@ -99,7 +99,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_EMPTY
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 )
             ],
             'target does not exist' => [
@@ -110,7 +110,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_DOES_NOT_EXIST
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
             ],
             'target not a directory, is a file' => [
@@ -121,7 +121,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => $baseClass,
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_A_DIRECTORY
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
             ],
         ];
@@ -145,7 +145,7 @@ class GenerateCommandValidatorTest extends TestCase
                 'baseClass' => 'Foo',
                 'expectedResult' => new GenerateCommandValidationResult(
                     false,
-                    GenerateCommandErrorOutput::ERROR_CODE_BASE_CLASS_DOES_NOT_EXIST
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 )
             ],
         ];
@@ -169,7 +169,7 @@ class GenerateCommandValidatorTest extends TestCase
 
         $expectedResult = new GenerateCommandValidationResult(
             false,
-            GenerateCommandErrorOutput::ERROR_CODE_SOURCE_INVALID_NOT_READABLE
+            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
         );
 
         $this->assertEquals($expectedResult, $result);
@@ -194,7 +194,7 @@ class GenerateCommandValidatorTest extends TestCase
 
         $expectedResult = new GenerateCommandValidationResult(
             false,
-            GenerateCommandErrorOutput::ERROR_CODE_TARGET_INVALID_NOT_WRITABLE
+            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
         );
 
         $this->assertEquals($expectedResult, $result);
