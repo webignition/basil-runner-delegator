@@ -42,6 +42,6 @@ class TestGenerator
         $this->phpFileCreator->setOutputDirectory($outputDirectory);
         $filename = $this->phpFileCreator->create($className, $code);
 
-        return new GeneratedTestOutput($test->getPath(), $filename);
+        return new GeneratedTestOutput($test->getPath() ?? '', $filename);
     }
 }

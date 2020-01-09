@@ -17,14 +17,13 @@ use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableDataProviderException;
 use webignition\BasilLoader\Exception\NonRetrievablePageException;
 use webignition\BasilLoader\Exception\NonRetrievableStepException;
+use webignition\BasilLoader\Exception\ParseException;
 use webignition\BasilLoader\Exception\UnknownTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModelProvider\Exception\UnknownDataProviderException;
 use webignition\BasilModelProvider\Exception\UnknownPageException;
 use webignition\BasilModelProvider\Exception\UnknownStepException;
-use webignition\BasilParser\Exception\UnparseableStepException;
-use webignition\BasilParser\Exception\UnparseableTestException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
@@ -124,14 +123,13 @@ class GenerateCommand extends Command
      * @throws NonRetrievableDataProviderException
      * @throws NonRetrievablePageException
      * @throws NonRetrievableStepException
+     * @throws ParseException
      * @throws UnknownDataProviderException
      * @throws UnknownElementException
      * @throws UnknownPageElementException
      * @throws UnknownPageException
      * @throws UnknownStepException
      * @throws UnknownTestException
-     * @throws UnparseableStepException
-     * @throws UnparseableTestException
      * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
      * @throws YamlLoaderException
