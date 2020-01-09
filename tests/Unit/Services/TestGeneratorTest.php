@@ -63,8 +63,6 @@ class TestGeneratorTest extends \PHPUnit\Framework\TestCase
         return [
             'default' => [
                 'test' => $testParser->parse(
-                    $root . '/tests/Fixtures/basil/Test',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     [
                         'config' => [
                             'browser' => 'chrome',
@@ -76,7 +74,7 @@ class TestGeneratorTest extends \PHPUnit\Framework\TestCase
                             ],
                         ],
                     ]
-                ),
+                )->withPath($root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'),
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'outputDirectory' => $root . '/tests/build/target',
                 'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
