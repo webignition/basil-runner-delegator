@@ -101,7 +101,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws CircularStepImportException
      * @throws EmptyTestException
      * @throws InvalidPageException
      * @throws InvalidTestException
@@ -164,6 +163,25 @@ class GenerateCommand extends Command
                         GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                         [
                             'path' => $yamlLoaderException->getPath()
+                        ]
+                    )
+                );
+
+                $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+                return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
+            } catch (CircularStepImportException $circularStepImportException) {
+                $errorOutput = new GenerateCommandErrorOutput(
+                    (string) $source,
+                    (string) $target,
+                    $fullyQualifiedBaseClass,
+                    $circularStepImportException->getMessage(),
+                    new ErrorContext(
+                        ErrorContext::RESOLVER,
+                        ErrorContext::CODE_RESOLVER,
+                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                        [
+                            'import_name' => $circularStepImportException->getImportName(),
                         ]
                     )
                 );
