@@ -210,7 +210,8 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @param int $expectedExitCode
      * @param GenerateCommandErrorOutput $expectedCommandOutput
      *
-     * @dataProvider runFailureDataProvider
+     * @dataProvider runFailureNonLoadableDataDataProvider
+     * @dataProvider runFailureCircularStepImportDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -227,7 +228,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
-    public function runFailureDataProvider(): array
+    public function runFailureNonLoadableDataDataProvider(): array
     {
         $root = (new ProjectRootPathProvider())->get();
 
@@ -312,6 +313,77 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                         [
                             'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                        ]
+                    )
+                ),
+            ],
+        ];
+    }
+
+    public function runFailureCircularStepImportDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'test suite imports test containing non-array data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Data is not an array',
+                    new ErrorContext(
+                        ErrorContext::LOADER,
+                        ErrorContext::CODE_LOADER,
+                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                        [
+                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                        ]
+                    )
+                ),
+            ],
+            'test imports step which imports self' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Circular step import "circular_reference_self"',
+                    new ErrorContext(
+                        ErrorContext::RESOLVER,
+                        ErrorContext::CODE_RESOLVER,
+                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                        [
+                            'import_name' => 'circular_reference_self',
+                        ]
+                    )
+                ),
+            ],
+            'test imports step which step imports self' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
+                    $root . '/tests/build/target',
+                    AbstractBaseTest::class,
+                    'Circular step import "circular_reference_self"',
+                    new ErrorContext(
+                        ErrorContext::RESOLVER,
+                        ErrorContext::CODE_RESOLVER,
+                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                        [
+                            'import_name' => 'circular_reference_self',
                         ]
                     )
                 ),

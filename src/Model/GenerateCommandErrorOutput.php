@@ -15,6 +15,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
     public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
     public const CODE_LOADER_EXCEPTION = 200;
+    public const CODE_RESOLVER_EXCEPTION = 300;
 
     private $errorMessage;
     private $errorContext;

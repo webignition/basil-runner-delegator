@@ -8,8 +8,10 @@ class ErrorContext implements \JsonSerializable
 {
     public const CODE_COMMAND_CONFIG = 100;
     public const CODE_LOADER = 101;
+    public const CODE_RESOLVER = 102;
     public const COMMAND_CONFIG = 'command-config';
     public const LOADER = 'loader';
+    public const RESOLVER = 'resolver';
 
     private $name = '';
     private $contextCode = 0;

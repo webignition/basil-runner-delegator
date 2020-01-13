@@ -206,6 +206,25 @@ class GenerateCommand extends Command
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
                 return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
+            } catch (CircularStepImportException $circularStepImportException) {
+                $errorOutput = new GenerateCommandErrorOutput(
+                    (string) $source,
+                    (string) $target,
+                    $fullyQualifiedBaseClass,
+                    $circularStepImportException->getMessage(),
+                    new ErrorContext(
+                        ErrorContext::RESOLVER,
+                        ErrorContext::CODE_RESOLVER,
+                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                        [
+                            'import_name' => $circularStepImportException->getImportName(),
+                        ]
+                    )
+                );
+
+                $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+                return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
             }
 
             foreach ($testSuite->getTests() as $test) {
