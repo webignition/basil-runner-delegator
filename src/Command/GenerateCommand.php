@@ -112,7 +112,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws CircularStepImportException
      * @throws EmptyTestException
      * @throws InvalidPageException
      * @throws InvalidTestException
