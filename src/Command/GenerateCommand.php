@@ -148,33 +148,18 @@ class GenerateCommand extends Command
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
             } catch (YamlLoaderException $yamlLoaderException) {
-                $message = $yamlLoaderException->getMessage();
-                $previousException = $yamlLoaderException->getPrevious();
-
-                if ($previousException instanceof \Exception) {
-                    $message = $previousException->getMessage();
-                }
-
-                $errorOutput = new GenerateCommandErrorOutput(
-                    $configuration,
-                    $message,
-                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    [
-                        'path' => $yamlLoaderException->getPath()
-                    ]
+                $errorOutput = $this->generateCommandErrorOutputFactory->createForYamlLoaderException(
+                    $yamlLoaderException,
+                    $configuration
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
                 return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
             } catch (CircularStepImportException $circularStepImportException) {
-                $errorOutput = new GenerateCommandErrorOutput(
-                    $configuration,
-                    $circularStepImportException->getMessage(),
-                    GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                    [
-                        'import_name' => $circularStepImportException->getImportName(),
-                    ]
+                $errorOutput = $this->generateCommandErrorOutputFactory->createForCircularStepImportException(
+                    $circularStepImportException,
+                    $configuration
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
