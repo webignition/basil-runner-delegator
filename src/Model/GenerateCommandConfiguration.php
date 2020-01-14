@@ -10,8 +10,11 @@ class GenerateCommandConfiguration implements \JsonSerializable
     private $target;
     private $baseClass;
 
-    public function __construct(string $source, string $target, string $baseClass)
-    {
+    public function __construct(
+        string $source,
+        string $target,
+        string $baseClass
+    ) {
         $this->source = $source;
         $this->target = $target;
         $this->baseClass = $baseClass;
@@ -30,6 +33,35 @@ class GenerateCommandConfiguration implements \JsonSerializable
     public function getBaseClass(): string
     {
         return $this->baseClass;
+    }
+
+    public function isValid(): bool
+    {
+        if ('' === $this->source) {
+            return false;
+        }
+
+        if (!is_readable($this->source)) {
+            return false;
+        }
+
+        if ('' === $this->target) {
+            return false;
+        }
+
+        if (!is_dir($this->target)) {
+            return false;
+        }
+
+        if (!is_writable($this->target)) {
+            return false;
+        }
+
+        if (!class_exists($this->baseClass)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
