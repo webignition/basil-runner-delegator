@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
-use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
@@ -12,6 +11,7 @@ use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
+use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TestGeneratorTest extends AbstractBaseTest
 {

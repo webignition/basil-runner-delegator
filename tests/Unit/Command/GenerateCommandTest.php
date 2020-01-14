@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
@@ -18,6 +18,7 @@ use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
+use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class GenerateCommandTest extends AbstractBaseTest
 {
@@ -66,17 +67,17 @@ class GenerateCommandTest extends AbstractBaseTest
                     [
                          'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                          'tests/build/target',
-                        AbstractBaseTest::class
+                        BasilBaseTest::class
                     ],
                     new GenerateCommandConfiguration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
-                        AbstractBaseTest::class
+                        BasilBaseTest::class
                     )
                 ),
                 'testGenerator' => $this->createTestGenerator($this->createTestGeneratorAndReturnUsingCallable([
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' => [
-                        'expectedFullyQualifiedBaseClass' => AbstractBaseTest::class,
+                        'expectedFullyQualifiedBaseClass' => BasilBaseTest::class,
                         'expectedTarget' => $root . '/tests/build/target',
                         'generatedTestOutput' => new GeneratedTestOutput(
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
@@ -88,7 +89,7 @@ class GenerateCommandTest extends AbstractBaseTest
                     new GenerateCommandConfiguration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
-                        AbstractBaseTest::class
+                        BasilBaseTest::class
                     ),
                     [
                         new GeneratedTestOutput(
@@ -166,13 +167,13 @@ class GenerateCommandTest extends AbstractBaseTest
         $emptySourceConfiguration = new GenerateCommandConfiguration(
             '',
             $root . '/tests/build/target',
-            AbstractBaseTest::class
+            BasilBaseTest::class
         );
 
         $emptyTargetConfiguration = new GenerateCommandConfiguration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             '',
-            AbstractBaseTest::class
+            BasilBaseTest::class
         );
 
         $invalidConfiguration = new GenerateCommandConfiguration(
@@ -191,7 +192,7 @@ class GenerateCommandTest extends AbstractBaseTest
                     [
                         '',
                         'tests/build/target',
-                        AbstractBaseTest::class,
+                        BasilBaseTest::class,
                     ],
                     $emptySourceConfiguration
                 ),
@@ -212,7 +213,7 @@ class GenerateCommandTest extends AbstractBaseTest
                     [
                         'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         '',
-                        AbstractBaseTest::class,
+                        BasilBaseTest::class,
                     ],
                     $emptyTargetConfiguration
                 ),
@@ -289,6 +290,7 @@ class GenerateCommandTest extends AbstractBaseTest
         GenerateCommandConfiguration $configuration
     ): GenerateCommandConfigurationFactory {
         $factory = \Mockery::mock(GenerateCommandConfigurationFactory::class);
+
         $factory
             ->shouldReceive('create')
             ->withArgs($args)
