@@ -159,9 +159,9 @@ class GenerateCommand extends Command
                     $configuration,
                     $message,
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $yamlLoaderException->getPath()
-                    ])
+                    ]
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
@@ -172,9 +172,9 @@ class GenerateCommand extends Command
                     $configuration,
                     $circularStepImportException->getMessage(),
                     GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'import_name' => $circularStepImportException->getImportName(),
-                    ])
+                    ]
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
