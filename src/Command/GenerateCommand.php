@@ -23,6 +23,7 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
+use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
@@ -42,26 +43,26 @@ class GenerateCommand extends Command
     private $sourceLoader;
     private $testGenerator;
     private $projectRootPath;
-    private $generateCommandConfigurationFactory;
-    private $generateCommandConfigurationValidator;
-    private $generateCommandErrorOutputFactory;
+    private $configurationFactory;
+    private $configurationValidator;
+    private $errorOutputFactory;
 
     public function __construct(
         SourceLoader $sourceLoader,
         TestGenerator $testGenerator,
         ProjectRootPathProvider $projectRootPathProvider,
-        GenerateCommandConfigurationFactory $generateCommandConfigurationFactory,
-        GenerateCommandConfigurationValidator $generateCommandConfigurationValidator,
-        GenerateCommandErrorOutputFactory $generateCommandErrorOutputFactory
+        GenerateCommandConfigurationFactory $configurationFactory,
+        GenerateCommandConfigurationValidator $configurationValidator,
+        GenerateCommandErrorOutputFactory $errorOutputFactory
     ) {
         parent::__construct();
 
         $this->sourceLoader = $sourceLoader;
         $this->testGenerator = $testGenerator;
         $this->projectRootPath = $projectRootPathProvider->get();
-        $this->generateCommandConfigurationFactory = $generateCommandConfigurationFactory;
-        $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
-        $this->generateCommandErrorOutputFactory = $generateCommandErrorOutputFactory;
+        $this->configurationFactory = $configurationFactory;
+        $this->configurationValidator = $configurationValidator;
+        $this->errorOutputFactory = $errorOutputFactory;
     }
 
     protected function configure(): void
@@ -122,30 +123,21 @@ class GenerateCommand extends Command
         $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
         $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
 
-        $configuration = $this->generateCommandConfigurationFactory->create($rawSource, $rawTarget, $baseClass);
+        $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
 
         if ('' === $rawSource) {
-            $errorOutput = $this->generateCommandErrorOutputFactory->createForEmptySource($configuration);
-
-            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-            return $errorOutput->getCode();
+            return $this->printErrorOutput($this->errorOutputFactory->createForEmptySource($configuration), $output);
         }
 
         if ('' === $rawTarget) {
-            $errorOutput = $this->generateCommandErrorOutputFactory->createForEmptyTarget($configuration);
-
-            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-            return $errorOutput->getCode();
+            return $this->printErrorOutput($this->errorOutputFactory->createForEmptyTarget($configuration), $output);
         }
 
-        if (false === $this->generateCommandConfigurationValidator->isValid($configuration)) {
-            $errorOutput = $this->generateCommandErrorOutputFactory->createFromInvalidConfiguration($configuration);
-
-            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-            return $errorOutput->getCode();
+        if (false === $this->configurationValidator->isValid($configuration)) {
+            return $this->printErrorOutput(
+                $this->errorOutputFactory->createFromInvalidConfiguration($configuration),
+                $output
+            );
         }
 
         $sourcePaths = $this->createSourcePaths($configuration->getSource());
@@ -210,5 +202,12 @@ class GenerateCommand extends Command
         sort($sourcePaths);
 
         return $sourcePaths;
+    }
+
+    private function printErrorOutput(GenerateCommandErrorOutput $errorOutput, OutputInterface $output): int
+    {
+        $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+        return $errorOutput->getCode();
     }
 }
