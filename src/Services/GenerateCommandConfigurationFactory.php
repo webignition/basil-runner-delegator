@@ -46,13 +46,9 @@ class GenerateCommandConfigurationFactory
             $baseClass
         );
 
-        $validationResult = $this->validator->validate(
-            $configuration,
-            $rawSource,
-            $rawTarget
-        );
+        if (false === $this->validator->isValid($configuration, $rawSource, $rawTarget)) {
+            $validationResult =  $this->validator->createValidationResult($configuration, $rawSource, $rawTarget);
 
-        if (false === $validationResult->getIsValid()) {
             throw new GenerateCommandValidationException($validationResult);
         }
 

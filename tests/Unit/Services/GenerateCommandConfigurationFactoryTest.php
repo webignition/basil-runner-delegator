@@ -38,7 +38,6 @@ class GenerateCommandConfigurationFactoryTest extends TestCase
         } catch (GenerateCommandValidationException $generateCommandValidationException) {
             $result = $generateCommandValidationException->getValidationResult();
 
-            $this->assertFalse($result->getIsValid());
             $this->assertEquals(
                 new GenerateCommandConfiguration('', '', ''),
                 $result->getConfiguration()
@@ -61,7 +60,7 @@ class GenerateCommandConfigurationFactoryTest extends TestCase
         $root = (new ProjectRootPathProvider())->get();
 
         return [
-            'foo' => [
+            'default' => [
                 'input' => $this->createTypedInput(
                     'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     'tests/build/target',
