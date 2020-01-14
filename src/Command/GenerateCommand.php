@@ -153,18 +153,12 @@ class GenerateCommand extends Command
                 }
 
                 $errorOutput = new GenerateCommandErrorOutput(
-                    (string) $source,
-                    (string) $target,
-                    $fullyQualifiedBaseClass,
+                    $configuration,
                     $message,
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $yamlLoaderException->getPath()
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $yamlLoaderException->getPath()
+                    ])
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
@@ -172,18 +166,12 @@ class GenerateCommand extends Command
                 return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
             } catch (CircularStepImportException $circularStepImportException) {
                 $errorOutput = new GenerateCommandErrorOutput(
-                    (string) $source,
-                    (string) $target,
-                    $fullyQualifiedBaseClass,
+                    $configuration,
                     $circularStepImportException->getMessage(),
-                    new ErrorContext(
-                        ErrorContext::RESOLVER,
-                        ErrorContext::CODE_RESOLVER,
-                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                        [
-                            'import_name' => $circularStepImportException->getImportName(),
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                    new ErrorContext([
+                        'import_name' => $circularStepImportException->getImportName(),
+                    ])
                 );
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
