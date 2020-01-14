@@ -10,30 +10,49 @@ use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValida
 
 class GenerateCommandValidator
 {
-    public function validate(
+    public function isValid(
         GenerateCommandConfiguration $configuration,
         string $rawSource,
         string $rawTarget
-    ): GenerateCommandValidationResult {
+    ): bool {
+        if (0 !== $this->getSourceValidationErrorCode($configuration->getSource(), $rawSource)) {
+            return false;
+        }
+
+        if (0 !== $this->getTargetValidationErrorCode($configuration->getTarget(), $rawTarget)) {
+            return false;
+        }
+
+        if (!class_exists($configuration->getBaseClass())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function createValidationResult(
+        GenerateCommandConfiguration $configuration,
+        string $rawSource,
+        string $rawTarget
+    ): ?GenerateCommandValidationResult {
         $sourceValidationErrorCode = $this->getSourceValidationErrorCode($configuration->getSource(), $rawSource);
         if (0 !== $sourceValidationErrorCode) {
-            return new GenerateCommandValidationResult($configuration, false, $sourceValidationErrorCode);
+            return new GenerateCommandValidationResult($configuration, $sourceValidationErrorCode);
         }
 
         $targetValidationErrorCode = $this->getTargetValidationErrorCode($configuration->getTarget(), $rawTarget);
         if (0 !== $targetValidationErrorCode) {
-            return new GenerateCommandValidationResult($configuration, false, $targetValidationErrorCode);
+            return new GenerateCommandValidationResult($configuration, $targetValidationErrorCode);
         }
 
         if (!class_exists($configuration->getBaseClass())) {
             return new GenerateCommandValidationResult(
                 $configuration,
-                false,
                 GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
             );
         }
 
-        return new GenerateCommandValidationResult($configuration, true);
+        return null;
     }
 
     private function getSourceValidationErrorCode(string $source, string $rawSource): int

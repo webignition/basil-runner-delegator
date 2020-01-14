@@ -14,138 +14,195 @@ use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 
 class GenerateCommandValidatorTest extends TestCase
 {
+    private $validator;
+
     public function setUp(): void
     {
         parent::setUp();
 
         PHPMockery::define('webignition\BasilRunner\Services\Validator\Command', 'is_readable');
         PHPMockery::define('webignition\BasilRunner\Services\Validator\Command', 'is_writable');
+
+        $this->validator = new GenerateCommandValidator();
     }
 
     /**
-     * @dataProvider validateSourceDataProvider
-     * @dataProvider validateTargetDataProvider
-     * @dataProvider validateBaseClassDataProvider
+     * @dataProvider isValidDataProvider
      */
-    public function testValidate(
+    public function testIsValid(
         GenerateCommandConfiguration $configuration,
         string $rawSource,
         string $rawTarget,
-        GenerateCommandValidationResult $expectedResult
-    ): void {
-        $validator = new GenerateCommandValidator();
-        $result = $validator->validate($configuration, $rawSource, $rawTarget);
-
-        $this->assertEquals($expectedResult, $result);
+        bool $expectedIsValid
+    ) {
+        $this->assertSame($expectedIsValid, $this->validator->isValid($configuration, $rawSource, $rawTarget));
     }
 
-    public function validateSourceDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $target = $root . '/tests/build/target';
-        $rawTarget = 'tests/build/target';
-        $baseClass = TestCase::class;
-
-        return [
-            'valid' => [
-                'configuration' => new GenerateCommandConfiguration(
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    $target,
-                    $baseClass
-                ),
-                'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                'rawTarget' => $rawTarget,
-                'expectedResult' => new GenerateCommandValidationResult(
-                    new GenerateCommandConfiguration(
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        $target,
-                        $baseClass
-                    ),
-                    true
-                )
-            ],
-            'source empty' => [
-                'configuration' => new GenerateCommandConfiguration(
-                    '',
-                    $target,
-                    $baseClass
-                ),
-                'rawSource' => '',
-                'rawTarget' => $rawTarget,
-                'expectedResult' => new GenerateCommandValidationResult(
-                    new GenerateCommandConfiguration(
-                        '',
-                        $target,
-                        $baseClass
-                    ),
-                    false,
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
-                )
-            ],
-            'source does not exist' => [
-                'configuration' => new GenerateCommandConfiguration(
-                    '',
-                    $target,
-                    $baseClass
-                ),
-                'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
-                'rawTarget' => $rawTarget,
-                'expectedResult' => new GenerateCommandValidationResult(
-                    new GenerateCommandConfiguration(
-                        '',
-                        $target,
-                        $baseClass
-                    ),
-                    false,
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
-                ),
-            ],
-        ];
-    }
-
-    public function validateTargetDataProvider(): array
+    public function isValidDataProvider(): array
     {
         $root = (new ProjectRootPathProvider())->get();
 
         $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
         $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+
+        $target = $root . '/tests/build/target';
+        $rawTarget = 'tests/build/target';
+
         $baseClass = TestCase::class;
 
+        $emptySourceConfiguration = new GenerateCommandConfiguration(
+            '',
+            $target,
+            $baseClass
+        );
+
+        $emptyTargetConfiguration = new GenerateCommandConfiguration(
+            $source,
+            '',
+            $baseClass
+        );
+
         return [
-            'target empty' => [
+            'valid' => [
                 'configuration' => new GenerateCommandConfiguration(
                     $source,
-                    '',
+                    $target,
                     $baseClass
                 ),
+                'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'rawTarget' => $rawTarget,
+                'expectedIsValid' => true,
+            ],
+            'source empty' => [
+                'configuration' => $emptySourceConfiguration,
+                'rawSource' => '',
+                'rawTarget' => $rawTarget,
+                'expectedIsValid' => false,
+            ],
+            'source does not exist' => [
+                'configuration' => $emptySourceConfiguration,
+                'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
+                'rawTarget' => $rawTarget,
+                'expectedIsValid' => false,
+            ],
+            'target empty' => [
+                'configuration' => $emptyTargetConfiguration,
                 'rawSource' => $rawSource,
                 'rawTarget' => '',
-                'expectedResult' => new GenerateCommandValidationResult(
-                    new GenerateCommandConfiguration(
-                        $source,
-                        '',
-                        $baseClass
-                    ),
-                    false,
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
-                )
+                'expectedIsValid' => false,
             ],
             'target does not exist' => [
+                'configuration' => $emptyTargetConfiguration,
+                'rawSource' => $rawSource,
+                'rawTarget' => '/tests/build/target/non-existent',
+                'expectedIsValid' => false,
+            ],
+            'target not a directory, is a file' => [
                 'configuration' => new GenerateCommandConfiguration(
                     $source,
-                    '',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $baseClass
                 ),
                 'rawSource' => $rawSource,
+                'rawTarget' => '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'expectedIsValid' => false,
+            ],
+            'base class does not exist' => [
+                'configuration' => new GenerateCommandConfiguration(
+                    $source,
+                    $target,
+                    'Foo'
+                ),
+                'rawSource' => $rawSource,
+                'rawTarget' => $rawTarget,
+                'expectedIsValid' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createValidationResultDataProvider
+     */
+    public function testCreateValidationResult(
+        GenerateCommandConfiguration $configuration,
+        string $rawSource,
+        string $rawTarget,
+        ?GenerateCommandValidationResult $expectedValidationResult
+    ) {
+        $this->assertEquals(
+            $expectedValidationResult,
+            $this->validator->createValidationResult($configuration, $rawSource, $rawTarget)
+        );
+    }
+
+    public function createValidationResultDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+        $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
+
+        $target = $root . '/tests/build/target';
+        $rawTarget = 'tests/build/target';
+
+        $baseClass = TestCase::class;
+
+        $emptySourceConfiguration = new GenerateCommandConfiguration(
+            '',
+            $target,
+            $baseClass
+        );
+
+        $emptyTargetConfiguration = new GenerateCommandConfiguration(
+            $source,
+            '',
+            $baseClass
+        );
+
+        return [
+            'valid' => [
+                'configuration' => new GenerateCommandConfiguration(
+                    $source,
+                    $target,
+                    $baseClass
+                ),
+                'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                'rawTarget' => $rawTarget,
+                'expectedValidationResult' => null,
+            ],
+            'source empty' => [
+                'configuration' => $emptySourceConfiguration,
+                'rawSource' => '',
+                'rawTarget' => $rawTarget,
+                'expectedValidationResult' => new GenerateCommandValidationResult(
+                    $emptySourceConfiguration,
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                ),
+            ],
+            'source does not exist' => [
+                'configuration' => $emptySourceConfiguration,
+                'rawSource' => '/tests/Fixtures/basil/Test/non-existent.yml',
+                'rawTarget' => $rawTarget,
+                'expectedValidationResult' => new GenerateCommandValidationResult(
+                    $emptySourceConfiguration,
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
+                ),
+            ],
+            'target empty' => [
+                'configuration' => $emptyTargetConfiguration,
+                'rawSource' => $rawSource,
+                'rawTarget' => '',
+                'expectedValidationResult' => new GenerateCommandValidationResult(
+                    $emptyTargetConfiguration,
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
+                ),
+            ],
+            'target does not exist' => [
+                'configuration' => $emptyTargetConfiguration,
+                'rawSource' => $rawSource,
                 'rawTarget' => '/tests/build/target/non-existent',
-                'expectedResult' => new GenerateCommandValidationResult(
-                    new GenerateCommandConfiguration(
-                        $source,
-                        '',
-                        $baseClass
-                    ),
-                    false,
+                'expectedValidationResult' => new GenerateCommandValidationResult(
+                    $emptyTargetConfiguration,
                     GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
             ],
@@ -157,29 +214,15 @@ class GenerateCommandValidatorTest extends TestCase
                 ),
                 'rawSource' => $rawSource,
                 'rawTarget' => '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                'expectedResult' => new GenerateCommandValidationResult(
+                'expectedValidationResult' => new GenerateCommandValidationResult(
                     new GenerateCommandConfiguration(
                         $source,
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $baseClass
                     ),
-                    false,
                     GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
             ],
-        ];
-    }
-
-    public function validateBaseClassDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $rawSource = 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $target = $root . '/tests/build/target';
-        $rawTarget = 'tests/build/target';
-
-        return [
             'base class does not exist' => [
                 'configuration' => new GenerateCommandConfiguration(
                     $source,
@@ -188,21 +231,19 @@ class GenerateCommandValidatorTest extends TestCase
                 ),
                 'rawSource' => $rawSource,
                 'rawTarget' => $rawTarget,
-                'expectedResult' => new GenerateCommandValidationResult(
+                'expectedValidationResult' => new GenerateCommandValidationResult(
                     new GenerateCommandConfiguration(
                         $source,
                         $target,
                         'Foo'
                     ),
-                    false,
                     GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
-                )
+                ),
             ],
         ];
     }
 
-
-    public function testValidateSourceFailureSourceNotReadable(): void
+    public function testSourceNotReadable(): void
     {
         $root = (new ProjectRootPathProvider())->get();
 
@@ -215,24 +256,22 @@ class GenerateCommandValidatorTest extends TestCase
             TestCase::class
         );
 
-        $validator = new GenerateCommandValidator();
-
         PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_readable')->andReturn(false);
 
-        $result = $validator->validate($configuration, $rawSource, $rawTarget);
+        $this->assertFalse($this->validator->isValid($configuration, $rawSource, $rawTarget));
 
-        $expectedResult = new GenerateCommandValidationResult(
-            $configuration,
-            false,
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+        $this->assertEquals(
+            new GenerateCommandValidationResult(
+                $configuration,
+                GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+            ),
+            $this->validator->createValidationResult($configuration, $rawSource, $rawTarget)
         );
-
-        $this->assertEquals($expectedResult, $result);
 
         \Mockery::close();
     }
 
-    public function testValidateTargetFailureTargetNotWritable(): void
+    public function testTargetNotWritable(): void
     {
         $root = (new ProjectRootPathProvider())->get();
 
@@ -245,19 +284,17 @@ class GenerateCommandValidatorTest extends TestCase
             TestCase::class
         );
 
-        $validator = new GenerateCommandValidator();
-
         PHPMockery::mock('webignition\BasilRunner\Services\Validator\Command', 'is_writable')->andReturn(false);
 
-        $result = $validator->validate($configuration, $rawSource, $rawTarget);
+        $this->assertFalse($this->validator->isValid($configuration, $rawSource, $rawTarget));
 
-        $expectedResult = new GenerateCommandValidationResult(
-            $configuration,
-            false,
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+        $this->assertEquals(
+            new GenerateCommandValidationResult(
+                $configuration,
+                GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+            ),
+            $this->validator->createValidationResult($configuration, $rawSource, $rawTarget)
         );
-
-        $this->assertEquals($expectedResult, $result);
 
         \Mockery::close();
     }
