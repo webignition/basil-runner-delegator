@@ -12,7 +12,6 @@ use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Model\ErrorContext;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
@@ -250,9 +249,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    ])
+                    ]
                 ),
             ],
             'test suite imports test containing invalid yaml' => [
@@ -269,9 +268,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    ])
+                    ]
                 ),
             ],
             'test file contains non-array data' => [
@@ -288,9 +287,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Data is not an array',
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ])
+                    ]
                 ),
             ],
             'test suite imports test containing non-array data' => [
@@ -307,9 +306,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Data is not an array',
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ])
+                    ]
                 ),
             ],
         ];
@@ -334,9 +333,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Data is not an array',
                     GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ])
+                    ]
                 ),
             ],
             'test imports step which imports self' => [
@@ -353,9 +352,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Circular step import "circular_reference_self"',
                     GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'import_name' => 'circular_reference_self',
-                    ])
+                    ]
                 ),
             ],
             'test imports step which step imports self' => [
@@ -372,9 +371,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ),
                     'Circular step import "circular_reference_self"',
                     GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                    new ErrorContext([
+                    [
                         'import_name' => 'circular_reference_self',
-                    ])
+                    ]
                 ),
             ],
         ];
