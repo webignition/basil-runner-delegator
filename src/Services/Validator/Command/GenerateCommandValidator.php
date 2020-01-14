@@ -4,44 +4,46 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\Validator\Command;
 
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
 
 class GenerateCommandValidator
 {
     public function validate(
-        ?string $source,
+        GenerateCommandConfiguration $configuration,
         string $rawSource,
-        ?string $target,
-        string $rawTarget,
-        string $baseClass
+        string $rawTarget
     ): GenerateCommandValidationResult {
-        $sourceValidationErrorCode = $this->getSourceValidationErrorCode($source, $rawSource);
+        $sourceValidationErrorCode = $this->getSourceValidationErrorCode($configuration->getSource(), $rawSource);
         if (0 !== $sourceValidationErrorCode) {
-            return new GenerateCommandValidationResult(false, $sourceValidationErrorCode);
+            return new GenerateCommandValidationResult($configuration, false, $sourceValidationErrorCode);
         }
 
-        $targetValidationErrorCode = $this->getTargetValidationErrorCode($target, $rawTarget);
+        $targetValidationErrorCode = $this->getTargetValidationErrorCode($configuration->getTarget(), $rawTarget);
         if (0 !== $targetValidationErrorCode) {
-            return new GenerateCommandValidationResult(false, $targetValidationErrorCode);
+            return new GenerateCommandValidationResult($configuration, false, $targetValidationErrorCode);
         }
 
-        if (!class_exists($baseClass)) {
+        if (!class_exists($configuration->getBaseClass())) {
             return new GenerateCommandValidationResult(
+                $configuration,
                 false,
                 GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
             );
         }
 
-        return new GenerateCommandValidationResult(true);
+        return new GenerateCommandValidationResult($configuration, true);
     }
 
-    private function getSourceValidationErrorCode(?string $source, string $rawSource): int
+    private function getSourceValidationErrorCode(string $source, string $rawSource): int
     {
-        if (null === $source) {
-            return '' === $rawSource
-                ? GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
-                : GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
+        if ('' === $rawSource) {
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY;
+        }
+
+        if ('' === $source) {
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_readable($source)) {
@@ -51,12 +53,14 @@ class GenerateCommandValidator
         return 0;
     }
 
-    private function getTargetValidationErrorCode(?string $target, string $rawTarget): int
+    private function getTargetValidationErrorCode(string $target, string $rawTarget): int
     {
-        if (null === $target) {
-            return '' === $rawTarget
-                ? GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
-                : GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
+        if ('' === $rawTarget) {
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY;
+        }
+
+        if ('' === $target) {
+            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_dir($target)) {
