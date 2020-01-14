@@ -4,55 +4,24 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Exception\GenerateCommandValidationException;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
-use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommandConfigurationFactory
 {
-    private $validator;
     private $projectRootPath;
 
-    public function __construct(
-        GenerateCommandValidator $validator,
-        ProjectRootPathProvider $projectRootPathProvider
-    ) {
-        $this->validator = $validator;
+    public function __construct(ProjectRootPathProvider $projectRootPathProvider)
+    {
         $this->projectRootPath = $projectRootPathProvider->get();
     }
 
-    /**
-     * @param TypedInput $input
-     *
-     * @return GenerateCommandConfiguration
-     *
-     * @throws GenerateCommandValidationException
-     */
-    public function createFromTypedInput(TypedInput $input): GenerateCommandConfiguration
+    public function create(string $rawSource, string $rawTarget, string $baseClass): GenerateCommandConfiguration
     {
-        $rawSource = (string) $input->getStringOption(GenerateCommand::OPTION_SOURCE);
-        $source = $this->getAbsolutePath((string) $rawSource);
-
-        $rawTarget = (string) $input->getStringOption(GenerateCommand::OPTION_TARGET);
-        $target = $this->getAbsolutePath($rawTarget);
-
-        $baseClass = (string) $input->getStringOption(GenerateCommand::OPTION_BASE_CLASS);
-
-        $configuration = new GenerateCommandConfiguration(
-            (string) $source,
-            (string) $target,
+        return new GenerateCommandConfiguration(
+            (string) $this->getAbsolutePath($rawSource),
+            (string) $this->getAbsolutePath($rawTarget),
             $baseClass
         );
-
-        if (false === $this->validator->isValid($configuration, $rawSource, $rawTarget)) {
-            $validationResult =  $this->validator->createValidationResult($configuration, $rawSource, $rawTarget);
-
-            throw new GenerateCommandValidationException($validationResult);
-        }
-
-        return $configuration;
     }
 
     private function getAbsolutePath(string $path): ?string
