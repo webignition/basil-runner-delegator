@@ -129,7 +129,7 @@ class GenerateCommand extends Command
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $errorOutput->getErrorCode();
+            return $errorOutput->getCode();
         }
 
         if ('' === $rawTarget) {
@@ -137,7 +137,7 @@ class GenerateCommand extends Command
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $errorOutput->getErrorCode();
+            return $errorOutput->getCode();
         }
 
         if (false === $this->generateCommandConfigurationValidator->isValid($configuration)) {
@@ -145,7 +145,7 @@ class GenerateCommand extends Command
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $errorOutput->getErrorCode();
+            return $errorOutput->getCode();
         }
 
         $sourcePaths = $this->createSourcePaths($configuration->getSource());
