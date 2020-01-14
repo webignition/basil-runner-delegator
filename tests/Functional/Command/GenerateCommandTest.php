@@ -13,6 +13,7 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\ErrorContext;
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
@@ -242,18 +243,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                    ])
                 ),
             ],
             'test suite imports test containing invalid yaml' => [
@@ -263,18 +262,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                    ])
                 ),
             ],
             'test file contains non-array data' => [
@@ -284,18 +281,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Data is not an array',
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    ])
                 ),
             ],
             'test suite imports test containing non-array data' => [
@@ -305,18 +300,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Data is not an array',
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    ])
                 ),
             ],
         ];
@@ -334,18 +327,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Data is not an array',
-                    new ErrorContext(
-                        ErrorContext::LOADER,
-                        ErrorContext::CODE_LOADER,
-                        GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                        [
-                            'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                    new ErrorContext([
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    ])
                 ),
             ],
             'test imports step which imports self' => [
@@ -355,18 +346,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Circular step import "circular_reference_self"',
-                    new ErrorContext(
-                        ErrorContext::RESOLVER,
-                        ErrorContext::CODE_RESOLVER,
-                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                        [
-                            'import_name' => 'circular_reference_self',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                    new ErrorContext([
+                        'import_name' => 'circular_reference_self',
+                    ])
                 ),
             ],
             'test imports step which step imports self' => [
@@ -376,18 +365,16 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ],
                 'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
-                    $root . '/tests/build/target',
-                    AbstractBaseTest::class,
+                    new GenerateCommandConfiguration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
                     'Circular step import "circular_reference_self"',
-                    new ErrorContext(
-                        ErrorContext::RESOLVER,
-                        ErrorContext::CODE_RESOLVER,
-                        GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
-                        [
-                            'import_name' => 'circular_reference_self',
-                        ]
-                    )
+                    GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
+                    new ErrorContext([
+                        'import_name' => 'circular_reference_self',
+                    ])
                 ),
             ],
         ];
