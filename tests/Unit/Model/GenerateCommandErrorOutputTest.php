@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\ErrorContext;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -58,10 +57,10 @@ class GenerateCommandErrorOutputTest extends AbstractBaseTest
                     ),
                     'error-message-01',
                     1,
-                    new ErrorContext([
+                    [
                         'context-key-01' => 'context-value-01',
                         'context-key-02' => 'context-value-02',
-                    ])
+                    ]
                 ),
                 'expectedSerializedData' => [
                     'config' => [

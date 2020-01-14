@@ -15,26 +15,36 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
     public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
 
-    private $errorMessage;
-    private $errorCode;
-    private $errorContext;
+    private $message;
+    private $code;
 
+    /**
+     * @var array<mixed>
+     */
+    private $context;
+
+    /**
+     * @param GenerateCommandConfiguration $configuration
+     * @param string $message
+     * @param int $code
+     * @param array<mixed> $context
+     */
     public function __construct(
         GenerateCommandConfiguration $configuration,
-        string $errorMessage,
-        int $errorCode,
-        ?ErrorContext $errorContext = null
+        string $message,
+        int $code,
+        array $context = []
     ) {
         parent::__construct($configuration, self::STATUS_FAILURE);
 
-        $this->errorMessage = $errorMessage;
-        $this->errorCode = $errorCode;
-        $this->errorContext = $errorContext;
+        $this->message = $message;
+        $this->code = $code;
+        $this->context = $context;
     }
 
-    public function getErrorCode(): int
+    public function getCode(): int
     {
-        return $this->errorCode;
+        return $this->code;
     }
 
     /**
@@ -43,12 +53,12 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public function jsonSerialize(): array
     {
         $errorData = [
-            'message' => $this->errorMessage,
-            'code' => $this->errorCode,
+            'message' => $this->message,
+            'code' => $this->code,
         ];
 
-        if (null !== $this->errorContext) {
-            $errorData['context'] = $this->errorContext->jsonSerialize();
+        if ([] !== $this->context) {
+            $errorData['context'] = $this->context;
         }
 
         $serializedData = parent::jsonSerialize();
@@ -62,12 +72,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         $data = json_decode($json, true);
         $configData = $data['config'] ?? [];
         $errorData = $data['error'] ?? [];
-
         $contextData = $errorData['context'] ?? [];
-
-        $context = [] === $contextData
-            ? null
-            : ErrorContext::fromData($contextData);
 
         return new GenerateCommandErrorOutput(
             new GenerateCommandConfiguration(
@@ -77,7 +82,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
             ),
             $errorData['message'],
             (int) $errorData['code'],
-            $context
+            $contextData
         );
     }
 }
