@@ -145,7 +145,7 @@ class GenerateCommand extends Command
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
             } catch (YamlLoaderException $yamlLoaderException) {
-                $errorOutput = $this->generateCommandErrorOutputFactory->createForYamlLoaderException(
+                $errorOutput = $this->errorOutputFactory->createForYamlLoaderException(
                     $yamlLoaderException,
                     $configuration
                 );
@@ -154,7 +154,7 @@ class GenerateCommand extends Command
 
                 return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
             } catch (CircularStepImportException $circularStepImportException) {
-                $errorOutput = $this->generateCommandErrorOutputFactory->createForCircularStepImportException(
+                $errorOutput = $this->errorOutputFactory->createForCircularStepImportException(
                     $circularStepImportException,
                     $configuration
                 );
