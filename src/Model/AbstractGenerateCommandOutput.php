@@ -6,11 +6,16 @@ namespace webignition\BasilRunner\Model;
 
 abstract class AbstractGenerateCommandOutput implements \JsonSerializable
 {
-    private $configuration;
+    protected const STATUS_SUCCESS = 'success';
+    protected const STATUS_FAILURE = 'failure';
 
-    public function __construct(GenerateCommandConfiguration $configuration)
+    private $configuration;
+    private $status;
+
+    public function __construct(GenerateCommandConfiguration $configuration, string $status)
     {
         $this->configuration = $configuration;
+        $this->status = $status;
     }
 
     public function getConfiguration(): GenerateCommandConfiguration
@@ -25,6 +30,7 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
     {
         return [
             'config' => $this->configuration->jsonSerialize(),
+            'status' => $this->status,
         ];
     }
 }

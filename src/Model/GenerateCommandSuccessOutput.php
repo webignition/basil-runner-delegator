@@ -17,7 +17,7 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
      */
     public function __construct(GenerateCommandConfiguration $configuration, array $output)
     {
-        parent::__construct($configuration);
+        parent::__construct($configuration, self::STATUS_SUCCESS);
 
         $this->output = $output;
     }

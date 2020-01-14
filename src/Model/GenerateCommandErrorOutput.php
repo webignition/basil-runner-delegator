@@ -25,7 +25,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         int $errorCode,
         ?ErrorContext $errorContext = null
     ) {
-        parent::__construct($configuration);
+        parent::__construct($configuration, self::STATUS_FAILURE);
 
         $this->errorMessage = $errorMessage;
         $this->errorCode = $errorCode;
