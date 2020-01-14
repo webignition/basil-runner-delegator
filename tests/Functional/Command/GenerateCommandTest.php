@@ -12,10 +12,9 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
-use webignition\BasilRunner\Model\ValidationResult\Command\GenerateCommandValidationResult;
+use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 use webignition\BasilRunner\Tests\Services\ObjectReflector;
 
@@ -71,7 +70,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
             $expectedGeneratedCodeClassName = $generatedCodeClassNames[$generatedTestOutputSource] ?? '';
             $this->assertSame($expectedGeneratedCodeClassName . '.php', $generatedTestOutput->getTarget());
 
-            $expectedCodePath = $commandOutput->getTarget() . '/' . $generatedTestOutput->getTarget();
+            $commandOutputConfiguration = $commandOutput->getConfiguration();
+            $commandOutputTarget = $commandOutputConfiguration->getTarget();
+
+            $expectedCodePath = $commandOutputTarget . '/' . $generatedTestOutput->getTarget();
 
             $this->assertFileExists($expectedCodePath);
             $this->assertFileIsReadable($expectedCodePath);
@@ -262,10 +264,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
         /* @var ObjectReflector $objectReflector */
         $objectReflector = self::$container->get(ObjectReflector::class);
 
-        $generateCommandValidator = \Mockery::mock(GenerateCommandValidator::class);
+        $generateCommandValidator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
         $generateCommandValidator
-            ->shouldReceive('validate')
-            ->andReturn(new GenerateCommandValidationResult(true));
+            ->shouldReceive('isValid')
+            ->andReturn(true);
 
         $objectReflector->setProperty(
             $this->command,

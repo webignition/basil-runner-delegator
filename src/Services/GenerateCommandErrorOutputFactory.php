@@ -31,47 +31,40 @@ class GenerateCommandErrorOutputFactory
             'base class invalid: does not exist'
     ];
 
+    private $generateCommandConfigurationValidator;
+
+    public function __construct(GenerateCommandConfigurationValidator $generateCommandConfigurationValidator)
+    {
+        $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
+    }
+
     public function createFromInvalidConfiguration(
         GenerateCommandConfiguration $configuration
     ): GenerateCommandErrorOutput {
-        $errorCode = $this->deriveErrorCode($configuration);
+        return $this->create(
+            $configuration,
+            $this->generateCommandConfigurationValidator->deriveInvalidConfigurationErrorCode($configuration)
+        );
+    }
 
+    public function createForEmptySource(GenerateCommandConfiguration $configuration): GenerateCommandErrorOutput
+    {
+        return $this->create($configuration, GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
+    }
+
+    public function createForEmptyTarget(GenerateCommandConfiguration $configuration): GenerateCommandErrorOutput
+    {
+        return $this->create($configuration, GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
+    }
+
+    private function create(GenerateCommandConfiguration $configuration, int $errorCode): GenerateCommandErrorOutput
+    {
         $errorMessage = $this->errorMessages[$errorCode] ?? 'unknown';
+
         return new GenerateCommandErrorOutput(
             $configuration,
             $errorMessage,
             $errorCode
         );
-    }
-
-    private function deriveErrorCode(GenerateCommandConfiguration $configuration): int
-    {
-        $source = $configuration->getSource();
-        if ('' === $source) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
-        }
-
-        if (!is_readable($source)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
-        }
-
-        $target = $configuration->getTarget();
-        if ('' === $target) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
-        }
-
-        if (!is_dir($target)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
-        }
-
-        if (!is_writable($target)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
-        }
-
-        if (!class_exists($configuration->getBaseClass())) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST;
-        }
-
-        return 0;
     }
 }

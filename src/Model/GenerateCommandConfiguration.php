@@ -35,35 +35,6 @@ class GenerateCommandConfiguration implements \JsonSerializable
         return $this->baseClass;
     }
 
-    public function isValid(): bool
-    {
-        if ('' === $this->source) {
-            return false;
-        }
-
-        if (!is_readable($this->source)) {
-            return false;
-        }
-
-        if ('' === $this->target) {
-            return false;
-        }
-
-        if (!is_dir($this->target)) {
-            return false;
-        }
-
-        if (!is_writable($this->target)) {
-            return false;
-        }
-
-        if (!class_exists($this->baseClass)) {
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @return array<mixed>
      */

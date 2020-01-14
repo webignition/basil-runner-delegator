@@ -13,7 +13,7 @@ use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 
-class TestGeneratorTest extends \PHPUnit\Framework\TestCase
+class TestGeneratorTest extends AbstractBaseTest
 {
     /**
      * @dataProvider generateDataProvider

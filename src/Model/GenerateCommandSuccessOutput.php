@@ -12,14 +12,12 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
     private $output;
 
     /**
-     * @param string $source
-     * @param string $target
-     * @param string $baseClass
+     * @param GenerateCommandConfiguration $configuration
      * @param array<GeneratedTestOutput> $output
      */
-    public function __construct(string $source, string $target, string $baseClass, array $output)
+    public function __construct(GenerateCommandConfiguration $configuration, array $output)
     {
-        parent::__construct($source, $target, $baseClass);
+        parent::__construct($configuration);
 
         $this->output = $output;
     }
@@ -56,9 +54,11 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
         }
 
         return new GenerateCommandSuccessOutput(
-            $configData['source'],
-            $configData['target'],
-            $configData['base-class'],
+            new GenerateCommandConfiguration(
+                $configData['source'],
+                $configData['target'],
+                $configData['base-class']
+            ),
             $output
         );
     }

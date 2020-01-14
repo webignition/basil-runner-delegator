@@ -2,15 +2,19 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\Validator\Command;
+namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandConfigurationFactoryTest extends TestCase
+class GenerateCommandConfigurationFactoryTest extends AbstractBaseTest
 {
+    /**
+     * @var GenerateCommandConfigurationFactory
+     */
     private $factory;
 
     protected function setUp(): void

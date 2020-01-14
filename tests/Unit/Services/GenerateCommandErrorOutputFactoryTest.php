@@ -2,37 +2,31 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\Validator\Command;
+namespace webignition\BasilRunner\Tests\Unit\Services;
 
-use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandErrorOutputFactoryTest extends TestCase
+class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
 {
-    private $factory;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        PHPMockery::define('webignition\BasilRunner\Services', 'is_readable');
-        PHPMockery::define('webignition\BasilRunner\Services', 'is_writable');
-
-        $this->factory = new GenerateCommandErrorOutputFactory();
-    }
-
     /**
      * @dataProvider createFromInvalidConfigurationDataProvider
      */
     public function testCreateFromInvalidConfiguration(
         GenerateCommandConfiguration $configuration,
+        GenerateCommandConfigurationValidator $generateCommandConfigurationValidator,
         GenerateCommandErrorOutput $expectedOutput
     ) {
-        $this->assertEquals($expectedOutput, $this->factory->createFromInvalidConfiguration($configuration));
+        $factory = new GenerateCommandErrorOutputFactory(
+            $generateCommandConfigurationValidator
+        );
+
+        $this->assertEquals($expectedOutput, $factory->createFromInvalidConfiguration($configuration));
     }
 
     public function createFromInvalidConfigurationDataProvider(): array
@@ -46,22 +40,58 @@ class GenerateCommandErrorOutputFactoryTest extends TestCase
         return [
             'source does not exist' => [
                 'configuration' => new GenerateCommandConfiguration('', $target, $baseClass),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration('', $target, $baseClass),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
+                ),
                 'expectedOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration('', $target, $baseClass),
                     'source invalid; does not exist',
                     GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
             ],
+            'source not readable' => [
+                'configuration' => new GenerateCommandConfiguration('', $target, $baseClass),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration('', $target, $baseClass),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                ),
+                'expectedOutput' => new GenerateCommandErrorOutput(
+                    new GenerateCommandConfiguration('', $target, $baseClass),
+                    'source invalid; file is not readable',
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                ),
+            ],
             'target does not exist' => [
                 'configuration' => new GenerateCommandConfiguration($source, '', $baseClass),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration($source, '', $baseClass),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
+                ),
                 'expectedOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration($source, '', $baseClass),
                     'target invalid; does not exist',
                     GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
             ],
+            'target not writable' => [
+                'configuration' => new GenerateCommandConfiguration($source, '', $baseClass),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration($source, '', $baseClass),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                ),
+                'expectedOutput' => new GenerateCommandErrorOutput(
+                    new GenerateCommandConfiguration($source, '', $baseClass),
+                    'target invalid; directory is not writable',
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                ),
+            ],
             'target not a directory' => [
                 'configuration' => new GenerateCommandConfiguration($source, $source, $baseClass),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration($source, $source, $baseClass),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                ),
                 'expectedOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration($source, $source, $baseClass),
                     'target invalid; is not a directory (is it a file?)',
@@ -70,6 +100,10 @@ class GenerateCommandErrorOutputFactoryTest extends TestCase
             ],
             'base class does not exist' => [
                 'configuration' => new GenerateCommandConfiguration($source, $target, 'Foo'),
+                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                    new GenerateCommandConfiguration($source, $target, 'Foo'),
+                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                ),
                 'expectedOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration($source, $target, 'Foo'),
                     'base class invalid: does not exist',
@@ -79,47 +113,21 @@ class GenerateCommandErrorOutputFactoryTest extends TestCase
         ];
     }
 
-    public function testCreateFromInvalidConfigurationSourceNotReadable()
-    {
-        $root = (new ProjectRootPathProvider())->get();
+    private function createGenerateCommandConfigurationValidator(
+        GenerateCommandConfiguration $expectedConfiguration,
+        int $errorCode
+    ): GenerateCommandConfigurationValidator {
+        $validator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
 
-        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $target = $root . '/tests/build/target';
+        $validator
+            ->shouldReceive('deriveInvalidConfigurationErrorCode')
+            ->withArgs(function (GenerateCommandConfiguration $configuration) use ($expectedConfiguration) {
+                $this->assertEquals($expectedConfiguration, $configuration);
 
-        $configuration = new GenerateCommandConfiguration($source, $target, TestCase::class);
+                return true;
+            })
+            ->andReturn($errorCode);
 
-        $expectedOutput = new GenerateCommandErrorOutput(
-            $configuration,
-            'source invalid; file is not readable',
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
-        );
-
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_readable')->andReturn(false);
-
-        $this->assertEquals($expectedOutput, $this->factory->createFromInvalidConfiguration($configuration));
-
-        \Mockery::close();
-    }
-
-    public function testCreateFromInvalidConfigurationTargetNotWritable()
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $target = $root . '/tests/build/target';
-
-        $configuration = new GenerateCommandConfiguration($source, $target, TestCase::class);
-
-        $expectedOutput = new GenerateCommandErrorOutput(
-            $configuration,
-            'target invalid; directory is not writable',
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
-        );
-
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_writable')->andReturn(false);
-
-        $this->assertEquals($expectedOutput, $this->factory->createFromInvalidConfiguration($configuration));
-
-        \Mockery::close();
+        return $validator;
     }
 }
