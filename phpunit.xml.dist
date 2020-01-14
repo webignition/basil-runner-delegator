@@ -18,7 +18,8 @@
 
     <testsuites>
         <testsuite name="Default Test Suite">
-            <directory>tests/</directory>
+            <directory>tests/Unit</directory>
+            <directory>tests/Functional</directory>
             <exclude>tests/build/</exclude>
             <exclude>tests/Fixtures/</exclude>
         </testsuite>

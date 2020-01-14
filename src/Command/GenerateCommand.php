@@ -23,57 +23,45 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
-use webignition\BasilRunner\Model\ErrorContext;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
+use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Services\Validator\Command\GenerateCommandValidator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommand extends Command
 {
+    public const OPTION_SOURCE = 'source';
+    public const OPTION_TARGET = 'target';
+    public const OPTION_BASE_CLASS = 'base-class';
+
     private const NAME = 'generate';
 
     private $sourceLoader;
     private $testGenerator;
     private $projectRootPath;
-    private $generateCommandValidator;
-
-    /**
-     * @var array<int, string>
-     */
-    private $errorMessages = [
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
-            'source empty; call with --source=SOURCE',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
-            'source invalid; does not exist',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE =>
-            'source invalid; file is not readable',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY =>
-            'target empty; call with --target=TARGET',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST =>
-            'target invalid; does not exist',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY =>
-            'target invalid; is not a directory (is it a file?)',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
-            'target invalid; directory is not writable',
-        GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST =>
-            'base class invalid: does not exist'
-    ];
+    private $generateCommandConfigurationFactory;
+    private $generateCommandConfigurationValidator;
+    private $generateCommandErrorOutputFactory;
 
     public function __construct(
         SourceLoader $sourceLoader,
         TestGenerator $testGenerator,
         ProjectRootPathProvider $projectRootPathProvider,
-        GenerateCommandValidator $generateCommandValidator
+        GenerateCommandConfigurationFactory $generateCommandConfigurationFactory,
+        GenerateCommandConfigurationValidator $generateCommandConfigurationValidator,
+        GenerateCommandErrorOutputFactory $generateCommandErrorOutputFactory
     ) {
         parent::__construct();
 
         $this->sourceLoader = $sourceLoader;
         $this->testGenerator = $testGenerator;
         $this->projectRootPath = $projectRootPathProvider->get();
-        $this->generateCommandValidator = $generateCommandValidator;
+        $this->generateCommandConfigurationFactory = $generateCommandConfigurationFactory;
+        $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
+        $this->generateCommandErrorOutputFactory = $generateCommandErrorOutputFactory;
     }
 
     protected function configure(): void
@@ -82,7 +70,7 @@ class GenerateCommand extends Command
             ->setName(self::NAME)
             ->setDescription('Generate tests from basil source')
             ->addOption(
-                'source',
+                self::OPTION_SOURCE,
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Path to the basil test source from which to generate tests. ' .
@@ -90,14 +78,14 @@ class GenerateCommand extends Command
                 ''
             )
             ->addOption(
-                'target',
+                self::OPTION_TARGET,
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Output path for generated tests',
                 ''
             )
             ->addOption(
-                'base-class',
+                self::OPTION_BASE_CLASS,
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Base class to extend',
@@ -130,93 +118,56 @@ class GenerateCommand extends Command
     {
         $typedInput = new TypedInput($input);
 
-        $rawSource = (string) $typedInput->getStringOption('source');
-        $source = $this->getAbsolutePath((string) $rawSource);
+        $rawSource = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_SOURCE));
+        $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
+        $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
 
-        $rawTarget = (string) $typedInput->getStringOption('target');
-        $target = $this->getAbsolutePath($rawTarget);
+        $configuration = $this->generateCommandConfigurationFactory->create($rawSource, $rawTarget, $baseClass);
 
-        $fullyQualifiedBaseClass = (string) $typedInput->getStringOption('base-class');
-
-        $validationResult = $this->generateCommandValidator->validate(
-            $source,
-            $rawSource,
-            $target,
-            $rawTarget,
-            $fullyQualifiedBaseClass
-        );
-
-        if (false === $validationResult->getIsValid()) {
-            $errorMessage = $this->errorMessages[$validationResult->getErrorCode()] ?? 'unknown';
-            $errorOutput = new GenerateCommandErrorOutput(
-                (string) $source,
-                (string) $target,
-                $fullyQualifiedBaseClass,
-                $errorMessage,
-                new ErrorContext(
-                    ErrorContext::COMMAND_CONFIG,
-                    ErrorContext::CODE_COMMAND_CONFIG,
-                    $validationResult->getErrorCode()
-                )
-            );
+        if ('' === $rawSource) {
+            $errorOutput = $this->generateCommandErrorOutputFactory->createForEmptySource($configuration);
 
             $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            return $validationResult->getErrorCode();
+            return $errorOutput->getErrorCode();
         }
 
-        $source = (string) $source;
-        $target = (string) $target;
+        if ('' === $rawTarget) {
+            $errorOutput = $this->generateCommandErrorOutputFactory->createForEmptyTarget($configuration);
 
-        if (!class_exists($fullyQualifiedBaseClass)) {
-            // Base class does not exist
-            // Fail gracefully
+            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-            exit('Fix in #24');
+            return $errorOutput->getErrorCode();
         }
 
-        $sourcePaths = $this->createSourcePaths($source);
+        if (false === $this->generateCommandConfigurationValidator->isValid($configuration)) {
+            $errorOutput = $this->generateCommandErrorOutputFactory->createFromInvalidConfiguration($configuration);
+
+            $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+
+            return $errorOutput->getErrorCode();
+        }
+
+        $sourcePaths = $this->createSourcePaths($configuration->getSource());
 
         $generatedFiles = [];
         foreach ($sourcePaths as $sourcePath) {
             $testSuite = $this->sourceLoader->load($sourcePath);
 
             foreach ($testSuite->getTests() as $test) {
-                $generatedFiles[] = $this->testGenerator->generate($test, $fullyQualifiedBaseClass, $target);
+                $generatedFiles[] = $this->testGenerator->generate(
+                    $test,
+                    $configuration->getBaseClass(),
+                    $configuration->getTarget()
+                );
             }
         }
 
-        $commandOutput = new GenerateCommandSuccessOutput(
-            $source,
-            $target,
-            $fullyQualifiedBaseClass,
-            $generatedFiles
-        );
+        $commandOutput = new GenerateCommandSuccessOutput($configuration, $generatedFiles);
 
         $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
 
         return 0;
-    }
-
-    private function getAbsolutePath(string $path): ?string
-    {
-        if ('' === $path) {
-            return null;
-        }
-
-        $isAbsolutePath = '/' === $path[0];
-        if ($isAbsolutePath) {
-            return $this->getRealPath($path);
-        }
-
-        return $this->getRealPath($this->projectRootPath . '/' . $path);
-    }
-
-    private function getRealPath(string $path): ?string
-    {
-        $path = realpath($path);
-
-        return false === $path ? null : $path;
     }
 
     /**

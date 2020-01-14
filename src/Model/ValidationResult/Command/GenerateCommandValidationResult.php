@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ValidationResult\Command;
 
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+
 class GenerateCommandValidationResult
 {
-    private $isValid;
+    private $configuration;
     private $errorCode;
 
-    public function __construct(bool $isValid, int $errorCode = 0)
+    public function __construct(GenerateCommandConfiguration $configuration, int $errorCode)
     {
-        $this->isValid = $isValid;
+        $this->configuration = $configuration;
         $this->errorCode = $errorCode;
     }
 
-    public function getIsValid(): bool
+    public function getConfiguration(): GenerateCommandConfiguration
     {
-        return $this->isValid;
+        return $this->configuration;
     }
 
     public function getErrorCode(): int

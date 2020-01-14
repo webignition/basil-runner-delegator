@@ -6,30 +6,16 @@ namespace webignition\BasilRunner\Model;
 
 abstract class AbstractGenerateCommandOutput implements \JsonSerializable
 {
-    private $source;
-    private $target;
-    private $baseClass;
+    private $configuration;
 
-    public function __construct(string $source, string $target, string $baseClass)
+    public function __construct(GenerateCommandConfiguration $configuration)
     {
-        $this->source = $source;
-        $this->target = $target;
-        $this->baseClass = $baseClass;
+        $this->configuration = $configuration;
     }
 
-    public function getSource(): string
+    public function getConfiguration(): GenerateCommandConfiguration
     {
-        return $this->source;
-    }
-
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
-
-    public function getBaseClass(): string
-    {
-        return $this->baseClass;
+        return $this->configuration;
     }
 
     /**
@@ -38,11 +24,7 @@ abstract class AbstractGenerateCommandOutput implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'config' => [
-                'source' => $this->source,
-                'target' => $this->target,
-                'base-class' => $this->baseClass,
-            ],
+            'config' => $this->configuration->jsonSerialize(),
         ];
     }
 }
