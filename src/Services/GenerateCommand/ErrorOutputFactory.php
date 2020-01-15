@@ -73,7 +73,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $message,
-            ErrorOutput::CODE_LOADER_EXCEPTION,
+            ErrorOutput::CODE_LOADER_INVALID_YAML,
             [
                 'path' => $yamlLoaderException->getPath()
             ]
@@ -87,7 +87,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $circularStepImportException->getMessage(),
-            ErrorOutput::CODE_RESOLVER_EXCEPTION,
+            ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
             [
                 'import_name' => $circularStepImportException->getImportName(),
             ]
@@ -101,7 +101,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $emptyTestException->getMessage(),
-            ErrorOutput::CODE_LOADER_EXCEPTION,
+            ErrorOutput::CODE_LOADER_EMPTY_TEST,
             [
                 'path' => $emptyTestException->getPath(),
             ]
