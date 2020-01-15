@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services;
 
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 
 class GenerateCommandConfigurationValidator
 {
@@ -45,28 +45,28 @@ class GenerateCommandConfigurationValidator
     {
         $source = $configuration->getSource();
         if ('' === $source) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
+            return ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_readable($source)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
+            return ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
         }
 
         $target = $configuration->getTarget();
         if ('' === $target) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
+            return ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST;
         }
 
         if (!is_dir($target)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
+            return ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
         }
 
         if (!is_writable($target)) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
+            return ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
         }
 
         if (!class_exists($configuration->getBaseClass())) {
-            return GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST;
+            return ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST;
         }
 
         return 0;

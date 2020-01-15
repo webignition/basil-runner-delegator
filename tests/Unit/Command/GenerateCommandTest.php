@@ -10,7 +10,7 @@ use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
@@ -133,7 +133,7 @@ class GenerateCommandTest extends AbstractBaseTest
     /**
      * @param array<string, string> $input
      * @param int $validationErrorCode
-     * @param GenerateCommandErrorOutput $expectedCommandOutput
+     * @param ErrorOutput $expectedCommandOutput
      *
      * @dataProvider runFailureDataProvider
      */
@@ -142,7 +142,7 @@ class GenerateCommandTest extends AbstractBaseTest
         GenerateCommandConfigurationFactory $configurationFactory,
         GenerateCommandConfigurationValidator $configurationValidator,
         int $validationErrorCode,
-        GenerateCommandErrorOutput $expectedCommandOutput
+        ErrorOutput $expectedCommandOutput
     ): void {
         $command = $this->createCommand(
             $configurationFactory,
@@ -157,7 +157,7 @@ class GenerateCommandTest extends AbstractBaseTest
 
         $output = $commandTester->getDisplay();
 
-        $commandOutput = GenerateCommandErrorOutput::fromJson($output);
+        $commandOutput = ErrorOutput::fromJson($output);
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -198,11 +198,11 @@ class GenerateCommandTest extends AbstractBaseTest
                     $emptySourceConfiguration
                 ),
                 'configurationValidator' => \Mockery::mock(GenerateCommandConfigurationValidator::class),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
+                'expectedCommandOutput' => new ErrorOutput(
                     $emptySourceConfiguration,
                     'source empty; call with --source=SOURCE',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
                 ),
             ],
             'target empty' => [
@@ -219,11 +219,11 @@ class GenerateCommandTest extends AbstractBaseTest
                     $emptyTargetConfiguration
                 ),
                 'configurationValidator' => \Mockery::mock(GenerateCommandConfigurationValidator::class),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
+                'expectedCommandOutput' => new ErrorOutput(
                     $emptyTargetConfiguration,
                     'target empty; call with --target=TARGET',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
             'invalid configuration: source does not exist' => [
@@ -242,13 +242,13 @@ class GenerateCommandTest extends AbstractBaseTest
                 ),
                 'configurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     $invalidConfiguration,
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
+                'expectedCommandOutput' => new ErrorOutput(
                     $invalidConfiguration,
                     'base class invalid: does not exist',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
             ],
         ];

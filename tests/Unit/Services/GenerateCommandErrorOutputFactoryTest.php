@@ -6,7 +6,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -20,7 +20,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
     public function testCreateFromInvalidConfiguration(
         GenerateCommandConfiguration $configuration,
         GenerateCommandConfigurationValidator $generateCommandConfigurationValidator,
-        GenerateCommandErrorOutput $expectedOutput
+        ErrorOutput $expectedOutput
     ) {
         $factory = new GenerateCommandErrorOutputFactory(
             $generateCommandConfigurationValidator
@@ -42,72 +42,72 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
                 'configuration' => new GenerateCommandConfiguration('', $target, $baseClass),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration('', $target, $baseClass),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration('', $target, $baseClass),
                     'source invalid; does not exist',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
             ],
             'source not readable' => [
                 'configuration' => new GenerateCommandConfiguration('', $target, $baseClass),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration('', $target, $baseClass),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration('', $target, $baseClass),
                     'source invalid; file is not readable',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
                 ),
             ],
             'target does not exist' => [
                 'configuration' => new GenerateCommandConfiguration($source, '', $baseClass),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration($source, '', $baseClass),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration($source, '', $baseClass),
                     'target invalid; does not exist',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
             ],
             'target not writable' => [
                 'configuration' => new GenerateCommandConfiguration($source, '', $baseClass),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration($source, '', $baseClass),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration($source, '', $baseClass),
                     'target invalid; directory is not writable',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
                 ),
             ],
             'target not a directory' => [
                 'configuration' => new GenerateCommandConfiguration($source, $source, $baseClass),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration($source, $source, $baseClass),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration($source, $source, $baseClass),
                     'target invalid; is not a directory (is it a file?)',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
             ],
             'base class does not exist' => [
                 'configuration' => new GenerateCommandConfiguration($source, $target, 'Foo'),
                 'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     new GenerateCommandConfiguration($source, $target, 'Foo'),
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
-                'expectedOutput' => new GenerateCommandErrorOutput(
+                'expectedOutput' => new ErrorOutput(
                     new GenerateCommandConfiguration($source, $target, 'Foo'),
                     'base class invalid: does not exist',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
             ],
         ];
