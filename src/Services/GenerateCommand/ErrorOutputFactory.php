@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilLoader\Exception\EmptyTestException;
+use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
+use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 
 class ErrorOutputFactory
 {
@@ -35,10 +37,14 @@ class ErrorOutputFactory
     ];
 
     private $generateCommandConfigurationValidator;
+    private $validatorInvalidResultSerializer;
 
-    public function __construct(ConfigurationValidator $generateCommandConfigurationValidator)
-    {
+    public function __construct(
+        ConfigurationValidator $generateCommandConfigurationValidator,
+        ValidatorInvalidResultSerializer $validatorInvalidResultSerializer
+    ) {
         $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
+        $this->validatorInvalidResultSerializer = $validatorInvalidResultSerializer;
     }
 
     public function createFromInvalidConfiguration(Configuration $configuration): ErrorOutput
@@ -104,6 +110,24 @@ class ErrorOutputFactory
             ErrorOutput::CODE_LOADER_EMPTY_TEST,
             [
                 'path' => $emptyTestException->getPath(),
+            ]
+        );
+    }
+
+    public function createForInvalidPageException(
+        InvalidPageException $invalidPageException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $invalidPageException->getMessage(),
+            ErrorOutput::CODE_LOADER_INVALID_PAGE,
+            [
+                'import_name' => $invalidPageException->getImportName(),
+                'path' => $invalidPageException->getPath(),
+                'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
+                    $invalidPageException->getValidationResult()
+                )
             ]
         );
     }
