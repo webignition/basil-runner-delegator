@@ -9,13 +9,13 @@ use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
-use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
@@ -28,16 +28,16 @@ class GenerateCommandTest extends AbstractBaseTest
      *
      * @param array<string, string> $input
      * @param TestGenerator $testGenerator
-     * @param GenerateCommandSuccessOutput $expectedCommandOutput
+     * @param \webignition\BasilRunner\Model\GenerateCommand\SuccessOutput $expectedCommandOutput
      *
      */
     public function testRunSuccess(
         array $input,
-        GenerateCommandConfigurationFactory $configurationFactory,
+        ConfigurationFactory $configurationFactory,
         TestGenerator $testGenerator,
-        GenerateCommandSuccessOutput $expectedCommandOutput
+        SuccessOutput $expectedCommandOutput
     ): void {
-        $configurationValidator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
+        $configurationValidator = \Mockery::mock(ConfigurationValidator::class);
         $configurationValidator
             ->shouldReceive('isValid')
             ->andReturnTrue();
@@ -50,7 +50,7 @@ class GenerateCommandTest extends AbstractBaseTest
         $this->assertSame(0, $exitCode);
 
         $output = $commandTester->getDisplay();
-        $commandOutput = GenerateCommandSuccessOutput::fromJson($output);
+        $commandOutput = SuccessOutput::fromJson($output);
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -70,7 +70,7 @@ class GenerateCommandTest extends AbstractBaseTest
                          'tests/build/target',
                         BasilBaseTest::class
                     ],
-                    new GenerateCommandConfiguration(
+                    new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
                         BasilBaseTest::class
@@ -86,8 +86,8 @@ class GenerateCommandTest extends AbstractBaseTest
                         ),
                     ],
                 ])),
-                'expectedCommandOutput' => new GenerateCommandSuccessOutput(
-                    new GenerateCommandConfiguration(
+                'expectedCommandOutput' => new SuccessOutput(
+                    new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
                         BasilBaseTest::class
@@ -133,16 +133,16 @@ class GenerateCommandTest extends AbstractBaseTest
     /**
      * @param array<string, string> $input
      * @param int $validationErrorCode
-     * @param GenerateCommandErrorOutput $expectedCommandOutput
+     * @param ErrorOutput $expectedCommandOutput
      *
      * @dataProvider runFailureDataProvider
      */
     public function testRunFailure(
         array $input,
-        GenerateCommandConfigurationFactory $configurationFactory,
-        GenerateCommandConfigurationValidator $configurationValidator,
+        ConfigurationFactory $configurationFactory,
+        ConfigurationValidator $configurationValidator,
         int $validationErrorCode,
-        GenerateCommandErrorOutput $expectedCommandOutput
+        ErrorOutput $expectedCommandOutput
     ): void {
         $command = $this->createCommand(
             $configurationFactory,
@@ -157,7 +157,7 @@ class GenerateCommandTest extends AbstractBaseTest
 
         $output = $commandTester->getDisplay();
 
-        $commandOutput = GenerateCommandErrorOutput::fromJson($output);
+        $commandOutput = ErrorOutput::fromJson($output);
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -165,19 +165,19 @@ class GenerateCommandTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $emptySourceConfiguration = new GenerateCommandConfiguration(
+        $emptySourceConfiguration = new Configuration(
             '',
             $root . '/tests/build/target',
             BasilBaseTest::class
         );
 
-        $emptyTargetConfiguration = new GenerateCommandConfiguration(
+        $emptyTargetConfiguration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             '',
             BasilBaseTest::class
         );
 
-        $invalidConfiguration = new GenerateCommandConfiguration(
+        $invalidConfiguration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             'NonExistentBaseClass'
@@ -197,12 +197,12 @@ class GenerateCommandTest extends AbstractBaseTest
                     ],
                     $emptySourceConfiguration
                 ),
-                'configurationValidator' => \Mockery::mock(GenerateCommandConfigurationValidator::class),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'configurationValidator' => \Mockery::mock(ConfigurationValidator::class),
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
+                'expectedCommandOutput' => new ErrorOutput(
                     $emptySourceConfiguration,
                     'source empty; call with --source=SOURCE',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
                 ),
             ],
             'target empty' => [
@@ -218,12 +218,12 @@ class GenerateCommandTest extends AbstractBaseTest
                     ],
                     $emptyTargetConfiguration
                 ),
-                'configurationValidator' => \Mockery::mock(GenerateCommandConfigurationValidator::class),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'configurationValidator' => \Mockery::mock(ConfigurationValidator::class),
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
+                'expectedCommandOutput' => new ErrorOutput(
                     $emptyTargetConfiguration,
                     'target empty; call with --target=TARGET',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
+                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
             'invalid configuration: source does not exist' => [
@@ -242,21 +242,21 @@ class GenerateCommandTest extends AbstractBaseTest
                 ),
                 'configurationValidator' => $this->createGenerateCommandConfigurationValidator(
                     $invalidConfiguration,
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
-                'validationErrorCode' => GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
+                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
+                'expectedCommandOutput' => new ErrorOutput(
                     $invalidConfiguration,
                     'base class invalid: does not exist',
-                    GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
+                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
             ],
         ];
     }
 
     private function createCommand(
-        GenerateCommandConfigurationFactory $configurationFactory,
-        GenerateCommandConfigurationValidator $configurationValidator,
+        ConfigurationFactory $configurationFactory,
+        ConfigurationValidator $configurationValidator,
         TestGenerator $testGenerator
     ): GenerateCommand {
         return new GenerateCommand(
@@ -265,7 +265,7 @@ class GenerateCommandTest extends AbstractBaseTest
             new ProjectRootPathProvider(),
             $configurationFactory,
             $configurationValidator,
-            new GenerateCommandErrorOutputFactory($configurationValidator),
+            new ErrorOutputFactory($configurationValidator),
             new Renderer()
         );
     }
@@ -283,15 +283,15 @@ class GenerateCommandTest extends AbstractBaseTest
 
     /**
      * @param array<mixed> $args
-     * @param GenerateCommandConfiguration $configuration
+     * @param Configuration $configuration
      *
-     * @return GenerateCommandConfigurationFactory
+     * @return \webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory
      */
     private function createConfigurationFactory(
         array $args,
-        GenerateCommandConfiguration $configuration
-    ): GenerateCommandConfigurationFactory {
-        $factory = \Mockery::mock(GenerateCommandConfigurationFactory::class);
+        Configuration $configuration
+    ): ConfigurationFactory {
+        $factory = \Mockery::mock(ConfigurationFactory::class);
 
         $factory
             ->shouldReceive('create')
@@ -302,14 +302,14 @@ class GenerateCommandTest extends AbstractBaseTest
     }
 
     private function createGenerateCommandConfigurationValidator(
-        GenerateCommandConfiguration $expectedConfiguration,
+        Configuration $expectedConfiguration,
         int $errorCode
-    ): GenerateCommandConfigurationValidator {
-        $validator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
+    ): ConfigurationValidator {
+        $validator = \Mockery::mock(ConfigurationValidator::class);
 
         $validator
             ->shouldReceive('isValid')
-            ->withArgs(function (GenerateCommandConfiguration $configuration) use ($expectedConfiguration) {
+            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
                 $this->assertEquals($expectedConfiguration, $configuration);
 
                 return true;
@@ -318,7 +318,7 @@ class GenerateCommandTest extends AbstractBaseTest
 
         $validator
             ->shouldReceive('deriveInvalidConfigurationErrorCode')
-            ->withArgs(function (GenerateCommandConfiguration $configuration) use ($expectedConfiguration) {
+            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
                 $this->assertEquals($expectedConfiguration, $configuration);
 
                 return true;

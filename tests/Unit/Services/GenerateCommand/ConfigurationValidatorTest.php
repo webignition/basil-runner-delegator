@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunner\Tests\Unit\Services\GenerateCommand;
 
 use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
+class ConfigurationValidatorTest extends AbstractBaseTest
 {
     /**
-     * @var GenerateCommandConfigurationValidator
+     * @var ConfigurationValidator
      */
     private $validator;
 
@@ -23,20 +23,20 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->validator = new GenerateCommandConfigurationValidator();
+        $this->validator = new ConfigurationValidator();
     }
 
     public function testIsValidSourceNotReadable(): void
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_readable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_readable')->andReturn(false);
 
         $this->assertFalse($this->validator->isValid($configuration));
     }
@@ -45,13 +45,13 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_writable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_writable')->andReturn(false);
 
         $this->assertFalse($this->validator->isValid($configuration));
     }
@@ -59,7 +59,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     /**
      * @dataProvider isValidDataProvider
      */
-    public function testIsValid(GenerateCommandConfiguration $configuration, bool $expectedIsValid)
+    public function testIsValid(Configuration $configuration, bool $expectedIsValid)
     {
         $this->assertSame($expectedIsValid, $this->validator->isValid($configuration));
     }
@@ -73,23 +73,23 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
 
         return [
             'valid' => [
-                'configuration' => new GenerateCommandConfiguration($source, $target, TestCase::class),
+                'configuration' => new Configuration($source, $target, TestCase::class),
                 'expectedIsValid' => true,
             ],
             'invalid: source is empty' => [
-                'configuration' => new GenerateCommandConfiguration('', $target, TestCase::class),
+                'configuration' => new Configuration('', $target, TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: target is empty' => [
-                'configuration' => new GenerateCommandConfiguration($source, '', TestCase::class),
+                'configuration' => new Configuration($source, '', TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: target is not a directory, is a file' => [
-                'configuration' => new GenerateCommandConfiguration($source, $source, TestCase::class),
+                'configuration' => new Configuration($source, $source, TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: base class does not exist' => [
-                'configuration' => new GenerateCommandConfiguration($source, $target, 'Foo'),
+                'configuration' => new Configuration($source, $target, 'Foo'),
                 'expectedIsValid' => false,
             ],
         ];
@@ -99,16 +99,16 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_readable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_readable')->andReturn(false);
 
         $this->assertSame(
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE,
+            ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE,
             $this->validator->deriveInvalidConfigurationErrorCode($configuration)
         );
     }
@@ -117,16 +117,16 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_writable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_writable')->andReturn(false);
 
         $this->assertSame(
-            GenerateCommandErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE,
+            ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE,
             $this->validator->deriveInvalidConfigurationErrorCode($configuration)
         );
     }

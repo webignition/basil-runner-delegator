@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\GenerateCommand;
 
-abstract class AbstractGenerateCommandOutput implements GenerateCommandOutputInterface
+abstract class AbstractOutput implements OutputInterface
 {
     protected const STATUS_SUCCESS = 'success';
     protected const STATUS_FAILURE = 'failure';
@@ -13,14 +13,14 @@ abstract class AbstractGenerateCommandOutput implements GenerateCommandOutputInt
     private $status;
     private $code;
 
-    public function __construct(GenerateCommandConfiguration $configuration, string $status, int $code)
+    public function __construct(Configuration $configuration, string $status, int $code)
     {
         $this->configuration = $configuration;
         $this->status = $status;
         $this->code = $code;
     }
 
-    public function getConfiguration(): GenerateCommandConfiguration
+    public function getConfiguration(): Configuration
     {
         return $this->configuration;
     }

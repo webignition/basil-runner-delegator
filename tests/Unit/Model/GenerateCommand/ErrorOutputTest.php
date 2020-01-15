@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Model;
+namespace webignition\BasilRunner\Tests\Unit\Model\GenerateCommand;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
+use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandErrorOutputTest extends AbstractBaseTest
+class ErrorOutputTest extends AbstractBaseTest
 {
     /**
      * @dataProvider jsonSerializeDataProvider
      *
-     * @param GenerateCommandErrorOutput $output
+     * @param ErrorOutput $output
      * @param array<mixed> $expectedSerializedData
      */
-    public function testJsonSerialize(GenerateCommandErrorOutput $output, array $expectedSerializedData)
+    public function testJsonSerialize(ErrorOutput $output, array $expectedSerializedData)
     {
         $this->assertEquals($expectedSerializedData, $output->jsonSerialize());
     }
@@ -26,8 +26,8 @@ class GenerateCommandErrorOutputTest extends AbstractBaseTest
     {
         return [
             'without context' => [
-                'output' => new GenerateCommandErrorOutput(
-                    new GenerateCommandConfiguration(
+                'output' => new ErrorOutput(
+                    new Configuration(
                         'source-value',
                         'target-value',
                         TestCase::class
@@ -49,8 +49,8 @@ class GenerateCommandErrorOutputTest extends AbstractBaseTest
                 ],
             ],
             'with context' => [
-                'output' => new GenerateCommandErrorOutput(
-                    new GenerateCommandConfiguration(
+                'output' => new ErrorOutput(
+                    new Configuration(
                         'source-value',
                         'target-value',
                         TestCase::class

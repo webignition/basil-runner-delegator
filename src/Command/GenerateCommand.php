@@ -23,11 +23,11 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
-use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
-use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCommandOutputInterface;
+use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
@@ -53,9 +53,9 @@ class GenerateCommand extends Command
         SourceLoader $sourceLoader,
         TestGenerator $testGenerator,
         ProjectRootPathProvider $projectRootPathProvider,
-        GenerateCommandConfigurationFactory $configurationFactory,
-        GenerateCommandConfigurationValidator $configurationValidator,
-        GenerateCommandErrorOutputFactory $errorOutputFactory,
+        ConfigurationFactory $configurationFactory,
+        ConfigurationValidator $configurationValidator,
+        ErrorOutputFactory $errorOutputFactory,
         Renderer $outputRenderer
     ) {
         parent::__construct();
@@ -158,7 +158,7 @@ class GenerateCommand extends Command
             }
         }
 
-        $commandOutput = new GenerateCommandSuccessOutput($configuration, $generatedFiles);
+        $commandOutput = new SuccessOutput($configuration, $generatedFiles);
 
         return $this->render($commandOutput);
     }
