@@ -36,7 +36,7 @@ class ValidatorInvalidResultSerializerTest extends AbstractBaseTest
      * @dataProvider serializeToArrayDataProvider
      *
      * @param InvalidResultInterface $invalidResult
-     * @param array $expectedData
+     * @param array<mixed> $expectedData
      */
     public function testSerializeToArray(InvalidResultInterface $invalidResult, array $expectedData)
     {

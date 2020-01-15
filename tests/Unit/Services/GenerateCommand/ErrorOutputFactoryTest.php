@@ -10,6 +10,7 @@ use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class ErrorOutputFactoryTest extends AbstractBaseTest
@@ -23,7 +24,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
         ErrorOutput $expectedOutput
     ) {
         $factory = new ErrorOutputFactory(
-            $generateCommandConfigurationValidator
+            $generateCommandConfigurationValidator,
+            new ValidatorInvalidResultSerializer()
         );
 
         $this->assertEquals($expectedOutput, $factory->createFromInvalidConfiguration($configuration));

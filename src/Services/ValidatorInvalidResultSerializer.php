@@ -8,6 +8,11 @@ use webignition\BasilValidationResult\InvalidResultInterface;
 
 class ValidatorInvalidResultSerializer
 {
+    /**
+     * @param InvalidResultInterface $invalidResult
+     *
+     * @return array<mixed>
+     */
     public function serializeToArray(InvalidResultInterface $invalidResult): array
     {
         $serializedData = [
@@ -38,16 +43,16 @@ class ValidatorInvalidResultSerializer
         $subject = $invalidResult->getSubject();
 
         if (is_scalar($subject)) {
-            return json_encode($subject);
+            return (string) json_encode($subject);
         }
 
         if (is_object($subject)) {
             if (true === method_exists($subject, '__toString')) {
-                return json_encode((string) $subject);
+                return (string) json_encode((string) $subject);
             }
 
             if ($subject instanceof \JsonSerializable) {
-                return json_encode($subject);
+                return (string) json_encode($subject);
             }
         }
 
