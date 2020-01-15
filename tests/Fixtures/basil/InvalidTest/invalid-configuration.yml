@@ -1,0 +1,3 @@
+config:
+  browser: ""
+  url: "https://example.com"

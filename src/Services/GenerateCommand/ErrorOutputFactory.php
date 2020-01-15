@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
+use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
@@ -83,6 +84,10 @@ class ErrorOutputFactory
             return $this->createForInvalidPageException($exception, $configuration);
         }
 
+        if ($exception instanceof InvalidTestException) {
+            return $this->createForInvalidTestException($exception, $configuration);
+        }
+
         return new ErrorOutput(
             $configuration,
             'An unknown error has occurred',
@@ -153,6 +158,23 @@ class ErrorOutputFactory
                 'path' => $invalidPageException->getPath(),
                 'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidPageException->getValidationResult()
+                )
+            ]
+        );
+    }
+
+    public function createForInvalidTestException(
+        InvalidTestException $invalidTestException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $invalidTestException->getMessage(),
+            ErrorOutput::CODE_LOADER_INVALID_TEST,
+            [
+                'path' => $invalidTestException->getPath(),
+                'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
+                    $invalidTestException->getValidationResult()
                 )
             ]
         );
