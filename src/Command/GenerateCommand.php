@@ -148,23 +148,19 @@ class GenerateCommand extends Command
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
             } catch (YamlLoaderException $yamlLoaderException) {
-                $errorOutput = $this->errorOutputFactory->createForYamlLoaderException(
+                $commandOutput = $this->errorOutputFactory->createForYamlLoaderException(
                     $yamlLoaderException,
                     $configuration
                 );
 
-                $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-                return $errorOutput->getCode();
+                return $this->render($commandOutput);
             } catch (CircularStepImportException $circularStepImportException) {
-                $errorOutput = $this->errorOutputFactory->createForCircularStepImportException(
+                $commandOutput = $this->errorOutputFactory->createForCircularStepImportException(
                     $circularStepImportException,
                     $configuration
                 );
 
-                $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
-
-                return $errorOutput->getCode();
+                return $this->render($commandOutput);
             }
 
             foreach ($testSuite->getTests() as $test) {
