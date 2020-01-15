@@ -7,6 +7,7 @@ namespace webignition\BasilRunner\Services\GenerateCommand;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
+use webignition\BasilLoader\Exception\NonRetrievableImportException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
@@ -86,6 +87,10 @@ class ErrorOutputFactory
 
         if ($exception instanceof InvalidTestException) {
             return $this->createForInvalidTestException($exception, $configuration);
+        }
+
+        if ($exception instanceof NonRetrievableImportException) {
+            return $this->createForNonRetrievableImportException($exception, $configuration);
         }
 
         return new ErrorOutput(
@@ -176,6 +181,36 @@ class ErrorOutputFactory
                 'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidTestException->getValidationResult()
                 )
+            ]
+        );
+    }
+
+    public function createForNonRetrievableImportException(
+        NonRetrievableImportException $nonRetrievableImportException,
+        Configuration $configuration
+    ): ErrorOutput {
+        $yamlLoaderException = $nonRetrievableImportException->getYamlLoaderException();
+
+        $loaderMessage = $yamlLoaderException->getMessage();
+        $loaderPreviousException = $yamlLoaderException->getPrevious();
+
+        if ($loaderPreviousException instanceof \Exception) {
+            $loaderMessage = $loaderPreviousException->getMessage();
+        }
+
+        return new ErrorOutput(
+            $configuration,
+            $nonRetrievableImportException->getMessage(),
+            ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+            [
+                'test' => $nonRetrievableImportException->getTestPath(),
+                'type' => $nonRetrievableImportException->getType(),
+                'name' => $nonRetrievableImportException->getName(),
+                'path' => $nonRetrievableImportException->getPath(),
+                'loader-error' => [
+                    'message' => $loaderMessage,
+                    'path' => $yamlLoaderException->getPath(),
+                ]
             ]
         );
     }

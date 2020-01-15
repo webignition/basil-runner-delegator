@@ -217,6 +217,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @dataProvider runFailureEmptyTestDataProvider
      * @dataProvider runInvalidPageDataProvider
      * @dataProvider runInvalidTestDataProvider
+     * @dataProvider runNonRetrievableImportDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -397,34 +398,34 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $testImportingPageWithEmptyUrlPath = 'tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
-        $testImportingPageWithEmptyUrlAbsolutePath = $root . '/' . $testImportingPageWithEmptyUrlPath;
+        $testPath = 'tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
+        $testAbsolutePath = $root . '/' . $testPath;
 
-        $pageWithEmptyUrlPath = 'tests/Fixtures/basil/InvalidPage/url-empty.yml';
-        $pageWithEmptyUrlAbsolutePath = $root . '/' . $pageWithEmptyUrlPath;
+        $pagePath = 'tests/Fixtures/basil/InvalidPage/url-empty.yml';
+        $pageAbsolutePath = $root . '/' . $pagePath;
 
-        $testSuiteImportingInvalidPagePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
-        $testSuiteImportingInvalidPageAbsolutePath = $root . '/' . $testSuiteImportingInvalidPagePath;
+        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
+        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
 
         return [
             'test imports invalid page; url empty' => [
                 'input' => [
-                    '--source' => $testImportingPageWithEmptyUrlPath,
+                    '--source' => $testPath,
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $testImportingPageWithEmptyUrlAbsolutePath,
+                        $testAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Invalid page "empty_url_page" at path "' . $pageWithEmptyUrlAbsolutePath . '": page-url-empty',
+                    'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testImportingPageWithEmptyUrlAbsolutePath,
+                        'test' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
-                        'path' => $pageWithEmptyUrlAbsolutePath,
+                        'path' => $pageAbsolutePath,
                         'validation-result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
@@ -434,22 +435,22 @@ class GenerateCommandTest extends AbstractFunctionalTest
             ],
             'test suite imports test which imports invalid page; url empty' => [
                 'input' => [
-                    '--source' => $testSuiteImportingInvalidPagePath,
+                    '--source' => $testSuitePath,
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $testSuiteImportingInvalidPageAbsolutePath,
+                        $testSuiteAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Invalid page "empty_url_page" at path "' . $pageWithEmptyUrlAbsolutePath . '": page-url-empty',
+                    'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testImportingPageWithEmptyUrlAbsolutePath,
+                        'test' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
-                        'path' => $pageWithEmptyUrlAbsolutePath,
+                        'path' => $pageAbsolutePath,
                         'validation-result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
@@ -464,31 +465,31 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $testWithInvalidConfigurationPath = 'tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
-        $testWithInvalidConfigurationAbsolutePath = $root . '/' . $testWithInvalidConfigurationPath;
+        $testPath = 'tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
+        $testAbsolutePath = $root . '/' . $testPath;
 
-        $testSuiteImportingInvalidTestPath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
-        $testSuiteImportingInvalidTestAbsolutePath = $root . '/' . $testSuiteImportingInvalidTestPath;
+        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
+        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
 
         return [
             'test has invalid configuration' => [
                 'input' => [
-                    '--source' => $testWithInvalidConfigurationPath,
+                    '--source' => $testPath,
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $testWithInvalidConfigurationAbsolutePath,
+                        $testAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
                     'Invalid test at path "' .
-                    $testWithInvalidConfigurationAbsolutePath .
+                    $testAbsolutePath .
                     '": test-configuration-invalid',
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
-                        'path' => $testWithInvalidConfigurationAbsolutePath,
+                        'path' => $testAbsolutePath,
                         'validation-result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
@@ -502,22 +503,22 @@ class GenerateCommandTest extends AbstractFunctionalTest
             ],
             'test suite imports test with invalid configuration' => [
                 'input' => [
-                    '--source' => $testSuiteImportingInvalidTestPath,
+                    '--source' => $testSuitePath,
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $testSuiteImportingInvalidTestAbsolutePath,
+                        $testSuiteAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
                     'Invalid test at path "' .
-                    $testWithInvalidConfigurationAbsolutePath .
+                    $testAbsolutePath .
                     '": test-configuration-invalid',
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
-                        'path' => $testWithInvalidConfigurationAbsolutePath,
+                        'path' => $testAbsolutePath,
                         'validation-result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
@@ -525,6 +526,75 @@ class GenerateCommandTest extends AbstractFunctionalTest
                                 'type' => 'test-configuration',
                                 'reason' => 'test-configuration-browser-empty',
                             ],
+                        ],
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    public function runNonRetrievableImportDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $pagePath = 'tests/Fixtures/basil/InvalidPage/unparseable.yml';
+        $pageAbsolutePath = $root . '/' . $pagePath;
+
+        $testPath = 'tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
+        $testAbsolutePath = $root . '/' . $testPath;
+
+        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-unparseable-page.yml';
+        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
+
+        return [
+            'test imports non-parsable page' => [
+                'input' => [
+                    '--source' => $testPath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $testAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
+                    ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+                    [
+                        'test' => $testAbsolutePath,
+                        'type' => 'page',
+                        'name' => 'unparseable_page',
+                        'path' => $pageAbsolutePath,
+                        'loader-error' => [
+                            'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
+                            'path' => $pageAbsolutePath,
+                        ],
+                    ]
+                ),
+            ],
+            'test suite imports test which imports non-parsable page' => [
+                'input' => [
+                    '--source' => $testSuiteAbsolutePath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $testSuiteAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
+                    ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+                    [
+                        'test' => $testAbsolutePath,
+                        'type' => 'page',
+                        'name' => 'unparseable_page',
+                        'path' => $pageAbsolutePath,
+                        'loader-error' => [
+                            'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
+                            'path' => $pageAbsolutePath,
                         ],
                     ]
                 ),
