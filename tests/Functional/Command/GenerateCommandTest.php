@@ -215,6 +215,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @dataProvider runFailureNonLoadableDataDataProvider
      * @dataProvider runFailureCircularStepImportDataProvider
      * @dataProvider runFailureEmptyTestDataProvider
+     * @dataProvider runInvalidPageDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -385,6 +386,44 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ErrorOutput::CODE_LOADER_EMPTY_TEST,
                     [
                         'path' => $emptyTestAbsolutePath,
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    public function runInvalidPageDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $testImportingPageWithEmptyUrlPath = 'tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
+        $testImportingPageWithEmptyUrlAbsolutePath = $root . '/' . $testImportingPageWithEmptyUrlPath;
+
+        $pageWithEmptyUrlPath = 'tests/Fixtures/basil/InvalidPage/url-empty.yml';
+        $pageWithEmptyUrlAbsolutePath = $root . '/' . $pageWithEmptyUrlPath;
+
+        return [
+            'invalid page; url empty' => [
+                'input' => [
+                    '--source' => $testImportingPageWithEmptyUrlPath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $testImportingPageWithEmptyUrlAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Invalid page "empty_url_page" at path "' . $pageWithEmptyUrlAbsolutePath . '": page-url-empty',
+                    ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                    [
+                        'import_name' => 'empty_url_page',
+                        'path' => $pageWithEmptyUrlAbsolutePath,
+                        'validation-result' => [
+                            'type' => 'page',
+                            'reason' => 'page-url-empty',
+                        ],
                     ]
                 ),
             ],

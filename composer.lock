@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6871c80bd26ab6e1aaf0a4100ffb6b53",
+    "content-hash": "3a3317026b2f6fda3edf695176f20631",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3509,16 +3509,16 @@
         },
         {
             "name": "webignition/basil-data-validator",
-            "version": "0.5",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-data-validator.git",
-                "reference": "1f205007feab4eff7559723c34fb90032663dedf"
+                "reference": "488561982d257fae4bc2bd1d352137a894f6c172"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/1f205007feab4eff7559723c34fb90032663dedf",
-                "reference": "1f205007feab4eff7559723c34fb90032663dedf",
+                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/488561982d257fae4bc2bd1d352137a894f6c172",
+                "reference": "488561982d257fae4bc2bd1d352137a894f6c172",
                 "shasum": ""
             },
             "require": {
@@ -3554,7 +3554,7 @@
             ],
             "description": "Validator for source data for basil language",
             "homepage": "https://github.com/webignition/basil-data-validator",
-            "time": "2020-01-12T21:53:08+00:00"
+            "time": "2020-01-15T15:52:09+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
@@ -3742,16 +3742,16 @@
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.25",
+            "version": "0.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "440fa7a2120cf431d55097bf5fa5d501b69e7dc5"
+                "reference": "ef355bfa889a9d5f7fd68d3432fbdbd843502714"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/440fa7a2120cf431d55097bf5fa5d501b69e7dc5",
-                "reference": "440fa7a2120cf431d55097bf5fa5d501b69e7dc5",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/ef355bfa889a9d5f7fd68d3432fbdbd843502714",
+                "reference": "ef355bfa889a9d5f7fd68d3432fbdbd843502714",
                 "shasum": ""
             },
             "require": {
@@ -3779,7 +3779,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-01-09T13:02:43+00:00"
+            "time": "2020-01-15T13:04:48+00:00"
         },
         {
             "name": "webignition/basil-parser",
