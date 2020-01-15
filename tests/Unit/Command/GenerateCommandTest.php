@@ -9,7 +9,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
@@ -70,7 +70,7 @@ class GenerateCommandTest extends AbstractBaseTest
                          'tests/build/target',
                         BasilBaseTest::class
                     ],
-                    new GenerateCommandConfiguration(
+                    new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
                         BasilBaseTest::class
@@ -87,7 +87,7 @@ class GenerateCommandTest extends AbstractBaseTest
                     ],
                 ])),
                 'expectedCommandOutput' => new SuccessOutput(
-                    new GenerateCommandConfiguration(
+                    new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
                         BasilBaseTest::class
@@ -165,19 +165,19 @@ class GenerateCommandTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $emptySourceConfiguration = new GenerateCommandConfiguration(
+        $emptySourceConfiguration = new Configuration(
             '',
             $root . '/tests/build/target',
             BasilBaseTest::class
         );
 
-        $emptyTargetConfiguration = new GenerateCommandConfiguration(
+        $emptyTargetConfiguration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             '',
             BasilBaseTest::class
         );
 
-        $invalidConfiguration = new GenerateCommandConfiguration(
+        $invalidConfiguration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             'NonExistentBaseClass'
@@ -283,13 +283,13 @@ class GenerateCommandTest extends AbstractBaseTest
 
     /**
      * @param array<mixed> $args
-     * @param GenerateCommandConfiguration $configuration
+     * @param Configuration $configuration
      *
      * @return GenerateCommandConfigurationFactory
      */
     private function createConfigurationFactory(
         array $args,
-        GenerateCommandConfiguration $configuration
+        Configuration $configuration
     ): GenerateCommandConfigurationFactory {
         $factory = \Mockery::mock(GenerateCommandConfigurationFactory::class);
 
@@ -302,14 +302,14 @@ class GenerateCommandTest extends AbstractBaseTest
     }
 
     private function createGenerateCommandConfigurationValidator(
-        GenerateCommandConfiguration $expectedConfiguration,
+        Configuration $expectedConfiguration,
         int $errorCode
     ): GenerateCommandConfigurationValidator {
         $validator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
 
         $validator
             ->shouldReceive('isValid')
-            ->withArgs(function (GenerateCommandConfiguration $configuration) use ($expectedConfiguration) {
+            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
                 $this->assertEquals($expectedConfiguration, $configuration);
 
                 return true;
@@ -318,7 +318,7 @@ class GenerateCommandTest extends AbstractBaseTest
 
         $validator
             ->shouldReceive('deriveInvalidConfigurationErrorCode')
-            ->withArgs(function (GenerateCommandConfiguration $configuration) use ($expectedConfiguration) {
+            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
                 $this->assertEquals($expectedConfiguration, $configuration);
 
                 return true;

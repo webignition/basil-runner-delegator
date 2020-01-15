@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 
 class GenerateCommandConfigurationValidator
 {
-    public function isValid(GenerateCommandConfiguration $configuration): bool
+    public function isValid(Configuration $configuration): bool
     {
         $source = $configuration->getSource();
         $target = $configuration->getTarget();
@@ -41,7 +41,7 @@ class GenerateCommandConfigurationValidator
         return true;
     }
 
-    public function deriveInvalidConfigurationErrorCode(GenerateCommandConfiguration $configuration): int
+    public function deriveInvalidConfigurationErrorCode(Configuration $configuration): int
     {
         $source = $configuration->getSource();
         if ('' === $source) {

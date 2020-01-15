@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\GenerateCommand;
 
-class GenerateCommandConfiguration implements \JsonSerializable
+class Configuration implements \JsonSerializable
 {
     private $source;
     private $target;

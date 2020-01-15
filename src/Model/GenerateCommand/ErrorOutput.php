@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\GenerateCommand;
 
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
-
 class ErrorOutput extends AbstractOutput implements \JsonSerializable
 {
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
@@ -25,13 +23,13 @@ class ErrorOutput extends AbstractOutput implements \JsonSerializable
     private $context;
 
     /**
-     * @param GenerateCommandConfiguration $configuration
+     * @param Configuration $configuration
      * @param string $message
      * @param int $code
      * @param array<mixed> $context
      */
     public function __construct(
-        GenerateCommandConfiguration $configuration,
+        Configuration $configuration,
         string $message,
         int $code,
         array $context = []
@@ -70,7 +68,7 @@ class ErrorOutput extends AbstractOutput implements \JsonSerializable
         $contextData = $errorData['context'] ?? [];
 
         return new ErrorOutput(
-            new GenerateCommandConfiguration(
+            new Configuration(
                 $configData['source'],
                 $configData['target'],
                 $configData['base-class']

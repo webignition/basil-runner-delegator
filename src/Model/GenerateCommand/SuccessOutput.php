@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\GenerateCommand;
 
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 
 class SuccessOutput extends AbstractOutput implements \JsonSerializable
@@ -17,10 +16,10 @@ class SuccessOutput extends AbstractOutput implements \JsonSerializable
     private $output;
 
     /**
-     * @param GenerateCommandConfiguration $configuration
+     * @param Configuration $configuration
      * @param array<GeneratedTestOutput> $output
      */
-    public function __construct(GenerateCommandConfiguration $configuration, array $output)
+    public function __construct(Configuration $configuration, array $output)
     {
         parent::__construct($configuration, self::STATUS_SUCCESS, self::CODE);
 
@@ -59,7 +58,7 @@ class SuccessOutput extends AbstractOutput implements \JsonSerializable
         }
 
         return new SuccessOutput(
-            new GenerateCommandConfiguration(
+            new Configuration(
                 $configData['source'],
                 $configData['target'],
                 $configData['base-class']

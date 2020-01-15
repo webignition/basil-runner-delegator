@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Model\GenerateCommand;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -27,7 +27,7 @@ class ErrorOutputTest extends AbstractBaseTest
         return [
             'without context' => [
                 'output' => new ErrorOutput(
-                    new GenerateCommandConfiguration(
+                    new Configuration(
                         'source-value',
                         'target-value',
                         TestCase::class
@@ -50,7 +50,7 @@ class ErrorOutputTest extends AbstractBaseTest
             ],
             'with context' => [
                 'output' => new ErrorOutput(
-                    new GenerateCommandConfiguration(
+                    new Configuration(
                         'source-value',
                         'target-value',
                         TestCase::class

@@ -6,7 +6,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -30,7 +30,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
@@ -45,7 +45,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
@@ -59,7 +59,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     /**
      * @dataProvider isValidDataProvider
      */
-    public function testIsValid(GenerateCommandConfiguration $configuration, bool $expectedIsValid)
+    public function testIsValid(Configuration $configuration, bool $expectedIsValid)
     {
         $this->assertSame($expectedIsValid, $this->validator->isValid($configuration));
     }
@@ -73,23 +73,23 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
 
         return [
             'valid' => [
-                'configuration' => new GenerateCommandConfiguration($source, $target, TestCase::class),
+                'configuration' => new Configuration($source, $target, TestCase::class),
                 'expectedIsValid' => true,
             ],
             'invalid: source is empty' => [
-                'configuration' => new GenerateCommandConfiguration('', $target, TestCase::class),
+                'configuration' => new Configuration('', $target, TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: target is empty' => [
-                'configuration' => new GenerateCommandConfiguration($source, '', TestCase::class),
+                'configuration' => new Configuration($source, '', TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: target is not a directory, is a file' => [
-                'configuration' => new GenerateCommandConfiguration($source, $source, TestCase::class),
+                'configuration' => new Configuration($source, $source, TestCase::class),
                 'expectedIsValid' => false,
             ],
             'invalid: base class does not exist' => [
-                'configuration' => new GenerateCommandConfiguration($source, $target, 'Foo'),
+                'configuration' => new Configuration($source, $target, 'Foo'),
                 'expectedIsValid' => false,
             ],
         ];
@@ -99,7 +99,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class
@@ -117,7 +117,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $configuration = new GenerateCommandConfiguration(
+        $configuration = new Configuration(
             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
             $root . '/tests/build/target',
             TestCase::class

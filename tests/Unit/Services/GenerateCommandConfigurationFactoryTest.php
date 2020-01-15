@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -33,7 +33,7 @@ class GenerateCommandConfigurationFactoryTest extends AbstractBaseTest
         string $rawSource,
         string $rawTarget,
         string $baseClass,
-        GenerateCommandConfiguration $expectedConfiguration
+        Configuration $expectedConfiguration
     ) {
         $this->assertEquals($expectedConfiguration, $this->factory->create($rawSource, $rawTarget, $baseClass));
     }
@@ -47,7 +47,7 @@ class GenerateCommandConfigurationFactoryTest extends AbstractBaseTest
                 'rawSource' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 'rawTarget' => 'tests/build/target',
                 'baseClass' => TestCase::class,
-                'expectedConfiguration' => new GenerateCommandConfiguration(
+                'expectedConfiguration' => new Configuration(
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     $root . '/tests/build/target',
                     TestCase::class

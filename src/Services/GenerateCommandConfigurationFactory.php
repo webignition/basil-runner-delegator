@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 
 class GenerateCommandConfigurationFactory
 {
@@ -15,9 +15,9 @@ class GenerateCommandConfigurationFactory
         $this->projectRootPath = $projectRootPathProvider->get();
     }
 
-    public function create(string $rawSource, string $rawTarget, string $baseClass): GenerateCommandConfiguration
+    public function create(string $rawSource, string $rawTarget, string $baseClass): Configuration
     {
-        return new GenerateCommandConfiguration(
+        return new Configuration(
             (string) $this->getAbsolutePath($rawSource),
             (string) $this->getAbsolutePath($rawTarget),
             $baseClass

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 
 class GenerateCommandErrorOutputFactory
@@ -38,26 +38,25 @@ class GenerateCommandErrorOutputFactory
         $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
     }
 
-    public function createFromInvalidConfiguration(
-        GenerateCommandConfiguration $configuration
-    ): ErrorOutput {
+    public function createFromInvalidConfiguration(Configuration $configuration): ErrorOutput
+    {
         return $this->create(
             $configuration,
             $this->generateCommandConfigurationValidator->deriveInvalidConfigurationErrorCode($configuration)
         );
     }
 
-    public function createForEmptySource(GenerateCommandConfiguration $configuration): ErrorOutput
+    public function createForEmptySource(Configuration $configuration): ErrorOutput
     {
         return $this->create($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
     }
 
-    public function createForEmptyTarget(GenerateCommandConfiguration $configuration): ErrorOutput
+    public function createForEmptyTarget(Configuration $configuration): ErrorOutput
     {
         return $this->create($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
-    private function create(GenerateCommandConfiguration $configuration, int $errorCode): ErrorOutput
+    private function create(Configuration $configuration, int $errorCode): ErrorOutput
     {
         $errorMessage = $this->errorMessages[$errorCode] ?? 'unknown';
 
