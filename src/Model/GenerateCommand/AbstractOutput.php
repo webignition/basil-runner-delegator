@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\GenerateCommand;
 
-abstract class AbstractGenerateCommandOutput implements GenerateCommandOutputInterface
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
+
+abstract class AbstractOutput implements GenerateCommandOutputInterface
 {
     protected const STATUS_SUCCESS = 'success';
     protected const STATUS_FAILURE = 'failure';

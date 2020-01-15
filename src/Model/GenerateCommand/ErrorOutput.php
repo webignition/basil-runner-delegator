@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\GenerateCommand;
 
-use webignition\BasilRunner\Model\AbstractGenerateCommandOutput;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 
-class ErrorOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
+class ErrorOutput extends AbstractOutput implements \JsonSerializable
 {
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
     public const CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST = 101;

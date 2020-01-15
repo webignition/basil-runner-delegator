@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\GenerateCommand;
 
-use webignition\BasilRunner\Model\AbstractGenerateCommandOutput;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 
-class SuccessOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
+class SuccessOutput extends AbstractOutput implements \JsonSerializable
 {
     private const CODE = 0;
 
