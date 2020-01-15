@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
+use webignition\BasilLoader\Exception\YamlLoaderException;
+use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 
 class ErrorOutputFactory
 {
@@ -41,7 +42,7 @@ class ErrorOutputFactory
 
     public function createFromInvalidConfiguration(Configuration $configuration): ErrorOutput
     {
-        return $this->create(
+        return $this->createFromErrorCode(
             $configuration,
             $this->generateCommandConfigurationValidator->deriveInvalidConfigurationErrorCode($configuration)
         );
@@ -49,15 +50,50 @@ class ErrorOutputFactory
 
     public function createForEmptySource(Configuration $configuration): ErrorOutput
     {
-        return $this->create($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
+        return $this->createFromErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
     }
 
     public function createForEmptyTarget(Configuration $configuration): ErrorOutput
     {
-        return $this->create($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
+        return $this->createFromErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
-    private function create(Configuration $configuration, int $errorCode): ErrorOutput
+    public function createForYamlLoaderException(
+        YamlLoaderException $yamlLoaderException,
+        Configuration $configuration
+    ): ErrorOutput {
+        $message = $yamlLoaderException->getMessage();
+        $previousException = $yamlLoaderException->getPrevious();
+
+        if ($previousException instanceof \Exception) {
+            $message = $previousException->getMessage();
+        }
+
+        return new ErrorOutput(
+            $configuration,
+            $message,
+            ErrorOutput::CODE_LOADER_EXCEPTION,
+            [
+                'path' => $yamlLoaderException->getPath()
+            ]
+        );
+    }
+
+    public function createForCircularStepImportException(
+        CircularStepImportException $circularStepImportException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $circularStepImportException->getMessage(),
+            ErrorOutput::CODE_RESOLVER_EXCEPTION,
+            [
+                'import_name' => $circularStepImportException->getImportName(),
+            ]
+        );
+    }
+
+    private function createFromErrorCode(Configuration $configuration, int $errorCode): ErrorOutput
     {
         $errorMessage = $this->errorMessages[$errorCode] ?? 'unknown';
 
