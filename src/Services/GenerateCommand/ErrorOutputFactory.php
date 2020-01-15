@@ -65,6 +65,31 @@ class ErrorOutputFactory
         return $this->createFromErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
+    public function createForException(\Exception $exception, Configuration $configuration): ErrorOutput
+    {
+        if ($exception instanceof YamlLoaderException) {
+            return $this->createForYamlLoaderException($exception, $configuration);
+        }
+
+        if ($exception instanceof CircularStepImportException) {
+            return $this->createForCircularStepImportException($exception, $configuration);
+        }
+
+        if ($exception instanceof EmptyTestException) {
+            return $this->createForEmptyTestException($exception, $configuration);
+        }
+
+        if ($exception instanceof InvalidPageException) {
+            return $this->createForInvalidPageException($exception, $configuration);
+        }
+
+        return new ErrorOutput(
+            $configuration,
+            'An unknown error has occurred',
+            ErrorOutput::CODE_UNKNOWN
+        );
+    }
+
     public function createForYamlLoaderException(
         YamlLoaderException $yamlLoaderException,
         Configuration $configuration

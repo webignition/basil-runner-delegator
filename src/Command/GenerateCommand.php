@@ -145,32 +145,13 @@ class GenerateCommand extends Command
         foreach ($sourcePaths as $sourcePath) {
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
-            } catch (YamlLoaderException $yamlLoaderException) {
-                $commandOutput = $this->errorOutputFactory->createForYamlLoaderException(
-                    $yamlLoaderException,
-                    $configuration
-                );
-
-                return $this->render($commandOutput);
-            } catch (CircularStepImportException $circularStepImportException) {
-                $commandOutput = $this->errorOutputFactory->createForCircularStepImportException(
-                    $circularStepImportException,
-                    $configuration
-                );
-
-                return $this->render($commandOutput);
-            } catch (EmptyTestException $emptyTestException) {
-                $commandOutput = $this->errorOutputFactory->createForEmptyTestException(
-                    $emptyTestException,
-                    $configuration
-                );
-
-                return $this->render($commandOutput);
-            } catch (InvalidPageException $invalidPageException) {
-                $commandOutput = $this->errorOutputFactory->createForInvalidPageException(
-                    $invalidPageException,
-                    $configuration
-                );
+            } catch (
+                CircularStepImportException |
+                EmptyTestException |
+                InvalidPageException |
+                YamlLoaderException $exception
+            ) {
+                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
 
                 return $this->render($commandOutput);
             }

@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Model\GenerateCommand;
 
 class ErrorOutput extends AbstractOutput implements \JsonSerializable
 {
+    public const CODE_UNKNOWN = 99;
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
     public const CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST = 101;
     public const CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE = 102;
