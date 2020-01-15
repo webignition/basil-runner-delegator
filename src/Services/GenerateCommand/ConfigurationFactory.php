@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
+use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
-class GenerateCommandConfigurationFactory
+class ConfigurationFactory
 {
     private $projectRootPath;
 

@@ -13,7 +13,7 @@ use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
@@ -33,7 +33,7 @@ class GenerateCommandTest extends AbstractBaseTest
      */
     public function testRunSuccess(
         array $input,
-        GenerateCommandConfigurationFactory $configurationFactory,
+        ConfigurationFactory $configurationFactory,
         TestGenerator $testGenerator,
         SuccessOutput $expectedCommandOutput
     ): void {
@@ -139,7 +139,7 @@ class GenerateCommandTest extends AbstractBaseTest
      */
     public function testRunFailure(
         array $input,
-        GenerateCommandConfigurationFactory $configurationFactory,
+        ConfigurationFactory $configurationFactory,
         GenerateCommandConfigurationValidator $configurationValidator,
         int $validationErrorCode,
         ErrorOutput $expectedCommandOutput
@@ -255,7 +255,7 @@ class GenerateCommandTest extends AbstractBaseTest
     }
 
     private function createCommand(
-        GenerateCommandConfigurationFactory $configurationFactory,
+        ConfigurationFactory $configurationFactory,
         GenerateCommandConfigurationValidator $configurationValidator,
         TestGenerator $testGenerator
     ): GenerateCommand {
@@ -285,13 +285,13 @@ class GenerateCommandTest extends AbstractBaseTest
      * @param array<mixed> $args
      * @param Configuration $configuration
      *
-     * @return GenerateCommandConfigurationFactory
+     * @return \webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory
      */
     private function createConfigurationFactory(
         array $args,
         Configuration $configuration
-    ): GenerateCommandConfigurationFactory {
-        $factory = \Mockery::mock(GenerateCommandConfigurationFactory::class);
+    ): ConfigurationFactory {
+        $factory = \Mockery::mock(ConfigurationFactory::class);
 
         $factory
             ->shouldReceive('create')

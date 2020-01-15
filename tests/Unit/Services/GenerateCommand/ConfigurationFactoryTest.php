@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunner\Tests\Unit\Services\GenerateCommand;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandConfigurationFactoryTest extends AbstractBaseTest
+class ConfigurationFactoryTest extends AbstractBaseTest
 {
     /**
-     * @var GenerateCommandConfigurationFactory
+     * @var ConfigurationFactory
      */
     private $factory;
 
@@ -21,7 +21,7 @@ class GenerateCommandConfigurationFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new GenerateCommandConfigurationFactory(
+        $this->factory = new ConfigurationFactory(
             new ProjectRootPathProvider()
         );
     }
