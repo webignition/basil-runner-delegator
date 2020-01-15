@@ -16,7 +16,6 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
 
     private $message;
-    private $code;
 
     /**
      * @var array<mixed>
@@ -35,16 +34,10 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
         int $code,
         array $context = []
     ) {
-        parent::__construct($configuration, self::STATUS_FAILURE);
+        parent::__construct($configuration, self::STATUS_FAILURE, $code);
 
         $this->message = $message;
-        $this->code = $code;
         $this->context = $context;
-    }
-
-    public function getCode(): int
-    {
-        return $this->code;
     }
 
     /**
@@ -54,7 +47,7 @@ class GenerateCommandErrorOutput extends AbstractGenerateCommandOutput implement
     {
         $errorData = [
             'message' => $this->message,
-            'code' => $this->code,
+            'code' => $this->getCode(),
         ];
 
         if ([] !== $this->context) {
