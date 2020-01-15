@@ -148,6 +148,7 @@ class ErrorOutputFactory
             $invalidPageException->getMessage(),
             ErrorOutput::CODE_LOADER_INVALID_PAGE,
             [
+                'test' => $invalidPageException->getTestPath(),
                 'import_name' => $invalidPageException->getImportName(),
                 'path' => $invalidPageException->getPath(),
                 'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
