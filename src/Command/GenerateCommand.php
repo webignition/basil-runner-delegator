@@ -23,7 +23,7 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
-use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
+use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCommandOutputInterface;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;

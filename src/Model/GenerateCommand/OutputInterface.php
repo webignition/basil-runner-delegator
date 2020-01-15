@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\GenerateCommand;
 
-interface GenerateCommandOutputInterface extends \JsonSerializable
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+
+interface OutputInterface extends \JsonSerializable
 {
     public function getConfiguration(): GenerateCommandConfiguration;
     public function getCode(): int;

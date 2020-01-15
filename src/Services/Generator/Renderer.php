@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\Generator;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
+use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCommandOutputInterface;
 
 class Renderer
 {
