@@ -15,7 +15,7 @@ use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
@@ -265,7 +265,7 @@ class GenerateCommandTest extends AbstractBaseTest
             new ProjectRootPathProvider(),
             $configurationFactory,
             $configurationValidator,
-            new GenerateCommandErrorOutputFactory($configurationValidator),
+            new ErrorOutputFactory($configurationValidator),
             new Renderer()
         );
     }

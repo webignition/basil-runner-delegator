@@ -27,7 +27,7 @@ use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCom
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
@@ -55,7 +55,7 @@ class GenerateCommand extends Command
         ProjectRootPathProvider $projectRootPathProvider,
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
-        GenerateCommandErrorOutputFactory $errorOutputFactory,
+        ErrorOutputFactory $errorOutputFactory,
         Renderer $outputRenderer
     ) {
         parent::__construct();

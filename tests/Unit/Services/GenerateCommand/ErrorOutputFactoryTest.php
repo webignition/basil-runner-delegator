@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunner\Tests\Unit\Services\GenerateCommand;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
+class ErrorOutputFactoryTest extends AbstractBaseTest
 {
     /**
      * @dataProvider createFromInvalidConfigurationDataProvider
@@ -22,7 +22,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
         ConfigurationValidator $generateCommandConfigurationValidator,
         ErrorOutput $expectedOutput
     ) {
-        $factory = new GenerateCommandErrorOutputFactory(
+        $factory = new ErrorOutputFactory(
             $generateCommandConfigurationValidator
         );
 

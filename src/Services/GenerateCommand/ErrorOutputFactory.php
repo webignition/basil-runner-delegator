@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 
-class GenerateCommandErrorOutputFactory
+class ErrorOutputFactory
 {
     /**
      * @var array<int, string>
