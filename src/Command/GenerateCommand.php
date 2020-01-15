@@ -23,11 +23,12 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
-use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
+use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
 use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
+use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
@@ -46,6 +47,7 @@ class GenerateCommand extends Command
     private $configurationFactory;
     private $configurationValidator;
     private $errorOutputFactory;
+    private $outputRenderer;
 
     public function __construct(
         SourceLoader $sourceLoader,
@@ -53,7 +55,8 @@ class GenerateCommand extends Command
         ProjectRootPathProvider $projectRootPathProvider,
         GenerateCommandConfigurationFactory $configurationFactory,
         GenerateCommandConfigurationValidator $configurationValidator,
-        GenerateCommandErrorOutputFactory $errorOutputFactory
+        GenerateCommandErrorOutputFactory $errorOutputFactory,
+        Renderer $outputRenderer
     ) {
         parent::__construct();
 
@@ -63,6 +66,7 @@ class GenerateCommand extends Command
         $this->configurationFactory = $configurationFactory;
         $this->configurationValidator = $configurationValidator;
         $this->errorOutputFactory = $errorOutputFactory;
+        $this->outputRenderer = $outputRenderer;
     }
 
     protected function configure(): void
@@ -117,6 +121,8 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->outputRenderer->setOutput($output);
+
         $typedInput = new TypedInput($input);
 
         $rawSource = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_SOURCE));
@@ -126,18 +132,15 @@ class GenerateCommand extends Command
         $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
 
         if ('' === $rawSource) {
-            return $this->printErrorOutput($this->errorOutputFactory->createForEmptySource($configuration), $output);
+            return $this->render($this->errorOutputFactory->createForEmptySource($configuration));
         }
 
         if ('' === $rawTarget) {
-            return $this->printErrorOutput($this->errorOutputFactory->createForEmptyTarget($configuration), $output);
+            return $this->render($this->errorOutputFactory->createForEmptyTarget($configuration));
         }
 
         if (false === $this->configurationValidator->isValid($configuration)) {
-            return $this->printErrorOutput(
-                $this->errorOutputFactory->createFromInvalidConfiguration($configuration),
-                $output
-            );
+            return $this->render($this->errorOutputFactory->createFromInvalidConfiguration($configuration));
         }
 
         $sourcePaths = $this->createSourcePaths($configuration->getSource());
@@ -157,9 +160,7 @@ class GenerateCommand extends Command
 
         $commandOutput = new GenerateCommandSuccessOutput($configuration, $generatedFiles);
 
-        $output->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
-
-        return 0;
+        return $this->render($commandOutput);
     }
 
     /**
@@ -204,10 +205,10 @@ class GenerateCommand extends Command
         return $sourcePaths;
     }
 
-    private function printErrorOutput(GenerateCommandErrorOutput $errorOutput, OutputInterface $output): int
+    private function render(GenerateCommandOutputInterface $commandOutput): int
     {
-        $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
+        $this->outputRenderer->render($commandOutput);
 
-        return $errorOutput->getCode();
+        return $commandOutput->getCode();
     }
 }
