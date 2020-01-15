@@ -319,31 +319,12 @@ class GenerateCommandTest extends AbstractFunctionalTest
         $root = (new ProjectRootPathProvider())->get();
 
         return [
-            'test suite imports test containing non-array data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                'expectedCommandOutput' => new GenerateCommandErrorOutput(
-                    new GenerateCommandConfiguration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Data is not an array',
-                    GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ]
-                ),
-            ],
             'test imports step which imports self' => [
                 'input' => [
                     '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration(
                         $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
@@ -362,7 +343,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'expectedExitCode' => GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedExitCode' => GenerateCommandErrorOutput::CODE_RESOLVER_EXCEPTION,
                 'expectedCommandOutput' => new GenerateCommandErrorOutput(
                     new GenerateCommandConfiguration(
                         $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',

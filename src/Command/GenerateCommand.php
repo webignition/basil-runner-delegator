@@ -155,7 +155,7 @@ class GenerateCommand extends Command
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-                return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
+                return $errorOutput->getCode();
             } catch (CircularStepImportException $circularStepImportException) {
                 $errorOutput = $this->errorOutputFactory->createForCircularStepImportException(
                     $circularStepImportException,
@@ -164,7 +164,7 @@ class GenerateCommand extends Command
 
                 $output->writeln((string) json_encode($errorOutput, JSON_PRETTY_PRINT));
 
-                return GenerateCommandErrorOutput::CODE_LOADER_EXCEPTION;
+                return $errorOutput->getCode();
             }
 
             foreach ($testSuite->getTests() as $test) {
