@@ -11,7 +11,7 @@ use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
@@ -54,7 +54,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         $this->assertSame(0, $exitCode);
 
-        $commandOutput = GenerateCommandSuccessOutput::fromJson($output->fetch());
+        $commandOutput = SuccessOutput::fromJson($output->fetch());
 
         $outputData = $commandOutput->getOutput();
         $this->assertCount(count($expectedGeneratedTestOutputSources), $outputData);

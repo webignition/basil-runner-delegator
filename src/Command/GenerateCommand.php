@@ -24,7 +24,7 @@ use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
 use webignition\BasilRunner\Model\GenerateCommandOutputInterface;
-use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
@@ -158,7 +158,7 @@ class GenerateCommand extends Command
             }
         }
 
-        $commandOutput = new GenerateCommandSuccessOutput($configuration, $generatedFiles);
+        $commandOutput = new SuccessOutput($configuration, $generatedFiles);
 
         return $this->render($commandOutput);
     }

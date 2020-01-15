@@ -11,7 +11,7 @@ use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommandConfiguration;
 use webignition\BasilRunner\Model\GenerateCommandErrorOutput;
-use webignition\BasilRunner\Model\GenerateCommandSuccessOutput;
+use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
@@ -28,14 +28,14 @@ class GenerateCommandTest extends AbstractBaseTest
      *
      * @param array<string, string> $input
      * @param TestGenerator $testGenerator
-     * @param GenerateCommandSuccessOutput $expectedCommandOutput
+     * @param \webignition\BasilRunner\Model\GenerateCommand\SuccessOutput $expectedCommandOutput
      *
      */
     public function testRunSuccess(
         array $input,
         GenerateCommandConfigurationFactory $configurationFactory,
         TestGenerator $testGenerator,
-        GenerateCommandSuccessOutput $expectedCommandOutput
+        SuccessOutput $expectedCommandOutput
     ): void {
         $configurationValidator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
         $configurationValidator
@@ -50,7 +50,7 @@ class GenerateCommandTest extends AbstractBaseTest
         $this->assertSame(0, $exitCode);
 
         $output = $commandTester->getDisplay();
-        $commandOutput = GenerateCommandSuccessOutput::fromJson($output);
+        $commandOutput = SuccessOutput::fromJson($output);
         $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -86,7 +86,7 @@ class GenerateCommandTest extends AbstractBaseTest
                         ),
                     ],
                 ])),
-                'expectedCommandOutput' => new GenerateCommandSuccessOutput(
+                'expectedCommandOutput' => new SuccessOutput(
                     new GenerateCommandConfiguration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',

@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\GenerateCommand;
 
-class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
+use webignition\BasilRunner\Model\AbstractGenerateCommandOutput;
+use webignition\BasilRunner\Model\GenerateCommandConfiguration;
+use webignition\BasilRunner\Model\GeneratedTestOutput;
+
+class SuccessOutput extends AbstractGenerateCommandOutput implements \JsonSerializable
 {
     private const CODE = 0;
 
@@ -43,7 +47,7 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
         return $serializedData;
     }
 
-    public static function fromJson(string $json): GenerateCommandSuccessOutput
+    public static function fromJson(string $json): SuccessOutput
     {
         $data = json_decode($json, true);
         $configData = $data['config'];
@@ -55,7 +59,7 @@ class GenerateCommandSuccessOutput extends AbstractGenerateCommandOutput impleme
             $output[] = GeneratedTestOutput::fromArray($generatedTestOutput);
         }
 
-        return new GenerateCommandSuccessOutput(
+        return new SuccessOutput(
             new GenerateCommandConfiguration(
                 $configData['source'],
                 $configData['target'],
