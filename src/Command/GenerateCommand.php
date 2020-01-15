@@ -105,7 +105,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws InvalidPageException
      * @throws InvalidTestException
      * @throws NonRetrievableImportException
      * @throws ParseException
@@ -163,6 +162,13 @@ class GenerateCommand extends Command
             } catch (EmptyTestException $emptyTestException) {
                 $commandOutput = $this->errorOutputFactory->createForEmptyTestException(
                     $emptyTestException,
+                    $configuration
+                );
+
+                return $this->render($commandOutput);
+            } catch (InvalidPageException $invalidPageException) {
+                $commandOutput = $this->errorOutputFactory->createForInvalidPageException(
+                    $invalidPageException,
                     $configuration
                 );
 
