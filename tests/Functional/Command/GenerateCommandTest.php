@@ -216,6 +216,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @dataProvider runFailureCircularStepImportDataProvider
      * @dataProvider runFailureEmptyTestDataProvider
      * @dataProvider runInvalidPageDataProvider
+     * @dataProvider runInvalidTestDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -452,6 +453,78 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'validation-result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
+                        ],
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    public function runInvalidTestDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $testWithInvalidConfigurationPath = 'tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
+        $testWithInvalidConfigurationAbsolutePath = $root . '/' . $testWithInvalidConfigurationPath;
+
+        $testSuiteImportingInvalidTestPath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
+        $testSuiteImportingInvalidTestAbsolutePath = $root . '/' . $testSuiteImportingInvalidTestPath;
+
+        return [
+            'test has invalid configuration' => [
+                'input' => [
+                    '--source' => $testWithInvalidConfigurationPath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $testWithInvalidConfigurationAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Invalid test at path "' .
+                    $testWithInvalidConfigurationAbsolutePath .
+                    '": test-configuration-invalid',
+                    ErrorOutput::CODE_LOADER_INVALID_TEST,
+                    [
+                        'path' => $testWithInvalidConfigurationAbsolutePath,
+                        'validation-result' => [
+                            'type' => 'test',
+                            'reason' => 'test-configuration-invalid',
+                            'previous' => [
+                                'type' => 'test-configuration',
+                                'reason' => 'test-configuration-browser-empty',
+                            ],
+                        ],
+                    ]
+                ),
+            ],
+            'test suite imports test with invalid configuration' => [
+                'input' => [
+                    '--source' => $testSuiteImportingInvalidTestPath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $testSuiteImportingInvalidTestAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Invalid test at path "' .
+                    $testWithInvalidConfigurationAbsolutePath .
+                    '": test-configuration-invalid',
+                    ErrorOutput::CODE_LOADER_INVALID_TEST,
+                    [
+                        'path' => $testWithInvalidConfigurationAbsolutePath,
+                        'validation-result' => [
+                            'type' => 'test',
+                            'reason' => 'test-configuration-invalid',
+                            'previous' => [
+                                'type' => 'test-configuration',
+                                'reason' => 'test-configuration-browser-empty',
+                            ],
                         ],
                     ]
                 ),
