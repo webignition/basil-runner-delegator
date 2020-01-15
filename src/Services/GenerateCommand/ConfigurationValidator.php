@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 
-class GenerateCommandConfigurationValidator
+class ConfigurationValidator
 {
     public function isValid(Configuration $configuration): bool
     {

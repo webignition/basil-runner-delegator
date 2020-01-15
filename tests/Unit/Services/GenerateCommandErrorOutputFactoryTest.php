@@ -7,7 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services;
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -19,7 +19,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
      */
     public function testCreateFromInvalidConfiguration(
         Configuration $configuration,
-        GenerateCommandConfigurationValidator $generateCommandConfigurationValidator,
+        ConfigurationValidator $generateCommandConfigurationValidator,
         ErrorOutput $expectedOutput
     ) {
         $factory = new GenerateCommandErrorOutputFactory(
@@ -40,7 +40,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
         return [
             'source does not exist' => [
                 'configuration' => new Configuration('', $target, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration('', $target, $baseClass),
                     ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
                 ),
@@ -52,7 +52,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
             ],
             'source not readable' => [
                 'configuration' => new Configuration('', $target, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration('', $target, $baseClass),
                     ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
                 ),
@@ -64,7 +64,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
             ],
             'target does not exist' => [
                 'configuration' => new Configuration($source, '', $baseClass),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration($source, '', $baseClass),
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
                 ),
@@ -76,7 +76,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
             ],
             'target not writable' => [
                 'configuration' => new Configuration($source, '', $baseClass),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration($source, '', $baseClass),
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
                 ),
@@ -88,7 +88,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
             ],
             'target not a directory' => [
                 'configuration' => new Configuration($source, $source, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration($source, $source, $baseClass),
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
@@ -100,7 +100,7 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
             ],
             'base class does not exist' => [
                 'configuration' => new Configuration($source, $target, 'Foo'),
-                'generateCommandConfigurationValidator' => $this->createGenerateCommandConfigurationValidator(
+                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
                     new Configuration($source, $target, 'Foo'),
                     ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
                 ),
@@ -113,11 +113,11 @@ class GenerateCommandErrorOutputFactoryTest extends AbstractBaseTest
         ];
     }
 
-    private function createGenerateCommandConfigurationValidator(
+    private function createConfigurationValidator(
         Configuration $expectedConfiguration,
         int $errorCode
-    ): GenerateCommandConfigurationValidator {
-        $validator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
+    ): ConfigurationValidator {
+        $validator = \Mockery::mock(ConfigurationValidator::class);
 
         $validator
             ->shouldReceive('deriveInvalidConfigurationErrorCode')

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunner\Tests\Unit\Services\GenerateCommand;
 
 use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
+class ConfigurationValidatorTest extends AbstractBaseTest
 {
     /**
-     * @var GenerateCommandConfigurationValidator
+     * @var ConfigurationValidator
      */
     private $validator;
 
@@ -23,7 +23,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->validator = new GenerateCommandConfigurationValidator();
+        $this->validator = new ConfigurationValidator();
     }
 
     public function testIsValidSourceNotReadable(): void
@@ -36,7 +36,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_readable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_readable')->andReturn(false);
 
         $this->assertFalse($this->validator->isValid($configuration));
     }
@@ -51,7 +51,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_writable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_writable')->andReturn(false);
 
         $this->assertFalse($this->validator->isValid($configuration));
     }
@@ -105,7 +105,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_readable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_readable')->andReturn(false);
 
         $this->assertSame(
             ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE,
@@ -123,7 +123,7 @@ class GenerateCommandConfigurationValidatorTest extends AbstractBaseTest
             TestCase::class
         );
 
-        PHPMockery::mock('webignition\BasilRunner\Services', 'is_writable')->andReturn(false);
+        PHPMockery::mock('webignition\BasilRunner\Services\GenerateCommand', 'is_writable')->andReturn(false);
 
         $this->assertSame(
             ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE,

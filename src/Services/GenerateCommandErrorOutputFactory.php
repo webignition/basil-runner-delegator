@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Services;
 
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 
 class GenerateCommandErrorOutputFactory
 {
@@ -33,7 +34,7 @@ class GenerateCommandErrorOutputFactory
 
     private $generateCommandConfigurationValidator;
 
-    public function __construct(GenerateCommandConfigurationValidator $generateCommandConfigurationValidator)
+    public function __construct(ConfigurationValidator $generateCommandConfigurationValidator)
     {
         $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
     }

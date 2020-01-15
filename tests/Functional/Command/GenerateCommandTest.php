@@ -12,7 +12,7 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
@@ -47,7 +47,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
         array $expectedGeneratedCode
     ) {
         $this->mockClassNameFactory($generatedCodeClassNames);
-        $this->mockGenerateCommandValidator();
+        $this->mockConfigurationValidator();
 
         $output = new BufferedOutput();
 
@@ -259,12 +259,12 @@ class GenerateCommandTest extends AbstractFunctionalTest
         );
     }
 
-    private function mockGenerateCommandValidator(): void
+    private function mockConfigurationValidator(): void
     {
         /* @var ObjectReflector $objectReflector */
         $objectReflector = self::$container->get(ObjectReflector::class);
 
-        $generateCommandValidator = \Mockery::mock(GenerateCommandConfigurationValidator::class);
+        $generateCommandValidator = \Mockery::mock(ConfigurationValidator::class);
         $generateCommandValidator
             ->shouldReceive('isValid')
             ->andReturn(true);

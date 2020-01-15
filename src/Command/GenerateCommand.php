@@ -26,7 +26,7 @@ use webignition\BasilResolver\UnknownPageElementException;
 use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCommandOutputInterface;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommandConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommandErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -54,7 +54,7 @@ class GenerateCommand extends Command
         TestGenerator $testGenerator,
         ProjectRootPathProvider $projectRootPathProvider,
         ConfigurationFactory $configurationFactory,
-        GenerateCommandConfigurationValidator $configurationValidator,
+        ConfigurationValidator $configurationValidator,
         GenerateCommandErrorOutputFactory $errorOutputFactory,
         Renderer $outputRenderer
     ) {
