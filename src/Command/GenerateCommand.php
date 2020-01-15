@@ -105,7 +105,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws EmptyTestException
      * @throws InvalidPageException
      * @throws InvalidTestException
      * @throws NonRetrievableImportException
@@ -157,6 +156,13 @@ class GenerateCommand extends Command
             } catch (CircularStepImportException $circularStepImportException) {
                 $commandOutput = $this->errorOutputFactory->createForCircularStepImportException(
                     $circularStepImportException,
+                    $configuration
+                );
+
+                return $this->render($commandOutput);
+            } catch (EmptyTestException $emptyTestException) {
+                $commandOutput = $this->errorOutputFactory->createForEmptyTestException(
+                    $emptyTestException,
                     $configuration
                 );
 

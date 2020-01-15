@@ -214,6 +214,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      *
      * @dataProvider runFailureNonLoadableDataDataProvider
      * @dataProvider runFailureCircularStepImportDataProvider
+     * @dataProvider runFailureEmptyTestDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -354,6 +355,36 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ErrorOutput::CODE_RESOLVER_EXCEPTION,
                     [
                         'import_name' => 'circular_reference_self',
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    public function runFailureEmptyTestDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $emptyTestPath = 'tests/Fixtures/basil/InvalidTest/empty.yml';
+        $emptyTestAbsolutePath = $root . '/' . $emptyTestPath;
+
+        return [
+            'test file is empty' => [
+                'input' => [
+                    '--source' => $emptyTestPath,
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_EXCEPTION,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $emptyTestAbsolutePath,
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Empty test at path "' . $emptyTestAbsolutePath . '"',
+                    ErrorOutput::CODE_LOADER_EXCEPTION,
+                    [
+                        'path' => $emptyTestAbsolutePath,
                     ]
                 ),
             ],

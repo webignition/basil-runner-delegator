@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
+use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
@@ -89,6 +90,20 @@ class ErrorOutputFactory
             ErrorOutput::CODE_RESOLVER_EXCEPTION,
             [
                 'import_name' => $circularStepImportException->getImportName(),
+            ]
+        );
+    }
+
+    public function createForEmptyTestException(
+        EmptyTestException $emptyTestException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $emptyTestException->getMessage(),
+            ErrorOutput::CODE_LOADER_EXCEPTION,
+            [
+                'path' => $emptyTestException->getPath(),
             ]
         );
     }
