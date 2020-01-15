@@ -1,0 +1,11 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  pages:
+    unparseable_page: "../InvalidPage/unparseable.yml"
+
+"use unparseable_page":
+  assertions:
+    - $page.url is $unparseable_page.url
