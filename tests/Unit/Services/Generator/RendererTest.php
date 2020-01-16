@@ -141,5 +141,4 @@ class RendererTest extends AbstractBaseTest
             ],
         ];
     }
-
 }
