@@ -31,6 +31,9 @@ class ErrorOutputFactory
     public const UNPARSEABLE_ASSERTION_EMPTY_IDENTIFIER = 'empty-identifier';
     public const UNPARSEABLE_ASSERTION_EMPTY_VALUE = 'empty-value';
 
+    /**
+     * @var array<mixed>
+     */
     private $unparseableStatementErrorMessages = [
         'action' => [
             UnparseableActionException::CODE_EMPTY => self::UNPARSEABLE_ACTION_EMPTY,
@@ -315,7 +318,7 @@ class ErrorOutputFactory
         );
     }
 
-    private function createUnknownErrorOutput(Configuration $configuration)
+    private function createUnknownErrorOutput(Configuration $configuration): ErrorOutput
     {
         return new ErrorOutput(
             $configuration,
