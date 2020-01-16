@@ -1,0 +1,5 @@
+actions:
+  - click $elements.unknown_element_name
+
+assertions:
+  - $page.url is $page.url
