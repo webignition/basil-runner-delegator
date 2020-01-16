@@ -427,7 +427,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'test' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
                         'path' => $pageAbsolutePath,
-                        'validation-result' => [
+                        'validation_result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
                         ],
@@ -452,7 +452,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'test' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
                         'path' => $pageAbsolutePath,
-                        'validation-result' => [
+                        'validation_result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
                         ],
@@ -491,7 +491,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
                         'path' => $testAbsolutePath,
-                        'validation-result' => [
+                        'validation_result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
                             'previous' => [
@@ -520,7 +520,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
                         'path' => $testAbsolutePath,
-                        'validation-result' => [
+                        'validation_result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
                             'previous' => [
@@ -567,7 +567,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'page',
                         'name' => 'unparseable_page',
                         'path' => $pageAbsolutePath,
-                        'loader-error' => [
+                        'loader_error' => [
                             'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
                             'path' => $pageAbsolutePath,
                         ],
@@ -593,7 +593,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'page',
                         'name' => 'unparseable_page',
                         'path' => $pageAbsolutePath,
-                        'loader-error' => [
+                        'loader_error' => [
                             'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
                             'path' => $pageAbsolutePath,
                         ],
@@ -626,7 +626,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
                         'step_name' => 'contains unparseable action',
-                        'statement-type' => 'action',
+                        'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
 
@@ -651,7 +651,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
                         'step_name' => 'contains unparseable assertion',
-                        'statement-type' => 'assertion',
+                        'statement_type' => 'assertion',
                         'statement' => '$page.url is',
                         'reason' => 'empty-value',
 
@@ -676,7 +676,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
                         'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
-                        'statement-type' => 'action',
+                        'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
 
@@ -701,7 +701,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
                         'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-assertion.yml',
-                        'statement-type' => 'assertion',
+                        'statement_type' => 'assertion',
                         'statement' => '$page.url is',
                         'reason' => 'empty-value',
 
@@ -726,7 +726,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
                         'step_name' => 'contains unparseable action',
-                        'statement-type' => 'action',
+                        'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
 
@@ -751,7 +751,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
                         'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
-                        'statement-type' => 'action',
+                        'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
 
