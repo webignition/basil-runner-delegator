@@ -190,7 +190,7 @@ class ErrorOutputFactory
             $invalidPageException->getMessage(),
             ErrorOutput::CODE_LOADER_INVALID_PAGE,
             [
-                'test' => $invalidPageException->getTestPath(),
+                'test_path' => $invalidPageException->getTestPath(),
                 'import_name' => $invalidPageException->getImportName(),
                 'page_path' => $invalidPageException->getPath(),
                 'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
@@ -235,7 +235,7 @@ class ErrorOutputFactory
             $nonRetrievableImportException->getMessage(),
             ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
             [
-                'test' => $nonRetrievableImportException->getTestPath(),
+                'test_path' => $nonRetrievableImportException->getTestPath(),
                 'type' => $nonRetrievableImportException->getType(),
                 'name' => $nonRetrievableImportException->getName(),
                 'import_path' => $nonRetrievableImportException->getPath(),

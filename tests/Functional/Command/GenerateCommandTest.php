@@ -443,7 +443,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
                         'page_path' => $pageAbsolutePath,
                         'validation_result' => [
@@ -468,7 +468,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
                         'page_path' => $pageAbsolutePath,
                         'validation_result' => [
@@ -582,7 +582,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
                     ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'type' => 'page',
                         'name' => 'unparseable_page',
                         'import_path' => $pageAbsolutePath,
@@ -608,7 +608,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
                     ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'type' => 'page',
                         'name' => 'unparseable_page',
                         'import_path' => $pageAbsolutePath,
