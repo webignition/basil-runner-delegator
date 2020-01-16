@@ -193,7 +193,7 @@ class ErrorOutputFactory
                 'test' => $invalidPageException->getTestPath(),
                 'import_name' => $invalidPageException->getImportName(),
                 'path' => $invalidPageException->getPath(),
-                'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
+                'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidPageException->getValidationResult()
                 )
             ]
@@ -210,7 +210,7 @@ class ErrorOutputFactory
             ErrorOutput::CODE_LOADER_INVALID_TEST,
             [
                 'path' => $invalidTestException->getPath(),
-                'validation-result' => $this->validatorInvalidResultSerializer->serializeToArray(
+                'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidTestException->getValidationResult()
                 )
             ]
@@ -239,7 +239,7 @@ class ErrorOutputFactory
                 'type' => $nonRetrievableImportException->getType(),
                 'name' => $nonRetrievableImportException->getName(),
                 'path' => $nonRetrievableImportException->getPath(),
-                'loader-error' => [
+                'loader_error' => [
                     'message' => $loaderMessage,
                     'path' => $yamlLoaderException->getPath(),
                 ]
@@ -279,7 +279,7 @@ class ErrorOutputFactory
 
             $code = $unparseableStatementException->getCode();
 
-            $context['statement-type'] = $statementType;
+            $context['statement_type'] = $statementType;
             $context['statement'] = $unparseableStatementException->getStatement();
             $context['reason'] = $this->unparseableStatementErrorMessages[$statementType][$code] ?? 'unknown';
         }
