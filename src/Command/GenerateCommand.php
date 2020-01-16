@@ -149,6 +149,7 @@ class GenerateCommand extends Command
                 InvalidPageException |
                 InvalidTestException |
                 NonRetrievableImportException |
+                ParseException |
                 YamlLoaderException $exception
             ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
