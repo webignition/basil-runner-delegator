@@ -190,9 +190,9 @@ class ErrorOutputFactory
             $invalidPageException->getMessage(),
             ErrorOutput::CODE_LOADER_INVALID_PAGE,
             [
-                'test' => $invalidPageException->getTestPath(),
+                'test_path' => $invalidPageException->getTestPath(),
                 'import_name' => $invalidPageException->getImportName(),
-                'path' => $invalidPageException->getPath(),
+                'page_path' => $invalidPageException->getPath(),
                 'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidPageException->getValidationResult()
                 )
@@ -209,7 +209,7 @@ class ErrorOutputFactory
             $invalidTestException->getMessage(),
             ErrorOutput::CODE_LOADER_INVALID_TEST,
             [
-                'path' => $invalidTestException->getPath(),
+                'test_path' => $invalidTestException->getPath(),
                 'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
                     $invalidTestException->getValidationResult()
                 )
@@ -235,10 +235,10 @@ class ErrorOutputFactory
             $nonRetrievableImportException->getMessage(),
             ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
             [
-                'test' => $nonRetrievableImportException->getTestPath(),
+                'test_path' => $nonRetrievableImportException->getTestPath(),
                 'type' => $nonRetrievableImportException->getType(),
                 'name' => $nonRetrievableImportException->getName(),
-                'path' => $nonRetrievableImportException->getPath(),
+                'import_path' => $nonRetrievableImportException->getPath(),
                 'loader_error' => [
                     'message' => $loaderMessage,
                     'path' => $yamlLoaderException->getPath(),

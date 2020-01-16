@@ -316,6 +316,25 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ]
                 ),
             ],
+            'test suite contains unparseable yaml' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Malformed inline YAML string: "../Test/lacking-closing-quote.yml at line 2.',
+                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    [
+                        'path' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
+                    ]
+                ),
+            ],
         ];
     }
 
@@ -424,9 +443,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
-                        'path' => $pageAbsolutePath,
+                        'page_path' => $pageAbsolutePath,
                         'validation_result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
@@ -449,9 +468,9 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
                     ErrorOutput::CODE_LOADER_INVALID_PAGE,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
-                        'path' => $pageAbsolutePath,
+                        'page_path' => $pageAbsolutePath,
                         'validation_result' => [
                             'type' => 'page',
                             'reason' => 'page-url-empty',
@@ -490,7 +509,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     '": test-configuration-invalid',
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
-                        'path' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'validation_result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
@@ -519,7 +538,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     '": test-configuration-invalid',
                     ErrorOutput::CODE_LOADER_INVALID_TEST,
                     [
-                        'path' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'validation_result' => [
                             'type' => 'test',
                             'reason' => 'test-configuration-invalid',
@@ -563,10 +582,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
                     ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'type' => 'page',
                         'name' => 'unparseable_page',
-                        'path' => $pageAbsolutePath,
+                        'import_path' => $pageAbsolutePath,
                         'loader_error' => [
                             'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
                             'path' => $pageAbsolutePath,
@@ -589,10 +608,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
                     ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                     [
-                        'test' => $testAbsolutePath,
+                        'test_path' => $testAbsolutePath,
                         'type' => 'page',
                         'name' => 'unparseable_page',
-                        'path' => $pageAbsolutePath,
+                        'import_path' => $pageAbsolutePath,
                         'loader_error' => [
                             'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
                             'path' => $pageAbsolutePath,
