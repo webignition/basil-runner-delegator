@@ -218,6 +218,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @dataProvider runInvalidPageDataProvider
      * @dataProvider runInvalidTestDataProvider
      * @dataProvider runNonRetrievableImportDataProvider
+     * @dataProvider runParseExceptionDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -596,6 +597,164 @@ class GenerateCommandTest extends AbstractFunctionalTest
                             'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
                             'path' => $pageAbsolutePath,
                         ],
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    public function runParseExceptionDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'test declares step, step contains unparseable action' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable test',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'test',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
+                        'step_name' => 'contains unparseable action',
+                        'statement-type' => 'action',
+                        'statement' => 'click invalid-identifier',
+                        'reason' => 'invalid-identifier',
+
+                    ]
+                ),
+            ],
+            'test declares step, step contains unparseable assertion' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable test',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'test',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
+                        'step_name' => 'contains unparseable assertion',
+                        'statement-type' => 'assertion',
+                        'statement' => '$page.url is',
+                        'reason' => 'empty-value',
+
+                    ]
+                ),
+            ],
+            'test imports step, step contains unparseable action' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable step',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'step',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
+                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
+                        'statement-type' => 'action',
+                        'statement' => 'click invalid-identifier',
+                        'reason' => 'invalid-identifier',
+
+                    ]
+                ),
+            ],
+            'test imports step, step contains unparseable assertion' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable step',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'step',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
+                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-assertion.yml',
+                        'statement-type' => 'assertion',
+                        'statement' => '$page.url is',
+                        'reason' => 'empty-value',
+
+                    ]
+                ),
+            ],
+            'test suite imports test which declares step, step contains unparseable action' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable test',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'test',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
+                        'step_name' => 'contains unparseable action',
+                        'statement-type' => 'action',
+                        'statement' => 'click invalid-identifier',
+                        'reason' => 'invalid-identifier',
+
+                    ]
+                ),
+            ],
+            'test suite imports test which imports step, step contains unparseable action' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable step',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'step',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
+                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
+                        'statement-type' => 'action',
+                        'statement' => 'click invalid-identifier',
+                        'reason' => 'invalid-identifier',
+
                     ]
                 ),
             ],

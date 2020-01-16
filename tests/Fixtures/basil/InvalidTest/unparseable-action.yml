@@ -1,0 +1,10 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+"contains unparseable action":
+  actions:
+    - click invalid-identifier
+
+  assertions:
+    - $page.url is $page.url

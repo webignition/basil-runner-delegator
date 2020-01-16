@@ -8,7 +8,14 @@ use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableImportException;
+use webignition\BasilLoader\Exception\ParseException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
+use webignition\BasilParser\Exception\UnparseableActionException;
+use webignition\BasilParser\Exception\UnparseableAssertionException;
+use webignition\BasilParser\Exception\UnparseableDataExceptionInterface;
+use webignition\BasilParser\Exception\UnparseableStatementException;
+use webignition\BasilParser\Exception\UnparseableStepException;
+use webignition\BasilParser\Exception\UnparseableTestException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
@@ -16,10 +23,32 @@ use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 
 class ErrorOutputFactory
 {
+    public const UNPARSEABLE_ACTION_EMPTY = 'empty';
+    public const UNPARSEABLE_ACTION_EMPTY_VALUE = 'empty-value';
+    public const UNPARSEABLE_ACTION_INVALID_IDENTIFIER = 'invalid-identifier';
+    public const UNPARSEABLE_ASSERTION_EMPTY = 'empty';
+    public const UNPARSEABLE_ASSERTION_EMPTY_COMPARISON = 'empty-comparison';
+    public const UNPARSEABLE_ASSERTION_EMPTY_IDENTIFIER = 'empty-identifier';
+    public const UNPARSEABLE_ASSERTION_EMPTY_VALUE = 'empty-value';
+
+    private $unparseableStatementErrorMessages = [
+        'action' => [
+            UnparseableActionException::CODE_EMPTY => self::UNPARSEABLE_ACTION_EMPTY,
+            UnparseableActionException::CODE_EMPTY_INPUT_ACTION_VALUE => self::UNPARSEABLE_ACTION_EMPTY_VALUE,
+            UnparseableActionException::CODE_INVALID_IDENTIFIER => self::UNPARSEABLE_ACTION_INVALID_IDENTIFIER,
+        ],
+        'assertion' => [
+            UnparseableAssertionException::CODE_EMPTY => self::UNPARSEABLE_ASSERTION_EMPTY,
+            UnparseableAssertionException::CODE_EMPTY_COMPARISON => self::UNPARSEABLE_ASSERTION_EMPTY_COMPARISON,
+            UnparseableAssertionException::CODE_EMPTY_IDENTIFIER => self::UNPARSEABLE_ASSERTION_EMPTY_IDENTIFIER,
+            UnparseableAssertionException::CODE_EMPTY_VALUE => self::UNPARSEABLE_ASSERTION_EMPTY_VALUE,
+        ],
+    ];
+
     /**
      * @var array<int, string>
      */
-    private $errorMessages = [
+    private $configurationErrorMessages = [
         ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
             'source empty; call with --source=SOURCE',
         ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
@@ -51,7 +80,7 @@ class ErrorOutputFactory
 
     public function createFromInvalidConfiguration(Configuration $configuration): ErrorOutput
     {
-        return $this->createFromErrorCode(
+        return $this->createForConfigurationErrorCode(
             $configuration,
             $this->generateCommandConfigurationValidator->deriveInvalidConfigurationErrorCode($configuration)
         );
@@ -59,12 +88,12 @@ class ErrorOutputFactory
 
     public function createForEmptySource(Configuration $configuration): ErrorOutput
     {
-        return $this->createFromErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
+        return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
     }
 
     public function createForEmptyTarget(Configuration $configuration): ErrorOutput
     {
-        return $this->createFromErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
+        return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
     public function createForException(\Exception $exception, Configuration $configuration): ErrorOutput
@@ -93,11 +122,11 @@ class ErrorOutputFactory
             return $this->createForNonRetrievableImportException($exception, $configuration);
         }
 
-        return new ErrorOutput(
-            $configuration,
-            'An unknown error has occurred',
-            ErrorOutput::CODE_UNKNOWN
-        );
+        if ($exception instanceof ParseException) {
+            return $this->createForParseException($exception, $configuration);
+        }
+
+        return $this->createUnknownErrorOutput($configuration);
     }
 
     public function createForYamlLoaderException(
@@ -215,14 +244,83 @@ class ErrorOutputFactory
         );
     }
 
-    private function createFromErrorCode(Configuration $configuration, int $errorCode): ErrorOutput
+    public function createForParseException(
+        ParseException $parseException,
+        Configuration $configuration
+    ): ErrorOutput {
+        $unparseableDataException = $parseException->getUnparseableDataException();
+        $unparseableStatementException = $this->findUnparseableStatementException($unparseableDataException);
+
+        $context = [
+            'type' => $unparseableDataException instanceof UnparseableTestException ? 'test' : 'step',
+            'test_path' => $parseException->getTestPath(),
+        ];
+
+        if ($unparseableDataException instanceof UnparseableTestException) {
+            $unparseableStepException = $unparseableDataException->getUnparseableStepException();
+
+            $context['step_name'] = $unparseableStepException->getStepName();
+        }
+
+        if ($unparseableDataException instanceof UnparseableStepException) {
+            $context['step_path'] = $parseException->getSubjectPath();
+        }
+
+        if (
+            $unparseableStatementException instanceof UnparseableActionException ||
+            $unparseableStatementException instanceof UnparseableAssertionException
+        ) {
+            $statementType = $unparseableStatementException instanceof UnparseableActionException
+                ? 'action'
+                : 'assertion';
+
+            $code = $unparseableStatementException->getCode();
+
+            $context['statement-type'] = $statementType;
+            $context['statement'] = $unparseableStatementException->getStatement();
+            $context['reason'] = $this->unparseableStatementErrorMessages[$statementType][$code] ?? 'unknown';
+        }
+
+        return new ErrorOutput(
+            $configuration,
+            $unparseableDataException->getMessage(),
+            ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+            $context
+        );
+    }
+
+    private function findUnparseableStatementException(
+        UnparseableDataExceptionInterface $unparseableDataException
+    ): ?UnparseableStatementException {
+        $unparseableStatementException = null;
+
+        if ($unparseableDataException instanceof UnparseableStepException) {
+            $unparseableStatementException = $unparseableDataException->getUnparseableStatementException();
+        } elseif ($unparseableDataException instanceof UnparseableTestException) {
+            $unparseableStepException = $unparseableDataException->getUnparseableStepException();
+            $unparseableStatementException = $unparseableStepException->getUnparseableStatementException();
+        }
+
+        return $unparseableStatementException;
+    }
+
+    private function createForConfigurationErrorCode(Configuration $configuration, int $errorCode): ErrorOutput
     {
-        $errorMessage = $this->errorMessages[$errorCode] ?? 'unknown';
+        $errorMessage = $this->configurationErrorMessages[$errorCode] ?? 'unknown';
 
         return new ErrorOutput(
             $configuration,
             $errorMessage,
             $errorCode
+        );
+    }
+
+    private function createUnknownErrorOutput(Configuration $configuration)
+    {
+        return new ErrorOutput(
+            $configuration,
+            'An unknown error has occurred',
+            ErrorOutput::CODE_UNKNOWN
         );
     }
 }
