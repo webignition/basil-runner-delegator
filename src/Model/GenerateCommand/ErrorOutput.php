@@ -22,6 +22,7 @@ class ErrorOutput extends AbstractOutput implements \JsonSerializable
     public const CODE_LOADER_INVALID_TEST = 204;
     public const CODE_LOADER_NON_RETRIEVABLE_IMPORT = 205;
     public const CODE_LOADER_UNPARSEABLE_DATA = 206;
+    public const CODE_LOADER_UNKNOWN_ELEMENT = 207;
 
     private $message;
 

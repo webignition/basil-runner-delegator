@@ -105,7 +105,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws ParseException
      * @throws UnknownElementException
      * @throws UnknownItemException
      * @throws UnknownPageElementException
@@ -143,6 +142,8 @@ class GenerateCommand extends Command
         foreach ($sourcePaths as $sourcePath) {
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
+            } catch (UnknownPageElementException $unknownPageElementException) {
+                throw $unknownPageElementException;
             } catch (
                 CircularStepImportException |
                 EmptyTestException |
@@ -150,6 +151,7 @@ class GenerateCommand extends Command
                 InvalidTestException |
                 NonRetrievableImportException |
                 ParseException |
+                UnknownElementException |
                 YamlLoaderException $exception
             ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);

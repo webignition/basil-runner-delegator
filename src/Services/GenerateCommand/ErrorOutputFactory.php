@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
+use webignition\BasilContextAwareException\ExceptionContext\ExceptionContextInterface;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
@@ -17,6 +18,8 @@ use webignition\BasilParser\Exception\UnparseableStatementException;
 use webignition\BasilParser\Exception\UnparseableStepException;
 use webignition\BasilParser\Exception\UnparseableTestException;
 use webignition\BasilResolver\CircularStepImportException;
+use webignition\BasilResolver\UnknownElementException;
+use webignition\BasilResolver\UnknownPageElementException;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
@@ -127,6 +130,10 @@ class ErrorOutputFactory
 
         if ($exception instanceof ParseException) {
             return $this->createForParseException($exception, $configuration);
+        }
+
+        if ($exception instanceof UnknownElementException && !$exception instanceof UnknownPageElementException) {
+            return $this->createForUnknownElementException($exception, $configuration);
         }
 
         return $this->createUnknownErrorOutput($configuration);
@@ -290,6 +297,37 @@ class ErrorOutputFactory
             ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
             $context
         );
+    }
+
+    public function createForUnknownElementException(
+        UnknownElementException $unknownElementException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $unknownElementException->getMessage(),
+            ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
+            array_merge(
+                [
+                    'element_name' => $unknownElementException->getElementName(),
+                ],
+                $this->createErrorOutputContextFromExceptionContext($unknownElementException->getExceptionContext())
+            )
+        );
+    }
+
+    /**
+     * @param ExceptionContextInterface $exceptionContext
+     *
+     * @return array<string, string>
+     */
+    private function createErrorOutputContextFromExceptionContext(ExceptionContextInterface $exceptionContext): array
+    {
+        return [
+            'test_path' => (string) $exceptionContext->getTestName(),
+            'step_name' => (string) $exceptionContext->getStepName(),
+            'statement' => (string) $exceptionContext->getContent(),
+        ];
     }
 
     private function findUnparseableStatementException(
