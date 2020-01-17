@@ -10,6 +10,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
+use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
@@ -223,12 +224,18 @@ class GenerateCommandTest extends AbstractFunctionalTest
      * @dataProvider runUnknownItemDataProvider
      * @dataProvider runUnknownPageElementDataProvider
      * @dataProvider runUnknownTestDataProvider
+     * @dataProvider runUnresolvedPlaceholderDataProvider
      */
     public function testRunFailure(
         array $input,
         int $expectedExitCode,
-        ErrorOutput $expectedCommandOutput
+        ErrorOutput $expectedCommandOutput,
+        ?callable $initializer = null
     ) {
+        if (null !== $initializer) {
+            $initializer($this);
+        }
+
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
@@ -1095,6 +1102,78 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 ),
             ],
         ];
+    }
+
+    public function runUnresolvedPlaceholderDataProvider(): array
+    {
+        $root = (new ProjectRootPathProvider())->get();
+
+        return [
+            'placeholder CLIENT is not defined' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unresolved placeholder "CLIENT" in content ' .
+                    '"{{ CLIENT }}->request(\'GET\', \'https://example.com\');"',
+                    ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+                    [
+                        'placeholder' => 'CLIENT',
+                        'content' => '{{ CLIENT }}->request(\'GET\', \'https://example.com\');',
+                    ]
+                ),
+                'initializer' => function (GenerateCommandTest $generateCommandTest) {
+                    $mockExternalVariableIdentifiers = \Mockery::mock(ExternalVariableIdentifiers::class);
+                    $mockExternalVariableIdentifiers
+                        ->shouldReceive('get')
+                        ->andReturn([]);
+
+                    $this->mockTestGeneratorCompilerExternalVariableIdentifiers(
+                        $generateCommandTest->command,
+                        $mockExternalVariableIdentifiers
+                    );
+                }
+            ],
+        ];
+    }
+
+    private function mockTestGeneratorCompilerExternalVariableIdentifiers(
+        GenerateCommand $command,
+        ExternalVariableIdentifiers $updatedExternalVariableIdentifiers
+    ): void {
+        /* @var ObjectReflector $objectReflector */
+        $objectReflector = self::$container->get(ObjectReflector::class);
+
+        $testGenerator = $objectReflector->getProperty($command, 'testGenerator');
+        $compiler = $objectReflector->getProperty($testGenerator, 'compiler');
+
+        $objectReflector->setProperty(
+            $compiler,
+            Compiler::class,
+            'externalVariableIdentifiers',
+            $updatedExternalVariableIdentifiers
+        );
+
+        $objectReflector->setProperty(
+            $testGenerator,
+            TestGenerator::class,
+            'compiler',
+            $compiler
+        );
+
+        $objectReflector->setProperty(
+            $command,
+            GenerateCommand::class,
+            'testGenerator',
+            $testGenerator
+        );
     }
 
     /**
