@@ -11,6 +11,7 @@ use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableImportException;
 use webignition\BasilLoader\Exception\ParseException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
+use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilParser\Exception\UnparseableActionException;
 use webignition\BasilParser\Exception\UnparseableAssertionException;
 use webignition\BasilParser\Exception\UnparseableDataExceptionInterface;
@@ -134,6 +135,10 @@ class ErrorOutputFactory
 
         if ($exception instanceof UnknownElementException && !$exception instanceof UnknownPageElementException) {
             return $this->createForUnknownElementException($exception, $configuration);
+        }
+
+        if ($exception instanceof UnknownItemException) {
+            return $this->createForUnknownItemException($exception, $configuration);
         }
 
         return $this->createUnknownErrorOutput($configuration);
@@ -312,6 +317,24 @@ class ErrorOutputFactory
                     'element_name' => $unknownElementException->getElementName(),
                 ],
                 $this->createErrorOutputContextFromExceptionContext($unknownElementException->getExceptionContext())
+            )
+        );
+    }
+
+    public function createForUnknownItemException(
+        UnknownItemException $unknownItemException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $unknownItemException->getMessage(),
+            ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+            array_merge(
+                [
+                    'type' => $unknownItemException->getType(),
+                    'name' => $unknownItemException->getName(),
+                ],
+                $this->createErrorOutputContextFromExceptionContext($unknownItemException->getExceptionContext())
             )
         );
     }
