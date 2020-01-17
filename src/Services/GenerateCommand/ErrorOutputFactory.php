@@ -141,6 +141,10 @@ class ErrorOutputFactory
             return $this->createForUnknownItemException($exception, $configuration);
         }
 
+        if ($exception instanceof UnknownPageElementException) {
+            return $this->createForUnknownPageElementException($exception, $configuration);
+        }
+
         return $this->createUnknownErrorOutput($configuration);
     }
 
@@ -335,6 +339,24 @@ class ErrorOutputFactory
                     'name' => $unknownItemException->getName(),
                 ],
                 $this->createErrorOutputContextFromExceptionContext($unknownItemException->getExceptionContext())
+            )
+        );
+    }
+
+    public function createForUnknownPageElementException(
+        UnknownPageElementException $unknownPageElementException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $unknownPageElementException->getMessage(),
+            ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
+            array_merge(
+                [
+                    'import_name' => $unknownPageElementException->getImportName(),
+                    'element_name' => $unknownPageElementException->getElementName(),
+                ],
+                $this->createErrorOutputContextFromExceptionContext($unknownPageElementException->getExceptionContext())
             )
         );
     }
