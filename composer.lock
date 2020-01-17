@@ -120,6 +120,7 @@
                 "selenium",
                 "webdriver"
             ],
+            "abandoned": "php-webdriver/webdriver",
             "time": "2019-06-13T08:02:18+00:00"
         },
         {
@@ -3417,16 +3418,16 @@
         },
         {
             "name": "webignition/basil-code-generator",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-code-generator.git",
-                "reference": "df465dacdf1fe3936e1e824ea5b8e8993ba9a62c"
+                "reference": "de82f4c7076fd6bb4b55613f490905db76f40ff7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/df465dacdf1fe3936e1e824ea5b8e8993ba9a62c",
-                "reference": "df465dacdf1fe3936e1e824ea5b8e8993ba9a62c",
+                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/de82f4c7076fd6bb4b55613f490905db76f40ff7",
+                "reference": "de82f4c7076fd6bb4b55613f490905db76f40ff7",
                 "shasum": ""
             },
             "require": {
@@ -3435,11 +3436,10 @@
                 "webignition/php-basil-compilation-source": ">=0.63,<1"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
+                "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-panther-test-case": "^0.1.0",
-                "webignition/php-basil-model-factory": ">=0.33,<1"
+                "webignition/base-panther-test-case": "^0.1.0"
             },
             "type": "library",
             "autoload": {
@@ -3458,7 +3458,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-code-generator",
-            "time": "2019-11-16T13:13:46+00:00"
+            "time": "2020-01-17T12:15:56+00:00"
         },
         {
             "name": "webignition/basil-compiler",
