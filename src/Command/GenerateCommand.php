@@ -106,7 +106,6 @@ class GenerateCommand extends Command
      * @return int|null
      *
      * @throws UnknownElementException
-     * @throws UnknownItemException
      * @throws UnknownPageElementException
      * @throws UnknownTestException
      * @throws UnresolvedPlaceholderException
@@ -152,6 +151,7 @@ class GenerateCommand extends Command
                 NonRetrievableImportException |
                 ParseException |
                 UnknownElementException |
+                UnknownItemException |
                 YamlLoaderException $exception
             ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
