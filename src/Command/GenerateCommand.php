@@ -105,7 +105,6 @@ class GenerateCommand extends Command
      *
      * @return int|null
      *
-     * @throws UnresolvedPlaceholderException
      * @throws UnsupportedStepException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -156,12 +155,18 @@ class GenerateCommand extends Command
                 return $this->render($commandOutput);
             }
 
-            foreach ($testSuite->getTests() as $test) {
-                $generatedFiles[] = $this->testGenerator->generate(
-                    $test,
-                    $configuration->getBaseClass(),
-                    $configuration->getTarget()
-                );
+            try {
+                foreach ($testSuite->getTests() as $test) {
+                    $generatedFiles[] = $this->testGenerator->generate(
+                        $test,
+                        $configuration->getBaseClass(),
+                        $configuration->getTarget()
+                    );
+                }
+            } catch (UnresolvedPlaceholderException $exception) {
+                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
+
+                return $this->render($commandOutput);
             }
         }
 

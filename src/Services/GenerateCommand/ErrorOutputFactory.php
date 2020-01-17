@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
+use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilContextAwareException\ExceptionContext\ExceptionContextInterface;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
@@ -147,7 +148,11 @@ class ErrorOutputFactory
         }
 
         if ($exception instanceof UnknownTestException) {
-            return  $this->createForUnknownTestException($exception, $configuration);
+            return $this->createForUnknownTestException($exception, $configuration);
+        }
+
+        if ($exception instanceof UnresolvedPlaceholderException) {
+            return $this->createForUnresolvedPlaceholderException($exception, $configuration);
         }
 
         return $this->createUnknownErrorOutput($configuration);
@@ -377,6 +382,23 @@ class ErrorOutputFactory
             array_merge(
                 [
                     'import_name' => $unknownTestException->getImportName(),
+                ]
+            )
+        );
+    }
+
+    public function createForUnresolvedPlaceholderException(
+        UnresolvedPlaceholderException $unresolvedPlaceholderException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $unresolvedPlaceholderException->getMessage(),
+            ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+            array_merge(
+                [
+                    'placeholder' => $unresolvedPlaceholderException->getPlaceholder(),
+                    'content' => $unresolvedPlaceholderException->getContent(),
                 ]
             )
         );
