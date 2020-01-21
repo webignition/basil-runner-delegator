@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  basil-runner:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    container_name: basil-runner
+    tty: true
+    stdin_open: true
+    volumes:
+      - ../tests/Fixtures/basil:/app/basil
