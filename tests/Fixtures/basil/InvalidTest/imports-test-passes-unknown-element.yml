@@ -1,0 +1,14 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  pages:
+    page_import_name: "../Page/with-elements.yml"
+  steps:
+    step_import_name: "../Step/uses-elements.yml"
+
+"action contains unknown page element":
+  use: step_import_name
+  elements:
+    submit_button: $page_import_name.elements.unknown_element

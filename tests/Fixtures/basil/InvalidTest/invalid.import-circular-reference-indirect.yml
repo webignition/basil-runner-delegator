@@ -1,0 +1,11 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  steps:
+    circular_reference_indirect: "../Step/circular-reference-indirect.yml"
+    circular_reference_self: "../Step/circular-reference-self.yml"
+
+"use circular_reference_indirect":
+  use: circular_reference_indirect

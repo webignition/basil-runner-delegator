@@ -1,0 +1,7 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+"contains unparseable assertion":
+  assertions:
+    - $page.url is

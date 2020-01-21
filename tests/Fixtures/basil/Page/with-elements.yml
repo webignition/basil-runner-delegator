@@ -1,0 +1,7 @@
+url: "http://example.com"
+elements:
+  form: $".form"
+  inputs: $"{{ form }} .inputs"
+  name_input: $"{{ inputs }} .name"
+  email_input: $"{{ inputs }} .email"
+  submit_button: $"{{ form }} .submit"

@@ -19,6 +19,7 @@ use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
+use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class GenerateCommandTest extends AbstractBaseTest
@@ -265,7 +266,7 @@ class GenerateCommandTest extends AbstractBaseTest
             new ProjectRootPathProvider(),
             $configurationFactory,
             $configurationValidator,
-            new ErrorOutputFactory($configurationValidator),
+            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
             new Renderer()
         );
     }

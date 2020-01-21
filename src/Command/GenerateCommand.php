@@ -104,20 +104,6 @@ class GenerateCommand extends Command
      * @param OutputInterface $output
      *
      * @return int|null
-     *
-     * @throws CircularStepImportException
-     * @throws EmptyTestException
-     * @throws InvalidPageException
-     * @throws InvalidTestException
-     * @throws NonRetrievableImportException
-     * @throws ParseException
-     * @throws UnknownElementException
-     * @throws UnknownItemException
-     * @throws UnknownPageElementException
-     * @throws UnknownTestException
-     * @throws UnresolvedPlaceholderException
-     * @throws UnsupportedStepException
-     * @throws YamlLoaderException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -147,14 +133,41 @@ class GenerateCommand extends Command
 
         $generatedFiles = [];
         foreach ($sourcePaths as $sourcePath) {
-            $testSuite = $this->sourceLoader->load($sourcePath);
+            try {
+                $testSuite = $this->sourceLoader->load($sourcePath);
+            } catch (
+                CircularStepImportException |
+                EmptyTestException |
+                InvalidPageException |
+                InvalidTestException |
+                NonRetrievableImportException |
+                ParseException |
+                UnknownElementException |
+                UnknownItemException |
+                UnknownPageElementException |
+                UnknownTestException |
+                YamlLoaderException $exception
+            ) {
+                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
 
-            foreach ($testSuite->getTests() as $test) {
-                $generatedFiles[] = $this->testGenerator->generate(
-                    $test,
-                    $configuration->getBaseClass(),
-                    $configuration->getTarget()
-                );
+                return $this->render($commandOutput);
+            }
+
+            try {
+                foreach ($testSuite->getTests() as $test) {
+                    $generatedFiles[] = $this->testGenerator->generate(
+                        $test,
+                        $configuration->getBaseClass(),
+                        $configuration->getTarget()
+                    );
+                }
+            } catch (
+                UnresolvedPlaceholderException |
+                UnsupportedStepException $exception
+            ) {
+                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
+
+                return $this->render($commandOutput);
             }
         }
 
