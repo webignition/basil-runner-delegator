@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3ec0aa0bc0d755696036c64ede04ee7",
+    "content-hash": "4a2dcffb79c3abb60d8f3f5ec357378a",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3647,16 +3647,16 @@
         },
         {
             "name": "webignition/basil-loader",
-            "version": "0.18",
+            "version": "0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-loader.git",
-                "reference": "43e5a63ce4b96f6257f284a629da4f55554a756a"
+                "reference": "049a2dc3fe7b87c21aeb3b8c02eef0248e44ed13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/43e5a63ce4b96f6257f284a629da4f55554a756a",
-                "reference": "43e5a63ce4b96f6257f284a629da4f55554a756a",
+                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/049a2dc3fe7b87c21aeb3b8c02eef0248e44ed13",
+                "reference": "049a2dc3fe7b87c21aeb3b8c02eef0248e44ed13",
                 "shasum": ""
             },
             "require": {
@@ -3697,7 +3697,7 @@
             ],
             "description": "Loader for basil language files",
             "homepage": "https://github.com/webignition/basil-loader",
-            "time": "2020-01-13T15:43:37+00:00"
+            "time": "2020-01-16T16:59:42+00:00"
         },
         {
             "name": "webignition/basil-model-provider",
