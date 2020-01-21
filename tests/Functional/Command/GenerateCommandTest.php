@@ -9,9 +9,15 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\ClassNameFactory;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
+use webignition\BasilModels\Step\Step;
 use webignition\BasilModels\Test\TestInterface;
+use webignition\BasilParser\ActionParser;
+use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
@@ -232,6 +238,8 @@ class GenerateCommandTest extends AbstractFunctionalTest
         ErrorOutput $expectedCommandOutput,
         ?callable $initializer = null
     ) {
+        $this->command = self::$container->get(GenerateCommand::class);
+
         if (null !== $initializer) {
             $initializer($this);
         }
@@ -1142,6 +1150,176 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 }
             ],
         ];
+    }
+
+    /**
+     * @dataProvider runFailureUnsupportedStepDataProvider
+     *
+     * @param UnsupportedStepException $unsupportedStepException
+     * @param array<mixed> $expectedErrorOutputContext
+     */
+    public function testRunFailureUnsupportedStepException(
+        UnsupportedStepException $unsupportedStepException,
+        array $expectedErrorOutputContext
+    ) {
+        $root = (new ProjectRootPathProvider())->get();
+
+        $input = [
+            '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+            '--target' => 'tests/build/target',
+        ];
+
+        $testGenerator = \Mockery::mock(TestGenerator::class);
+        $testGenerator
+            ->shouldReceive('generate')
+            ->andThrow($unsupportedStepException);
+
+        $this->mockTestGenerator($this->command, $testGenerator);
+
+        $output = new BufferedOutput();
+
+        $exitCode = $this->command->run(new ArrayInput($input), $output);
+        $this->assertSame(ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP, $exitCode);
+
+        $expectedCommandOutput = new ErrorOutput(
+            new Configuration(
+                $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                $root . '/tests/build/target',
+                AbstractBaseTest::class
+            ),
+            'Unsupported step',
+            ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP,
+            $expectedErrorOutputContext
+        );
+
+        $commandOutput = ErrorOutput::fromJson($output->fetch());
+
+        $this->assertEquals($expectedCommandOutput, $commandOutput);
+    }
+
+    public function runFailureUnsupportedStepDataProvider(): array
+    {
+        $actionParser = ActionParser::create();
+        $assertionParser = AssertionParser::create();
+
+        return [
+            'click action with attribute identifier' => [
+                'unsupportedStepException' => new UnsupportedStepException(
+                    new Step(
+                        [
+                            $actionParser->parse('click $".selector".attribute_name'),
+                        ],
+                        []
+                    ),
+                    new UnsupportedStatementException(
+                        $actionParser->parse('click $".selector".attribute_name'),
+                        new UnsupportedContentException(
+                            UnsupportedContentException::TYPE_IDENTIFIER,
+                            '$".selector".attribute_name'
+                        )
+                    )
+                ),
+                'expectedErrorOutputContext' => [
+                    'statement_type' => 'action',
+                    'statement' => 'click $".selector".attribute_name',
+                    'content_type' => 'identifier',
+                    'content' => '$".selector".attribute_name',
+                ],
+            ],
+            'comparison assertion examined value identifier cannot be extracted' => [
+                'unsupportedStepException' => new UnsupportedStepException(
+                    new Step(
+                        [],
+                        [
+                            $assertionParser->parse('$".selector" is "value"'),
+                        ]
+                    ),
+                    new UnsupportedStatementException(
+                        $assertionParser->parse('$".selector" is "value"'),
+                        new UnsupportedContentException(
+                            UnsupportedContentException::TYPE_IDENTIFIER,
+                            '$".selector"'
+                        )
+                    )
+                ),
+                'expectedErrorOutputContext' => [
+                    'statement_type' => 'assertion',
+                    'statement' => '$".selector" is "value"',
+                    'content_type' => 'identifier',
+                    'content' => '$".selector"',
+                ],
+            ],
+            'comparison assertion examined value is not supported' => [
+                'unsupportedStepException' => new UnsupportedStepException(
+                    new Step(
+                        [],
+                        [
+                            $assertionParser->parse('$elements.element_name is "value"'),
+                        ]
+                    ),
+                    new UnsupportedStatementException(
+                        $assertionParser->parse('$elements.element_name is "value"'),
+                        new UnsupportedContentException(
+                            UnsupportedContentException::TYPE_VALUE,
+                            '$elements.element_name'
+                        )
+                    )
+                ),
+                'expectedErrorOutputContext' => [
+                    'statement_type' => 'assertion',
+                    'statement' => '$elements.element_name is "value"',
+                    'content_type' => 'value',
+                    'content' => '$elements.element_name',
+                ],
+            ],
+            'unsupported action type' => [
+                'unsupportedStepException' => new UnsupportedStepException(
+                    new Step(
+                        [
+                            $actionParser->parse('foo $".selector"'),
+                        ],
+                        []
+                    ),
+                    new UnsupportedStatementException(
+                        $actionParser->parse('foo $".selector"')
+                    )
+                ),
+                'expectedErrorOutputContext' => [
+                    'statement_type' => 'action',
+                    'statement' => 'foo $".selector"',
+                ],
+            ],
+        ];
+    }
+
+    private function mockTestGenerator(GenerateCommand $command, TestGenerator $mockTestGenerator): void
+    {
+        /* @var ObjectReflector $objectReflector */
+        $objectReflector = self::$container->get(ObjectReflector::class);
+
+//        $testGenerator = $objectReflector->getProperty($command, 'testGenerator');
+//        $compiler = $objectReflector->getProperty($testGenerator, 'compiler');
+//
+//        $objectReflector->setProperty(
+//            $compiler,
+//            Compiler::class,
+//            'externalVariableIdentifiers',
+//            $updatedExternalVariableIdentifiers
+//        );
+//
+//        $objectReflector->setProperty(
+//            $testGenerator,
+//            TestGenerator::class,
+//            'compiler',
+//            $compiler
+//        );
+
+        $objectReflector->setProperty(
+            $command,
+            GenerateCommand::class,
+            'testGenerator',
+            $mockTestGenerator
+        );
     }
 
     private function mockTestGeneratorCompilerExternalVariableIdentifiers(

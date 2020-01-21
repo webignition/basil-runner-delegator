@@ -27,6 +27,7 @@ class ErrorOutput extends AbstractOutput implements \JsonSerializable
     public const CODE_LOADER_UNKNOWN_PAGE_ELEMENT = 209;
     public const CODE_LOADER_UNKNOWN_TEST = 210;
     public const CODE_GENERATOR_UNRESOLVED_PLACEHOLDER = 211;
+    public const CODE_GENERATOR_UNSUPPORTED_STEP = 212;
 
     private $message;
 

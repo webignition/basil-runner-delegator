@@ -60,7 +60,7 @@
         "squizlabs/php_codesniffer": "3.*",
         "webignition/basil-data-validator": ">=0.7,<1",
         "webignition/basil-models": ">=0.26,<1",
-        "webignition/basil-parser": ">=0.19,<1"
+        "webignition/basil-parser": ">=0.20,<1"
     },
     "bin": [
         "bin/basil-runner"

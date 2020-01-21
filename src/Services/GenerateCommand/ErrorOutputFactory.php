@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
+use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilContextAwareException\ExceptionContext\ExceptionContextInterface;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
@@ -153,6 +155,10 @@ class ErrorOutputFactory
 
         if ($exception instanceof UnresolvedPlaceholderException) {
             return $this->createForUnresolvedPlaceholderException($exception, $configuration);
+        }
+
+        if ($exception instanceof UnsupportedStepException) {
+            return $this->createForUnsupportedStepException($exception, $configuration);
         }
 
         return $this->createUnknownErrorOutput($configuration);
@@ -379,11 +385,9 @@ class ErrorOutputFactory
             $configuration,
             $unknownTestException->getMessage(),
             ErrorOutput::CODE_LOADER_UNKNOWN_TEST,
-            array_merge(
-                [
-                    'import_name' => $unknownTestException->getImportName(),
-                ]
-            )
+            [
+                'import_name' => $unknownTestException->getImportName(),
+            ]
         );
     }
 
@@ -395,13 +399,53 @@ class ErrorOutputFactory
             $configuration,
             $unresolvedPlaceholderException->getMessage(),
             ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
-            array_merge(
-                [
-                    'placeholder' => $unresolvedPlaceholderException->getPlaceholder(),
-                    'content' => $unresolvedPlaceholderException->getContent(),
-                ]
-            )
+            [
+                'placeholder' => $unresolvedPlaceholderException->getPlaceholder(),
+                'content' => $unresolvedPlaceholderException->getContent(),
+            ]
         );
+    }
+
+    public function createForUnsupportedStepException(
+        UnsupportedStepException $unsupportedStepException,
+        Configuration $configuration
+    ): ErrorOutput {
+        return new ErrorOutput(
+            $configuration,
+            $unsupportedStepException->getMessage(),
+            ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP,
+            $this->createErrorOutputContextFromUnsupportedStepException($unsupportedStepException)
+        );
+    }
+
+    /**
+     * @param UnsupportedStepException $unsupportedStepException
+     *
+     * @return array<string, string>
+     */
+    private function createErrorOutputContextFromUnsupportedStepException(
+        UnsupportedStepException $unsupportedStepException
+    ): array {
+        $statementType = UnsupportedStepException::CODE_UNSUPPORTED_ACTION === $unsupportedStepException->getCode()
+            ? 'action'
+            : 'assertion';
+
+        $unsupportedStatementException = $unsupportedStepException->getUnsupportedStatementException();
+
+        $context = [
+            'statement_type' => $statementType,
+            'statement' => (string) $unsupportedStatementException->getStatement(),
+        ];
+
+        $unsupportedContentException = $unsupportedStatementException->getUnsupportedContentException();
+        if ($unsupportedContentException instanceof UnsupportedContentException) {
+            $context = array_merge($context, [
+                'content_type' => $unsupportedContentException->getType(),
+                'content' => (string) $unsupportedContentException->getContent(),
+            ]);
+        }
+
+        return $context;
     }
 
     /**

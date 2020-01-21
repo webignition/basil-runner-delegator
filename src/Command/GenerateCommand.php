@@ -104,8 +104,6 @@ class GenerateCommand extends Command
      * @param OutputInterface $output
      *
      * @return int|null
-     *
-     * @throws UnsupportedStepException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -163,7 +161,10 @@ class GenerateCommand extends Command
                         $configuration->getTarget()
                     );
                 }
-            } catch (UnresolvedPlaceholderException $exception) {
+            } catch (
+                UnresolvedPlaceholderException |
+                UnsupportedStepException $exception
+            ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
 
                 return $this->render($commandOutput);
