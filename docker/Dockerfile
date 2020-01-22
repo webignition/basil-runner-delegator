@@ -2,10 +2,6 @@ FROM php:7.4-cli-buster
 
 WORKDIR /app
 
-COPY bin /app/bin
-COPY config /app/config
-COPY src /app/src
-COPY .env /app
 COPY composer.json /app
 COPY composer.lock /app
 
@@ -15,5 +11,3 @@ RUN apt-get update \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --prefer-dist --no-dev
-
-RUN mkdir /app/build
