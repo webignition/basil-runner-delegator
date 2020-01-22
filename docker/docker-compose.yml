@@ -9,4 +9,4 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - /vagrant:/app
+      - ../tests/Fixtures/basil:/app/basil
