@@ -15,6 +15,8 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
     public function testF0f81bc625442f2edd8f05ccc64de6b1()
     {
         // verify page is open
+        $this->setName('verify page is open');
+
         // $page.url is "https://example.com"
         $expected = "https://example.com" ?? null;
         $expected = (string) $expected;
