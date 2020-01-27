@@ -12,10 +12,15 @@ class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
         self::$client->request('GET', 'https://example.com');
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setBasilTestPath('{{ test_path }}');
+    }
+
     public function testF0f81bc625442f2edd8f05ccc64de6b1()
     {
-        // verify page is open
-        $this->setName('verify page is open');
+        $this->setBasilStepName('verify page is open');
 
         // $page.url is "https://example.com"
         $expected = "https://example.com" ?? null;

@@ -124,10 +124,10 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 'expectedGeneratedTestOutputSources' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => [
+                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                ],
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
+                ]),
             ],
             'test suite' => [
                 'input' => [
@@ -147,14 +147,14 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
                 ],
-                'expectedGeneratedCode' => [
+                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                ],
+                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'
+                ]),
             ],
             'collection of tests by directory' => [
                 'input' => [
@@ -174,14 +174,14 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => [
+                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                ],
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
+                ]),
             ],
             'collection of test suites by directory' => [
                 'input' => [
@@ -202,14 +202,14 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => [
+                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents($root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                ],
+                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php',
+                ]),
             ],
         ];
     }
@@ -1424,6 +1424,31 @@ class GenerateCommandTest extends AbstractFunctionalTest
             GenerateCommand::class,
             'generateCommandValidator',
             $generateCommandValidator
+        );
+    }
+
+    /**
+     * @param array<string, string> $sourceToOutputMap
+     *
+     * @return array<string, string>
+     */
+    private function createExpectedGeneratedCodeSet(array $sourceToOutputMap): array
+    {
+        $data = [];
+
+        foreach ($sourceToOutputMap as $testPath => $generatedCodePath) {
+            $data[$testPath] = $this->createGeneratedCodeWithTestPath($testPath, $generatedCodePath);
+        }
+
+        return $data;
+    }
+
+    private function createGeneratedCodeWithTestPath(string $testPath, string $generatedCodePath): string
+    {
+        return str_replace(
+            '{{ test_path }}',
+            $testPath,
+            (string) file_get_contents($generatedCodePath)
         );
     }
 }
