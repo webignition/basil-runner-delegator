@@ -78,8 +78,12 @@ class TestGeneratorTest extends AbstractFunctionalTest
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'outputDirectory' => $root . '/tests/build/target',
                 'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
-                'expectedGeneratedCode' => file_get_contents(
-                    $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
+                'expectedGeneratedCode' => str_replace(
+                    '{{ test_path }}',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    (string) file_get_contents(
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
+                    )
                 ),
             ],
         ];

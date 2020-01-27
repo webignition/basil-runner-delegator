@@ -13,10 +13,15 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         self::$client->request('GET', 'https://example.com');
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setBasilTestPath('{{ test_path }}');
+    }
+
     public function test0b4535a573cf4196b7e26f0f41e6e2e7()
     {
-        // follow more information
-        $this->setName('follow more information');
+        $this->setBasilStepName('follow more information');
 
         // $"a" exists <- click $"a"
         $has = $this->navigator->hasOne(ElementIdentifier::fromJson('{"locator":"a"}'));
