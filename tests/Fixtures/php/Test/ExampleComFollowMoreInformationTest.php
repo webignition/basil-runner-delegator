@@ -11,12 +11,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
     {
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setBasilTestPath('{{ test_path }}');
+        self::setBasilTestPath('{{ test_path }}');
     }
 
     public function test0b4535a573cf4196b7e26f0f41e6e2e7()

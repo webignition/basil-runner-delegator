@@ -10,12 +10,7 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
     {
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setBasilTestPath('{{ test_path }}');
+        self::setBasilTestPath('{{ test_path }}');
     }
 
     public function testF0f81bc625442f2edd8f05ccc64de6b1()

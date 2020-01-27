@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d82dfd1105099141d82d71884417f40",
+    "content-hash": "a2994c397e8ac57d720b6f5efe7f0425",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3372,16 +3372,16 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.4",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "24878857121199dab51fbeca54b352c0a3c0bb41"
+                "reference": "dbf81298a78a64da68ac4535bd75a31911ce620d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/24878857121199dab51fbeca54b352c0a3c0bb41",
-                "reference": "24878857121199dab51fbeca54b352c0a3c0bb41",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/dbf81298a78a64da68ac4535bd75a31911ce620d",
+                "reference": "dbf81298a78a64da68ac4535bd75a31911ce620d",
                 "shasum": ""
             },
             "require": {
@@ -3414,7 +3414,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-01-24T11:05:17+00:00"
+            "time": "2020-01-27T18:41:51+00:00"
         },
         {
             "name": "webignition/basil-code-generator",
@@ -3462,16 +3462,16 @@
         },
         {
             "name": "webignition/basil-compiler",
-            "version": "0.6",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler.git",
-                "reference": "a7121039e0ebdc87aa7e6fa527a274c1f154ca88"
+                "reference": "75bdce6549217044721febd2740c56e1f31e070b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler/zipball/a7121039e0ebdc87aa7e6fa527a274c1f154ca88",
-                "reference": "a7121039e0ebdc87aa7e6fa527a274c1f154ca88",
+                "url": "https://api.github.com/repos/webignition/basil-compiler/zipball/75bdce6549217044721febd2740c56e1f31e070b",
+                "reference": "75bdce6549217044721febd2740c56e1f31e070b",
                 "shasum": ""
             },
             "require": {
@@ -3479,7 +3479,7 @@
                 "php": ">=7.2",
                 "webignition/basil-code-generator": ">=0.9,<1",
                 "webignition/basil-models": ">=0.26,<1",
-                "webignition/php-basil-compilable-source-factory": ">=0.10,<1",
+                "webignition/php-basil-compilable-source-factory": ">=0.11,<1",
                 "webignition/php-basil-compilation-source": ">=0.64,<1"
             },
             "require-dev": {
@@ -3508,7 +3508,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler",
-            "time": "2020-01-27T15:11:09+00:00"
+            "time": "2020-01-27T19:14:15+00:00"
         },
         {
             "name": "webignition/basil-data-validator",
@@ -3919,16 +3919,16 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.10",
+            "version": "0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "5c845797832b8ad2c0d72d64ed5c2312fab5a7d5"
+                "reference": "881585e321cf436ecb2132eda86bf5c2997c477d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/5c845797832b8ad2c0d72d64ed5c2312fab5a7d5",
-                "reference": "5c845797832b8ad2c0d72d64ed5c2312fab5a7d5",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/881585e321cf436ecb2132eda86bf5c2997c477d",
+                "reference": "881585e321cf436ecb2132eda86bf5c2997c477d",
                 "shasum": ""
             },
             "require": {
@@ -3952,7 +3952,7 @@
                 "phpstan/phpstan-mockery": "^0.12",
                 "phpunit/phpunit": "~8.0",
                 "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-panther-test-case": ">=0.4,<1",
+                "webignition/base-panther-test-case": ">=0.5,<1",
                 "webignition/basil-parser": ">=0.20,<1",
                 "webignition/symfony-panther-webserver-runner": ">=0.1,<1"
             },
@@ -3973,7 +3973,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-01-27T14:27:36+00:00"
+            "time": "2020-01-27T19:07:14+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",
