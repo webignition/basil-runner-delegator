@@ -37,25 +37,22 @@ class GenerateRunTest extends TestCase
             '--path=' . $buildPath;
 
         $runCommandOutput = (string) shell_exec($runCommand);
-
-        echo "\n" . $runCommandOutput . "\n";
-
         $runCommandOutputLines = explode("\n", $runCommandOutput);
 
-//        $this->assertRegExp('#^PHPUnit.+#', $runCommandOutputLines[0]);
-//        $this->assertSame('', $runCommandOutputLines[1]);
-//        $this->assertRegExp('#^\.\.\.\. +4 / 4 \(100%\)$#', $runCommandOutputLines[2]);
-//        $this->assertSame('', $runCommandOutputLines[3]);
-//        $this->assertRegExp('#^Time: .+, Memory: .+$#', $runCommandOutputLines[4]);
-//        $this->assertSame('', $runCommandOutputLines[5]);
-//        $this->assertStringContainsString('OK (4 tests, 9 assertions)', $runCommandOutputLines[6]);
-//        $this->assertSame('', $runCommandOutputLines[7]);
-//
-//        $this->assertNotEmpty($runCommandOutput);
-//
-//        foreach ($generateCommandOutput->getTestPaths() as $testPath) {
-//            unlink($testPath);
-//        }
+        $this->assertRegExp('#^PHPUnit.+#', $runCommandOutputLines[0]);
+        $this->assertSame('', $runCommandOutputLines[1]);
+        $this->assertRegExp('#^\.\.\.\. +4 / 4 \(100%\)$#', $runCommandOutputLines[2]);
+        $this->assertSame('', $runCommandOutputLines[3]);
+        $this->assertRegExp('#^Time: .+, Memory: .+$#', $runCommandOutputLines[4]);
+        $this->assertSame('', $runCommandOutputLines[5]);
+        $this->assertStringContainsString('OK (4 tests, 9 assertions)', $runCommandOutputLines[6]);
+        $this->assertSame('', $runCommandOutputLines[7]);
+
+        $this->assertNotEmpty($runCommandOutput);
+
+        foreach ($generateCommandOutput->getTestPaths() as $testPath) {
+            unlink($testPath);
+        }
     }
 
     private function mutateTestContent(string $path, callable $mutator): void
