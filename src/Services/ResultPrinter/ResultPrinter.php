@@ -125,7 +125,10 @@ class ResultPrinter extends Printer implements TestListener
      */
     public function endTest(Test $test, float $time): void
     {
-        // TODO: Implement endTest() method.
+        if ($test instanceof BasilTestCaseInterface) {
+            $this->write('    ' . $test->getBasilStepName());
+            $this->writeEmptyLine();
+        }
     }
 
     private function writeEmptyLine(): void
