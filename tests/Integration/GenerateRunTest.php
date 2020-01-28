@@ -43,7 +43,12 @@ class GenerateRunTest extends TestCase
         $formatter = Formatter::create();
         $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
 
-        $expectedBody = $formatter->makeBold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n";
+        $expectedBody =
+            $formatter->makeBold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
+            '    verify page is open' . "\n" .
+            '    verify primary heading' . "\n" .
+            '    verify links are present' . "\n" .
+            '    navigate to form' . "\n";
 
         $this->assertSame($expectedBody, $phpUnitOutput->getBody());
 
