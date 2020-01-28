@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 
+use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\Formatter;
@@ -17,11 +18,16 @@ class ResultPrinterTest extends AbstractBaseTest
      *
      * @param string[] $testPaths
      * @param string[] $stepNames
+     * @param int[] $endStatuses
      * @param string $expectedOutput
      */
-    public function testPrinterOutput(array $testPaths, array $stepNames, string $expectedOutput)
-    {
-        $tests = $this->createBasilTestCases($testPaths, $stepNames);
+    public function testPrinterOutput(
+        array $testPaths,
+        array $stepNames,
+        array $endStatuses,
+        string $expectedOutput
+    ) {
+        $tests = $this->createBasilTestCases($testPaths, $stepNames, $endStatuses);
 
         $outResource = fopen('php://memory', 'w+');
 
@@ -50,12 +56,15 @@ class ResultPrinterTest extends AbstractBaseTest
                 'testPaths' => [
                     $root . '/test.yml',
                 ],
-                'step names' => [
+                'stepNames' => [
                     'step one',
+                ],
+                'endStatuses' => [
+                    BaseTestRunner::STATUS_PASSED,
                 ],
                 'expectedOutput' =>
                     $formatter->makeBold('test.yml') . "\n" .
-                    '    step one' . "\n"
+                    '  ✓ step one' . "\n"
                 ,
             ],
             'multiple tests' => [
@@ -65,20 +74,26 @@ class ResultPrinterTest extends AbstractBaseTest
                     $root . '/test2.yml',
                     $root . '/test3.yml',
                 ],
-                'step names' => [
+                'stepNames' => [
                     'test one step one',
                     'test two step one',
                     'test two step two',
                     'test three step one',
                 ],
+                'endStatuses' => [
+                    BaseTestRunner::STATUS_PASSED,
+                    BaseTestRunner::STATUS_PASSED,
+                    BaseTestRunner::STATUS_PASSED,
+                    BaseTestRunner::STATUS_PASSED,
+                ],
                 'expectedOutput' =>
                     $formatter->makeBold('test1.yml') . "\n" .
-                    '    test one step one' . "\n" .
+                    '  ✓ test one step one' . "\n" .
                     $formatter->makeBold('test2.yml') . "\n" .
-                    '    test two step one' . "\n" .
-                    '    test two step two' . "\n" .
+                    '  ✓ test two step one' . "\n" .
+                    '  ✓ test two step two' . "\n" .
                     $formatter->makeBold('test3.yml') . "\n" .
-                    '    test three step one' . "\n"
+                    '  ✓ test three step one' . "\n",
             ],
         ];
     }
@@ -98,10 +113,11 @@ class ResultPrinterTest extends AbstractBaseTest
     /**
      * @param string[] $testPaths
      * @param string[] $stepNames
+     * @param int[] $endStatuses
      *
      * @return BasilTestCaseInterface[]
      */
-    private function createBasilTestCases(array $testPaths, array $stepNames): array
+    private function createBasilTestCases(array $testPaths, array $stepNames, array $endStatuses): array
     {
         $testCases = [];
 
@@ -114,6 +130,10 @@ class ResultPrinterTest extends AbstractBaseTest
             $basilTestCase
                 ->shouldReceive('getBasilStepName')
                 ->andReturn($stepNames[$testIndex]);
+
+            $basilTestCase
+                ->shouldReceive('getStatus')
+                ->andReturn($endStatuses[$testIndex]);
 
             $testCases[] = $basilTestCase;
         }
