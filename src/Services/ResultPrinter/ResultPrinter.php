@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunner\Services\ResultPrinter;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -10,9 +10,33 @@ use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
+use webignition\BaseBasilTestCase\BasilTestCaseInterface;
+use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener
 {
+    private $formatter;
+
+    /**
+     * @var string
+     */
+    private $projectRootPath = '';
+
+    /**
+     * @var string
+     */
+    private $currentTestPath = '';
+
+    public function __construct($out = null)
+    {
+        parent::__construct($out);
+
+        $this->formatter = Formatter::create();
+        $projectRootPath = (ProjectRootPathProvider::create())->get();
+
+        $this->projectRootPath = $projectRootPath;
+    }
+
     /**
      * @inheritDoc
      */
@@ -82,7 +106,18 @@ class ResultPrinter extends Printer implements TestListener
      */
     public function startTest(Test $test): void
     {
-        // TODO: Implement startTest() method.
+        if ($test instanceof BasilTestCaseInterface) {
+            $testPath = $test::getBasilTestPath();
+
+            if ($this->currentTestPath !== $testPath) {
+                $this->currentTestPath = $testPath;
+
+                $relativePath = substr($testPath, strlen($this->projectRootPath) + 1);
+
+                $this->write($this->formatter->makeBold($relativePath));
+                $this->writeEmptyLine();
+            }
+        }
     }
 
     /**
@@ -91,5 +126,10 @@ class ResultPrinter extends Printer implements TestListener
     public function endTest(Test $test, float $time): void
     {
         // TODO: Implement endTest() method.
+    }
+
+    private function writeEmptyLine(): void
+    {
+        $this->write("\n");
     }
 }
