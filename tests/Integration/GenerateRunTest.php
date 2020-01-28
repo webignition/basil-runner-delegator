@@ -12,16 +12,14 @@ use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 
 class GenerateRunTest extends TestCase
 {
-    public function testGenerateAndRun()
+    /**
+     * @dataProvider generateAndRunDataProvider
+     *
+     * @param string $source
+     */
+    public function testGenerateAndRun(string $source, string $target, string $expectedOutputBody)
     {
-        $buildPath = './tests/build/target';
-
-        $generateCommand =
-            './bin/basil-runner generate ' .
-            '--source=./tests/Fixtures/basil-integration/Test ' .
-            '--target=./tests/build/target ' .
-            '--base-class="' . AbstractBrowserTestCase::class . '"';
-
+        $generateCommand = $this->createGenerateCommand($source, $target);
         $generateCommandOutput = SuccessOutput::fromJson((string) shell_exec($generateCommand));
 
         foreach ($generateCommandOutput->getTestPaths() as $testPath) {
@@ -34,27 +32,49 @@ class GenerateRunTest extends TestCase
             });
         }
 
-        $runCommand =
-            './bin/basil-runner ' .
-            '--path=' . $buildPath;
+        $runCommand = $this->createRunCommand($target);
 
         $runCommandOutput = (string) shell_exec($runCommand);
-
-        $formatter = Formatter::create();
         $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
 
-        $expectedBody =
-            $formatter->makeBold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
-            '    verify page is open' . "\n" .
-            '    verify primary heading' . "\n" .
-            '    verify links are present' . "\n" .
-            '    navigate to form' . "\n";
-
-        $this->assertSame($expectedBody, $phpUnitOutput->getBody());
+        $this->assertSame($expectedOutputBody, $phpUnitOutput->getBody());
 
         foreach ($generateCommandOutput->getTestPaths() as $testPath) {
             unlink($testPath);
         }
+    }
+
+    public function generateAndRunDataProvider(): array
+    {
+        $formatter = Formatter::create();
+
+        return [
+            'default' => [
+                'source' => './tests/Fixtures/basil-integration/Test',
+                'target' => './tests/build/target',
+                'expectedOutputBody' => $formatter->makeBold(
+                    'tests/Fixtures/basil-integration/Test/index-page-test.yml'
+                ) . "\n" .
+                    '    verify page is open' . "\n" .
+                    '    verify primary heading' . "\n" .
+                    '    verify links are present' . "\n" .
+                    '    navigate to form' . "\n",
+            ],
+        ];
+    }
+
+    private function createGenerateCommand(string $source, string $target): string
+    {
+        return './bin/basil-runner generate ' .
+            '--source=' . $source . ' ' .
+            '--target=' . $target . ' ' .
+            '--base-class="' . AbstractBrowserTestCase::class . '"';
+    }
+
+    private function createRunCommand(string $path): string
+    {
+        return './bin/basil-runner ' .
+            '--path=' . $path;
     }
 
     private function mutateTestContent(string $path, callable $mutator): void
