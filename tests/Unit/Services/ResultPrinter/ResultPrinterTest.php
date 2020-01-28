@@ -89,11 +89,14 @@ class ResultPrinterTest extends AbstractBaseTest
                 'expectedOutput' =>
                     $formatter->makeBold('test1.yml') . "\n" .
                     '  ✓ test one step one' . "\n" .
+                    "\n" .
                     $formatter->makeBold('test2.yml') . "\n" .
                     '  ✓ test two step one' . "\n" .
                     '  ✓ test two step two' . "\n" .
+                    "\n" .
                     $formatter->makeBold('test3.yml') . "\n" .
-                    '  x test three step one' . "\n",
+                    '  x test three step one' . "\n"
+                ,
             ],
         ];
     }
