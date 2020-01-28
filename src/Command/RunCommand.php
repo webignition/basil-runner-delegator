@@ -16,6 +16,7 @@ class RunCommand extends Command
     public const OPTION_PATH = 'path';
 
     public const RETURN_CODE_INVALID_PATH = 100;
+    public const RETURN_CODE_UNABLE_TO_OPEN_PROCESS = 200;
 
     private const NAME = 'basil-runner:run';
     private const DEFAULT_RELATIVE_PATH = '/generated';
@@ -53,14 +54,17 @@ class RunCommand extends Command
             return self::RETURN_CODE_INVALID_PATH;
         }
 
-        $execOutput = [];
-        $returnCode = 0;
+        $process = popen($this->createPhpUnitCommand($path), 'r');
 
-        exec($this->createPhpUnitCommand($path), $execOutput, $returnCode);
+        if (is_resource($process)) {
+            while ($buffer = fread($process, 8)) {
+                $output->write($buffer);
+            }
 
-        $output->writeln(implode("\n", $execOutput));
+            return pclose($process);
+        }
 
-        return 0;
+        return self::RETURN_CODE_UNABLE_TO_OPEN_PROCESS;
     }
 
     private function createPhpUnitCommand(string $path): string
