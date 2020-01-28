@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+</head>
+<body>
+    <form action="/action1" id="form1">
+        <input name="input-without-value">
+        <input name="input-with-value" value="test">
+
+        <textarea class="textarea-empty"></textarea>
+        <textarea class="textarea-non-empty">textarea content</textarea>
+
+        <select class="select-none-selected">
+            <option value="none-selected-1">One</option>
+            <option value="none-selected-2">Two</option>
+            <option value="none-selected-3">Three</option>
+        </select>
+
+        <select class="select-has-selected">
+            <option value="has-selected-1">One</option>
+            <option value="has-selected-2" selected>Two</option>
+            <option value="has-selected-3">Three</option>
+        </select>
+
+        <input type="radio" name="radio-not-checked" value="not-checked-1">
+        <input type="radio" name="radio-not-checked" value="not-checked-2">
+        <input type="radio" name="radio-not-checked" value="not-checked-3">
+
+        <input type="radio" name="radio-checked" value="checked-1">
+        <input type="radio" name="radio-checked" value="checked-2" checked>
+        <input type="radio" name="radio-checked" value="checked-3">
+    </form>
+    <form action="/action2">
+        <input name="input-2" value="test">
+    </form>
+</body>
+</html>
