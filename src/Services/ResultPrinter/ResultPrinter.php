@@ -32,6 +32,11 @@ class ResultPrinter extends Printer implements TestListener
     private $currentTestPath = '';
 
     /**
+     * @var bool
+     */
+    private $isFirstTest;
+
+    /**
      * @var array<int, string>
      */
     private $icons = [
@@ -47,6 +52,7 @@ class ResultPrinter extends Printer implements TestListener
         $projectRootPath = (ProjectRootPathProvider::create())->get();
 
         $this->projectRootPath = $projectRootPath;
+        $this->isFirstTest = true;
     }
 
     /**
@@ -126,8 +132,16 @@ class ResultPrinter extends Printer implements TestListener
 
                 $relativePath = substr($testPath, strlen($this->projectRootPath) + 1);
 
+                if (false === $this->isFirstTest) {
+                    $this->writeEmptyLine();
+                }
+
                 $this->write($this->formatter->makeBold($relativePath));
                 $this->writeEmptyLine();
+
+                if ($this->isFirstTest) {
+                    $this->isFirstTest = false;
+                }
             }
         }
     }
