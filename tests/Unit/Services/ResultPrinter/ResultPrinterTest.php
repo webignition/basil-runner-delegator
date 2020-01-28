@@ -84,7 +84,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     BaseTestRunner::STATUS_PASSED,
                     BaseTestRunner::STATUS_PASSED,
                     BaseTestRunner::STATUS_PASSED,
-                    BaseTestRunner::STATUS_PASSED,
+                    BaseTestRunner::STATUS_FAILURE,
                 ],
                 'expectedOutput' =>
                     $formatter->makeBold('test1.yml') . "\n" .
@@ -93,7 +93,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     '  ✓ test two step one' . "\n" .
                     '  ✓ test two step two' . "\n" .
                     $formatter->makeBold('test3.yml') . "\n" .
-                    '  ✓ test three step one' . "\n",
+                    '  x test three step one' . "\n",
             ],
         ];
     }
