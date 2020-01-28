@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class RunCommand extends Command
@@ -72,6 +73,10 @@ class RunCommand extends Command
         $phpUnitExecutablePath = $this->projectRootPath . '/vendor/bin/phpunit';
         $phpUnitConfigurationPath = $this->projectRootPath . '/phpunit.run.xml';
 
-        return $phpUnitExecutablePath . ' -c ' . $phpUnitConfigurationPath . ' --colors=always ' . $path;
+        return $phpUnitExecutablePath .
+            ' -c ' . $phpUnitConfigurationPath .
+            ' --colors=always ' .
+            ' --printer="' . ResultPrinter::class . '" ' .
+            $path;
     }
 }

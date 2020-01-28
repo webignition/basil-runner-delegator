@@ -7,6 +7,8 @@ namespace webignition\BasilRunner\Tests\Integration;
 use PHPUnit\Framework\TestCase;
 use webignition\BasePantherTestCase\AbstractBrowserTestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
+use webignition\BasilRunner\Services\ResultPrinter\Formatter;
+use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 
 class GenerateRunTest extends TestCase
 {
@@ -37,18 +39,13 @@ class GenerateRunTest extends TestCase
             '--path=' . $buildPath;
 
         $runCommandOutput = (string) shell_exec($runCommand);
-        $runCommandOutputLines = explode("\n", $runCommandOutput);
 
-        $this->assertRegExp('#^PHPUnit.+#', $runCommandOutputLines[0]);
-        $this->assertSame('', $runCommandOutputLines[1]);
-        $this->assertRegExp('#^\.\.\.\. +4 / 4 \(100%\)$#', $runCommandOutputLines[2]);
-        $this->assertSame('', $runCommandOutputLines[3]);
-        $this->assertRegExp('#^Time: .+, Memory: .+$#', $runCommandOutputLines[4]);
-        $this->assertSame('', $runCommandOutputLines[5]);
-        $this->assertStringContainsString('OK (4 tests, 9 assertions)', $runCommandOutputLines[6]);
-        $this->assertSame('', $runCommandOutputLines[7]);
+        $formatter = Formatter::create();
+        $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
 
-        $this->assertNotEmpty($runCommandOutput);
+        $expectedBody = $formatter->makeBold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n";
+
+        $this->assertSame($expectedBody, $phpUnitOutput->getBody());
 
         foreach ($generateCommandOutput->getTestPaths() as $testPath) {
             unlink($testPath);
