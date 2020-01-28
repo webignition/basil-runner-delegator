@@ -4,21 +4,15 @@
 <phpunit
     backupGlobals               = "false"
     backupStaticAttributes      = "false"
-    colors                      = "true"
     convertErrorsToExceptions   = "true"
     convertNoticesToExceptions  = "true"
     convertWarningsToExceptions = "true"
     processIsolation            = "false"
-    stopOnFailure               = "false"
+    stopOnFailure               = "true"
+    stopOnError                 = "true"
     bootstrap                   = "config/bootstrap.php" >
 
     <php>
         <env name="APP_ENV" value="prod"/>
     </php>
-
-    <testsuites>
-        <testsuite name="Generated Test Suite">
-            <directory>generated/</directory>
-        </testsuite>
-    </testsuites>
 </phpunit>
