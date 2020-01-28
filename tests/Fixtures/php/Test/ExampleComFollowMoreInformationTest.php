@@ -10,7 +10,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$client->request('GET', 'https://example.com');
+        self::$client->request('GET', 'https://example.com/');
         self::setBasilTestPath('{{ test_path }}');
     }
 

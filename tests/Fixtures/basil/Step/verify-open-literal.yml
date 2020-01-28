@@ -1,2 +1,2 @@
 assertions:
-  - $page.url is "https://example.com"
+  - $page.url is "https://example.com/"

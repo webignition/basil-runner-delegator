@@ -1130,11 +1130,11 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         AbstractBaseTest::class
                     ),
                     'Unresolved placeholder "CLIENT" in content ' .
-                    '"{{ CLIENT }}->request(\'GET\', \'https://example.com\');"',
+                    '"{{ CLIENT }}->request(\'GET\', \'https://example.com/\');"',
                     ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
                     [
                         'placeholder' => 'CLIENT',
-                        'content' => '{{ CLIENT }}->request(\'GET\', \'https://example.com\');',
+                        'content' => '{{ CLIENT }}->request(\'GET\', \'https://example.com/\');',
                     ]
                 ),
                 'initializer' => function (GenerateCommandTest $generateCommandTest) {
