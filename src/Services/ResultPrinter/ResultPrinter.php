@@ -36,6 +36,7 @@ class ResultPrinter extends Printer implements TestListener
      */
     private $icons = [
         BaseTestRunner::STATUS_PASSED => '✓',
+        BaseTestRunner::STATUS_FAILURE => 'x',
     ];
 
     public function __construct($out = null)
