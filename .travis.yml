@@ -2,8 +2,12 @@ language: php
 php:
   - "7.2"
 
+addons:
+  chrome: stable
+
 install:
   - composer install --prefer-dist
+  - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
 
 script:
   - composer ci
