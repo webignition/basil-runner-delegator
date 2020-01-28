@@ -35,6 +35,22 @@ class SuccessOutput extends AbstractOutput implements \JsonSerializable
     }
 
     /**
+     * @return string[]
+     */
+    public function getTestPaths(): array
+    {
+        $targetDirectory = $this->getConfiguration()->getTarget();
+
+        $testPaths = [];
+
+        foreach ($this->getOutput() as $generatedTestOutput) {
+            $testPaths[] = $targetDirectory .  '/' . $generatedTestOutput->getTarget();
+        }
+
+        return $testPaths;
+    }
+
+    /**
      * @return array<mixed>
      */
     public function jsonSerialize(): array
