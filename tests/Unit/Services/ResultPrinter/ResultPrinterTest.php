@@ -15,7 +15,7 @@ class ResultPrinterTest extends AbstractBaseTest
     /**
      * @dataProvider startTestOutputsBasilTestPathInBoldDataProvider
      *
-     * @param BasilTestCaseInterface[] $tests
+     * @param string[] $testPaths
      * @param string $expectedOutput
      */
     public function testStartTestOutputsBasilTestPathInBold(array $testPaths, string $expectedOutput)
@@ -24,15 +24,19 @@ class ResultPrinterTest extends AbstractBaseTest
 
         $outResource = fopen('php://memory', 'w+');
 
-        $printer = new ResultPrinter($outResource);
+        if (is_resource($outResource)) {
+            $printer = new ResultPrinter($outResource);
 
-        $this->exercisePrinter($printer, $tests);
+            $this->exercisePrinter($printer, $tests);
 
-        rewind($outResource);
-        $outContent = stream_get_contents($outResource);
-        fclose($outResource);
+            rewind($outResource);
+            $outContent = stream_get_contents($outResource);
+            fclose($outResource);
 
-        $this->assertSame($expectedOutput, $outContent);
+            $this->assertSame($expectedOutput, $outContent);
+        } else {
+            $this->fail('Failed to open resource "php://memory" for reading and writing');
+        }
     }
 
     public function startTestOutputsBasilTestPathInBoldDataProvider(): array
@@ -73,6 +77,11 @@ class ResultPrinterTest extends AbstractBaseTest
         }
     }
 
+    /**
+     * @param string[] $testPaths
+     *
+     * @return BasilTestCaseInterface[]
+     */
     private function createBasilTestCases(array $testPaths): array
     {
         $testCases = [];

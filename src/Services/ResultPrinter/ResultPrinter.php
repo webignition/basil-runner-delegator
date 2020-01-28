@@ -16,7 +16,15 @@ use webignition\BasilRunner\Services\ProjectRootPathProvider;
 class ResultPrinter extends Printer implements TestListener
 {
     private $formatter;
-    private $projectRootPath;
+
+    /**
+     * @var string
+     */
+    private $projectRootPath = '';
+
+    /**
+     * @var string
+     */
     private $currentTestPath = '';
 
     public function __construct($out = null)
