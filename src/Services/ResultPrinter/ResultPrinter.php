@@ -155,11 +155,7 @@ class ResultPrinter extends Printer implements TestListener
 
     private function getTestEndStatus(Test $test): int
     {
-        if ($test instanceof TestCase) {
-            return $test->getStatus();
-        }
-
-        if ($test instanceof BasilTestCaseInterface) {
+        if ($test instanceof TestCase || $test instanceof BasilTestCaseInterface) {
             return $test->getStatus();
         }
 
