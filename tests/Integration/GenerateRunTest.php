@@ -55,10 +55,10 @@ class GenerateRunTest extends TestCase
                 'expectedOutputBody' => $formatter->makeBold(
                     'tests/Fixtures/basil-integration/Test/index-page-test.yml'
                 ) . "\n" .
-                    '    verify page is open' . "\n" .
-                    '    verify primary heading' . "\n" .
-                    '    verify links are present' . "\n" .
-                    '    navigate to form' . "\n",
+                    '  ✓ verify page is open' . "\n" .
+                    '  ✓ verify primary heading' . "\n" .
+                    '  ✓ verify links are present' . "\n" .
+                    '  ✓ navigate to form' . "\n",
             ],
         ];
     }
