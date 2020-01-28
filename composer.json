@@ -58,9 +58,11 @@
         "phpstan/phpstan": "^0.12.0",
         "phpstan/phpstan-mockery": "^0.12.0",
         "squizlabs/php_codesniffer": "3.*",
+        "webignition/base-panther-test-case": ">=0.5,<1",
         "webignition/basil-data-validator": ">=0.7,<1",
         "webignition/basil-models": ">=0.26,<1",
-        "webignition/basil-parser": ">=0.20,<1"
+        "webignition/basil-parser": ">=0.20,<1",
+        "webignition/symfony-panther-webserver-runner": ">=0.1,<1"
     },
     "bin": [
         "bin/basil-runner"
