@@ -64,7 +64,7 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'expectedOutput' =>
                     $formatter->makeBold('test.yml') . "\n" .
-                    '  ✓ step one' . "\n"
+                    $formatter->colourise('  ✓ step one', Formatter::COLOUR_FG_GREEN) . "\n"
                 ,
             ],
             'multiple tests' => [
@@ -88,14 +88,14 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'expectedOutput' =>
                     $formatter->makeBold('test1.yml') . "\n" .
-                    '  ✓ test one step one' . "\n" .
+                    $formatter->colourise('  ✓ test one step one', Formatter::COLOUR_FG_GREEN) . "\n" .
                     "\n" .
                     $formatter->makeBold('test2.yml') . "\n" .
-                    '  ✓ test two step one' . "\n" .
-                    '  ✓ test two step two' . "\n" .
+                    $formatter->colourise('  ✓ test two step one', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    $formatter->colourise('  ✓ test two step two', Formatter::COLOUR_FG_GREEN) . "\n" .
                     "\n" .
                     $formatter->makeBold('test3.yml') . "\n" .
-                    '  x test three step one' . "\n"
+                    $formatter->colourise('  x test three step one', Formatter::COLOUR_FG_RED) . "\n"
                 ,
             ],
         ];
