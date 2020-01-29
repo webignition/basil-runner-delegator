@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73f1d2aac9e9ec026da676c8db66ff9a",
+    "content-hash": "db06b682dcd125922e38846a783a3d17",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3512,16 +3512,16 @@
         },
         {
             "name": "webignition/basil-data-validator",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-data-validator.git",
-                "reference": "3228414a45dfa72790cf49eb9ef4af76d5bb4252"
+                "reference": "f2b8f0f982da52f34e32a3aadbf3b6b967a9643c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/3228414a45dfa72790cf49eb9ef4af76d5bb4252",
-                "reference": "3228414a45dfa72790cf49eb9ef4af76d5bb4252",
+                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/f2b8f0f982da52f34e32a3aadbf3b6b967a9643c",
+                "reference": "f2b8f0f982da52f34e32a3aadbf3b6b967a9643c",
                 "shasum": ""
             },
             "require": {
@@ -3557,7 +3557,7 @@
             ],
             "description": "Validator for source data for basil language",
             "homepage": "https://github.com/webignition/basil-data-validator",
-            "time": "2020-01-29T18:26:12+00:00"
+            "time": "2020-01-29T20:12:29+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
