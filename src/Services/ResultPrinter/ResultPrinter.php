@@ -13,13 +13,13 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
+use webignition\BaseBasilTestCase\Statement;
+use webignition\BasilRunner\Model\TerminalString;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener
 {
     private const DEFAULT_ICON = '?';
-
-    private $formatter;
 
     /**
      * @var string
@@ -48,7 +48,6 @@ class ResultPrinter extends Printer implements TestListener
     {
         parent::__construct($out);
 
-        $this->formatter = Formatter::create();
         $projectRootPath = (ProjectRootPathProvider::create())->get();
 
         $this->projectRootPath = $projectRootPath;
@@ -136,7 +135,10 @@ class ResultPrinter extends Printer implements TestListener
                     $this->writeEmptyLine();
                 }
 
-                $this->write($this->formatter->makeBold($relativePath));
+                $testPathTerminalString = (new TerminalString($relativePath))
+                    ->withDecoration(TerminalString::DECORATION_BOLD);
+
+                $this->write((string) $testPathTerminalString);
                 $this->writeEmptyLine();
 
                 if ($this->isFirstTest) {
@@ -152,21 +154,62 @@ class ResultPrinter extends Printer implements TestListener
     public function endTest(Test $test, float $time): void
     {
         if ($test instanceof BasilTestCaseInterface) {
-            $content = sprintf(
-                '  %s %s',
-                $this->getEndTestIcon($test),
-                $test->getBasilStepName()
-            );
+            $testEndStatus = $this->getTestEndStatus($test);
 
-            $contentColour = BaseTestRunner::STATUS_PASSED === $this->getTestEndStatus($test)
-                ? Formatter::COLOUR_FG_GREEN
-                : Formatter::COLOUR_FG_RED;
-
-            $content = $this->formatter->colourise($content, $contentColour);
-
-            $this->write($content);
+            $this->write($this->createStepName($test));
             $this->writeEmptyLine();
+
+            foreach ($test->getCompletedStatements() as $statement) {
+                $this->write($this->decorateCompletedStatement($statement));
+                $this->writeEmptyLine();
+            }
+
+            if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
+                $failedStatement = $test->getCurrentStatement();
+
+                if ($failedStatement instanceof Statement) {
+                    $this->write($this->decorateFailedStatement($failedStatement));
+                    $this->writeEmptyLine();
+                }
+            }
         }
+    }
+
+    private function createStepName(BasilTestCaseInterface $test): string
+    {
+        $testEndStatus = $this->getTestEndStatus($test);
+
+        $stepNameContent = sprintf(
+            '  %s %s',
+            $this->getEndTestIcon($test),
+            $test->getBasilStepName()
+        );
+
+        $contentColour = BaseTestRunner::STATUS_PASSED === $testEndStatus
+            ? TerminalString::COLOUR_GREEN
+            : TerminalString::COLOUR_RED;
+
+        return (string) (new TerminalString($stepNameContent))->withForegroundColour($contentColour);
+    }
+
+    private function decorateCompletedStatement(Statement $statement): string
+    {
+        $icon = $this->icons[BaseTestRunner::STATUS_PASSED];
+        $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_GREEN);
+
+        return '     ' . $iconContent . ' ' . $statement->getContent();
+    }
+
+    private function decorateFailedStatement(Statement $statement): string
+    {
+        $icon = $this->icons[BaseTestRunner::STATUS_FAILURE];
+        $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_RED);
+
+        $lead = '     ' . $iconContent . ' ';
+
+        return $lead . (string) (new TerminalString($statement->getContent()))
+            ->withForegroundColour(TerminalString::COLOUR_WHITE)
+            ->withBackgroundColour(TerminalString::COLOUR_RED);
     }
 
     private function getEndTestIcon(Test $test): string
