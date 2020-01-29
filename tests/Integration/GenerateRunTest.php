@@ -52,13 +52,14 @@ class GenerateRunTest extends TestCase
             'default' => [
                 'source' => './tests/Fixtures/basil-integration/Test',
                 'target' => './tests/build/target',
-                'expectedOutputBody' => $formatter->makeBold(
-                    'tests/Fixtures/basil-integration/Test/index-page-test.yml'
-                ) . "\n" .
-                    '  ✓ verify page is open' . "\n" .
-                    '  ✓ verify primary heading' . "\n" .
-                    '  ✓ verify links are present' . "\n" .
-                    '  ✓ navigate to form' . "\n",
+                'expectedOutputBody' =>
+                    $formatter->makeBold(
+                        'tests/Fixtures/basil-integration/Test/index-page-test.yml'
+                    ) . "\n" .
+                    $formatter->colourise('  ✓ verify page is open', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    $formatter->colourise('  ✓ verify primary heading', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    $formatter->colourise('  ✓ verify links are present', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    $formatter->colourise('  ✓ navigate to form', Formatter::COLOUR_FG_GREEN) . "\n",
             ],
         ];
     }

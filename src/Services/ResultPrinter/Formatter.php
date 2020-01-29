@@ -14,6 +14,9 @@ class Formatter
     public const COLOUR_FG_RED = 'red';
     public const COLOUR_FG_GREEN = 'green';
 
+    /**
+     * @var array<string, string>
+     */
     private $colours = [
         self::COLOUR_FG_RED => self::FG_RED_START,
         self::COLOUR_FG_GREEN => self::FG_GREEN_START,
