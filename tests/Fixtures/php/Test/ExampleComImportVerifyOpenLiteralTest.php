@@ -2,6 +2,7 @@
 
 namespace webignition\BasilRunner\Generated;
 
+use webignition\BaseBasilTestCase\Statement;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 
 class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
@@ -18,10 +19,13 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
         $this->setBasilStepName('verify page is open');
 
         // $page.url is "https://example.com/"
+        $statement = Statement::createAssertion('$page.url is "https://example.com/"');
+        $this->currentStatement = $statement;
         $expected = "https://example.com/" ?? null;
         $expected = (string) $expected;
         $examined = self::$client->getCurrentURL() ?? null;
         $examined = (string) $examined;
         $this->assertEquals($expected, $examined);
+        $this->completedStatements[] = $statement;
     }
 }
