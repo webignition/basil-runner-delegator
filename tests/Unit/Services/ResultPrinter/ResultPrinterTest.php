@@ -6,8 +6,8 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
+use webignition\BaseBasilTestCase\Statement;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\Formatter;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -19,15 +19,25 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
+     * @param array<int, Statement[]> $completedStatements
+     * @param Statement|null $failedStatement
      * @param string $expectedOutput
      */
     public function testPrinterOutput(
         array $testPaths,
         array $stepNames,
         array $endStatuses,
+        array $completedStatements,
+        ?Statement $failedStatement,
         string $expectedOutput
     ) {
-        $tests = $this->createBasilTestCases($testPaths, $stepNames, $endStatuses);
+        $tests = $this->createBasilTestCases(
+            $testPaths,
+            $stepNames,
+            $endStatuses,
+            $completedStatements,
+            $failedStatement
+        );
 
         $outResource = fopen('php://memory', 'w+');
 
@@ -49,7 +59,6 @@ class ResultPrinterTest extends AbstractBaseTest
     public function printerOutputDataProvider(): array
     {
         $root = (new ProjectRootPathProvider())->get();
-        $formatter = new Formatter();
 
         return [
             'single test' => [
@@ -62,9 +71,16 @@ class ResultPrinterTest extends AbstractBaseTest
                 'endStatuses' => [
                     BaseTestRunner::STATUS_PASSED,
                 ],
+                'completedStatements' => [
+                    [
+                        Statement::createAssertion('$page.url is "http://example.com/"'),
+                    ],
+                ],
+                'failedStatement' => null,
                 'expectedOutput' =>
-                    $formatter->makeBold('test.yml') . "\n" .
-                    $formatter->colourise('  ✓ step one', Formatter::COLOUR_FG_GREEN) . "\n"
+                    "\033[1m" . 'test.yml' . "\033[0m" . "\n" .
+                    "\033[32m" . '  ✓ step one' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n"
                 ,
             ],
             'multiple tests' => [
@@ -86,16 +102,43 @@ class ResultPrinterTest extends AbstractBaseTest
                     BaseTestRunner::STATUS_PASSED,
                     BaseTestRunner::STATUS_FAILURE,
                 ],
+                'completedStatements' => [
+                    [
+                        Statement::createAssertion('$page.url is "http://example.com/"'),
+                        Statement::createAssertion('$page.title is "Hello, World!"'),
+                    ],
+                    [
+                        Statement::createAction('click $".successful"'),
+                        Statement::createAssertion('$page.url is "http://example.com/successful/"'),
+                    ],
+                    [
+                        Statement::createAction('click $".back"'),
+                        Statement::createAssertion('$page.url is "http://example.com/"'),
+                    ],
+                    [
+                        Statement::createAction('click $".new"'),
+                    ]
+                ],
+                'failedStatement' => Statement::createAssertion('$page.url is "http://example.com/new/"'),
                 'expectedOutput' =>
-                    $formatter->makeBold('test1.yml') . "\n" .
-                    $formatter->colourise('  ✓ test one step one', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    "\033[1m" . 'test1.yml' . "\033[0m" . "\n" .
+                    "\033[32m" . '  ✓ test one step one' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Hello, World!"' . "\n" .
                     "\n" .
-                    $formatter->makeBold('test2.yml') . "\n" .
-                    $formatter->colourise('  ✓ test two step one', Formatter::COLOUR_FG_GREEN) . "\n" .
-                    $formatter->colourise('  ✓ test two step two', Formatter::COLOUR_FG_GREEN) . "\n" .
+                    "\033[1m" . 'test2.yml' . "\033[0m" . "\n" .
+                    "\033[32m" . '  ✓ test two step one' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".successful"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    "\033[32m" . '  ✓ test two step two' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".back"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
                     "\n" .
-                    $formatter->makeBold('test3.yml') . "\n" .
-                    $formatter->colourise('  x test three step one', Formatter::COLOUR_FG_RED) . "\n"
+                    "\033[1m" . 'test3.yml' . "\033[0m" . "\n" .
+                    "\033[31m" . '  x test three step one' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".new"' . "\n" .
+                    '     ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[37m" . "\033[41m" .
+                    '$page.url is "http://example.com/new/"' . "\033[0m" . "\n"
                 ,
             ],
         ];
@@ -117,11 +160,18 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
+     * @param array<int, Statement[]> $completedStatements
+     * @param Statement|null $failedStatement
      *
      * @return BasilTestCaseInterface[]
      */
-    private function createBasilTestCases(array $testPaths, array $stepNames, array $endStatuses): array
-    {
+    private function createBasilTestCases(
+        array $testPaths,
+        array $stepNames,
+        array $endStatuses,
+        array $completedStatements,
+        ?Statement $failedStatement
+    ): array {
         $testCases = [];
 
         foreach ($testPaths as $testIndex => $testPath) {
@@ -137,6 +187,14 @@ class ResultPrinterTest extends AbstractBaseTest
             $basilTestCase
                 ->shouldReceive('getStatus')
                 ->andReturn($endStatuses[$testIndex]);
+
+            $basilTestCase
+                ->shouldReceive('getCompletedStatements')
+                ->andReturn($completedStatements[$testIndex]);
+
+            $basilTestCase
+                ->shouldReceive('getCurrentStatement')
+                ->andReturn($failedStatement);
 
             $testCases[] = $basilTestCase;
         }

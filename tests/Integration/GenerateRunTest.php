@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Tests\Integration;
 use PHPUnit\Framework\TestCase;
 use webignition\BasePantherTestCase\AbstractBrowserTestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
-use webignition\BasilRunner\Services\ResultPrinter\Formatter;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 
 class GenerateRunTest extends TestCase
@@ -46,20 +45,28 @@ class GenerateRunTest extends TestCase
 
     public function generateAndRunDataProvider(): array
     {
-        $formatter = Formatter::create();
-
         return [
             'default' => [
                 'source' => './tests/Fixtures/basil-integration/Test',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $formatter->makeBold(
-                        'tests/Fixtures/basil-integration/Test/index-page-test.yml'
-                    ) . "\n" .
-                    $formatter->colourise('  ✓ verify page is open', Formatter::COLOUR_FG_GREEN) . "\n" .
-                    $formatter->colourise('  ✓ verify primary heading', Formatter::COLOUR_FG_GREEN) . "\n" .
-                    $formatter->colourise('  ✓ verify links are present', Formatter::COLOUR_FG_GREEN) . "\n" .
-                    $formatter->colourise('  ✓ navigate to form', Formatter::COLOUR_FG_GREEN) . "\n",
+                    "\033[1m" . 'tests/Fixtures/basil-integration/Test/index-page-test.yml' . "\033[0m" . "\n" .
+                    "\033[32m" . '  ✓ verify page is open' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" .
+                    ' $page.title is "Test fixture web server default document"' . "\n" .
+                    "\033[32m" . '  ✓ verify primary heading' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $"h1" exists' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" .
+                    ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    "\033[32m" . '  ✓ verify links are present' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-assertions]" exists' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
+                    "\033[32m" . '  ✓ navigate to form' . "\033[0m" . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $"a[id=link-to-form]"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
+                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Form"' . "\n"
             ],
         ];
     }
