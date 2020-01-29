@@ -158,6 +158,12 @@ class ResultPrinter extends Printer implements TestListener
                 $test->getBasilStepName()
             );
 
+            $contentColour = BaseTestRunner::STATUS_PASSED === $this->getTestEndStatus($test)
+                ? Formatter::COLOUR_FG_GREEN
+                : Formatter::COLOUR_FG_RED;
+
+            $content = $this->formatter->colourise($content, $contentColour);
+
             $this->write($content);
             $this->writeEmptyLine();
         }
