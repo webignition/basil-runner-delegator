@@ -13,7 +13,7 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BaseBasilTestCase\Statement;
+use webignition\BaseBasilTestCase\StatementInterface;
 use webignition\BasilRunner\Model\TerminalString;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
@@ -167,7 +167,7 @@ class ResultPrinter extends Printer implements TestListener
             if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
                 $failedStatement = $test->getCurrentStatement();
 
-                if ($failedStatement instanceof Statement) {
+                if ($failedStatement instanceof StatementInterface) {
                     $this->write($this->decorateFailedStatement($failedStatement));
                     $this->writeEmptyLine();
                 }
@@ -192,7 +192,7 @@ class ResultPrinter extends Printer implements TestListener
         return (string) (new TerminalString($stepNameContent))->withForegroundColour($contentColour);
     }
 
-    private function decorateCompletedStatement(Statement $statement): string
+    private function decorateCompletedStatement(StatementInterface $statement): string
     {
         $icon = $this->icons[BaseTestRunner::STATUS_PASSED];
         $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_GREEN);
@@ -200,7 +200,7 @@ class ResultPrinter extends Printer implements TestListener
         return '     ' . $iconContent . ' ' . $statement->getContent();
     }
 
-    private function decorateFailedStatement(Statement $statement): string
+    private function decorateFailedStatement(StatementInterface $statement): string
     {
         $icon = $this->icons[BaseTestRunner::STATUS_FAILURE];
         $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_RED);

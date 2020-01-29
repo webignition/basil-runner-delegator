@@ -47,8 +47,16 @@ class TerminalString
         self::DECORATION_BOLD => self::BOLD,
     ];
 
+    /**
+     * @var string|null
+     */
     private $foregroundCode;
+
+    /**
+     * @var string|null
+     */
     private $backgroundCode;
+
     private $content;
 
     /**
