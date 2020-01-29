@@ -3418,16 +3418,16 @@
         },
         {
             "name": "webignition/basil-code-generator",
-            "version": "0.9",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-code-generator.git",
-                "reference": "de82f4c7076fd6bb4b55613f490905db76f40ff7"
+                "reference": "2890429b9297ca0f3ee3661ef8dc5eb923e1fb5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/de82f4c7076fd6bb4b55613f490905db76f40ff7",
-                "reference": "de82f4c7076fd6bb4b55613f490905db76f40ff7",
+                "url": "https://api.github.com/repos/webignition/basil-code-generator/zipball/2890429b9297ca0f3ee3661ef8dc5eb923e1fb5d",
+                "reference": "2890429b9297ca0f3ee3661ef8dc5eb923e1fb5d",
                 "shasum": ""
             },
             "require": {
@@ -3458,7 +3458,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-code-generator",
-            "time": "2020-01-17T12:15:56+00:00"
+            "time": "2020-01-29T19:37:48+00:00"
         },
         {
             "name": "webignition/basil-compiler",
