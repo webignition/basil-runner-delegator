@@ -3745,16 +3745,16 @@
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.26",
+            "version": "0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "ef355bfa889a9d5f7fd68d3432fbdbd843502714"
+                "reference": "e1f4cd85a46a0974d26a130cd183e0bd787b991d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/ef355bfa889a9d5f7fd68d3432fbdbd843502714",
-                "reference": "ef355bfa889a9d5f7fd68d3432fbdbd843502714",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/e1f4cd85a46a0974d26a130cd183e0bd787b991d",
+                "reference": "e1f4cd85a46a0974d26a130cd183e0bd787b991d",
                 "shasum": ""
             },
             "require": {
@@ -3782,7 +3782,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-01-15T13:04:48+00:00"
+            "time": "2020-01-30T11:23:10+00:00"
         },
         {
             "name": "webignition/basil-parser",
