@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f33b158797ac0ae9ea8e5b9082f2931c",
+    "content-hash": "941a1ee7a1cdcfd9a31e1a97a599e4b3",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3919,16 +3919,16 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.13",
+            "version": "0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "2eb2c0066f56d9b02208283364c8c68f78332ba4"
+                "reference": "dc12915d1e76cb45112b5a00e725e47132ab4d11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/2eb2c0066f56d9b02208283364c8c68f78332ba4",
-                "reference": "2eb2c0066f56d9b02208283364c8c68f78332ba4",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/dc12915d1e76cb45112b5a00e725e47132ab4d11",
+                "reference": "dc12915d1e76cb45112b5a00e725e47132ab4d11",
                 "shasum": ""
             },
             "require": {
@@ -3973,7 +3973,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-02-03T10:44:39+00:00"
+            "time": "2020-02-03T12:07:15+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",
@@ -4061,16 +4061,16 @@
         },
         {
             "name": "webignition/php-dom-element-identifier",
-            "version": "0.10",
+            "version": "0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-dom-element-identifier.git",
-                "reference": "fcb502c1fc4377a50172d108c63444db86eca188"
+                "reference": "65b8b076726e0ef769cebd501e8304766b9b0eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-dom-element-identifier/zipball/fcb502c1fc4377a50172d108c63444db86eca188",
-                "reference": "fcb502c1fc4377a50172d108c63444db86eca188",
+                "url": "https://api.github.com/repos/webignition/php-dom-element-identifier/zipball/65b8b076726e0ef769cebd501e8304766b9b0eba",
+                "reference": "65b8b076726e0ef769cebd501e8304766b9b0eba",
                 "shasum": ""
             },
             "require": {
@@ -4100,7 +4100,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-dom-element-identifier",
-            "time": "2019-12-31T08:39:47+00:00"
+            "time": "2020-02-03T11:36:53+00:00"
         },
         {
             "name": "webignition/php-dom-element-locator",
