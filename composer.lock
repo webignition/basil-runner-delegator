@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db06b682dcd125922e38846a783a3d17",
+    "content-hash": "f33b158797ac0ae9ea8e5b9082f2931c",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3561,22 +3561,22 @@
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
-            "version": "0.7",
+            "version": "0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-dom-identifier-factory.git",
-                "reference": "e25041c25415940021702d8b8d233326df88129f"
+                "reference": "b3fb40306833104ddb32d8f279a6123168541e42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-dom-identifier-factory/zipball/e25041c25415940021702d8b8d233326df88129f",
-                "reference": "e25041c25415940021702d8b8d233326df88129f",
+                "url": "https://api.github.com/repos/webignition/basil-dom-identifier-factory/zipball/b3fb40306833104ddb32d8f279a6123168541e42",
+                "reference": "b3fb40306833104ddb32d8f279a6123168541e42",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=7.2",
-                "webignition/php-dom-element-identifier": ">=0.6,<1",
+                "webignition/php-dom-element-identifier": ">=0.10,<1",
                 "webignition/quoted-string-value-extractor": ">=0.1,<1"
             },
             "require-dev": {
@@ -3601,7 +3601,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-dom-identifier-factory",
-            "time": "2020-01-07T19:31:36+00:00"
+            "time": "2020-01-31T08:34:34+00:00"
         },
         {
             "name": "webignition/basil-identifier-analyser",
@@ -3919,25 +3919,25 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.12",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "faad6c440d5289800304e76c0287b43a20ac2baa"
+                "reference": "2eb2c0066f56d9b02208283364c8c68f78332ba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/faad6c440d5289800304e76c0287b43a20ac2baa",
-                "reference": "faad6c440d5289800304e76c0287b43a20ac2baa",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/2eb2c0066f56d9b02208283364c8c68f78332ba4",
+                "reference": "2eb2c0066f56d9b02208283364c8c68f78332ba4",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.2",
-                "webignition/basil-code-generator": ">=0.9,<1",
-                "webignition/basil-dom-identifier-factory": ">=0.6,<1",
+                "webignition/basil-code-generator": ">=0.10,<1",
+                "webignition/basil-dom-identifier-factory": ">=0.8,<1",
                 "webignition/basil-identifier-analyser": ">=0.4,<1",
-                "webignition/basil-models": ">=0.26,<1",
+                "webignition/basil-models": ">=0.27,<1",
                 "webignition/php-basil-compilation-source": ">=0.64,<1",
                 "webignition/php-dom-element-identifier": ">=0.10,<1",
                 "webignition/quoted-string-value-extractor": ">=0.1,<1",
@@ -3973,7 +3973,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-01-29T11:47:15+00:00"
+            "time": "2020-02-03T10:44:39+00:00"
         },
         {
             "name": "webignition/php-basil-compilation-source",
