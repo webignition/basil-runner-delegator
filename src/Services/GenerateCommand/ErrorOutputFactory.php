@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
-use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilCompiler\UnresolvedPlaceholderException;
 use webignition\BasilContextAwareException\ExceptionContext\ExceptionContextInterface;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;

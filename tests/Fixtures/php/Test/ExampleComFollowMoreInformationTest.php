@@ -2,9 +2,9 @@
 
 namespace webignition\BasilRunner\Generated;
 
+use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BaseBasilTestCase\Statement;
 use webignition\DomElementIdentifier\ElementIdentifier;
-use webignition\BaseBasilTestCase\AbstractBaseTest;
 
 class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 {
@@ -23,7 +23,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $statement = Statement::createAssertion('$"a" exists');
         $this->currentStatement = $statement;
         $has = $this->navigator->hasOne(ElementIdentifier::fromJson('{"locator":"a"}'));
-        $this->assertTrue($has);
+        $this->assertTrue($has, '{"assertion":{"source":"$\\"a\\" exists","identifier":"$\\"a\\"","comparison":"exists"}}');
         $this->completedStatements[] = $statement;
 
         // click $"a"
@@ -37,9 +37,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $statement = Statement::createAssertion('$page.url is "https://www.iana.org/domains/reserved"');
         $this->currentStatement = $statement;
         $expected = "https://www.iana.org/domains/reserved" ?? null;
-        $expected = (string) $expected;
         $examined = self::$client->getCurrentURL() ?? null;
-        $examined = (string) $examined;
         $this->assertEquals($expected, $examined);
         $this->completedStatements[] = $statement;
     }
