@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
+use webignition\BasilCompiler\UnresolvedPlaceholderException;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilRunner\Model\GeneratedTestOutput;
 
