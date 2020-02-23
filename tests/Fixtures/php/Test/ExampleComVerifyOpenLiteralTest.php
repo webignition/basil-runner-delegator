@@ -23,7 +23,10 @@ class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
         $this->currentStatement = $statement;
         $expected = "https://example.com/" ?? null;
         $examined = self::$client->getCurrentURL() ?? null;
-        $this->assertEquals($expected, $examined);
+        $this->assertEquals(
+            $expected,
+            $examined
+        );
         $this->completedStatements[] = $statement;
     }
 }
