@@ -25,7 +25,15 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
         $examined = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
             $expected,
-            $examined
+            $examined,
+            '{
+            "assertion": {
+                "source": "$page.url is \\"https:\\/\\/example.com\\/\\"",
+                "identifier": "$page.url",
+                "comparison": "is",
+                "value": "\\"https:\\/\\/example.com\\/\\""
+            }
+        }'
         );
         $this->completedStatements[] = $statement;
     }

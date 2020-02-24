@@ -22,11 +22,11 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         // $"a" exists <- click $"a"
         $statement = Statement::createAssertion('$"a" exists');
         $this->currentStatement = $statement;
-        $has = $this->navigator->hasOne(ElementIdentifier::fromJson('{
+        $examined = $this->navigator->hasOne(ElementIdentifier::fromJson('{
             "locator": "a"
         }'));
         $this->assertTrue(
-            $has,
+            $examined,
             '{
             "assertion": {
                 "source": "$\\"a\\" exists",
@@ -53,7 +53,15 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $examined = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
             $expected,
-            $examined
+            $examined,
+            '{
+            "assertion": {
+                "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
+                "identifier": "$page.url",
+                "comparison": "is",
+                "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
+            }
+        }'
         );
         $this->completedStatements[] = $statement;
     }
