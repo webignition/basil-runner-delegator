@@ -22,11 +22,11 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         // $"a" exists <- click $"a"
         $statement = Statement::createAssertion('$"a" exists');
         $this->currentStatement = $statement;
-        $examined = $this->navigator->hasOne(ElementIdentifier::fromJson('{
+        $this->examinedValue = $this->navigator->hasOne(ElementIdentifier::fromJson('{
             "locator": "a"
         }'));
         $this->assertTrue(
-            $examined,
+            $this->examinedValue,
             '{
             "assertion": {
                 "source": "$\\"a\\" exists",
@@ -44,16 +44,17 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             "locator": "a"
         }'));
         $element->click();
+        self::$crawler = self::$client->refreshCrawler();
         $this->completedStatements[] = $statement;
 
         // $page.url is "https://www.iana.org/domains/reserved"
         $statement = Statement::createAssertion('$page.url is "https://www.iana.org/domains/reserved"');
         $this->currentStatement = $statement;
-        $expected = "https://www.iana.org/domains/reserved" ?? null;
-        $examined = self::$client->getCurrentURL() ?? null;
+        $this->expectedValue = "https://www.iana.org/domains/reserved" ?? null;
+        $this->examinedValue = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
-            $expected,
-            $examined,
+            $this->expectedValue,
+            $this->examinedValue,
             '{
             "assertion": {
                 "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
