@@ -32,6 +32,15 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
                 "source": "$\\"a\\" exists",
                 "identifier": "$\\"a\\"",
                 "comparison": "exists"
+            },
+            "derived_from": {
+                "statement_type": "action",
+                "statement": {
+                    "source": "click $\\"a\\"",
+                    "type": "click",
+                    "arguments": "$\\"a\\"",
+                    "identifier": "$\\"a\\""
+                }
             }
         }'
         );
