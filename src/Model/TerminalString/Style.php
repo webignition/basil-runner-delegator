@@ -66,11 +66,14 @@ class Style
      */
     private $decorationCodes = [];
 
-    public function __construct($format = [])
+    /**
+     * @param array<mixed> $style
+     */
+    public function __construct($style = [])
     {
-        $foregroundColour = $format[self::FOREGROUND_COLOUR] ?? null;
-        $backgroundColour = $format[self::BACKGROUND_COLOUR] ?? null;
-        $decorations = $format[self::DECORATIONS] ?? [];
+        $foregroundColour = $style[self::FOREGROUND_COLOUR] ?? null;
+        $backgroundColour = $style[self::BACKGROUND_COLOUR] ?? null;
+        $decorations = $style[self::DECORATIONS] ?? [];
 
         $this->foregroundCode = $this->foregroundColours[$foregroundColour] ?? null;
         $this->backgroundCode = $this->backgroundColours[$backgroundColour] ?? null;
