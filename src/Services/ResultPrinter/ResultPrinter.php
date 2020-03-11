@@ -201,42 +201,30 @@ class ResultPrinter extends Printer implements TestListener
 
     private function decorateCompletedStatement(StatementInterface $statement): ActivityLine
     {
-        return $this->decorateStatement(
+        return new ActivityLine(
+            2,
             $this->icons[BaseTestRunner::STATUS_PASSED],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
             ]),
-            $statement
+            $statement->getContent(),
+            new Style()
         );
     }
 
     private function decorateFailedStatement(StatementInterface $statement): ActivityLine
     {
-        return $this->decorateStatement(
+        return new ActivityLine(
+            2,
             $this->icons[BaseTestRunner::STATUS_FAILURE],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
             ]),
-            $statement,
+            $statement->getContent(),
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                 Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
             ])
-        );
-    }
-
-    private function decorateStatement(
-        string $icon,
-        Style $iconStyle,
-        StatementInterface $statement,
-        ?Style $statementStyle = null
-    ): ActivityLine {
-        return new ActivityLine(
-            2,
-            $icon,
-            $iconStyle,
-            $statement->getContent(),
-            $statementStyle
         );
     }
 

@@ -22,7 +22,7 @@ class ActivityLine
         string $icon,
         Style $iconStyle,
         string $content,
-        ?Style $contentStyle = null
+        Style $contentStyle
     ) {
         $this->indentLevel = $indentLevel;
         $this->icon = $icon;
