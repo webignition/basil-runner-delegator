@@ -15,7 +15,15 @@ class ActivityLine
     private $iconStyle;
     private $content;
     private $contentStyle;
+
+    /**
+     * @var ActivityLine|null
+     */
     private $parent;
+
+    /**
+     * @var ActivityLine[]
+     */
     private $children = [];
 
     public function __construct(
@@ -51,7 +59,7 @@ class ActivityLine
         return $string;
     }
 
-    private function deriveIndentLevel()
+    private function deriveIndentLevel(): int
     {
         $indentLevel = 1;
         $parent = $this->parent;
