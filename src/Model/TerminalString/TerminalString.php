@@ -7,12 +7,12 @@ namespace webignition\BasilRunner\Model\TerminalString;
 class TerminalString
 {
     private $content;
-    private $format;
+    private $style;
 
-    public function __construct(string $content, ?TerminalStringFormat $format = null)
+    public function __construct(string $content, ?Style $style = null)
     {
         $this->content = $content;
-        $this->format = $format instanceof TerminalStringFormat ? $format : new TerminalStringFormat();
+        $this->style = $style instanceof Style ? $style : new Style();
     }
 
     public function __toString(): string
@@ -21,6 +21,6 @@ class TerminalString
             return '';
         }
 
-        return sprintf((string) $this->format, $this->content);
+        return sprintf((string) $this->style, $this->content);
     }
 }

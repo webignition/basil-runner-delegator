@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\TerminalString;
 
-class TerminalStringFormat
+class Style
 {
     public const FOREGROUND_COLOUR = 'foreground';
     public const BACKGROUND_COLOUR = 'background';

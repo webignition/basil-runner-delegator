@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Model\TerminalString;
 
-use webignition\BasilRunner\Model\TerminalString\TerminalStringFormat;
+use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TerminalStringFormatTest extends AbstractBaseTest
@@ -12,7 +12,7 @@ class TerminalStringFormatTest extends AbstractBaseTest
     /**
      * @dataProvider toStringDataProvider
      */
-    public function testToString(TerminalStringFormat $terminalStringFormat, string $expectedString)
+    public function testToString(Style $terminalStringFormat, string $expectedString)
     {
         $this->assertSame($expectedString, (string) $terminalStringFormat);
     }
@@ -21,59 +21,59 @@ class TerminalStringFormatTest extends AbstractBaseTest
     {
         return [
             'empty' => [
-                'terminalStringFormat' => new TerminalStringFormat(),
+                'terminalStringFormat' => new Style(),
                 'expectedString' => '%s',
             ],
             'foreground colour red' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
                 ]),
                 'expectedString' => "\033[31m" . '%s' . "\033[0m",
             ],
             'foreground colour green' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_GREEN,
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
                 ]),
                 'expectedString' => "\033[32m" . '%s' . "\033[0m",
             ],
             'foreground colour white' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                 ]),
                 'expectedString' => "\033[37m" . '%s' . "\033[0m",
             ],
             'foreground colour invalid' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::FOREGROUND_COLOUR => 'foreground colour invalid',
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => 'foreground colour invalid',
                 ]),
                 'expectedString' => '%s',
             ],
             'background colour black' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_BLACK,
+                'terminalStringFormat' => new Style([
+                    Style::BACKGROUND_COLOUR => Style::COLOUR_BLACK,
                 ]),
                 'expectedString' => "\033[40m" . '%s' . "\033[0m",
             ],
             'background colour red' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+                'terminalStringFormat' => new Style([
+                    Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
                 ]),
                 'expectedString' => "\033[41m" . '%s' . "\033[0m",
             ],
             'bold decoration' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::DECORATIONS => [
-                        TerminalStringFormat::DECORATION_BOLD,
+                'terminalStringFormat' => new Style([
+                    Style::DECORATIONS => [
+                        Style::DECORATION_BOLD,
                     ],
                 ]),
                 'expectedString' => "\033[1m" . '%s' . "\033[0m",
             ],
             'foreground colour, background color, bold decoration' => [
-                'terminalStringFormat' => new TerminalStringFormat([
-                    TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
-                    TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
-                    TerminalStringFormat::DECORATIONS => [
-                        TerminalStringFormat::DECORATION_BOLD,
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
+                    Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
+                    Style::DECORATIONS => [
+                        Style::DECORATION_BOLD,
                     ],
                 ]),
                 'expectedString' => "\033[37m" . "\033[41m" . "\033[1m" . '%s' . "\033[0m",

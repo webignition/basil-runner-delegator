@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Model\TerminalString;
 
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
-use webignition\BasilRunner\Model\TerminalString\TerminalStringFormat;
+use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TerminalStringTest extends AbstractBaseTest
@@ -28,8 +28,8 @@ class TerminalStringTest extends AbstractBaseTest
             'empty, formatting is ignored' => [
                 'terminalString' => new TerminalString(
                     '',
-                    new TerminalStringFormat([
-                        TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+                    new Style([
+                        Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
                     ])
                 ),
                 'expectedString' => '',
@@ -41,11 +41,11 @@ class TerminalStringTest extends AbstractBaseTest
             'non-empty, has format' => [
                 'terminalString' => new TerminalString(
                     'content',
-                    new TerminalStringFormat([
-                        TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
-                        TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
-                        TerminalStringFormat::DECORATIONS => [
-                            TerminalStringFormat::DECORATION_BOLD,
+                    new Style([
+                        Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
+                        Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
+                        Style::DECORATIONS => [
+                            Style::DECORATION_BOLD,
                         ],
                     ])
                 ),

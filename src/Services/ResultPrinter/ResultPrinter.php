@@ -15,7 +15,7 @@ use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\StatementInterface;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
-use webignition\BasilRunner\Model\TerminalString\TerminalStringFormat;
+use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener
@@ -138,9 +138,9 @@ class ResultPrinter extends Printer implements TestListener
 
                 $testPathTerminalString = new TerminalString(
                     $relativePath,
-                    new TerminalStringFormat([
-                        TerminalStringFormat::DECORATIONS => [
-                            TerminalStringFormat::DECORATION_BOLD,
+                    new Style([
+                        Style::DECORATIONS => [
+                            Style::DECORATION_BOLD,
                         ],
                     ])
                 );
@@ -193,13 +193,13 @@ class ResultPrinter extends Printer implements TestListener
         );
 
         $contentColour = BaseTestRunner::STATUS_PASSED === $testEndStatus
-            ? TerminalStringFormat::COLOUR_GREEN
-            : TerminalStringFormat::COLOUR_RED;
+            ? Style::COLOUR_GREEN
+            : Style::COLOUR_RED;
 
         return (string) new TerminalString(
             $stepNameContent,
-            new TerminalStringFormat([
-                TerminalStringFormat::FOREGROUND_COLOUR => $contentColour,
+            new Style([
+                Style::FOREGROUND_COLOUR => $contentColour,
             ])
         );
     }
@@ -209,8 +209,8 @@ class ResultPrinter extends Printer implements TestListener
         $icon = $this->icons[BaseTestRunner::STATUS_PASSED];
         $iconContent = new TerminalString(
             $icon,
-            new TerminalStringFormat([
-                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_GREEN,
+            new Style([
+                Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
             ])
         );
 
@@ -222,8 +222,8 @@ class ResultPrinter extends Printer implements TestListener
         $icon = $this->icons[BaseTestRunner::STATUS_FAILURE];
         $iconContent = new TerminalString(
             $icon,
-            new TerminalStringFormat([
-                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+            new Style([
+                Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
             ])
         );
 
@@ -231,9 +231,9 @@ class ResultPrinter extends Printer implements TestListener
 
         return $lead . (string) new TerminalString(
             $statement->getContent(),
-            new TerminalStringFormat([
-                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
-                TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+            new Style([
+                Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
+                Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
             ])
         );
     }
