@@ -164,11 +164,15 @@ class ResultPrinter extends Printer implements TestListener
         if ($test instanceof BasilTestCaseInterface) {
             $testEndStatus = $this->getTestEndStatus($test);
 
-            $this->write((string) $this->createStepNameActivityLine($test));
+            $stepNameLine = $this->createStepNameActivityLine($test);
+
+            $this->write((string) $stepNameLine);
             $this->writeEmptyLine();
 
             foreach ($test->getCompletedStatements() as $statement) {
-                $this->write((string) $this->decorateCompletedStatement($statement));
+                $statementLine = $this->decorateCompletedStatement($statement, $stepNameLine);
+
+                $this->write((string) $statementLine);
                 $this->writeEmptyLine();
             }
 
@@ -176,7 +180,9 @@ class ResultPrinter extends Printer implements TestListener
                 $failedStatement = $test->getCurrentStatement();
 
                 if ($failedStatement instanceof StatementInterface) {
-                    $this->write((string) $this->decorateFailedStatement($failedStatement));
+                    $failedStatementLine = $this->decorateFailedStatement($failedStatement, $stepNameLine);
+
+                    $this->write((string) $failedStatementLine);
                     $this->writeEmptyLine();
                 }
             }
@@ -196,26 +202,25 @@ class ResultPrinter extends Printer implements TestListener
                 : Style::COLOUR_RED,
         ]);
 
-        return new ActivityLine(1, $icon, $style, $content, $style);
+        return new ActivityLine($icon, $style, $content, $style);
     }
 
-    private function decorateCompletedStatement(StatementInterface $statement): ActivityLine
+    private function decorateCompletedStatement(StatementInterface $statement, ActivityLine $parent): ActivityLine
     {
         return new ActivityLine(
-            2,
             $this->icons[BaseTestRunner::STATUS_PASSED],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
             ]),
             $statement->getContent(),
-            new Style()
+            new Style(),
+            $parent
         );
     }
 
-    private function decorateFailedStatement(StatementInterface $statement): ActivityLine
+    private function decorateFailedStatement(StatementInterface $statement, ActivityLine $parent): ActivityLine
     {
         return new ActivityLine(
-            2,
             $this->icons[BaseTestRunner::STATUS_FAILURE],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
@@ -224,7 +229,8 @@ class ResultPrinter extends Printer implements TestListener
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                 Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-            ])
+            ]),
+            $parent
         );
     }
 

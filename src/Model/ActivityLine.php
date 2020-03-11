@@ -11,32 +11,45 @@ class ActivityLine
 {
     private const INDENT = '  ';
 
-    private $indentLevel;
     private $icon;
     private $iconStyle;
     private $content;
     private $contentStyle;
+    private $parent;
 
     public function __construct(
-        int $indentLevel,
         string $icon,
         Style $iconStyle,
         string $content,
-        Style $contentStyle
+        Style $contentStyle,
+        ?ActivityLine $parent = null
     ) {
-        $this->indentLevel = $indentLevel;
         $this->icon = $icon;
         $this->iconStyle = $iconStyle;
         $this->content = $content;
         $this->contentStyle = $contentStyle;
+        $this->parent = $parent;
     }
 
     public function __toString(): string
     {
-        $indent = str_repeat(self::INDENT, $this->indentLevel);
+        $indent = str_repeat(self::INDENT, $this->deriveIndentLevel());
         $iconContent = new TerminalString($this->icon, $this->iconStyle);
         $contentContent = new TerminalString($this->content, $this->contentStyle);
 
         return $indent . (string) $iconContent . ' ' . (string) $contentContent;
+    }
+
+    private function deriveIndentLevel()
+    {
+        $indentLevel = 1;
+        $parent = $this->parent;
+
+        while ($parent instanceof ActivityLine) {
+            $indentLevel++;
+            $parent = $parent->parent;
+        }
+
+        return $indentLevel;
     }
 }
