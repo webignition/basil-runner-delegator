@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\TerminalString;
 
-class TerminalString
+class Style
 {
+    public const FOREGROUND_COLOUR = 'foreground';
+    public const BACKGROUND_COLOUR = 'background';
+    public const DECORATIONS = 'decorations';
+
     private const BOLD = "\033[1m";
 
     private const FG_RED = "\033[31m";
@@ -57,48 +61,30 @@ class TerminalString
      */
     private $backgroundCode;
 
-    private $content;
-
     /**
      * @var string[]
      */
     private $decorationCodes = [];
 
-    public function __construct(string $content)
+    /**
+     * @param array<mixed> $style
+     */
+    public function __construct($style = [])
     {
-        $this->content = $content;
-    }
+        $foregroundColour = $style[self::FOREGROUND_COLOUR] ?? null;
+        $backgroundColour = $style[self::BACKGROUND_COLOUR] ?? null;
+        $decorations = $style[self::DECORATIONS] ?? [];
 
-    public function withForegroundColour(string $foregroundColour): TerminalString
-    {
-        $new = clone $this;
-        $new->foregroundCode = $this->foregroundColours[$foregroundColour] ?? null;
+        $this->foregroundCode = $this->foregroundColours[$foregroundColour] ?? null;
+        $this->backgroundCode = $this->backgroundColours[$backgroundColour] ?? null;
 
-        return $new;
-    }
-
-    public function withBackgroundColour(string $backgroundColour): TerminalString
-    {
-        $new = clone $this;
-        $new->backgroundCode = $this->backgroundColours[$backgroundColour] ?? null;
-
-        return $new;
-    }
-
-    public function withDecoration(string $decoration): TerminalString
-    {
-        $new = clone $this;
-        $new->addDecoration($decoration);
-
-        return $new;
+        foreach ($decorations as $decoration) {
+            $this->addDecoration($decoration);
+        }
     }
 
     public function __toString(): string
     {
-        if ('' === $this->content) {
-            return '';
-        }
-
         $foreground = (string) $this->foregroundCode;
         $background = (string) $this->backgroundCode;
         $decoration = implode('', $this->decorationCodes);
@@ -106,11 +92,10 @@ class TerminalString
         $includeReset = '' !== $foreground || '' !== $background || '' !== $decoration;
 
         return sprintf(
-            '%s%s%s%s%s',
+            '%s%s%s%%s%s',
             $foreground,
             $background,
             $decoration,
-            $this->content,
             $includeReset ? self::RESET : ''
         );
     }
