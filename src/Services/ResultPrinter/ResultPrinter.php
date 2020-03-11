@@ -15,6 +15,7 @@ use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\StatementInterface;
 use webignition\BasilRunner\Model\TerminalString;
+use webignition\BasilRunner\Model\TerminalStringFormat;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener
@@ -135,8 +136,14 @@ class ResultPrinter extends Printer implements TestListener
                     $this->writeEmptyLine();
                 }
 
-                $testPathTerminalString = (new TerminalString($relativePath))
-                    ->withDecoration(TerminalString::DECORATION_BOLD);
+                $testPathTerminalString = (new TerminalString(
+                    $relativePath,
+                    new TerminalStringFormat([
+                        TerminalStringFormat::DECORATIONS => [
+                            TerminalStringFormat::DECORATION_BOLD,
+                        ],
+                    ])
+                ));
 
                 $this->write((string) $testPathTerminalString);
                 $this->writeEmptyLine();
@@ -189,13 +196,23 @@ class ResultPrinter extends Printer implements TestListener
             ? TerminalString::COLOUR_GREEN
             : TerminalString::COLOUR_RED;
 
-        return (string) (new TerminalString($stepNameContent))->withForegroundColour($contentColour);
+        return (string) (new TerminalString(
+            $stepNameContent,
+            new TerminalStringFormat([
+                TerminalStringFormat::FOREGROUND_COLOUR => $contentColour,
+            ])
+        ));
     }
 
     private function decorateCompletedStatement(StatementInterface $statement): string
     {
         $icon = $this->icons[BaseTestRunner::STATUS_PASSED];
-        $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_GREEN);
+        $iconContent = (string) (new TerminalString(
+            $icon,
+            new TerminalStringFormat([
+                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_GREEN,
+            ])
+        ));
 
         return '     ' . $iconContent . ' ' . $statement->getContent();
     }
@@ -203,13 +220,22 @@ class ResultPrinter extends Printer implements TestListener
     private function decorateFailedStatement(StatementInterface $statement): string
     {
         $icon = $this->icons[BaseTestRunner::STATUS_FAILURE];
-        $iconContent = (string) (new TerminalString($icon))->withForegroundColour(TerminalString::COLOUR_RED);
+        $iconContent = (string) (new TerminalString(
+            $icon,
+            new TerminalStringFormat([
+                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+            ])
+        ));
 
         $lead = '     ' . $iconContent . ' ';
 
-        return $lead . (string) (new TerminalString($statement->getContent()))
-            ->withForegroundColour(TerminalString::COLOUR_WHITE)
-            ->withBackgroundColour(TerminalString::COLOUR_RED);
+        return $lead . (string) (new TerminalString(
+            $statement->getContent(),
+            new TerminalStringFormat([
+                TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
+                TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
+            ])
+        ));
     }
 
     private function getEndTestIcon(Test $test): string
