@@ -164,17 +164,17 @@ class ResultPrinter extends Printer implements TestListener
         if ($test instanceof BasilTestCaseInterface) {
             $testEndStatus = $this->getTestEndStatus($test);
 
-            $stepNameLine = $this->createStepNameActivityLine($test);
+            $stepNameLine = $this->createStepNameLine($test);
 
             foreach ($test->getCompletedStatements() as $statement) {
-                $stepNameLine->addChild($this->decorateCompletedStatement($statement));
+                $stepNameLine->addChild($this->createCompletedStatementLine($statement));
             }
 
             if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
                 $failedStatement = $test->getCurrentStatement();
 
                 if ($failedStatement instanceof StatementInterface) {
-                    $stepNameLine->addChild($this->decorateFailedStatement($failedStatement));
+                    $stepNameLine->addChild($this->createFailedStatementLine($failedStatement));
                 }
             }
 
@@ -183,7 +183,7 @@ class ResultPrinter extends Printer implements TestListener
         }
     }
 
-    private function createStepNameActivityLine(BasilTestCaseInterface $test): ActivityLine
+    private function createStepNameLine(BasilTestCaseInterface $test): ActivityLine
     {
         $testEndStatus = $this->getTestEndStatus($test);
 
@@ -199,7 +199,7 @@ class ResultPrinter extends Printer implements TestListener
         return new ActivityLine($icon, $style, $content, $style);
     }
 
-    private function decorateCompletedStatement(StatementInterface $statement): ActivityLine
+    private function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
         return new ActivityLine(
             $this->icons[BaseTestRunner::STATUS_PASSED],
@@ -211,7 +211,7 @@ class ResultPrinter extends Printer implements TestListener
         );
     }
 
-    private function decorateFailedStatement(StatementInterface $statement): ActivityLine
+    private function createFailedStatementLine(StatementInterface $statement): ActivityLine
     {
         return new ActivityLine(
             $this->icons[BaseTestRunner::STATUS_FAILURE],
