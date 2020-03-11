@@ -6,12 +6,6 @@ namespace webignition\BasilRunner\Model;
 
 class TerminalString
 {
-    public const COLOUR_RED = 'red';
-    public const COLOUR_GREEN = 'green';
-    public const COLOUR_WHITE = 'white';
-    public const COLOUR_BLACK = 'black';
-    public const DECORATION_BOLD = 'bold';
-
     private $content;
     private $format;
 

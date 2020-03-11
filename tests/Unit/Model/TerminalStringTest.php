@@ -42,8 +42,8 @@ class TerminalStringTest extends AbstractBaseTest
                 'terminalString' => new TerminalString(
                     'content',
                     new TerminalStringFormat([
-                        TerminalStringFormat::FOREGROUND_COLOUR => TerminalString::COLOUR_WHITE,
-                        TerminalStringFormat::BACKGROUND_COLOUR => TerminalString::COLOUR_RED,
+                        TerminalStringFormat::FOREGROUND_COLOUR => TerminalStringFormat::COLOUR_WHITE,
+                        TerminalStringFormat::BACKGROUND_COLOUR => TerminalStringFormat::COLOUR_RED,
                         TerminalStringFormat::DECORATIONS => [
                             TerminalStringFormat::DECORATION_BOLD,
                         ],
