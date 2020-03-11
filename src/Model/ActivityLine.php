@@ -16,19 +16,24 @@ class ActivityLine
     private $content;
     private $contentStyle;
     private $parent;
+    private $children = [];
 
     public function __construct(
         string $icon,
         Style $iconStyle,
         string $content,
-        Style $contentStyle,
-        ?ActivityLine $parent = null
+        Style $contentStyle
     ) {
         $this->icon = $icon;
         $this->iconStyle = $iconStyle;
         $this->content = $content;
         $this->contentStyle = $contentStyle;
-        $this->parent = $parent;
+    }
+
+    public function addChild(ActivityLine $child): void
+    {
+        $this->children[] = $child;
+        $child->parent = $this;
     }
 
     public function __toString(): string
@@ -37,7 +42,13 @@ class ActivityLine
         $iconContent = new TerminalString($this->icon, $this->iconStyle);
         $contentContent = new TerminalString($this->content, $this->contentStyle);
 
-        return $indent . (string) $iconContent . ' ' . (string) $contentContent;
+        $string = $indent . (string) $iconContent . ' ' . (string) $contentContent;
+
+        foreach ($this->children as $child) {
+            $string .= "\n" . (string) $child;
+        }
+
+        return $string;
     }
 
     private function deriveIndentLevel()
