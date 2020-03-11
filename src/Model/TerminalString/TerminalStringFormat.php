@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model;
+namespace webignition\BasilRunner\Model\TerminalString;
 
 class TerminalStringFormat
 {

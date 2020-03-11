@@ -14,8 +14,8 @@ use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\StatementInterface;
-use webignition\BasilRunner\Model\TerminalString;
-use webignition\BasilRunner\Model\TerminalStringFormat;
+use webignition\BasilRunner\Model\TerminalString\TerminalString;
+use webignition\BasilRunner\Model\TerminalString\TerminalStringFormat;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener

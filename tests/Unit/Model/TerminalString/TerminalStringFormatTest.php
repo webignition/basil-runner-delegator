@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Model;
+namespace webignition\BasilRunner\Tests\Unit\Model\TerminalString;
 
-use webignition\BasilRunner\Model\TerminalStringFormat;
+use webignition\BasilRunner\Model\TerminalString\TerminalStringFormat;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TerminalStringFormatTest extends AbstractBaseTest
