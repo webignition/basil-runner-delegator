@@ -6,6 +6,10 @@ namespace webignition\BasilRunner\Model;
 
 class TerminalStringFormat
 {
+    public const FOREGROUND_COLOUR = 'foreground';
+    public const BACKGROUND_COLOUR = 'background';
+    public const DECORATIONS = 'decorations';
+
     private const BOLD = "\033[1m";
 
     private const FG_RED = "\033[31m";
@@ -62,28 +66,18 @@ class TerminalStringFormat
      */
     private $decorationCodes = [];
 
-    public function withForegroundColour(string $foregroundColour): self
+    public function __construct($format = [])
     {
-        $new = clone $this;
-        $new->foregroundCode = $this->foregroundColours[$foregroundColour] ?? null;
+        $foregroundColour = $format[self::FOREGROUND_COLOUR] ?? null;
+        $backgroundColour = $format[self::BACKGROUND_COLOUR] ?? null;
+        $decorations = $format[self::DECORATIONS] ?? [];
 
-        return $new;
-    }
+        $this->foregroundCode = $this->foregroundColours[$foregroundColour] ?? null;
+        $this->backgroundCode = $this->backgroundColours[$backgroundColour] ?? null;
 
-    public function withBackgroundColour(string $backgroundColour): self
-    {
-        $new = clone $this;
-        $new->backgroundCode = $this->backgroundColours[$backgroundColour] ?? null;
-
-        return $new;
-    }
-
-    public function withDecoration(string $decoration): self
-    {
-        $new = clone $this;
-        $new->addDecoration($decoration);
-
-        return $new;
+        foreach ($decorations as $decoration) {
+            $this->addDecoration($decoration);
+        }
     }
 
     public function __toString(): string
