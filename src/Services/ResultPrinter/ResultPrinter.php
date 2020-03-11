@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Services\ResultPrinter;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
@@ -20,7 +19,10 @@ use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ResultPrinter extends Printer implements TestListener
 {
-    private const DEFAULT_ICON = '?';
+    /**
+     * @var ActivityLineFactory
+     */
+    private $activityLineFactory;
 
     /**
      * @var string
@@ -37,14 +39,6 @@ class ResultPrinter extends Printer implements TestListener
      */
     private $isFirstTest;
 
-    /**
-     * @var array<int, string>
-     */
-    private $icons = [
-        BaseTestRunner::STATUS_PASSED => '✓',
-        BaseTestRunner::STATUS_FAILURE => 'x',
-    ];
-
     public function __construct($out = null)
     {
         parent::__construct($out);
@@ -53,6 +47,7 @@ class ResultPrinter extends Printer implements TestListener
 
         $this->projectRootPath = $projectRootPath;
         $this->isFirstTest = true;
+        $this->activityLineFactory = new ActivityLineFactory();
     }
 
     /**
@@ -161,99 +156,25 @@ class ResultPrinter extends Printer implements TestListener
     public function endTest(Test $test, float $time): void
     {
         if ($test instanceof BasilTestCaseInterface) {
-            $testEndStatus = $this->getTestEndStatus($test);
+            $testEndStatus = $test->getStatus();
 
-            $this->write($this->createStepName($test));
-            $this->writeEmptyLine();
+            $stepNameLine = $this->activityLineFactory->createStepNameLine($test);
 
             foreach ($test->getCompletedStatements() as $statement) {
-                $this->write($this->decorateCompletedStatement($statement));
-                $this->writeEmptyLine();
+                $stepNameLine->addChild($this->activityLineFactory->createCompletedStatementLine($statement));
             }
 
             if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
                 $failedStatement = $test->getCurrentStatement();
 
                 if ($failedStatement instanceof StatementInterface) {
-                    $this->write($this->decorateFailedStatement($failedStatement));
-                    $this->writeEmptyLine();
+                    $stepNameLine->addChild($this->activityLineFactory->createFailedStatementLine($failedStatement));
                 }
             }
+
+            $this->write((string) $stepNameLine);
+            $this->writeEmptyLine();
         }
-    }
-
-    private function createStepName(BasilTestCaseInterface $test): string
-    {
-        $testEndStatus = $this->getTestEndStatus($test);
-
-        $stepNameContent = sprintf(
-            '  %s %s',
-            $this->getEndTestIcon($test),
-            $test->getBasilStepName()
-        );
-
-        $contentColour = BaseTestRunner::STATUS_PASSED === $testEndStatus
-            ? Style::COLOUR_GREEN
-            : Style::COLOUR_RED;
-
-        return (string) new TerminalString(
-            $stepNameContent,
-            new Style([
-                Style::FOREGROUND_COLOUR => $contentColour,
-            ])
-        );
-    }
-
-    private function decorateCompletedStatement(StatementInterface $statement): string
-    {
-        return $this->decorateStatement(
-            $this->icons[BaseTestRunner::STATUS_PASSED],
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
-            ]),
-            $statement
-        );
-    }
-
-    private function decorateFailedStatement(StatementInterface $statement): string
-    {
-        return $this->decorateStatement(
-            $this->icons[BaseTestRunner::STATUS_FAILURE],
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
-            ]),
-            $statement,
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
-                Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-            ])
-        );
-    }
-
-    private function decorateStatement(
-        string $icon,
-        Style $iconStyle,
-        StatementInterface $statement,
-        ?Style $statementStyle = null
-    ): string {
-        $iconContent = new TerminalString($icon, $iconStyle);
-        $statementContent = new TerminalString($statement->getContent(), $statementStyle);
-
-        return '     ' . $iconContent . ' ' . $statementContent;
-    }
-
-    private function getEndTestIcon(Test $test): string
-    {
-        return $this->icons[$this->getTestEndStatus($test)] ?? self::DEFAULT_ICON;
-    }
-
-    private function getTestEndStatus(Test $test): int
-    {
-        if ($test instanceof TestCase || $test instanceof BasilTestCaseInterface) {
-            return $test->getStatus();
-        }
-
-        return BaseTestRunner::STATUS_UNKNOWN;
     }
 
     private function writeEmptyLine(): void

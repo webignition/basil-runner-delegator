@@ -79,8 +79,8 @@ class ResultPrinterTest extends AbstractBaseTest
                 'failedStatement' => null,
                 'expectedOutput' =>
                     "\033[1m" . 'test.yml' . "\033[0m" . "\n" .
-                    "\033[32m" . '  ✓ step one' . "\033[0m" . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n"
+                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'step one' . "\033[0m" . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n"
                 ,
             ],
             'multiple tests' => [
@@ -122,22 +122,22 @@ class ResultPrinterTest extends AbstractBaseTest
                 'failedStatement' => Statement::createAssertion('$page.url is "http://example.com/new/"'),
                 'expectedOutput' =>
                     "\033[1m" . 'test1.yml' . "\033[0m" . "\n" .
-                    "\033[32m" . '  ✓ test one step one' . "\033[0m" . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Hello, World!"' . "\n" .
+                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test one step one' . "\033[0m" . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Hello, World!"' . "\n" .
                     "\n" .
                     "\033[1m" . 'test2.yml' . "\033[0m" . "\n" .
-                    "\033[32m" . '  ✓ test two step one' . "\033[0m" . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".successful"' . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/successful/"' . "\n" .
-                    "\033[32m" . '  ✓ test two step two' . "\033[0m" . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".back"' . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
+                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test two step one' . "\033[0m" . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".successful"' . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test two step two' . "\033[0m" . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".back"' . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
                     "\n" .
                     "\033[1m" . 'test3.yml' . "\033[0m" . "\n" .
-                    "\033[31m" . '  x test three step one' . "\033[0m" . "\n" .
-                    '     ' . "\033[32m" . '✓' . "\033[0m" . ' click $".new"' . "\n" .
-                    '     ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[37m" . "\033[41m" .
+                    '  ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[31m" . 'test three step one' . "\033[0m" . "\n" .
+                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".new"' . "\n" .
+                    '    ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[37m" . "\033[41m" .
                     '$page.url is "http://example.com/new/"' . "\033[0m" . "\n"
                 ,
             ],
