@@ -14,6 +14,7 @@ use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\StatementInterface;
+use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -163,11 +164,11 @@ class ResultPrinter extends Printer implements TestListener
         if ($test instanceof BasilTestCaseInterface) {
             $testEndStatus = $this->getTestEndStatus($test);
 
-            $this->write($this->createStepName($test));
+            $this->write((string) $this->createStepNameActivityLine($test));
             $this->writeEmptyLine();
 
             foreach ($test->getCompletedStatements() as $statement) {
-                $this->write($this->decorateCompletedStatement($statement));
+                $this->write((string) $this->decorateCompletedStatement($statement));
                 $this->writeEmptyLine();
             }
 
@@ -175,36 +176,30 @@ class ResultPrinter extends Printer implements TestListener
                 $failedStatement = $test->getCurrentStatement();
 
                 if ($failedStatement instanceof StatementInterface) {
-                    $this->write($this->decorateFailedStatement($failedStatement));
+                    $this->write((string) $this->decorateFailedStatement($failedStatement));
                     $this->writeEmptyLine();
                 }
             }
         }
     }
 
-    private function createStepName(BasilTestCaseInterface $test): string
+    private function createStepNameActivityLine(BasilTestCaseInterface $test): ActivityLine
     {
         $testEndStatus = $this->getTestEndStatus($test);
 
-        $stepNameContent = sprintf(
-            '  %s %s',
-            $this->getEndTestIcon($test),
-            $test->getBasilStepName()
-        );
+        $icon = $this->getEndTestIcon($test);
+        $content = $test->getBasilStepName();
 
-        $contentColour = BaseTestRunner::STATUS_PASSED === $testEndStatus
-            ? Style::COLOUR_GREEN
-            : Style::COLOUR_RED;
+        $style = new Style([
+            Style::FOREGROUND_COLOUR => BaseTestRunner::STATUS_PASSED === $testEndStatus
+                ? Style::COLOUR_GREEN
+                : Style::COLOUR_RED,
+        ]);
 
-        return (string) new TerminalString(
-            $stepNameContent,
-            new Style([
-                Style::FOREGROUND_COLOUR => $contentColour,
-            ])
-        );
+        return new ActivityLine(1, $icon, $style, $content, $style);
     }
 
-    private function decorateCompletedStatement(StatementInterface $statement): string
+    private function decorateCompletedStatement(StatementInterface $statement): ActivityLine
     {
         return $this->decorateStatement(
             $this->icons[BaseTestRunner::STATUS_PASSED],
@@ -215,7 +210,7 @@ class ResultPrinter extends Printer implements TestListener
         );
     }
 
-    private function decorateFailedStatement(StatementInterface $statement): string
+    private function decorateFailedStatement(StatementInterface $statement): ActivityLine
     {
         return $this->decorateStatement(
             $this->icons[BaseTestRunner::STATUS_FAILURE],
@@ -235,11 +230,14 @@ class ResultPrinter extends Printer implements TestListener
         Style $iconStyle,
         StatementInterface $statement,
         ?Style $statementStyle = null
-    ): string {
-        $iconContent = new TerminalString($icon, $iconStyle);
-        $statementContent = new TerminalString($statement->getContent(), $statementStyle);
-
-        return '     ' . $iconContent . ' ' . $statementContent;
+    ): ActivityLine {
+        return new ActivityLine(
+            2,
+            $icon,
+            $iconStyle,
+            $statement->getContent(),
+            $statementStyle
+        );
     }
 
     private function getEndTestIcon(Test $test): string
