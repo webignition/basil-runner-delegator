@@ -206,36 +206,40 @@ class ResultPrinter extends Printer implements TestListener
 
     private function decorateCompletedStatement(StatementInterface $statement): string
     {
-        $icon = $this->icons[BaseTestRunner::STATUS_PASSED];
-        $iconContent = new TerminalString(
-            $icon,
+        return $this->decorateStatement(
+            $this->icons[BaseTestRunner::STATUS_PASSED],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
-            ])
+            ]),
+            $statement
         );
-
-        return '     ' . (string) $iconContent . ' ' . $statement->getContent();
     }
 
     private function decorateFailedStatement(StatementInterface $statement): string
     {
-        $icon = $this->icons[BaseTestRunner::STATUS_FAILURE];
-        $iconContent = new TerminalString(
-            $icon,
+        return $this->decorateStatement(
+            $this->icons[BaseTestRunner::STATUS_FAILURE],
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
-            ])
-        );
-
-        $lead = '     ' . (string) $iconContent . ' ';
-
-        return $lead . (string) new TerminalString(
-            $statement->getContent(),
+            ]),
+            $statement,
             new Style([
                 Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                 Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
             ])
         );
+    }
+
+    private function decorateStatement(
+        string $icon,
+        Style $iconStyle,
+        StatementInterface $statement,
+        ?Style $statementStyle = null
+    ): string {
+        $iconContent = new TerminalString($icon, $iconStyle);
+        $statementContent = new TerminalString($statement->getContent(), $statementStyle);
+
+        return '     ' . $iconContent . ' ' . $statementContent;
     }
 
     private function getEndTestIcon(Test $test): string
