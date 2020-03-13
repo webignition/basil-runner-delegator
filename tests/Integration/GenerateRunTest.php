@@ -47,6 +47,8 @@ class GenerateRunTest extends TestCase
                     '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'verify primary heading' . "\033[0m" .
                     "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"h1" exists' . "\n" .
+                    '      ' . "\033[33m" . '> derived from:' . "\033[0m" .
+                    ' $"h1" is "Test fixture web server default document"' . "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" .
                     ' $"h1" is "Test fixture web server default document"' . "\n" .
                     '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'verify links are present' . "\033[0m" .
@@ -55,6 +57,7 @@ class GenerateRunTest extends TestCase
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
                     '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'navigate to form' . "\033[0m" . "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
+                    '      ' . "\033[33m" . '> derived from:' . "\033[0m" . ' click $"a[id=link-to-form]"' . "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $"a[id=link-to-form]"' . "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Form"' . "\n"

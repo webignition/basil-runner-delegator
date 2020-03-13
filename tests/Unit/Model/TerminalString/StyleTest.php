@@ -7,7 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Model\TerminalString;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class TerminalStringFormatTest extends AbstractBaseTest
+class StyleTest extends AbstractBaseTest
 {
     /**
      * @dataProvider toStringDataProvider
@@ -35,6 +35,12 @@ class TerminalStringFormatTest extends AbstractBaseTest
                     Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
                 ]),
                 'expectedString' => "\033[32m" . '%s' . "\033[0m",
+            ],
+            'foreground colour yellow' => [
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
+                ]),
+                'expectedString' => "\033[33m" . '%s' . "\033[0m",
             ],
             'foreground colour white' => [
                 'terminalStringFormat' => new Style([

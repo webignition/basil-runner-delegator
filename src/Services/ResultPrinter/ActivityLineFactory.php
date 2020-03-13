@@ -44,7 +44,22 @@ class ActivityLineFactory
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
-        return new ActivityLine(
+        $sourceStatement = $statement->getSourceStatement();
+        $sourceStatementActivityLine = null;
+
+        if ($sourceStatement instanceof StatementInterface) {
+            $sourceStatementActivityLine = new ActivityLine(
+                new TerminalString(
+                    '> derived from:',
+                    new Style([
+                        Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
+                    ])
+                ),
+                new TerminalString($sourceStatement->getContent())
+            );
+        }
+
+        $statementActivityLine = new ActivityLine(
             new TerminalString(
                 $this->icons[BaseTestRunner::STATUS_PASSED],
                 new Style([
@@ -53,6 +68,12 @@ class ActivityLineFactory
             ),
             new TerminalString($statement->getContent())
         );
+
+        if ($sourceStatementActivityLine instanceof ActivityLine) {
+            $statementActivityLine->addChild($sourceStatementActivityLine);
+        }
+
+        return $statementActivityLine;
     }
 
     public function createFailedStatementLine(StatementInterface $statement): ActivityLine
