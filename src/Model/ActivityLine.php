@@ -11,8 +11,8 @@ class ActivityLine
 {
     private const INDENT = '  ';
 
-    private $icon;
-    private $iconStyle;
+    private $prefix;
+    private $prefixStyle;
     private $content;
     private $contentStyle;
 
@@ -27,13 +27,13 @@ class ActivityLine
     private $children = [];
 
     public function __construct(
-        string $icon,
-        Style $iconStyle,
+        string $prefix,
+        Style $prefixStyle,
         string $content,
         Style $contentStyle
     ) {
-        $this->icon = $icon;
-        $this->iconStyle = $iconStyle;
+        $this->prefix = $prefix;
+        $this->prefixStyle = $prefixStyle;
         $this->content = $content;
         $this->contentStyle = $contentStyle;
     }
@@ -47,10 +47,10 @@ class ActivityLine
     public function __toString(): string
     {
         $indent = str_repeat(self::INDENT, $this->deriveIndentLevel());
-        $iconContent = new TerminalString($this->icon, $this->iconStyle);
+        $prefixContent = new TerminalString($this->prefix, $this->prefixStyle);
         $contentContent = new TerminalString($this->content, $this->contentStyle);
 
-        $string = $indent . (string) $iconContent . ' ' . (string) $contentContent;
+        $string = $indent . (string) $prefixContent . ' ' . (string) $contentContent;
 
         foreach ($this->children as $child) {
             $string .= "\n" . (string) $child;
