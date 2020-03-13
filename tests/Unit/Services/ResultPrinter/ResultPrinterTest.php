@@ -19,24 +19,21 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
-     * @param array<int, Statement[]> $completedStatements
-     * @param Statement|null $failedStatement
+     * @param array<int, Statement[]> $handledStatements
      * @param string $expectedOutput
      */
     public function testPrinterOutput(
         array $testPaths,
         array $stepNames,
         array $endStatuses,
-        array $completedStatements,
-        ?Statement $failedStatement,
+        array $handledStatements,
         string $expectedOutput
     ) {
         $tests = $this->createBasilTestCases(
             $testPaths,
             $stepNames,
             $endStatuses,
-            $completedStatements,
-            $failedStatement
+            $handledStatements
         );
 
         $outResource = fopen('php://memory', 'w+');
@@ -71,12 +68,11 @@ class ResultPrinterTest extends AbstractBaseTest
                 'endStatuses' => [
                     BaseTestRunner::STATUS_PASSED,
                 ],
-                'completedStatements' => [
+                'handledStatements' => [
                     [
                         Statement::createAssertion('$page.url is "http://example.com/"'),
                     ],
                 ],
-                'failedStatement' => null,
                 'expectedOutput' =>
                     "\033[1m" . 'test.yml' . "\033[0m" . "\n" .
                     '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'step one' . "\033[0m" . "\n" .
@@ -102,7 +98,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     BaseTestRunner::STATUS_PASSED,
                     BaseTestRunner::STATUS_FAILURE,
                 ],
-                'completedStatements' => [
+                'handledStatements' => [
                     [
                         Statement::createAssertion('$page.url is "http://example.com/"'),
                         Statement::createAssertion('$page.title is "Hello, World!"'),
@@ -117,9 +113,9 @@ class ResultPrinterTest extends AbstractBaseTest
                     ],
                     [
                         Statement::createAction('click $".new"'),
-                    ]
+                        Statement::createAssertion('$page.url is "http://example.com/new/"'),
+                    ],
                 ],
-                'failedStatement' => Statement::createAssertion('$page.url is "http://example.com/new/"'),
                 'expectedOutput' =>
                     "\033[1m" . 'test1.yml' . "\033[0m" . "\n" .
                     '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test one step one' . "\033[0m" . "\n" .
@@ -160,8 +156,7 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
-     * @param array<int, Statement[]> $completedStatements
-     * @param Statement|null $failedStatement
+     * @param array<int, Statement[]> $handledStatements
      *
      * @return BasilTestCaseInterface[]
      */
@@ -169,8 +164,7 @@ class ResultPrinterTest extends AbstractBaseTest
         array $testPaths,
         array $stepNames,
         array $endStatuses,
-        array $completedStatements,
-        ?Statement $failedStatement
+        array $handledStatements
     ): array {
         $testCases = [];
 
@@ -189,12 +183,8 @@ class ResultPrinterTest extends AbstractBaseTest
                 ->andReturn($endStatuses[$testIndex]);
 
             $basilTestCase
-                ->shouldReceive('getCompletedStatements')
-                ->andReturn($completedStatements[$testIndex]);
-
-            $basilTestCase
-                ->shouldReceive('getCurrentStatement')
-                ->andReturn($failedStatement);
+                ->shouldReceive('getHandledStatements')
+                ->andReturn($handledStatements[$testIndex]);
 
             $testCases[] = $basilTestCase;
         }
