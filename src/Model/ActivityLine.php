@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model;
 
-use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 
 class ActivityLine
@@ -12,9 +11,7 @@ class ActivityLine
     private const INDENT = '  ';
 
     private $prefix;
-    private $prefixStyle;
     private $content;
-    private $contentStyle;
 
     /**
      * @var ActivityLine|null
@@ -26,16 +23,10 @@ class ActivityLine
      */
     private $children = [];
 
-    public function __construct(
-        string $prefix,
-        Style $prefixStyle,
-        string $content,
-        Style $contentStyle
-    ) {
+    public function __construct(TerminalString $prefix, TerminalString $content)
+    {
         $this->prefix = $prefix;
-        $this->prefixStyle = $prefixStyle;
         $this->content = $content;
-        $this->contentStyle = $contentStyle;
     }
 
     public function addChild(ActivityLine $child): void
@@ -47,10 +38,7 @@ class ActivityLine
     public function __toString(): string
     {
         $indent = str_repeat(self::INDENT, $this->deriveIndentLevel());
-        $prefixContent = new TerminalString($this->prefix, $this->prefixStyle);
-        $contentContent = new TerminalString($this->content, $this->contentStyle);
-
-        $string = $indent . (string) $prefixContent . ' ' . (string) $contentContent;
+        $string = $indent . (string) $this->prefix . ' ' . (string) $this->content;
 
         foreach ($this->children as $child) {
             $string .= "\n" . (string) $child;

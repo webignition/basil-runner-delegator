@@ -9,6 +9,7 @@ use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\StatementInterface;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\TerminalString\Style;
+use webignition\BasilRunner\Model\TerminalString\TerminalString;
 
 class ActivityLineFactory
 {
@@ -35,33 +36,41 @@ class ActivityLineFactory
                 : Style::COLOUR_RED,
         ]);
 
-        return new ActivityLine($icon, $style, $content, $style);
+        return new ActivityLine(
+            new TerminalString($icon, $style),
+            new TerminalString($content, $style)
+        );
     }
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
         return new ActivityLine(
-            $this->icons[BaseTestRunner::STATUS_PASSED],
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
-            ]),
-            $statement->getContent(),
-            new Style()
+            new TerminalString(
+                $this->icons[BaseTestRunner::STATUS_PASSED],
+                new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
+                ])
+            ),
+            new TerminalString($statement->getContent())
         );
     }
 
     public function createFailedStatementLine(StatementInterface $statement): ActivityLine
     {
         return new ActivityLine(
-            $this->icons[BaseTestRunner::STATUS_FAILURE],
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
-            ]),
-            $statement->getContent(),
-            new Style([
-                Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
-                Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-            ])
+            new TerminalString(
+                $this->icons[BaseTestRunner::STATUS_FAILURE],
+                new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
+                ])
+            ),
+            new TerminalString(
+                $statement->getContent(),
+                new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
+                    Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
+                ])
+            )
         );
     }
 }
