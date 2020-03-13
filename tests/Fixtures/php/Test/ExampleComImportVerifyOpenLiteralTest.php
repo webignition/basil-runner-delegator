@@ -19,8 +19,9 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
         $this->setBasilStepName('verify page is open');
 
         // $page.url is "https://example.com/"
-        $statement = Statement::createAssertion('$page.url is "https://example.com/"');
-        $this->currentStatement = $statement;
+        $this->handledStatements[] = Statement::createAssertion(
+            '$page.url is "https://example.com/"'
+        );
         $this->expectedValue = "https://example.com/" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
@@ -35,6 +36,5 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
             }
         }'
         );
-        $this->completedStatements[] = $statement;
     }
 }

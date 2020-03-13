@@ -20,8 +20,10 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $this->setBasilStepName('follow more information');
 
         // $"a" exists <- click $"a"
-        $statement = Statement::createAssertion('$"a" exists');
-        $this->currentStatement = $statement;
+        $this->handledStatements[] = Statement::createAssertion(
+            '$"a" exists',
+            Statement::createAction('click $"a"')
+        );
         $this->examinedValue = $this->navigator->hasOne(ElementIdentifier::fromJson('{
             "locator": "a"
         }'));
@@ -44,21 +46,21 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             }
         }'
         );
-        $this->completedStatements[] = $statement;
 
         // click $"a"
-        $statement = Statement::createAction('click $"a"');
-        $this->currentStatement = $statement;
+        $this->handledStatements[] = Statement::createAction(
+            'click $"a"'
+        );
         $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
             "locator": "a"
         }'));
         $element->click();
         self::$crawler = self::$client->refreshCrawler();
-        $this->completedStatements[] = $statement;
 
         // $page.url is "https://www.iana.org/domains/reserved"
-        $statement = Statement::createAssertion('$page.url is "https://www.iana.org/domains/reserved"');
-        $this->currentStatement = $statement;
+        $this->handledStatements[] = Statement::createAssertion(
+            '$page.url is "https://www.iana.org/domains/reserved"'
+        );
         $this->expectedValue = "https://www.iana.org/domains/reserved" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
@@ -73,6 +75,5 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             }
         }'
         );
-        $this->completedStatements[] = $statement;
     }
 }

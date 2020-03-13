@@ -160,16 +160,19 @@ class ResultPrinter extends Printer implements TestListener
 
             $stepNameLine = $this->activityLineFactory->createStepNameLine($test);
 
-            foreach ($test->getCompletedStatements() as $statement) {
+            $completedStatements = $test->getHandledStatements();
+            $failedStatement = null;
+
+            if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
+                $failedStatement = array_pop($completedStatements);
+            }
+
+            foreach ($completedStatements as $statement) {
                 $stepNameLine->addChild($this->activityLineFactory->createCompletedStatementLine($statement));
             }
 
-            if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
-                $failedStatement = $test->getCurrentStatement();
-
-                if ($failedStatement instanceof StatementInterface) {
-                    $stepNameLine->addChild($this->activityLineFactory->createFailedStatementLine($failedStatement));
-                }
+            if ($failedStatement instanceof StatementInterface) {
+                $stepNameLine->addChild($this->activityLineFactory->createFailedStatementLine($failedStatement));
             }
 
             $this->write((string) $stepNameLine);
