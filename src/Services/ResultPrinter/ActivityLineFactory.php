@@ -44,6 +44,48 @@ class ActivityLineFactory
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
+        return $this->createStatementLine(
+            $statement,
+            function (StatementInterface $statement): ActivityLine {
+                return new ActivityLine(
+                    new TerminalString(
+                        $this->icons[BaseTestRunner::STATUS_PASSED],
+                        new Style([
+                            Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
+                        ])
+                    ),
+                    new TerminalString($statement->getContent())
+                );
+            }
+        );
+    }
+
+    public function createFailedStatementLine(StatementInterface $statement): ActivityLine
+    {
+        return $this->createStatementLine(
+            $statement,
+            function (StatementInterface $statement): ActivityLine {
+                return new ActivityLine(
+                    new TerminalString(
+                        $this->icons[BaseTestRunner::STATUS_FAILURE],
+                        new Style([
+                            Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
+                        ])
+                    ),
+                    new TerminalString(
+                        $statement->getContent(),
+                        new Style([
+                            Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
+                            Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
+                        ])
+                    )
+                );
+            }
+        );
+    }
+
+    private function createStatementLine(StatementInterface $statement, callable $activityLineCreator): ActivityLine
+    {
         $sourceStatement = $statement->getSourceStatement();
         $sourceStatementActivityLine = null;
 
@@ -59,39 +101,13 @@ class ActivityLineFactory
             );
         }
 
-        $statementActivityLine = new ActivityLine(
-            new TerminalString(
-                $this->icons[BaseTestRunner::STATUS_PASSED],
-                new Style([
-                    Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
-                ])
-            ),
-            new TerminalString($statement->getContent())
-        );
+        /* @var ActivityLine $statementActivityLine */
+        $statementActivityLine = $activityLineCreator($statement);
 
         if ($sourceStatementActivityLine instanceof ActivityLine) {
             $statementActivityLine->addChild($sourceStatementActivityLine);
         }
 
         return $statementActivityLine;
-    }
-
-    public function createFailedStatementLine(StatementInterface $statement): ActivityLine
-    {
-        return new ActivityLine(
-            new TerminalString(
-                $this->icons[BaseTestRunner::STATUS_FAILURE],
-                new Style([
-                    Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
-                ])
-            ),
-            new TerminalString(
-                $statement->getContent(),
-                new Style([
-                    Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
-                    Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-                ])
-            )
-        );
     }
 }
