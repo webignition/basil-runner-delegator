@@ -71,6 +71,9 @@ class ResultPrinter extends Printer implements TestListener
      */
     public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
+        echo $e->getMessage();
+        exit();
+
         // TODO: Implement addFailure() method.
     }
 
