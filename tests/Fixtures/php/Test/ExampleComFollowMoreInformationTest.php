@@ -24,9 +24,10 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             '$"a" exists',
             Statement::createAction('click $"a"')
         );
-        $this->examinedValue = $this->navigator->hasOne(ElementIdentifier::fromJson('{
+        $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
-        }'));
+        }');
+        $this->examinedValue = $this->navigator->hasOne($this->examinedElementIdentifier);
         $this->assertTrue(
             $this->examinedValue,
             '{
