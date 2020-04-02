@@ -47,7 +47,7 @@
         "webignition/base-basil-test-case": "^0.16.0",
         "webignition/basil-compiler": "^0.10.0",
         "webignition/basil-loader": "^0.21.0",
-        "webignition/basil-models": ">=0.34,<1",
+        "webignition/basil-models": ">=0.35,<1",
         "webignition/php-basil-compilable-source-factory": "^0.26.0",
         "webignition/symfony-console-typed-input": "^0.4.0"
     },
