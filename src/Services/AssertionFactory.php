@@ -4,15 +4,27 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
-use webignition\BasilModels\Assertion\Assertion;
 use webignition\BasilModels\Assertion\AssertionInterface;
-use webignition\BasilModels\Assertion\ComparisonAssertion;
+use webignition\BasilModels\Assertion\Factory\Factory;
+use webignition\BasilModels\Assertion\Factory\MalformedDataException;
+use webignition\BasilModels\Assertion\Factory\UnknownComparisonException;
 use webignition\BasilRunner\Exception\AssertionFactory\MalformedFailureMessageException;
-use webignition\BasilRunner\Exception\AssertionFactory\UnknownAssertionComparisonException;
 use webignition\BasilRunner\Exception\AssertionFactory\NonDecodableFailureMessageException;
 
 class AssertionFactory
 {
+    private $modelFactory;
+
+    public function __construct(Factory $modelFactory)
+    {
+        $this->modelFactory = $modelFactory;
+    }
+
+    public static function createFactory(): AssertionFactory
+    {
+        return new AssertionFactory(new Factory());
+    }
+
     /**
      * @param string $assertionFailureMessage
      *
@@ -20,7 +32,8 @@ class AssertionFactory
      *
      * @throws MalformedFailureMessageException
      * @throws NonDecodableFailureMessageException
-     * @throws UnknownAssertionComparisonException
+     * @throws MalformedDataException
+     * @throws UnknownComparisonException
      */
     public function createFromAssertionFailureMessage(string $assertionFailureMessage): ?AssertionInterface
     {
@@ -35,17 +48,6 @@ class AssertionFactory
             throw new NonDecodableFailureMessageException($assertionFailureMessage);
         }
 
-        $assertionData = $data['assertion'] ?? [];
-        $comparison = $assertionData['comparison'] ?? '';
-
-        if (Assertion::createsFromComparison($comparison)) {
-            return Assertion::fromArray($assertionData);
-        }
-
-        if (ComparisonAssertion::createsFromComparison($comparison)) {
-            return ComparisonAssertion::fromArray($assertionData);
-        }
-
-        throw new UnknownAssertionComparisonException($comparison, $assertionData, $assertionFailureMessage);
+        return $this->modelFactory->createFromArray($data['assertion'] ?? []);
     }
 }

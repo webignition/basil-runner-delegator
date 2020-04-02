@@ -8,7 +8,6 @@ use webignition\BasilModels\Assertion\Assertion;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\Assertion\ComparisonAssertion;
 use webignition\BasilRunner\Exception\AssertionFactory\MalformedFailureMessageException;
-use webignition\BasilRunner\Exception\AssertionFactory\UnknownAssertionComparisonException;
 use webignition\BasilRunner\Exception\AssertionFactory\NonDecodableFailureMessageException;
 use webignition\BasilRunner\Services\AssertionFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -24,7 +23,7 @@ class AssertionFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new AssertionFactory();
+        $this->factory = AssertionFactory::createFactory();
     }
 
     /**
@@ -168,24 +167,5 @@ class AssertionFactoryTest extends AbstractBaseTest
                 'failureMessage' => '{a}',
             ],
         ];
-    }
-
-    public function testCreateFromAssertionFailureMessageThrowsUnknownAssertionComparisonException()
-    {
-        $failureMessage = '{
-            "assertion": {
-                "source": "$\"a\" unknown-comparison",
-                "identifier": "$\"a\"",
-                "comparison": "unknown-comparison"
-            }
-        }';
-
-        try {
-            $this->factory->createFromAssertionFailureMessage($failureMessage);
-            $this->fail('MalformedFailureMessageException not thrown');
-        } catch (UnknownAssertionComparisonException $unknownAssertionComparisonException) {
-            $this->assertSame($failureMessage, $unknownAssertionComparisonException->getFailureMessage());
-            $this->assertSame('unknown-comparison', $unknownAssertionComparisonException->getComparison());
-        }
     }
 }
