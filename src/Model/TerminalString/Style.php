@@ -19,6 +19,7 @@ class Style
 
     private const BG_BLACK = "\033[40m";
     private const BG_RED = "\033[41m";
+    private const BG_YELLOW = "\033[43m";
 
     private const RESET = "\033[0m";
 
@@ -45,6 +46,7 @@ class Style
     private $backgroundColours = [
         self::COLOUR_BLACK => self::BG_BLACK,
         self::COLOUR_RED => self::BG_RED,
+        self::COLOUR_YELLOW => self::BG_YELLOW,
     ];
 
     /**

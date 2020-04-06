@@ -66,6 +66,12 @@ class StyleTest extends AbstractBaseTest
                 ]),
                 'expectedString' => "\033[41m" . '%s' . "\033[0m",
             ],
+            'background colour yellow' => [
+                'terminalStringFormat' => new Style([
+                    Style::BACKGROUND_COLOUR => Style::COLOUR_YELLOW,
+                ]),
+                'expectedString' => "\033[43m" . '%s' . "\033[0m",
+            ],
             'bold decoration' => [
                 'terminalStringFormat' => new Style([
                     Style::DECORATIONS => [
