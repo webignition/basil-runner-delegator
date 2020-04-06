@@ -14,6 +14,11 @@ class ActivityLine
     private $content;
 
     /**
+     * @var int
+     */
+    private $indentOffset = 0;
+
+    /**
      * @var ActivityLine|null
      */
     private $parent;
@@ -27,6 +32,20 @@ class ActivityLine
     {
         $this->prefix = $prefix;
         $this->content = $content;
+    }
+
+    public function decreaseIndent(): self
+    {
+        $this->indentOffset--;
+
+        return $this;
+    }
+
+    public function increaseIndent(): self
+    {
+        $this->indentOffset++;
+
+        return $this;
     }
 
     public function addChild(ActivityLine $child): void
@@ -55,6 +74,12 @@ class ActivityLine
         while ($parent instanceof ActivityLine) {
             $indentLevel++;
             $parent = $parent->parent;
+        }
+
+        $indentLevel += $this->indentOffset;
+
+        if ($indentLevel < 1) {
+            $indentLevel = 1;
         }
 
         return $indentLevel;
