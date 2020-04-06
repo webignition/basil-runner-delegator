@@ -347,7 +347,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Malformed inline YAML string: "../Test/lacking-closing-quote.yml at line 2.',
+                    'Malformed inline YAML string: ""../Test/lacking-closing-quote.yml" at line 2.',
                     ErrorOutput::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
@@ -606,7 +606,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'name' => 'unparseable_page',
                         'import_path' => $pageAbsolutePath,
                         'loader_error' => [
-                            'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
+                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
                             'path' => $pageAbsolutePath,
                         ],
                     ]
@@ -632,7 +632,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'name' => 'unparseable_page',
                         'import_path' => $pageAbsolutePath,
                         'loader_error' => [
-                            'message' => 'Malformed inline YAML string: "http://example.com at line 2.',
+                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
                             'path' => $pageAbsolutePath,
                         ],
                     ]
