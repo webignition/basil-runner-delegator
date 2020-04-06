@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb16dc6d09d24addae97dfc40723a2f6",
+    "content-hash": "c58d3728062ee619b683c2369704d594",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3368,6 +3368,49 @@
             "time": "2020-03-31T17:48:10+00:00"
         },
         {
+            "name": "webignition/basil-assertion-failure-message",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/basil-assertion-failure-message.git",
+                "reference": "ee2c5f8fd06dd207fc77e2a7131d538034869c68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/basil-assertion-failure-message/zipball/ee2c5f8fd06dd207fc77e2a7131d538034869c68",
+                "reference": "ee2c5f8fd06dd207fc77e2a7131d538034869c68",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2",
+                "webignition/basil-models": ">=0.35,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~8.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilAssertionFailureMessage\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-assertion-failure-message",
+            "time": "2020-04-06T09:30:04+00:00"
+        },
+        {
             "name": "webignition/basil-compilable-source",
             "version": "0.16",
             "source": {
@@ -3867,25 +3910,26 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.26",
+            "version": "0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "050020234d1c538219b828d8f2e66c1b567d94f4"
+                "reference": "edab7f3737109e23e6a1b733b3bc8bfb0d20e1b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/050020234d1c538219b828d8f2e66c1b567d94f4",
-                "reference": "050020234d1c538219b828d8f2e66c1b567d94f4",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/edab7f3737109e23e6a1b733b3bc8bfb0d20e1b6",
+                "reference": "edab7f3737109e23e6a1b733b3bc8bfb0d20e1b6",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.2",
+                "webignition/basil-assertion-failure-message": ">=0.1,<1",
                 "webignition/basil-compilable-source": ">=0.16,<1",
                 "webignition/basil-dom-identifier-factory": ">=0.8,<1",
                 "webignition/basil-identifier-analyser": ">=0.4,<1",
-                "webignition/basil-models": ">=0.32,<1",
+                "webignition/basil-models": ">=0.35,<1",
                 "webignition/php-dom-element-identifier": ">=0.12,<1",
                 "webignition/quoted-string-value-extractor": ">=0.1,<1"
             },
@@ -3917,7 +3961,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-04-02T11:53:50+00:00"
+            "time": "2020-04-06T09:29:40+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",
