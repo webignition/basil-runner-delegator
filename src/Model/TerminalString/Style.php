@@ -12,6 +12,7 @@ class Style
 
     private const BOLD = "\033[1m";
 
+    private const FG_BLACK = "\033[30m";
     private const FG_RED = "\033[31m";
     private const FG_GREEN = "\033[32m";
     private const FG_YELLOW = "\033[33m";
@@ -34,6 +35,7 @@ class Style
      * @var array<string, string>
      */
     private $foregroundColours = [
+        self::COLOUR_BLACK => self::FG_BLACK,
         self::COLOUR_RED => self::FG_RED,
         self::COLOUR_GREEN => self::FG_GREEN,
         self::COLOUR_YELLOW => self::FG_YELLOW,

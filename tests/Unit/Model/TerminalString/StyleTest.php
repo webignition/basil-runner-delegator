@@ -24,6 +24,12 @@ class StyleTest extends AbstractBaseTest
                 'terminalStringFormat' => new Style(),
                 'expectedString' => '%s',
             ],
+            'foreground colour black' => [
+                'terminalStringFormat' => new Style([
+                    Style::FOREGROUND_COLOUR => Style::COLOUR_BLACK,
+                ]),
+                'expectedString' => "\033[30m" . '%s' . "\033[0m",
+            ],
             'foreground colour red' => [
                 'terminalStringFormat' => new Style([
                     Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
