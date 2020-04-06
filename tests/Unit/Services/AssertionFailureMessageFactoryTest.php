@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use webignition\BasilAssertionFailureMessage\AssertionFailureMessage;
+use webignition\BasilAssertionFailureMessage\FailureMessageException;
 use webignition\BasilModels\Assertion\Assertion;
 use webignition\BasilModels\Assertion\ComparisonAssertion;
-use webignition\BasilRunner\Exception\AssertionFactory\MalformedFailureMessageException;
+use webignition\BasilModels\Assertion\Factory\UnknownComparisonException;
+use webignition\BasilRunner\Exception\AssertionFailureMessageParseException;
 use webignition\BasilRunner\Services\AssertionFailureMessageFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -26,19 +28,19 @@ class AssertionFailureMessageFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createFromAssertionFailureMessageDataProvider
+     * @dataProvider createDataProvider
      */
-    public function testCreateFromAssertionFailureMessage(
+    public function testCreate(
         string $failureMessage,
         AssertionFailureMessage $expectedAssertionFailureMessage
     ) {
         $this->assertEquals(
             $expectedAssertionFailureMessage,
-            $this->factory->createFromAssertionFailureMessage($failureMessage)
+            $this->factory->create($failureMessage)
         );
     }
 
-    public function createFromAssertionFailureMessageDataProvider(): array
+    public function createDataProvider(): array
     {
         $existsAssertion = new Assertion(
             '$".selector" exists',
@@ -75,27 +77,46 @@ class AssertionFailureMessageFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createFromAssertionFailureMessageThrowsMalformedFailureMessageExceptionDataProvider
+     * @dataProvider createThrowsAssertionFailureMessageParseExceptionDataProvider
      */
-    public function testCreateFromAssertionFailureMessageThrowsMalformedFailureMessageException(
-        string $failureMessage
+    public function testCreateThrowsAssertionFailureMessageParseException(
+        string $failureMessage,
+        AssertionFailureMessageParseException $expectedException
     ) {
         try {
-            $this->factory->createFromAssertionFailureMessage($failureMessage);
-            $this->fail('MalformedFailureMessageException not thrown');
-        } catch (MalformedFailureMessageException $malformedFailureMessageException) {
-            $this->assertSame($failureMessage, $malformedFailureMessageException->getFailureMessage());
+            $this->factory->create($failureMessage);
+            $this->fail('AssertionFailureMessageParseException not thrown');
+        } catch (AssertionFailureMessageParseException $exception) {
+            $this->assertEquals($expectedException, $exception);
+            $this->assertSame($failureMessage, $exception->getFailureMessage());
         }
     }
 
-    public function createFromAssertionFailureMessageThrowsMalformedFailureMessageExceptionDataProvider(): array
+    public function createThrowsAssertionFailureMessageParseExceptionDataProvider(): array
     {
         return [
             'empty' => [
                 'failureMessage' => '',
+                'expectedException' =>
+                    AssertionFailureMessageParseException::createMalformedFailureMessageException(''),
             ],
             'non-json' => [
                 'failureMessage' => 'This is not json',
+                'expectedException' =>
+                    AssertionFailureMessageParseException::createMalformedFailureMessageException('This is not json'),
+            ],
+            'foo' => [
+                'failureMessage' => json_encode([
+                    'assertion' => [],
+                ]),
+                'expectedException' =>
+                    AssertionFailureMessageParseException::createMalformedDataException(
+                        '{"assertion":[]}',
+                        FailureMessageException::createMalformedAssertionException(
+                            '{"assertion":[]}',
+                            new UnknownComparisonException([], '')
+                        )
+                    ),
             ],
         ];
     }
