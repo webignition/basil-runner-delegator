@@ -7,7 +7,7 @@ namespace webignition\BasilRunner\Services;
 use webignition\BasilAssertionFailureMessage\AssertionFailureMessage;
 use webignition\BasilAssertionFailureMessage\Factory as ModelFactory;
 use webignition\BasilAssertionFailureMessage\FailureMessageException;
-use webignition\BasilRunner\Exception\AssertionFactory\MalformedFailureMessageException;
+use webignition\BasilRunner\Exception\AssertionFailureMessageParseException;
 
 class AssertionFailureMessageFactory
 {
@@ -24,22 +24,25 @@ class AssertionFailureMessageFactory
     }
 
     /**
-     * @param string $assertionFailureMessage
+     * @param string $failureMessage
      *
      * @return AssertionFailureMessage
      *
-     * @throws FailureMessageException
-     * @throws MalformedFailureMessageException
+     * @throws AssertionFailureMessageParseException
      */
-    public function createFromAssertionFailureMessage(string $assertionFailureMessage): AssertionFailureMessage
+    public function create(string $failureMessage): AssertionFailureMessage
     {
-        $lastCurlyBracketPosition = strrpos($assertionFailureMessage, '}');
+        $lastCurlyBracketPosition = strrpos($failureMessage, '}');
         if (false === $lastCurlyBracketPosition) {
-            throw new MalformedFailureMessageException($assertionFailureMessage);
+            throw AssertionFailureMessageParseException::createMalformedFailureMessageException($failureMessage);
         }
 
-        $json = substr($assertionFailureMessage, 0, $lastCurlyBracketPosition + 1);
+        $json = substr($failureMessage, 0, $lastCurlyBracketPosition + 1);
 
-        return $this->assertionFailureMessageModelFactory->fromJson($json);
+        try {
+            return $this->assertionFailureMessageModelFactory->fromJson($json);
+        } catch (FailureMessageException $exception) {
+            throw AssertionFailureMessageParseException::createMalformedDataException($failureMessage, $exception);
+        }
     }
 }
