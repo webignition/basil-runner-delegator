@@ -20,7 +20,12 @@ class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
 
         // $page.url is "https://example.com/"
         $this->handledStatements[] = Statement::createAssertion(
-            '$page.url is "https://example.com/"'
+            '{
+            "source": "$page.url is \\"https:\\/\\/example.com\\/\\"",
+            "identifier": "$page.url",
+            "comparison": "is",
+            "value": "\\"https:\\/\\/example.com\\/\\""
+        }'
         );
         $this->expectedValue = "https://example.com/" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;
