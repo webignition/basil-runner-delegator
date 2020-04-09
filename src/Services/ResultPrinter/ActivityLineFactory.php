@@ -44,11 +44,9 @@ class ActivityLineFactory
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
-        $statementData = json_decode($statement->getContent(), true);
-
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement) use ($statementData): ActivityLine {
+            function (StatementInterface $statement, array $statementData): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_PASSED],
@@ -64,11 +62,9 @@ class ActivityLineFactory
 
     public function createFailedStatementLine(StatementInterface $statement): ActivityLine
     {
-        $statementData = json_decode($statement->getContent(), true);
-
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement) use ($statementData): ActivityLine {
+            function (StatementInterface $statement, array $statementData): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_FAILURE],
@@ -107,8 +103,10 @@ class ActivityLineFactory
             );
         }
 
+        $statementData = json_decode($statement->getContent(), true);
+
         /* @var ActivityLine $statementActivityLine */
-        $statementActivityLine = $activityLineCreator($statement);
+        $statementActivityLine = $activityLineCreator($statement, $statementData);
 
         if ($sourceStatementActivityLine instanceof ActivityLine) {
             $statementActivityLine->addChild($sourceStatementActivityLine);
