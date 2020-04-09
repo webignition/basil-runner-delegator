@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "27b58460a8c823bc9ecaa02084b77516",
+    "content-hash": "2ee298377d94d8dba59fd3cdc0183244",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -4229,16 +4229,16 @@
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.30",
+            "version": "0.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "b8aaf7699fe06a290e8f7ba322b6134f572cb60f"
+                "reference": "5dbd5dcf6b7adc1e690aa12e8b259972d20db62e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/b8aaf7699fe06a290e8f7ba322b6134f572cb60f",
-                "reference": "b8aaf7699fe06a290e8f7ba322b6134f572cb60f",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/5dbd5dcf6b7adc1e690aa12e8b259972d20db62e",
+                "reference": "5dbd5dcf6b7adc1e690aa12e8b259972d20db62e",
                 "shasum": ""
             },
             "require": {
@@ -4280,7 +4280,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-04-08T16:21:07+00:00"
+            "time": "2020-04-09T12:53:46+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",

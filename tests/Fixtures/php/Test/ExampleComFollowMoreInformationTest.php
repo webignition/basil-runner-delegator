@@ -21,8 +21,17 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // $"a" exists <- click $"a"
         $this->handledStatements[] = Statement::createAssertion(
-            '$"a" exists',
-            Statement::createAction('click $"a"')
+            '{
+            "source": "$\\"a\\" exists",
+            "identifier": "$\\"a\\"",
+            "comparison": "exists"
+        }',
+            Statement::createAction('{
+            "source": "click $\\"a\\"",
+            "type": "click",
+            "arguments": "$\\"a\\"",
+            "identifier": "$\\"a\\""
+        }')
         );
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
@@ -50,7 +59,12 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // click $"a"
         $this->handledStatements[] = Statement::createAction(
-            'click $"a"'
+            '{
+            "source": "click $\\"a\\"",
+            "type": "click",
+            "arguments": "$\\"a\\"",
+            "identifier": "$\\"a\\""
+        }'
         );
         $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
             "locator": "a"
@@ -60,7 +74,12 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // $page.url is "https://www.iana.org/domains/reserved"
         $this->handledStatements[] = Statement::createAssertion(
-            '$page.url is "https://www.iana.org/domains/reserved"'
+            '{
+            "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
+            "identifier": "$page.url",
+            "comparison": "is",
+            "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
+        }'
         );
         $this->expectedValue = "https://www.iana.org/domains/reserved" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;

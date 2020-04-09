@@ -44,9 +44,11 @@ class ActivityLineFactory
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
     {
+        $statementData = json_decode($statement->getContent(), true);
+
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement): ActivityLine {
+            function (StatementInterface $statement) use ($statementData): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_PASSED],
@@ -54,7 +56,7 @@ class ActivityLineFactory
                             Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
                         ])
                     ),
-                    new TerminalString($statement->getContent())
+                    new TerminalString($statementData['source'])
                 );
             }
         );
@@ -62,9 +64,11 @@ class ActivityLineFactory
 
     public function createFailedStatementLine(StatementInterface $statement): ActivityLine
     {
+        $statementData = json_decode($statement->getContent(), true);
+
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement): ActivityLine {
+            function (StatementInterface $statement) use ($statementData): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_FAILURE],
@@ -73,7 +77,7 @@ class ActivityLineFactory
                         ])
                     ),
                     new TerminalString(
-                        $statement->getContent(),
+                        $statementData['source'],
                         new Style([
                             Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                             Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
@@ -90,6 +94,8 @@ class ActivityLineFactory
         $sourceStatementActivityLine = null;
 
         if ($sourceStatement instanceof StatementInterface) {
+            $sourceStatementData = json_decode($sourceStatement->getContent(), true);
+
             $sourceStatementActivityLine = new ActivityLine(
                 new TerminalString(
                     '> derived from:',
@@ -97,7 +103,7 @@ class ActivityLineFactory
                         Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
                     ])
                 ),
-                new TerminalString($sourceStatement->getContent())
+                new TerminalString($sourceStatementData['source'])
             );
         }
 

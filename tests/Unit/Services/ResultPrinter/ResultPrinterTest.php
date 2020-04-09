@@ -7,6 +7,8 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BaseBasilTestCase\Statement;
+use webignition\BasilParser\ActionParser;
+use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -57,6 +59,9 @@ class ResultPrinterTest extends AbstractBaseTest
     {
         $root = (new ProjectRootPathProvider())->get();
 
+        $actionParser = ActionParser::create();
+        $assertionParser = AssertionParser::create();
+
         return [
             'single test' => [
                 'testPaths' => [
@@ -70,7 +75,9 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion('$page.url is "http://example.com/"'),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.url is "http://example.com/"')
+                        )),
                     ],
                 ],
                 'expectedOutput' =>
@@ -100,20 +107,36 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion('$page.url is "http://example.com/"'),
-                        Statement::createAssertion('$page.title is "Hello, World!"'),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.url is "http://example.com/"')
+                        )),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.title is "Hello, World!"')
+                        )),
                     ],
                     [
-                        Statement::createAction('click $".successful"'),
-                        Statement::createAssertion('$page.url is "http://example.com/successful/"'),
+                        Statement::createAction(json_encode(
+                            $actionParser->parse('click $".successful"')
+                        )),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.url is "http://example.com/successful/"')
+                        )),
                     ],
                     [
-                        Statement::createAction('click $".back"'),
-                        Statement::createAssertion('$page.url is "http://example.com/"'),
+                        Statement::createAction(json_encode(
+                            $actionParser->parse('click $".back"')
+                        )),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.url is "http://example.com/"')
+                        )),
                     ],
                     [
-                        Statement::createAction('click $".new"'),
-                        Statement::createAssertion('$page.url is "http://example.com/new/"'),
+                        Statement::createAction(json_encode(
+                            $actionParser->parse('click $".new"')
+                        )),
+                        Statement::createAssertion(json_encode(
+                            $assertionParser->parse('$page.url is "http://example.com/new/"')
+                        )),
                     ],
                 ],
                 'expectedOutput' =>
