@@ -75,7 +75,7 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.url is "http://example.com/"')
                         )),
                     ],
@@ -107,34 +107,34 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.url is "http://example.com/"')
                         )),
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.title is "Hello, World!"')
                         )),
                     ],
                     [
-                        Statement::createAction(json_encode(
+                        Statement::createAction((string) json_encode(
                             $actionParser->parse('click $".successful"')
                         )),
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.url is "http://example.com/successful/"')
                         )),
                     ],
                     [
-                        Statement::createAction(json_encode(
+                        Statement::createAction((string) json_encode(
                             $actionParser->parse('click $".back"')
                         )),
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.url is "http://example.com/"')
                         )),
                     ],
                     [
-                        Statement::createAction(json_encode(
+                        Statement::createAction((string) json_encode(
                             $actionParser->parse('click $".new"')
                         )),
-                        Statement::createAssertion(json_encode(
+                        Statement::createAssertion((string) json_encode(
                             $assertionParser->parse('$page.url is "http://example.com/new/"')
                         )),
                     ],
