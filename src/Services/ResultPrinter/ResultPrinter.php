@@ -12,7 +12,7 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BaseBasilTestCase\StatementInterface;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;

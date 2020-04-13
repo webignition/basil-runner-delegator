@@ -6,7 +6,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BaseBasilTestCase\Statement;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -21,7 +21,7 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
-     * @param array<int, Statement[]> $handledStatements
+     * @param array<int, StatementInterface[]> $handledStatements
      * @param string $expectedOutput
      */
     public function testPrinterOutput(
@@ -75,9 +75,7 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.url is "http://example.com/"')
-                        )),
+                        $assertionParser->parse('$page.url is "http://example.com/"'),
                     ],
                 ],
                 'expectedOutput' =>
@@ -107,36 +105,20 @@ class ResultPrinterTest extends AbstractBaseTest
                 ],
                 'handledStatements' => [
                     [
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.url is "http://example.com/"')
-                        )),
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.title is "Hello, World!"')
-                        )),
+                        $assertionParser->parse('$page.url is "http://example.com/"'),
+                        $assertionParser->parse('$page.title is "Hello, World!"'),
                     ],
                     [
-                        Statement::createAction((string) json_encode(
-                            $actionParser->parse('click $".successful"')
-                        )),
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.url is "http://example.com/successful/"')
-                        )),
+                        $actionParser->parse('click $".successful"'),
+                        $assertionParser->parse('$page.url is "http://example.com/successful/"')
                     ],
                     [
-                        Statement::createAction((string) json_encode(
-                            $actionParser->parse('click $".back"')
-                        )),
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.url is "http://example.com/"')
-                        )),
+                        $actionParser->parse('click $".back"'),
+                        $assertionParser->parse('$page.url is "http://example.com/"'),
                     ],
                     [
-                        Statement::createAction((string) json_encode(
-                            $actionParser->parse('click $".new"')
-                        )),
-                        Statement::createAssertion((string) json_encode(
-                            $assertionParser->parse('$page.url is "http://example.com/new/"')
-                        )),
+                        $actionParser->parse('click $".new"'),
+                        $assertionParser->parse('$page.url is "http://example.com/new/"'),
                     ],
                 ],
                 'expectedOutput' =>
@@ -179,7 +161,7 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $testPaths
      * @param string[] $stepNames
      * @param int[] $endStatuses
-     * @param array<int, Statement[]> $handledStatements
+     * @param array<int, StatementInterface[]> $handledStatements
      *
      * @return BasilTestCaseInterface[]
      */
