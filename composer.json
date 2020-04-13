@@ -44,13 +44,13 @@
         "symfony/finder": "^5.0",
         "symfony/http-kernel": "^5.0",
         "symfony/yaml": "^5.0",
-        "webignition/base-basil-test-case": "^0.16.0",
+        "webignition/base-basil-test-case": "^0.17.0",
         "webignition/basil-assertion-failure-message": "^0.2.0",
-        "webignition/basil-compiler": "^0.10.0",
+        "webignition/basil-compiler": "^0.11.0",
         "webignition/basil-identifier-analyser": ">=0.4,<1",
         "webignition/basil-loader": "^0.21.0",
         "webignition/basil-models": ">=0.35,<1",
-        "webignition/php-basil-compilable-source-factory": "^0.31.0",
+        "webignition/php-basil-compilable-source-factory": "^0.32.0",
         "webignition/symfony-console-typed-input": "^0.4.0"
     },
     "require-dev": {

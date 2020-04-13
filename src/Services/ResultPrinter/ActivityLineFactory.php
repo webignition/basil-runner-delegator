@@ -6,7 +6,8 @@ namespace webignition\BasilRunner\Services\ResultPrinter;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BaseBasilTestCase\StatementInterface;
+use webignition\BasilModels\Assertion\DerivedAssertionInterface;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
@@ -46,7 +47,7 @@ class ActivityLineFactory
     {
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement, array $statementData): ActivityLine {
+            function (StatementInterface $statement): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_PASSED],
@@ -54,7 +55,7 @@ class ActivityLineFactory
                             Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
                         ])
                     ),
-                    new TerminalString($statementData['source'])
+                    new TerminalString($statement->getSource())
                 );
             }
         );
@@ -64,7 +65,7 @@ class ActivityLineFactory
     {
         return $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement, array $statementData): ActivityLine {
+            function (StatementInterface $statement): ActivityLine {
                 return new ActivityLine(
                     new TerminalString(
                         $this->icons[BaseTestRunner::STATUS_FAILURE],
@@ -73,7 +74,7 @@ class ActivityLineFactory
                         ])
                     ),
                     new TerminalString(
-                        $statementData['source'],
+                        $statement->getSource(),
                         new Style([
                             Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
                             Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
@@ -86,11 +87,10 @@ class ActivityLineFactory
 
     private function createStatementLine(StatementInterface $statement, callable $activityLineCreator): ActivityLine
     {
-        $sourceStatement = $statement->getSourceStatement();
         $sourceStatementActivityLine = null;
 
-        if ($sourceStatement instanceof StatementInterface) {
-            $sourceStatementData = json_decode($sourceStatement->getContent(), true);
+        if ($statement instanceof DerivedAssertionInterface) {
+            $sourceStatement = $statement->getSourceStatement();
 
             $sourceStatementActivityLine = new ActivityLine(
                 new TerminalString(
@@ -99,14 +99,12 @@ class ActivityLineFactory
                         Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
                     ])
                 ),
-                new TerminalString($sourceStatementData['source'])
+                new TerminalString($sourceStatement->getSource())
             );
         }
 
-        $statementData = json_decode($statement->getContent(), true);
-
         /* @var ActivityLine $statementActivityLine */
-        $statementActivityLine = $activityLineCreator($statement, $statementData);
+        $statementActivityLine = $activityLineCreator($statement);
 
         if ($sourceStatementActivityLine instanceof ActivityLine) {
             $statementActivityLine->addChild($sourceStatementActivityLine);
