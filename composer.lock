@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b25a3c35eab7996251cbe2dce20e4948",
+    "content-hash": "7279cb980e750d8f05e70402e5c30cf9",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3642,16 +3642,16 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.17",
+            "version": "0.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "3365a1780d3bf3122fabdc79ad43818135ac302b"
+                "reference": "f517fb04aaa63b80d1640b8be65bb2fce5816cba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/3365a1780d3bf3122fabdc79ad43818135ac302b",
-                "reference": "3365a1780d3bf3122fabdc79ad43818135ac302b",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/f517fb04aaa63b80d1640b8be65bb2fce5816cba",
+                "reference": "f517fb04aaa63b80d1640b8be65bb2fce5816cba",
                 "shasum": ""
             },
             "require": {
@@ -3685,7 +3685,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-04-10T11:51:19+00:00"
+            "time": "2020-04-13T10:29:12+00:00"
         },
         {
             "name": "webignition/basil-assertion-failure-message",
