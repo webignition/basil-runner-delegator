@@ -3,7 +3,6 @@
 namespace webignition\BasilRunner\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BaseBasilTestCase\Statement;
 
 class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
 {
@@ -19,27 +18,17 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
         $this->setBasilStepName('verify page is open');
 
         // $page.url is "https://example.com/"
-        $this->handledStatements[] = Statement::createAssertion(
-            '{
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
             "source": "$page.url is \\"https:\\/\\/example.com\\/\\"",
             "identifier": "$page.url",
             "comparison": "is",
             "value": "\\"https:\\/\\/example.com\\/\\""
-        }'
-        );
+        }');
         $this->expectedValue = "https://example.com/" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
             $this->expectedValue,
-            $this->examinedValue,
-            '{
-            "assertion": {
-                "source": "$page.url is \\"https:\\/\\/example.com\\/\\"",
-                "identifier": "$page.url",
-                "comparison": "is",
-                "value": "\\"https:\\/\\/example.com\\/\\""
-            }
-        }'
+            $this->examinedValue
         );
     }
 }

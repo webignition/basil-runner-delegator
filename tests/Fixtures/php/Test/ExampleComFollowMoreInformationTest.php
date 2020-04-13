@@ -3,7 +3,6 @@
 namespace webignition\BasilRunner\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BaseBasilTestCase\Statement;
 use webignition\DomElementIdentifier\ElementIdentifier;
 
 class ExampleComFollowMoreInformationTest extends AbstractBaseTest
@@ -20,52 +19,31 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $this->setBasilStepName('follow more information');
 
         // $"a" exists <- click $"a"
-        $this->handledStatements[] = Statement::createAssertion(
-            '{
-            "source": "$\\"a\\" exists",
-            "identifier": "$\\"a\\"",
-            "comparison": "exists"
-        }',
-            Statement::createAction('{
-            "source": "click $\\"a\\"",
-            "type": "click",
-            "arguments": "$\\"a\\"",
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "source_type": "action",
+            "source": {
+                "source": "click $\\"a\\"",
+                "type": "click",
+                "arguments": "$\\"a\\"",
+                "identifier": "$\\"a\\""
+            },
             "identifier": "$\\"a\\""
-        }')
-        );
+        }');
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
         }');
         $this->examinedValue = $this->navigator->hasOne($this->examinedElementIdentifier);
         $this->assertTrue(
-            $this->examinedValue,
-            '{
-            "assertion": {
-                "source": "$\\"a\\" exists",
-                "identifier": "$\\"a\\"",
-                "comparison": "exists"
-            },
-            "derived_from": {
-                "statement_type": "action",
-                "statement": {
-                    "source": "click $\\"a\\"",
-                    "type": "click",
-                    "arguments": "$\\"a\\"",
-                    "identifier": "$\\"a\\""
-                }
-            }
-        }'
+            $this->examinedValue
         );
 
         // click $"a"
-        $this->handledStatements[] = Statement::createAction(
-            '{
+        $this->handledStatements[] = $this->actionFactory->createFromJson('{
             "source": "click $\\"a\\"",
             "type": "click",
             "arguments": "$\\"a\\"",
             "identifier": "$\\"a\\""
-        }'
-        );
+        }');
         $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
             "locator": "a"
         }'));
@@ -73,27 +51,17 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         self::$crawler = self::$client->refreshCrawler();
 
         // $page.url is "https://www.iana.org/domains/reserved"
-        $this->handledStatements[] = Statement::createAssertion(
-            '{
+        $this->handledStatements[] = $this->assertionFactory->createFromJson('{
             "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
             "identifier": "$page.url",
             "comparison": "is",
             "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
-        }'
-        );
+        }');
         $this->expectedValue = "https://www.iana.org/domains/reserved" ?? null;
         $this->examinedValue = self::$client->getCurrentURL() ?? null;
         $this->assertEquals(
             $this->expectedValue,
-            $this->examinedValue,
-            '{
-            "assertion": {
-                "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
-                "identifier": "$page.url",
-                "comparison": "is",
-                "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
-            }
-        }'
+            $this->examinedValue
         );
     }
 }

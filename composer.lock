@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4602602fe7b09f817aa126a587a07f8",
+    "content-hash": "b25a3c35eab7996251cbe2dce20e4948",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3642,22 +3642,23 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.16",
+            "version": "0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "6bee409887ef92e1766b8ef456f4153692e414b1"
+                "reference": "3365a1780d3bf3122fabdc79ad43818135ac302b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/6bee409887ef92e1766b8ef456f4153692e414b1",
-                "reference": "6bee409887ef92e1766b8ef456f4153692e414b1",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/3365a1780d3bf3122fabdc79ad43818135ac302b",
+                "reference": "3365a1780d3bf3122fabdc79ad43818135ac302b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2",
                 "phpunit/phpunit": "~8.0",
                 "symfony/panther": "^0.7",
+                "webignition/basil-models": ">=0.41,<1",
                 "webignition/symfony-panther-dom-crawler-navigator": ">=0.17,<1",
                 "webignition/webdriver-element-inspector": ">=0.7,<1",
                 "webignition/webdriver-element-mutator": ">=0.3,<1"
@@ -3684,7 +3685,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-03-31T17:48:10+00:00"
+            "time": "2020-04-10T11:51:19+00:00"
         },
         {
             "name": "webignition/basil-assertion-failure-message",
