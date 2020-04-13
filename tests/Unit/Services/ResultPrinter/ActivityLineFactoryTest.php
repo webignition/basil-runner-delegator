@@ -17,6 +17,9 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class ActivityLineFactoryTest extends AbstractBaseTest
 {
+    /**
+     * @var ActivityLineFactory
+     */
     private $factory;
 
     protected function setUp(): void
