@@ -45,12 +45,11 @@
         "symfony/http-kernel": "^5.0",
         "symfony/yaml": "^5.0",
         "webignition/base-basil-test-case": "^0.18.0",
-        "webignition/basil-assertion-failure-message": "^0.2.0",
         "webignition/basil-compiler": "^0.11.0",
-        "webignition/basil-identifier-analyser": ">=0.4,<1",
-        "webignition/basil-loader": "^0.21.0",
-        "webignition/basil-models": ">=0.35,<1",
-        "webignition/php-basil-compilable-source-factory": "^0.32.0",
+        "webignition/basil-identifier-analyser": ">=0.6,<1",
+        "webignition/basil-loader": "^0.22.0",
+        "webignition/basil-models": ">=0.41,<1",
+        "webignition/php-basil-compilable-source-factory": "^0.33.0",
         "webignition/symfony-console-typed-input": "^0.4.0"
     },
     "require-dev": {
@@ -61,8 +60,8 @@
         "phpstan/phpstan": "^0.12.0",
         "phpstan/phpstan-mockery": "^0.12.0",
         "squizlabs/php_codesniffer": "3.*",
-        "webignition/basil-data-validator": ">=0.9,<1",
-        "webignition/basil-parser": ">=0.20,<1",
+        "webignition/basil-data-validator": ">=0.10,<1",
+        "webignition/basil-parser": ">=0.21,<1",
         "webignition/symfony-panther-webserver-runner": "^0.2.0"
     },
     "bin": [
