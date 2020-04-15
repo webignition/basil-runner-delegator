@@ -2,6 +2,7 @@ parameters:
   inferPrivatePropertyTypeFromConstructor: true
   excludes_analyse:
     - '*/tests/Fixtures/php/*'
+    - '*/tests/build/*'
   ignoreErrors:
     # Return type of 'array' of test data providers
     -
