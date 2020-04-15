@@ -25,7 +25,7 @@
     },
     "scripts": {
         "cs": "./vendor/bin/phpcs",
-        "static-analysis": "./vendor/bin/phpstan analyse bin src tests --level=8",
+        "static-analysis": "./vendor/bin/phpstan analyse",
         "test": "./vendor/bin/phpunit --colors=always",
         "ci": [
             "@composer cs",
