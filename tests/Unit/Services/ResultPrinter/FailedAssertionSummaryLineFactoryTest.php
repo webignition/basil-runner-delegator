@@ -34,9 +34,10 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
      */
     public function testCreate(
         ElementIdentifierInterface $elementIdentifier,
+        string $comparison,
         SummaryLine $expectedSummaryLine
     ) {
-        $this->assertEquals($expectedSummaryLine, $this->factory->create($elementIdentifier));
+        $this->assertEquals($expectedSummaryLine, $this->factory->create($elementIdentifier, $comparison));
     }
 
     public function createDataProvider(): array
@@ -48,6 +49,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
         return [
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -73,6 +75,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             ],
             'non-derived non-descendant element exists assertion, CSS selector, ordinal position 2' => [
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -98,6 +101,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             ],
             'non-derived non-descendant attribute exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new AttributeIdentifier('.selector', 'attribute_name'),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -127,6 +131,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             ],
             'non-derived non-descendant element exists assertion, XPath expression, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -156,6 +161,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         ->withParentIdentifier(
                             new ElementIdentifier('.parent')
                         ),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -200,6 +206,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                                     new ElementIdentifier('.grandparent', 5)
                                 )
                         ),
+                'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
@@ -246,6 +253,32 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
+                        ))->decreaseIndent()
+                    ]
+                ),
+            ],
+            'non-derived non-descendant element not-exists assertion' => [
+                'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'not-exists',
+                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                    new SummaryLine(
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$".selector"', $detailHighlightStyle)
+                        ))
+                    ),
+                    [
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
+                        (new ActivityLine(
+                            new TerminalString(' '),
+                            new TerminalString('does exist')
                         ))->decreaseIndent()
                     ]
                 ),
