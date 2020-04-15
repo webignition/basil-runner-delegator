@@ -15,11 +15,18 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class FailedAssertionSummaryLineFactory
 {
+    private const EXISTS_FINAL_LINE = 'does not exist';
+    private const NOT_EXISTS_FINAL_LINE = 'does exist';
+
+    private const COMPARISON_FINAL_LINE_MAP = [
+        'exists' => self::EXISTS_FINAL_LINE,
+        'not-exists' => self::NOT_EXISTS_FINAL_LINE,
+    ];
+
     /**
      * @var IdentifierTypeAnalyser
      */
     private $identifierTypeAnalyser;
-
     private $detailStyle;
 
     public function __construct()
@@ -30,7 +37,7 @@ class FailedAssertionSummaryLineFactory
         ]);
     }
 
-    public function create(ElementIdentifierInterface $identifier): SummaryLine
+    public function create(ElementIdentifierInterface $identifier, string $comparison): SummaryLine
     {
         $summaryLine = new SummaryLine(
             new TerminalString(sprintf(
@@ -57,10 +64,12 @@ class FailedAssertionSummaryLineFactory
             $parent = $parent->getParentIdentifier();
         }
 
+        $finalLine = self::COMPARISON_FINAL_LINE_MAP[$comparison] ?? '';
+
         $summaryLine->addChild(
             (new ActivityLine(
                 new TerminalString(' '),
-                new TerminalString('does not exist')
+                new TerminalString($finalLine)
             ))->decreaseIndent()
         );
 

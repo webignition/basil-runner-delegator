@@ -198,8 +198,13 @@ class ResultPrinter extends Printer implements TestListener
                     $comparison = $assertion->getComparison();
                     $identifier = $this->domIdentifierFactory->createFromIdentifierString($assertion->getIdentifier());
 
-                    if ($identifier instanceof ElementIdentifierInterface && 'exists' === $comparison) {
-                        $summaryActivityLine = $this->failedAssertionSummaryLineFactory->create($identifier);
+                    if ($identifier instanceof ElementIdentifierInterface) {
+                        if (in_array($comparison, ['exists', 'not-exists'])) {
+                            $summaryActivityLine = $this->failedAssertionSummaryLineFactory->create(
+                                $identifier,
+                                $comparison
+                            );
+                        }
                     }
                 }
 
