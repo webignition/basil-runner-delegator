@@ -12,10 +12,14 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
+use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
+use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\StatementInterface;
+use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class ResultPrinter extends Printer implements TestListener
 {
@@ -39,6 +43,16 @@ class ResultPrinter extends Printer implements TestListener
      */
     private $isFirstTest;
 
+    /**
+     * @var FailedAssertionSummaryLineFactory
+     */
+    private $failedAssertionSummaryLineFactory;
+
+    /**
+     * @var DomIdentifierFactory
+     */
+    private $domIdentifierFactory;
+
     public function __construct($out = null)
     {
         parent::__construct($out);
@@ -48,6 +62,8 @@ class ResultPrinter extends Printer implements TestListener
         $this->projectRootPath = $projectRootPath;
         $this->isFirstTest = true;
         $this->activityLineFactory = new ActivityLineFactory();
+        $this->failedAssertionSummaryLineFactory = new FailedAssertionSummaryLineFactory();
+        $this->domIdentifierFactory = DomIdentifierFactory::createFactory();
     }
 
     /**
@@ -160,19 +176,36 @@ class ResultPrinter extends Printer implements TestListener
 
             $stepNameLine = $this->activityLineFactory->createStepNameLine($test);
 
-            $completedStatements = $test->getHandledStatements();
+            $handledStatements = $test->getHandledStatements();
             $failedStatement = null;
 
             if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
-                $failedStatement = array_pop($completedStatements);
+                $failedStatement = array_pop($handledStatements);
             }
 
-            foreach ($completedStatements as $statement) {
+            foreach ($handledStatements as $statement) {
                 $stepNameLine->addChild($this->activityLineFactory->createCompletedStatementLine($statement));
             }
 
             if ($failedStatement instanceof StatementInterface) {
                 $stepNameLine->addChild($this->activityLineFactory->createFailedStatementLine($failedStatement));
+
+                $summaryActivityLine = null;
+
+                if ($failedStatement instanceof AssertionInterface) {
+                    $assertion = $failedStatement;
+
+                    $comparison = $assertion->getComparison();
+                    $identifier = $this->domIdentifierFactory->createFromIdentifierString($assertion->getIdentifier());
+
+                    if ($identifier instanceof ElementIdentifierInterface && 'exists' === $comparison) {
+                        $summaryActivityLine = $this->failedAssertionSummaryLineFactory->create($identifier);
+                    }
+                }
+
+                if ($summaryActivityLine instanceof ActivityLine) {
+                    $stepNameLine->addChild($summaryActivityLine);
+                }
             }
 
             $this->write((string) $stepNameLine);

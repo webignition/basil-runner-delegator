@@ -7,6 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
+use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertionSummaryLineFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -40,16 +41,29 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
 
     public function createDataProvider(): array
     {
+        $detailHighlightStyle = new Style([
+            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
+        ]);
+
         return [
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Element identified by:')
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$".selector"', $detailHighlightStyle)
+                        ))
                     ),
                     [
-                        new KeyValueLine('CSS selector', '.selector'),
-                        new KeyValueLine('ordinal position', '1'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
@@ -61,11 +75,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Element identified by:')
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$".selector":2', $detailHighlightStyle)
+                        ))
                     ),
                     [
-                        new KeyValueLine('CSS selector', '.selector'),
-                        new KeyValueLine('ordinal position', '2'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('2', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
@@ -77,12 +100,24 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new AttributeIdentifier('.selector', 'attribute_name'),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Attribute identified by:')
+                        new TerminalString(sprintf(
+                            'Attribute %s identified by:',
+                            new TerminalString('$".selector".attribute_name', $detailHighlightStyle)
+                        ))
                     ),
                     [
-                        new KeyValueLine('CSS selector', '.selector'),
-                        new KeyValueLine('attribute name', 'attribute_name'),
-                        new KeyValueLine('ordinal position', '1'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'attribute name',
+                            (string) new TerminalString('attribute_name', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
@@ -94,11 +129,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Element identified by:')
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$"//div/h1"', $detailHighlightStyle)
+                        ))
                     ),
                     [
-                        new KeyValueLine('XPath expression', '//div/h1'),
-                        new KeyValueLine('ordinal position', '1'),
+                        new KeyValueLine(
+                            'XPath expression',
+                            (string) new TerminalString('//div/h1', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
@@ -114,17 +158,32 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         ),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Element identified by:')
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$".parent" >> $".child"', $detailHighlightStyle)
+                        ))
                     ),
                     [
-                        new KeyValueLine('CSS selector', '.child'),
-                        new KeyValueLine('ordinal position', '1'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.child', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('with parent:')
                         ))->decreaseIndent(),
-                        new KeyValueLine('CSS selector', '.parent'),
-                        new KeyValueLine('ordinal position', '1'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.parent', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
@@ -143,23 +202,47 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         ),
                 'expectedSummaryLine' => $this->addChildrenToSummaryLine(
                     new SummaryLine(
-                        new TerminalString('Element identified by:')
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString(
+                                '$".grandparent":5 >> $".parent":4 >> $".child":3',
+                                $detailHighlightStyle
+                            )
+                        ))
                     ),
                     [
-                        new KeyValueLine('CSS selector', '.child'),
-                        new KeyValueLine('ordinal position', '3'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.child', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('3', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('with parent:')
                         ))->decreaseIndent(),
-                        new KeyValueLine('CSS selector', '.parent'),
-                        new KeyValueLine('ordinal position', '4'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.parent', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('4', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('with parent:')
                         ))->decreaseIndent(),
-                        new KeyValueLine('CSS selector', '.grandparent'),
-                        new KeyValueLine('ordinal position', '5'),
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.grandparent', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('5', $detailHighlightStyle)
+                        ),
                         (new ActivityLine(
                             new TerminalString(' '),
                             new TerminalString('does not exist')
