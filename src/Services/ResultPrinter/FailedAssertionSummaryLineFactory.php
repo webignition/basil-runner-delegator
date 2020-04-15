@@ -8,6 +8,7 @@ use webignition\BasilIdentifierAnalyser\IdentifierTypeAnalyser;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
+use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\DomElementIdentifier\AttributeIdentifierInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
@@ -19,17 +20,23 @@ class FailedAssertionSummaryLineFactory
      */
     private $identifierTypeAnalyser;
 
+    private $detailStyle;
+
     public function __construct()
     {
         $this->identifierTypeAnalyser = IdentifierTypeAnalyser::create();
+        $this->detailStyle = new Style([
+            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
+        ]);
     }
 
     public function create(ElementIdentifierInterface $identifier): SummaryLine
     {
         $summaryLine = new SummaryLine(
             new TerminalString(sprintf(
-                '%s identified by:',
-                $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element'
+                '%s %s identified by:',
+                $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element',
+                new TerminalString((string) $identifier, $this->detailStyle)
             ))
         );
 
@@ -67,7 +74,7 @@ class FailedAssertionSummaryLineFactory
         $summaryLine->addChild(
             new KeyValueLine(
                 $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
-                $identifier->getLocator()
+                (string) new TerminalString($identifier->getLocator(), $this->detailStyle)
             )
         );
 
@@ -75,7 +82,7 @@ class FailedAssertionSummaryLineFactory
             $summaryLine->addChild(
                 new KeyValueLine(
                     'attribute name',
-                    $identifier->getAttributeName()
+                    (string) new TerminalString($identifier->getAttributeName(), $this->detailStyle)
                 )
             );
         }
@@ -83,7 +90,7 @@ class FailedAssertionSummaryLineFactory
         $summaryLine->addChild(
             new KeyValueLine(
                 'ordinal position',
-                (string) ($identifier->getOrdinalPosition() ?? 1)
+                (string) new TerminalString((string) ($identifier->getOrdinalPosition() ?? 1), $this->detailStyle)
             )
         );
 
