@@ -24,7 +24,7 @@
         }
     },
     "scripts": {
-        "cs": "./vendor/bin/phpcs src tests --colors --standard=PSR12 --ignore=*/tests/Fixtures/*",
+        "cs": "./vendor/bin/phpcs",
         "static-analysis": "./vendor/bin/phpstan analyse bin src tests --level=8",
         "test": "./vendor/bin/phpunit --colors=always",
         "ci": [
