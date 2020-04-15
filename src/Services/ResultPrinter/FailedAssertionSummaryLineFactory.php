@@ -15,12 +15,10 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class FailedAssertionSummaryLineFactory
 {
-    private const EXISTS_FINAL_LINE = 'does not exist';
-    private const NOT_EXISTS_FINAL_LINE = 'does exist';
+    private const IS_FINAL_LINE = 'is not equal to expected value';
 
     private const COMPARISON_FINAL_LINE_MAP = [
-        'exists' => self::EXISTS_FINAL_LINE,
-        'not-exists' => self::NOT_EXISTS_FINAL_LINE,
+        'is' => self::IS_FINAL_LINE,
     ];
 
     /**
@@ -37,7 +35,51 @@ class FailedAssertionSummaryLineFactory
         ]);
     }
 
-    public function create(ElementIdentifierInterface $identifier, string $comparison): SummaryLine
+    public function createForExistenceAssertion(ElementIdentifierInterface $identifier, string $comparison): SummaryLine
+    {
+        $finalLine = 'exists' === $comparison
+            ? 'does not exist'
+            : 'does exist';
+
+        return $this->create($identifier, new ActivityLine(
+            new TerminalString(' '),
+            new TerminalString($finalLine)
+        ));
+    }
+
+    public function createForComparisonAssertion(
+        ElementIdentifierInterface $identifier,
+        string $comparison,
+        ?string $expectedValue,
+        ?string $actualValue
+    ): SummaryLine {
+        $finalLine = self::COMPARISON_FINAL_LINE_MAP[$comparison] ?? '';
+
+        $finalActivityLine = (new ActivityLine(
+            new TerminalString(' '),
+            new TerminalString($finalLine)
+        ))->decreaseIndent();
+
+        $finalActivityLine
+            ->addChild(
+                new KeyValueLine(
+                    'expected',
+                    (string) new TerminalString((string) $expectedValue, $this->detailStyle)
+                )
+            );
+
+        $finalActivityLine
+            ->addChild(
+                new KeyValueLine(
+                    'actual',
+                    '  ' . (string) new TerminalString((string) $actualValue, $this->detailStyle)
+                )
+            );
+
+        return $this->create($identifier, $finalActivityLine);
+    }
+
+    private function create(ElementIdentifierInterface $identifier, ActivityLine $finalActivityLine): SummaryLine
     {
         $summaryLine = new SummaryLine(
             new TerminalString(sprintf(
@@ -64,14 +106,9 @@ class FailedAssertionSummaryLineFactory
             $parent = $parent->getParentIdentifier();
         }
 
-        $finalLine = self::COMPARISON_FINAL_LINE_MAP[$comparison] ?? '';
+        $finalActivityLine = $finalActivityLine->decreaseIndent();
 
-        $summaryLine->addChild(
-            (new ActivityLine(
-                new TerminalString(' '),
-                new TerminalString($finalLine)
-            ))->decreaseIndent()
-        );
+        $summaryLine->addChild($finalActivityLine);
 
         return $summaryLine;
     }
