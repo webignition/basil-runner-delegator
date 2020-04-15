@@ -3,8 +3,8 @@
     <file>src</file>
     <file>tests</file>
 
-    <exclude-pattern>*/tests/Fixtures/*</exclude-pattern>
     <exclude-pattern>*/tests/build/*</exclude-pattern>
+    <exclude-pattern>*/tests/Fixtures/*</exclude-pattern>
 
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
