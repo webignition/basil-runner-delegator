@@ -30,17 +30,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createDataProvider
+     * @dataProvider createForExistenceAssertionDataProvider
      */
-    public function testCreate(
+    public function testCreateForExistenceAssertion(
         ElementIdentifierInterface $elementIdentifier,
         string $comparison,
         SummaryLine $expectedSummaryLine
     ) {
-        $this->assertEquals($expectedSummaryLine, $this->factory->create($elementIdentifier, $comparison));
+        $this->assertEquals(
+            $expectedSummaryLine,
+            $this->factory->createForExistenceAssertion($elementIdentifier, $comparison)
+        );
     }
 
-    public function createDataProvider(): array
+    public function createForExistenceAssertionDataProvider(): array
     {
         $detailHighlightStyle = new Style([
             Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
@@ -50,7 +53,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -76,7 +79,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, CSS selector, ordinal position 2' => [
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -102,7 +105,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             'non-derived non-descendant attribute exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new AttributeIdentifier('.selector', 'attribute_name'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Attribute %s identified by:',
@@ -132,7 +135,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, XPath expression, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -162,7 +165,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                             new ElementIdentifier('.parent')
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -207,7 +210,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                                 )
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -260,7 +263,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element not-exists assertion' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'not-exists',
-                'expectedSummaryLine' => $this->addChildrenToSummaryLine(
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
                         new TerminalString(sprintf(
                             'Element %s identified by:',
@@ -287,12 +290,78 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @param SummaryLine $summaryLine
+     * @dataProvider createForComparisonAssertionDataProvider
+     */
+    public function testCreateForComparisonAssertion(
+        ElementIdentifierInterface $elementIdentifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue,
+        SummaryLine $expectedSummaryLine
+    ) {
+        $this->assertEquals(
+            $expectedSummaryLine,
+            $this->factory->createForComparisonAssertion($elementIdentifier, $comparison, $expectedValue, $actualValue)
+        );
+    }
+
+    public function createForComparisonAssertionDataProvider(): array
+    {
+        $detailHighlightStyle = new Style([
+            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
+        ]);
+
+        return [
+            'is' => [
+                'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
+                    new SummaryLine(
+                        new TerminalString(sprintf(
+                            'Element %s identified by:',
+                            new TerminalString('$".selector"', $detailHighlightStyle)
+                        ))
+                    ),
+                    [
+                        new KeyValueLine(
+                            'CSS selector',
+                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                        ),
+                        new KeyValueLine(
+                            'ordinal position',
+                            (string) new TerminalString('1', $detailHighlightStyle)
+                        ),
+                        $this->addChildrenToActivityLine(
+                            (new ActivityLine(
+                                new TerminalString(' '),
+                                new TerminalString('is not equal to expected value')
+                            ))->decreaseIndent()->decreaseIndent(),
+                            [
+                                new KeyValueLine(
+                                    'expected',
+                                    (string) new TerminalString('expected', $detailHighlightStyle)
+                                ),
+                                new KeyValueLine(
+                                    'actual',
+                                    '  ' . (string) new TerminalString('actual', $detailHighlightStyle)
+                                ),
+                            ]
+                        )
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @param ActivityLine $summaryLine
      * @param ActivityLine[] $children
      *
-     * @return SummaryLine
+     * @return ActivityLine
      */
-    private function addChildrenToSummaryLine(SummaryLine $summaryLine, array $children): SummaryLine
+    private function addChildrenToActivityLine(ActivityLine $summaryLine, array $children): ActivityLine
     {
         foreach ($children as $child) {
             $summaryLine->addChild($child);

@@ -200,10 +200,21 @@ class ResultPrinter extends Printer implements TestListener
 
                     if ($identifier instanceof ElementIdentifierInterface) {
                         if (in_array($comparison, ['exists', 'not-exists'])) {
-                            $summaryActivityLine = $this->failedAssertionSummaryLineFactory->create(
-                                $identifier,
-                                $comparison
-                            );
+                            $summaryActivityLine =
+                                $this->failedAssertionSummaryLineFactory->createForExistenceAssertion(
+                                    $identifier,
+                                    $comparison
+                                );
+                        }
+
+                        if (in_array($comparison, ['is'])) {
+                            $summaryActivityLine =
+                                $this->failedAssertionSummaryLineFactory->createForComparisonAssertion(
+                                    $identifier,
+                                    $comparison,
+                                    $test->getExpectedValue(),
+                                    $test->getExaminedValue()
+                                );
                         }
                     }
                 }
