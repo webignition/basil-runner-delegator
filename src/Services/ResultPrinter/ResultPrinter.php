@@ -19,6 +19,7 @@ use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class ResultPrinter extends Printer implements TestListener
 {
@@ -197,7 +198,7 @@ class ResultPrinter extends Printer implements TestListener
                     $comparison = $assertion->getComparison();
                     $identifier = $this->domIdentifierFactory->createFromIdentifierString($assertion->getIdentifier());
 
-                    if ('exists' === $comparison) {
+                    if ($identifier instanceof ElementIdentifierInterface && 'exists' === $comparison) {
                         $summaryActivityLine = $this->failedAssertionSummaryLineFactory->create($identifier);
                     }
                 }
