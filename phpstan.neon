@@ -1,6 +1,12 @@
 parameters:
+  level: 8
+  paths:
+    - bin
+    - src
+    - tests
   inferPrivatePropertyTypeFromConstructor: true
   excludes_analyse:
+    - '*/tests/build/*'
     - '*/tests/Fixtures/php/*'
   ignoreErrors:
     # Return type of 'array' of test data providers
