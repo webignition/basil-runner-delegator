@@ -9,12 +9,12 @@ use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\Assertion\DerivedAssertionInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ActivityLine;
-use webignition\BasilRunner\Model\TerminalString\Style;
-use webignition\BasilRunner\Model\TerminalString\TerminalString;
 
 class ActivityLineFactory
 {
     private const DEFAULT_ICON = '?';
+
+    private $consoleOutputFactory;
 
     /**
      * @var array<int, string>
@@ -24,6 +24,11 @@ class ActivityLineFactory
         BaseTestRunner::STATUS_FAILURE => 'x',
     ];
 
+    public function __construct(ConsoleOutputFactory $consoleOutputFactory)
+    {
+        $this->consoleOutputFactory = $consoleOutputFactory;
+    }
+
     public function createStepNameLine(BasilTestCaseInterface $test): ActivityLine
     {
         $testEndStatus = $test->getStatus();
@@ -31,16 +36,15 @@ class ActivityLineFactory
         $icon = $this->icons[$testEndStatus] ?? self::DEFAULT_ICON;
         $content = $test->getBasilStepName();
 
-        $style = new Style([
-            Style::FOREGROUND_COLOUR => BaseTestRunner::STATUS_PASSED === $testEndStatus
-                ? Style::COLOUR_GREEN
-                : Style::COLOUR_RED,
-        ]);
+        $styledIcon = $testEndStatus === BaseTestRunner::STATUS_PASSED
+            ? $this->consoleOutputFactory->createSuccess($icon)
+            : $this->consoleOutputFactory->createFailure($icon);
 
-        return new ActivityLine(
-            new TerminalString($icon, $style),
-            new TerminalString($content, $style)
-        );
+        $styledContent = $testEndStatus === BaseTestRunner::STATUS_PASSED
+            ? $this->consoleOutputFactory->createSuccess($content)
+            : $this->consoleOutputFactory->createFailure($content);
+
+        return new ActivityLine($styledIcon, $styledContent);
     }
 
     public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
@@ -49,13 +53,8 @@ class ActivityLineFactory
             $statement,
             function (StatementInterface $statement): ActivityLine {
                 return new ActivityLine(
-                    new TerminalString(
-                        $this->icons[BaseTestRunner::STATUS_PASSED],
-                        new Style([
-                            Style::FOREGROUND_COLOUR => Style::COLOUR_GREEN,
-                        ])
-                    ),
-                    new TerminalString($statement->getSource())
+                    $this->consoleOutputFactory->createSuccess($this->icons[BaseTestRunner::STATUS_PASSED]),
+                    $statement->getSource()
                 );
             }
         );
@@ -67,19 +66,8 @@ class ActivityLineFactory
             $statement,
             function (StatementInterface $statement): ActivityLine {
                 return new ActivityLine(
-                    new TerminalString(
-                        $this->icons[BaseTestRunner::STATUS_FAILURE],
-                        new Style([
-                            Style::FOREGROUND_COLOUR => Style::COLOUR_RED,
-                        ])
-                    ),
-                    new TerminalString(
-                        $statement->getSource(),
-                        new Style([
-                            Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
-                            Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-                        ])
-                    )
+                    $this->consoleOutputFactory->createFailure($this->icons[BaseTestRunner::STATUS_FAILURE]),
+                    $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
                 );
             }
         );
@@ -93,13 +81,8 @@ class ActivityLineFactory
             $sourceStatement = $statement->getSourceStatement();
 
             $sourceStatementActivityLine = new ActivityLine(
-                new TerminalString(
-                    '> derived from:',
-                    new Style([
-                        Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
-                    ])
-                ),
-                new TerminalString($sourceStatement->getSource())
+                $this->consoleOutputFactory->createComment('> derived from:'),
+                $sourceStatement->getSource()
             );
         }
 
