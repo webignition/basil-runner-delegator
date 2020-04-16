@@ -7,8 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
-use webignition\BasilRunner\Model\TerminalString\Style;
-use webignition\BasilRunner\Model\TerminalString\TerminalString;
+use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertionSummaryLineFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\AttributeIdentifier;
@@ -26,7 +25,9 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new FailedAssertionSummaryLineFactory();
+        $this->factory = new FailedAssertionSummaryLineFactory(
+            new ConsoleOutputFactory()
+        );
     }
 
     /**
@@ -45,34 +46,27 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
 
     public function createForExistenceAssertionDataProvider(): array
     {
-        $detailHighlightStyle = new Style([
-            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
-        ]);
+        $consoleOutputFactory = new ConsoleOutputFactory();
 
         return [
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$".selector"', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".selector"')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.selector')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -80,25 +74,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$".selector":2', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".selector":2')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.selector')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('2', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('2')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -107,28 +96,25 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
                     new SummaryLine(
-                        new TerminalString(sprintf(
+                        sprintf(
                             'Attribute %s identified by:',
-                            new TerminalString('$".selector".attribute_name', $detailHighlightStyle)
-                        ))
+                            $consoleOutputFactory->createComment('$".selector".attribute_name')
+                        )
                     ),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.selector')
                         ),
                         new KeyValueLine(
                             'attribute name',
-                            (string) new TerminalString('attribute_name', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('attribute_name')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -136,25 +122,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$"//div/h1"', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$"//div/h1"')
+                    )),
                     [
                         new KeyValueLine(
                             'XPath expression',
-                            (string) new TerminalString('//div/h1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('//div/h1')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -166,37 +147,29 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         ),
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$".parent" >> $".child"', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".parent" >> $".child"')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.child', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.child')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('with parent:')
-                        ))->decreaseIndent(),
+                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.parent', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.parent')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -211,52 +184,38 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                         ),
                 'comparison' => 'exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString(
-                                '$".grandparent":5 >> $".parent":4 >> $".child":3',
-                                $detailHighlightStyle
-                            )
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".grandparent":5 >> $".parent":4 >> $".child":3')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.child', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.child')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('3', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('3')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('with parent:')
-                        ))->decreaseIndent(),
+                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.parent', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.parent')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('4', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('4')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('with parent:')
-                        ))->decreaseIndent(),
+                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.grandparent', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.grandparent')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('5', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('5')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does not exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -264,25 +223,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'not-exists',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$".selector"', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".selector"')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.selector')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
-                        (new ActivityLine(
-                            new TerminalString(' '),
-                            new TerminalString('does exist')
-                        ))->decreaseIndent()
+                        (new ActivityLine(' ', 'does exist'))->decreaseIndent()
                     ]
                 ),
             ],
@@ -307,9 +261,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
 
     public function createForComparisonAssertionDataProvider(): array
     {
-        $detailHighlightStyle = new Style([
-            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
-        ]);
+        $consoleOutputFactory = new ConsoleOutputFactory();
 
         return [
             'is' => [
@@ -318,35 +270,33 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        new TerminalString(sprintf(
-                            'Element %s identified by:',
-                            new TerminalString('$".selector"', $detailHighlightStyle)
-                        ))
-                    ),
+                    new SummaryLine(sprintf(
+                        'Element %s identified by:',
+                        $consoleOutputFactory->createComment('$".selector"')
+                    )),
                     [
                         new KeyValueLine(
                             'CSS selector',
-                            (string) new TerminalString('.selector', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('.selector')
                         ),
                         new KeyValueLine(
                             'ordinal position',
-                            (string) new TerminalString('1', $detailHighlightStyle)
+                            $consoleOutputFactory->createComment('1')
                         ),
                         $this->addChildrenToActivityLine(
                             (new ActivityLine(
-                                new TerminalString(' '),
-                                new TerminalString('is not equal to expected value')
-                            ))->decreaseIndent()->decreaseIndent(),
+                                ' ',
+                                'is not equal to expected value'
+                            ))->decreaseIndent(),
                             [
-                                new KeyValueLine(
+                                (new KeyValueLine(
                                     'expected',
-                                    (string) new TerminalString('expected', $detailHighlightStyle)
-                                ),
-                                new KeyValueLine(
+                                    $consoleOutputFactory->createComment('expected')
+                                ))->decreaseIndent(),
+                                (new KeyValueLine(
                                     'actual',
-                                    '  ' . (string) new TerminalString('actual', $detailHighlightStyle)
-                                ),
+                                    '  ' . $consoleOutputFactory->createComment('actual')
+                                ))->decreaseIndent(),
                             ]
                         )
                     ]

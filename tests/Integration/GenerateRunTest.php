@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
+use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 
 class GenerateRunTest extends TestCase
@@ -34,33 +35,34 @@ class GenerateRunTest extends TestCase
 
     public function generateAndRunDataProvider(): array
     {
+        $cof = new ConsoleOutputFactory();
+
         return [
             'default' => [
                 'source' => './tests/Fixtures/basil-integration/Test',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    "\033[1m" . 'tests/Fixtures/basil-integration/Test/index-page-test.yml' . "\033[0m" . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'verify page is open' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" .
+                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'verify primary heading' . "\033[0m" .
-                    "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"h1" exists' . "\n" .
-                    '      ' . "\033[33m" . '> derived from:' . "\033[0m" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"h1" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:') .
                     ' $"h1" is "Test fixture web server default document"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" .
+                    '    ' . $cof->createSuccess('✓') .
                     ' $"h1" is "Test fixture web server default document"' . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'verify links are present' . "\033[0m" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify links are present') .
                     "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-assertions]" exists' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'navigate to form' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $"a[id=link-to-form]" exists' . "\n" .
-                    '      ' . "\033[33m" . '> derived from:' . "\033[0m" . ' click $"a[id=link-to-form]"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $"a[id=link-to-form]"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Form"' . "\n"
+                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-assertions]" exists' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('navigate to form') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:') . ' click $"a[id=link-to-form]"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' click $"a[id=link-to-form]"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n"
             ],
         ];
     }

@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter;
 
-use webignition\BasilIdentifierAnalyser\IdentifierTypeAnalyser;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
-use webignition\BasilRunner\Model\TerminalString\Style;
-use webignition\BasilRunner\Model\TerminalString\TerminalString;
 use webignition\DomElementIdentifier\AttributeIdentifierInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
@@ -21,18 +18,11 @@ class FailedAssertionSummaryLineFactory
         'is' => self::IS_FINAL_LINE,
     ];
 
-    /**
-     * @var IdentifierTypeAnalyser
-     */
-    private $identifierTypeAnalyser;
-    private $detailStyle;
+    private $consoleOutputFactory;
 
-    public function __construct()
+    public function __construct(ConsoleOutputFactory $consoleOutputFactory)
     {
-        $this->identifierTypeAnalyser = IdentifierTypeAnalyser::create();
-        $this->detailStyle = new Style([
-            Style::FOREGROUND_COLOUR => Style::COLOUR_YELLOW,
-        ]);
+        $this->consoleOutputFactory = $consoleOutputFactory;
     }
 
     public function createForExistenceAssertion(ElementIdentifierInterface $identifier, string $comparison): SummaryLine
@@ -41,10 +31,7 @@ class FailedAssertionSummaryLineFactory
             ? 'does not exist'
             : 'does exist';
 
-        return $this->create($identifier, new ActivityLine(
-            new TerminalString(' '),
-            new TerminalString($finalLine)
-        ));
+        return $this->create($identifier, new ActivityLine(' ', $finalLine));
     }
 
     public function createForComparisonAssertion(
@@ -55,39 +42,32 @@ class FailedAssertionSummaryLineFactory
     ): SummaryLine {
         $finalLine = self::COMPARISON_FINAL_LINE_MAP[$comparison] ?? '';
 
-        $finalActivityLine = (new ActivityLine(
-            new TerminalString(' '),
-            new TerminalString($finalLine)
-        ))->decreaseIndent();
+        $finalActivityLine = new ActivityLine(' ', $finalLine);
 
-        $finalActivityLine
-            ->addChild(
-                new KeyValueLine(
-                    'expected',
-                    (string) new TerminalString((string) $expectedValue, $this->detailStyle)
-                )
-            );
+        $finalActivityLine->addChild(
+            (new KeyValueLine(
+                'expected',
+                $this->consoleOutputFactory->createComment((string) $expectedValue)
+            ))->decreaseIndent()
+        );
 
-        $finalActivityLine
-            ->addChild(
-                new KeyValueLine(
-                    'actual',
-                    '  ' . (string) new TerminalString((string) $actualValue, $this->detailStyle)
-                )
-            );
+        $finalActivityLine->addChild(
+            (new KeyValueLine(
+                'actual',
+                '  ' . $this->consoleOutputFactory->createComment((string) $actualValue)
+            ))->decreaseIndent()
+        );
 
         return $this->create($identifier, $finalActivityLine);
     }
 
     private function create(ElementIdentifierInterface $identifier, ActivityLine $finalActivityLine): SummaryLine
     {
-        $summaryLine = new SummaryLine(
-            new TerminalString(sprintf(
-                '%s %s identified by:',
-                $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element',
-                new TerminalString((string) $identifier, $this->detailStyle)
-            ))
-        );
+        $summaryLine = new SummaryLine(sprintf(
+            '%s %s identified by:',
+            $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element',
+            $this->consoleOutputFactory->createComment((string) $identifier)
+        ));
 
         $this->applyIdentifierPropertiesSummaryLines($summaryLine, $identifier);
 
@@ -96,8 +76,8 @@ class FailedAssertionSummaryLineFactory
         while ($parent instanceof ElementIdentifierInterface) {
             $summaryLine->addChild(
                 (new ActivityLine(
-                    new TerminalString(' '),
-                    new TerminalString('with parent:')
+                    ' ',
+                    'with parent:'
                 ))->decreaseIndent()
             );
 
@@ -120,7 +100,7 @@ class FailedAssertionSummaryLineFactory
         $summaryLine->addChild(
             new KeyValueLine(
                 $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
-                (string) new TerminalString($identifier->getLocator(), $this->detailStyle)
+                $this->consoleOutputFactory->createComment($identifier->getLocator())
             )
         );
 
@@ -128,7 +108,7 @@ class FailedAssertionSummaryLineFactory
             $summaryLine->addChild(
                 new KeyValueLine(
                     'attribute name',
-                    (string) new TerminalString($identifier->getAttributeName(), $this->detailStyle)
+                    $this->consoleOutputFactory->createComment($identifier->getAttributeName())
                 )
             );
         }
@@ -136,7 +116,7 @@ class FailedAssertionSummaryLineFactory
         $summaryLine->addChild(
             new KeyValueLine(
                 'ordinal position',
-                (string) new TerminalString((string) ($identifier->getOrdinalPosition() ?? 1), $this->detailStyle)
+                $this->consoleOutputFactory->createComment((string) ($identifier->getOrdinalPosition() ?? 1))
             )
         );
 

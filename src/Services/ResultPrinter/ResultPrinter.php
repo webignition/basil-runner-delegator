@@ -16,13 +16,16 @@ use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ActivityLine;
-use webignition\BasilRunner\Model\TerminalString\TerminalString;
-use webignition\BasilRunner\Model\TerminalString\Style;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class ResultPrinter extends Printer implements TestListener
 {
+    /**
+     * @var ConsoleOutputFactory
+     */
+    private $consoleOutputFactory;
+
     /**
      * @var ActivityLineFactory
      */
@@ -59,10 +62,13 @@ class ResultPrinter extends Printer implements TestListener
 
         $projectRootPath = (ProjectRootPathProvider::create())->get();
 
+        $consoleOutputFactory = new ConsoleOutputFactory();
+
         $this->projectRootPath = $projectRootPath;
         $this->isFirstTest = true;
-        $this->activityLineFactory = new ActivityLineFactory();
-        $this->failedAssertionSummaryLineFactory = new FailedAssertionSummaryLineFactory();
+        $this->consoleOutputFactory = $consoleOutputFactory;
+        $this->activityLineFactory = new ActivityLineFactory($consoleOutputFactory);
+        $this->failedAssertionSummaryLineFactory = new FailedAssertionSummaryLineFactory($consoleOutputFactory);
         $this->domIdentifierFactory = DomIdentifierFactory::createFactory();
     }
 
@@ -147,16 +153,7 @@ class ResultPrinter extends Printer implements TestListener
                     $this->writeEmptyLine();
                 }
 
-                $testPathTerminalString = new TerminalString(
-                    $relativePath,
-                    new Style([
-                        Style::DECORATIONS => [
-                            Style::DECORATION_BOLD,
-                        ],
-                    ])
-                );
-
-                $this->write((string) $testPathTerminalString);
+                $this->write($this->consoleOutputFactory->createTestPath($relativePath));
                 $this->writeEmptyLine();
 
                 if ($this->isFirstTest) {

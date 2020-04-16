@@ -10,6 +10,7 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -62,6 +63,8 @@ class ResultPrinterTest extends AbstractBaseTest
         $actionParser = ActionParser::create();
         $assertionParser = AssertionParser::create();
 
+        $cof = new ConsoleOutputFactory();
+
         return [
             'single test' => [
                 'testPaths' => [
@@ -79,9 +82,9 @@ class ResultPrinterTest extends AbstractBaseTest
                     ],
                 ],
                 'expectedOutput' =>
-                    "\033[1m" . 'test.yml' . "\033[0m" . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'step one' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n"
+                $cof->createTestPath('test.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
                 ,
             ],
             'multiple tests' => [
@@ -122,24 +125,25 @@ class ResultPrinterTest extends AbstractBaseTest
                     ],
                 ],
                 'expectedOutput' =>
-                    "\033[1m" . 'test1.yml' . "\033[0m" . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test one step one' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.title is "Hello, World!"' . "\n" .
+                    $cof->createTestPath('test1.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test one step one') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Hello, World!"' . "\n" .
                     "\n" .
-                    "\033[1m" . 'test2.yml' . "\033[0m" . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test two step one' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".successful"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/successful/"' . "\n" .
-                    '  ' . "\033[32m" . '✓' . "\033[0m" . ' ' . "\033[32m" . 'test two step two' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".back"' . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' $page.url is "http://example.com/"' . "\n" .
+                    $cof->createTestPath('test2.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step one') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' click $".successful"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step two') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' click $".back"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
                     "\n" .
-                    "\033[1m" . 'test3.yml' . "\033[0m" . "\n" .
-                    '  ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[31m" . 'test three step one' . "\033[0m" . "\n" .
-                    '    ' . "\033[32m" . '✓' . "\033[0m" . ' click $".new"' . "\n" .
-                    '    ' . "\033[31m" . 'x' . "\033[0m" . ' ' . "\033[37m" . "\033[41m" .
-                    '$page.url is "http://example.com/new/"' . "\033[0m" . "\n"
+                    $cof->createTestPath('test3.yml') . "\n" .
+                    '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('test three step one') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' click $".new"' . "\n" .
+                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
+                        '$page.url is "http://example.com/new/"'
+                    ) . "\n"
                 ,
             ],
         ];
