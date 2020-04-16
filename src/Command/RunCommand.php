@@ -58,7 +58,7 @@ class RunCommand extends Command
         $process = popen($this->createPhpUnitCommand($path), 'r');
 
         if (is_resource($process)) {
-            while ($buffer = fread($process, 8)) {
+            while ($buffer = fgets($process)) {
                 $output->write($buffer);
             }
 
