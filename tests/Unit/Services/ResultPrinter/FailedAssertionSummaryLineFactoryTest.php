@@ -31,20 +31,20 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createForExistenceAssertionDataProvider
+     * @dataProvider createForElementalExistenceAssertionDataProvider
      */
-    public function testCreateForExistenceAssertion(
+    public function testCreateForElementalExistenceAssertion(
         ElementIdentifierInterface $elementIdentifier,
         string $comparison,
         SummaryLine $expectedSummaryLine
     ) {
         $this->assertEquals(
             $expectedSummaryLine,
-            $this->factory->createForExistenceAssertion($elementIdentifier, $comparison)
+            $this->factory->createForElementalExistenceAssertion($elementIdentifier, $comparison)
         );
     }
 
-    public function createForExistenceAssertionDataProvider(): array
+    public function createForElementalExistenceAssertionDataProvider(): array
     {
         $consoleOutputFactory = new ConsoleOutputFactory();
 
@@ -244,9 +244,9 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createForComparisonAssertionDataProvider
+     * @dataProvider createForElementalToScalarComparisonAssertionDataProvider
      */
-    public function testCreateForComparisonAssertion(
+    public function testCreateForElementalToScalarComparisonAssertion(
         ElementIdentifierInterface $elementIdentifier,
         string $comparison,
         string $expectedValue,
@@ -255,11 +255,16 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     ) {
         $this->assertEquals(
             $expectedSummaryLine,
-            $this->factory->createForComparisonAssertion($elementIdentifier, $comparison, $expectedValue, $actualValue)
+            $this->factory->createForElementalToScalarComparisonAssertion(
+                $elementIdentifier,
+                $comparison,
+                $expectedValue,
+                $actualValue
+            )
         );
     }
 
-    public function createForComparisonAssertionDataProvider(): array
+    public function createForElementalToScalarComparisonAssertionDataProvider(): array
     {
         $consoleOutputFactory = new ConsoleOutputFactory();
 
@@ -299,6 +304,54 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
                                 ))->decreaseIndent(),
                             ]
                         )
+                    ]
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createForScalarToScalarComparisonAssertionDataProvider
+     */
+    public function testCreateScalarToScalarComparisonAssertion(
+        string $identifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue,
+        SummaryLine $expectedSummaryLine
+    ) {
+        $this->assertEquals(
+            $expectedSummaryLine,
+            $this->factory->createForScalarToScalarComparisonAssertion(
+                $identifier,
+                $comparison,
+                $expectedValue,
+                $actualValue
+            )
+        );
+    }
+
+    public function createForScalarToScalarComparisonAssertionDataProvider(): array
+    {
+        $consoleOutputFactory = new ConsoleOutputFactory();
+
+        return [
+            'is' => [
+                'identifier' => '$page.title',
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummaryLine' => $this->addChildrenToActivityLine(
+                    new SummaryLine('$page.title is not equal to expected value'),
+                    [
+                        new KeyValueLine(
+                            'expected',
+                            $consoleOutputFactory->createComment('expected')
+                        ),
+                        new KeyValueLine(
+                            'actual',
+                            '  ' . $consoleOutputFactory->createComment('actual')
+                        ),
                     ]
                 ),
             ],

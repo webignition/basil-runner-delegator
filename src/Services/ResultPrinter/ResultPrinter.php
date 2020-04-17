@@ -191,14 +191,15 @@ class ResultPrinter extends Printer implements TestListener
 
                 if ($failedStatement instanceof AssertionInterface) {
                     $assertion = $failedStatement;
+                    $identifierString = $assertion->getIdentifier();
 
                     $comparison = $assertion->getComparison();
-                    $identifier = $this->domIdentifierFactory->createFromIdentifierString($assertion->getIdentifier());
+                    $identifier = $this->domIdentifierFactory->createFromIdentifierString($identifierString);
 
                     if ($identifier instanceof ElementIdentifierInterface) {
                         if (in_array($comparison, ['exists', 'not-exists'])) {
                             $summaryActivityLine =
-                                $this->failedAssertionSummaryLineFactory->createForExistenceAssertion(
+                                $this->failedAssertionSummaryLineFactory->createForElementalExistenceAssertion(
                                     $identifier,
                                     $comparison
                                 );
@@ -206,8 +207,18 @@ class ResultPrinter extends Printer implements TestListener
 
                         if (in_array($comparison, ['is'])) {
                             $summaryActivityLine =
-                                $this->failedAssertionSummaryLineFactory->createForComparisonAssertion(
+                                $this->failedAssertionSummaryLineFactory->createForElementalToScalarComparisonAssertion(
                                     $identifier,
+                                    $comparison,
+                                    $test->getExpectedValue(),
+                                    $test->getExaminedValue()
+                                );
+                        }
+                    } else {
+                        if (in_array($comparison, ['is'])) {
+                            $summaryActivityLine =
+                                $this->failedAssertionSummaryLineFactory->createForScalarToScalarComparisonAssertion(
+                                    $identifierString,
                                     $comparison,
                                     $test->getExpectedValue(),
                                     $test->getExaminedValue()

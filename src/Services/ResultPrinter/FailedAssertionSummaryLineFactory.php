@@ -12,10 +12,14 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class FailedAssertionSummaryLineFactory
 {
-    private const IS_FINAL_LINE = 'is not equal to expected value';
+    private const EXISTS_OUTCOME = 'does not exist';
+    private const NOT_EXISTS_OUTCOME = 'does exist';
+    private const IS_OUTCOME = 'is not equal to expected value';
 
-    private const COMPARISON_FINAL_LINE_MAP = [
-        'is' => self::IS_FINAL_LINE,
+    private const COMPARISON_OUTCOME_MAP = [
+        'exists' => self::EXISTS_OUTCOME,
+        'not-exists' => self::NOT_EXISTS_OUTCOME,
+        'is' => self::IS_OUTCOME,
     ];
 
     private $consoleOutputFactory;
@@ -25,44 +29,53 @@ class FailedAssertionSummaryLineFactory
         $this->consoleOutputFactory = $consoleOutputFactory;
     }
 
-    public function createForExistenceAssertion(ElementIdentifierInterface $identifier, string $comparison): SummaryLine
-    {
-        $finalLine = 'exists' === $comparison
-            ? 'does not exist'
-            : 'does exist';
+    public function createForElementalExistenceAssertion(
+        ElementIdentifierInterface $identifier,
+        string $comparison
+    ): SummaryLine {
+        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
 
-        return $this->create($identifier, new ActivityLine(' ', $finalLine));
+        return $this->createForElementalAssertion($identifier, new ActivityLine(' ', $outcome));
     }
 
-    public function createForComparisonAssertion(
+    public function createForElementalToScalarComparisonAssertion(
         ElementIdentifierInterface $identifier,
         string $comparison,
         ?string $expectedValue,
         ?string $actualValue
     ): SummaryLine {
-        $finalLine = self::COMPARISON_FINAL_LINE_MAP[$comparison] ?? '';
+        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
 
-        $finalActivityLine = new ActivityLine(' ', $finalLine);
+        $finalActivityLine = new ActivityLine(' ', $outcome);
 
-        $finalActivityLine->addChild(
-            (new KeyValueLine(
-                'expected',
-                $this->consoleOutputFactory->createComment((string) $expectedValue)
-            ))->decreaseIndent()
-        );
+        $finalActivityLine->addChild($this->createExpectedValueKeyValueLine((string) $expectedValue));
+        $finalActivityLine->addChild($this->createActualValueKeyValueLine((string) $actualValue));
 
-        $finalActivityLine->addChild(
-            (new KeyValueLine(
-                'actual',
-                '  ' . $this->consoleOutputFactory->createComment((string) $actualValue)
-            ))->decreaseIndent()
-        );
-
-        return $this->create($identifier, $finalActivityLine);
+        return $this->createForElementalAssertion($identifier, $finalActivityLine);
     }
 
-    private function create(ElementIdentifierInterface $identifier, ActivityLine $finalActivityLine): SummaryLine
-    {
+    public function createForScalarToScalarComparisonAssertion(
+        string $identifier,
+        string $comparison,
+        ?string $expectedValue,
+        ?string $actualValue
+    ): SummaryLine {
+        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
+
+        $summaryLine = new SummaryLine(
+            $identifier . ' ' . $outcome
+        );
+
+        $summaryLine->addChild($this->createExpectedValueKeyValueLine($expectedValue)->increaseIndent());
+        $summaryLine->addChild($this->createActualValueKeyValueLine($actualValue)->increaseIndent());
+
+        return $summaryLine;
+    }
+
+    private function createForElementalAssertion(
+        ElementIdentifierInterface $identifier,
+        ActivityLine $finalActivityLine
+    ): SummaryLine {
         $summaryLine = new SummaryLine(sprintf(
             '%s %s identified by:',
             $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element',
@@ -97,29 +110,41 @@ class FailedAssertionSummaryLineFactory
         SummaryLine $summaryLine,
         ElementIdentifierInterface $identifier
     ): SummaryLine {
-        $summaryLine->addChild(
-            new KeyValueLine(
-                $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
-                $this->consoleOutputFactory->createComment($identifier->getLocator())
-            )
-        );
+        $summaryLine->addChild($this->createValueKeyValueLine(
+            $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
+            $identifier->getLocator()
+        ));
 
         if ($identifier instanceof AttributeIdentifierInterface) {
-            $summaryLine->addChild(
-                new KeyValueLine(
-                    'attribute name',
-                    $this->consoleOutputFactory->createComment($identifier->getAttributeName())
-                )
-            );
+            $summaryLine->addChild($this->createValueKeyValueLine(
+                'attribute name',
+                $identifier->getAttributeName()
+            ));
         }
 
-        $summaryLine->addChild(
-            new KeyValueLine(
-                'ordinal position',
-                $this->consoleOutputFactory->createComment((string) ($identifier->getOrdinalPosition() ?? 1))
-            )
-        );
+        $summaryLine->addChild($this->createValueKeyValueLine(
+            'ordinal position',
+            (string) ($identifier->getOrdinalPosition() ?? 1)
+        ));
 
         return $summaryLine;
+    }
+
+    private function createExpectedValueKeyValueLine(?string $expectedValue): KeyValueLine
+    {
+        return ($this->createValueKeyValueLine('expected', $expectedValue))->decreaseIndent();
+    }
+
+    private function createActualValueKeyValueLine(?string $actualValue): KeyValueLine
+    {
+        return ($this->createValueKeyValueLine('actual', $actualValue, '  '))->decreaseIndent();
+    }
+
+    private function createValueKeyValueLine(string $key, ?string $value, string $padding = ''): KeyValueLine
+    {
+        return new KeyValueLine(
+            $key,
+            $padding . $this->consoleOutputFactory->createComment((string) $value)
+        );
     }
 }
