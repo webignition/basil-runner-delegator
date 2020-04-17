@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
-use webignition\BasilRunner\Services\ResultPrinter\AssertionSummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\AttributeIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class AssertionSummaryLineFactoryTest extends AbstractBaseTest
+class SummaryLineFactoryTest extends AbstractBaseTest
 {
     /**
-     * @var AssertionSummaryLineFactory
+     * @var SummaryLineFactory
      */
     private $factory;
 
@@ -25,7 +25,7 @@ class AssertionSummaryLineFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new AssertionSummaryLineFactory(
+        $this->factory = new SummaryLineFactory(
             new ConsoleOutputFactory()
         );
     }
