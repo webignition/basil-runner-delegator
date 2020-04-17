@@ -15,7 +15,7 @@ class SummaryLineFactory
 {
     private const EXISTS_OUTCOME = 'does not exist';
     private const NOT_EXISTS_OUTCOME = 'does exist';
-    private const IS_OUTCOME = 'is not equal to expected value';
+    private const IS_OUTCOME = 'is not equal to %s';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
@@ -42,15 +42,43 @@ class SummaryLineFactory
     public function createForElementalToScalarComparisonAssertion(
         ElementIdentifierInterface $identifier,
         string $comparison,
-        ?string $expectedValue,
-        ?string $actualValue
+        string $expectedValue,
+        string $actualValue
     ): SummaryLine {
-        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
+        $outcome = sprintf(
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            'expected value'
+        );
 
         $finalActivityLine = new ActivityLine(' ', $outcome);
 
-        $finalActivityLine->addChild($this->createExpectedValueKeyValueLine((string) $expectedValue));
-        $finalActivityLine->addChild($this->createActualValueKeyValueLine((string) $actualValue));
+        $finalActivityLine->addChild($this->createExpectedValueKeyValueLine($expectedValue));
+        $finalActivityLine->addChild($this->createActualValueKeyValueLine($actualValue));
+
+        return $this->createForElementalAssertion($identifier, $finalActivityLine);
+    }
+
+    public function createForElementalToElementalComparisonAssertion(
+        ElementIdentifierInterface $identifier,
+        ElementIdentifierInterface $valueIdentifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue
+    ): SummaryLine {
+        $outcome = sprintf(
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->createElementIdentifiedByString($valueIdentifier)
+        );
+
+        $finalActivityLine = new ActivityLine(' ', $outcome);
+
+        $identifierLines = $this->createIdentifierPropertiesSummaryLines($valueIdentifier);
+        foreach ($identifierLines as $identifierPropertySummaryLine) {
+            $finalActivityLine->addChild($identifierPropertySummaryLine);
+        }
+
+        $finalActivityLine->addChild($this->createExpectedValueKeyValueLine($expectedValue));
+        $finalActivityLine->addChild($this->createActualValueKeyValueLine($actualValue));
 
         return $this->createForElementalAssertion($identifier, $finalActivityLine);
     }
@@ -58,10 +86,13 @@ class SummaryLineFactory
     public function createForScalarToScalarComparisonAssertion(
         string $identifier,
         string $comparison,
-        ?string $expectedValue,
-        ?string $actualValue
+        string $expectedValue,
+        string $actualValue
     ): SummaryLine {
-        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
+        $outcome = sprintf(
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            'expected value'
+        );
 
         $summaryLine = new SummaryLine(
             $identifier . ' ' . $outcome
@@ -77,13 +108,12 @@ class SummaryLineFactory
         ElementIdentifierInterface $identifier,
         ActivityLine $finalActivityLine
     ): SummaryLine {
-        $summaryLine = new SummaryLine(sprintf(
-            '%s %s identified by:',
-            $identifier instanceof AttributeIdentifierInterface ? 'Attribute' : 'Element',
-            $this->consoleOutputFactory->createComment((string) $identifier)
-        ));
+        $summaryLine = new SummaryLine(ucfirst($this->createElementIdentifiedByString($identifier)));
 
-        $this->applyIdentifierPropertiesSummaryLines($summaryLine, $identifier);
+        $identifierLines = $this->createIdentifierPropertiesSummaryLines($identifier);
+        foreach ($identifierLines as $identifierPropertySummaryLine) {
+            $summaryLine->addChild($identifierPropertySummaryLine->increaseIndent());
+        }
 
         $parent = $identifier->getParentIdentifier();
 
@@ -95,7 +125,10 @@ class SummaryLineFactory
                 ))->decreaseIndent()
             );
 
-            $this->applyIdentifierPropertiesSummaryLines($summaryLine, $parent);
+            $identifierLines = $this->createIdentifierPropertiesSummaryLines($parent);
+            foreach ($identifierLines as $identifierPropertySummaryLine) {
+                $summaryLine->addChild($identifierPropertySummaryLine->increaseIndent());
+            }
 
             $parent = $parent->getParentIdentifier();
         }
@@ -107,45 +140,59 @@ class SummaryLineFactory
         return $summaryLine;
     }
 
-    private function applyIdentifierPropertiesSummaryLines(
-        SummaryLine $summaryLine,
-        ElementIdentifierInterface $identifier
-    ): SummaryLine {
-        $summaryLine->addChild($this->createValueKeyValueLine(
-            $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
-            $identifier->getLocator()
-        ));
-
-        if ($identifier instanceof AttributeIdentifierInterface) {
-            $summaryLine->addChild($this->createValueKeyValueLine(
-                'attribute name',
-                $identifier->getAttributeName()
-            ));
-        }
-
-        $summaryLine->addChild($this->createValueKeyValueLine(
-            'ordinal position',
-            (string) ($identifier->getOrdinalPosition() ?? 1)
-        ));
-
-        return $summaryLine;
+    private function createElementIdentifiedByString(ElementIdentifierInterface $identifier): string
+    {
+        return sprintf(
+            '%s %s identified by:',
+            $identifier instanceof AttributeIdentifierInterface ? 'attribute' : 'element',
+            $this->consoleOutputFactory->createComment((string) $identifier)
+        );
     }
 
-    private function createExpectedValueKeyValueLine(?string $expectedValue): ActivityLine
+    /**
+     * @param ElementIdentifierInterface $identifier
+     *
+     * @return ActivityLine[]
+     */
+    private function createIdentifierPropertiesSummaryLines(ElementIdentifierInterface $identifier): array
+    {
+        $summaryLines = [
+            $this->createValueKeyValueLine(
+                $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
+                $identifier->getLocator()
+            )
+        ];
+
+        if ($identifier instanceof AttributeIdentifierInterface) {
+            $summaryLines[] = $this->createValueKeyValueLine(
+                'attribute name',
+                $identifier->getAttributeName()
+            );
+        }
+
+        $summaryLines[] = $this->createValueKeyValueLine(
+            'ordinal position',
+            (string) ($identifier->getOrdinalPosition() ?? 1)
+        );
+
+        return $summaryLines;
+    }
+
+    private function createExpectedValueKeyValueLine(string $expectedValue): ActivityLine
     {
         return ($this->createValueKeyValueLine('expected', $expectedValue))->decreaseIndent();
     }
 
-    private function createActualValueKeyValueLine(?string $actualValue): ActivityLine
+    private function createActualValueKeyValueLine(string $actualValue): ActivityLine
     {
         return ($this->createValueKeyValueLine('actual', $actualValue, '  '))->decreaseIndent();
     }
 
-    private function createValueKeyValueLine(string $key, ?string $value, string $padding = ''): KeyValueLine
+    private function createValueKeyValueLine(string $key, string $value, string $padding = ''): KeyValueLine
     {
         return new KeyValueLine(
             $key,
-            $padding . $this->consoleOutputFactory->createComment((string) $value)
+            $padding . $this->consoleOutputFactory->createComment($value)
         );
     }
 }

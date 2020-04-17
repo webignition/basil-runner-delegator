@@ -85,8 +85,8 @@ class GenerateRunTest extends TestCase
                         '$"a[id=link-to-assertions]" not-exists'
                     ) . "\n" .
                     '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
-                    '      - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
-                    '      - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '        - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
+                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '      does exist' . "\n"
             ],
         ];

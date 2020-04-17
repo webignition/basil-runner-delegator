@@ -58,14 +58,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".selector"')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.selector')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -79,14 +79,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".selector":2')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.selector')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('2')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -102,18 +102,18 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         )
                     ),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.selector')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'attribute name',
                             $consoleOutputFactory->createComment('attribute_name')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -127,14 +127,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$"//div/h1"')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'XPath expression',
                             $consoleOutputFactory->createComment('//div/h1')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -152,23 +152,23 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".parent" >> $".child"')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.child')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.parent')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -189,32 +189,32 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".grandparent":5 >> $".parent":4 >> $".child":3')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.child')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('3')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.parent')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('4')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.grandparent')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('5')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
                     ]
                 ),
@@ -228,14 +228,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".selector"')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.selector')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         (new ActivityLine(' ', 'does exist'))->decreaseIndent()
                     ]
                 ),
@@ -280,14 +280,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                         $consoleOutputFactory->createComment('$".selector"')
                     )),
                     [
-                        new KeyValueLine(
+                        (new KeyValueLine(
                             'CSS selector',
                             $consoleOutputFactory->createComment('.selector')
-                        ),
-                        new KeyValueLine(
+                        ))->increaseIndent(),
+                        (new KeyValueLine(
                             'ordinal position',
                             $consoleOutputFactory->createComment('1')
-                        ),
+                        ))->increaseIndent(),
                         $this->addChildrenToActivityLine(
                             (new ActivityLine(
                                 ' ',

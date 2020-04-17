@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
+use webignition\BasilModels\Assertion\ComparisonAssertionInterface;
 use webignition\BasilRunner\Model\SummaryLine;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
@@ -35,10 +36,36 @@ class SummaryHandler
 
         $comparison = $assertion->getComparison();
         $identifier = $this->domIdentifierFactory->createFromIdentifierString($identifierString);
+        $valueIdentifier = null;
+
+        if ($assertion instanceof ComparisonAssertionInterface) {
+            $valueString = $assertion->getValue();
+            $valueIdentifier = $this->domIdentifierFactory->createFromIdentifierString($valueString);
+        }
 
         $summaryActivityLine = new SummaryLine('');
 
-        if ($identifier instanceof ElementIdentifierInterface) {
+        if (
+            $identifier instanceof ElementIdentifierInterface &&
+            $valueIdentifier instanceof ElementIdentifierInterface
+        ) {
+            if (in_array($comparison, ['is'])) {
+                $summaryActivityLine =
+                    $this->summaryLineFactory->createForElementalToElementalComparisonAssertion(
+                        $identifier,
+                        $valueIdentifier,
+                        $comparison,
+                        $expectedValue,
+                        $actualValue
+                    );
+            }
+        }
+
+//        if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
+//            // identifier is scalar, value is element
+//        }
+
+        if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
             if (in_array($comparison, ['exists', 'not-exists'])) {
                 $summaryActivityLine = $this->summaryLineFactory->createForElementalExistenceAssertion(
                     $identifier,
@@ -55,7 +82,9 @@ class SummaryHandler
                         $actualValue
                     );
             }
-        } else {
+        }
+
+        if (null === $identifier && null === $valueIdentifier) {
             if (in_array($comparison, ['is'])) {
                 $summaryActivityLine =
                     $this->summaryLineFactory->createForScalarToScalarComparisonAssertion(
