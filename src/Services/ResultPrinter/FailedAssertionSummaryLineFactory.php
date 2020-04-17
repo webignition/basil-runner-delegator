@@ -130,12 +130,12 @@ class FailedAssertionSummaryLineFactory
         return $summaryLine;
     }
 
-    private function createExpectedValueKeyValueLine(?string $expectedValue): KeyValueLine
+    private function createExpectedValueKeyValueLine(?string $expectedValue): ActivityLine
     {
         return ($this->createValueKeyValueLine('expected', $expectedValue))->decreaseIndent();
     }
 
-    private function createActualValueKeyValueLine(?string $actualValue): KeyValueLine
+    private function createActualValueKeyValueLine(?string $actualValue): ActivityLine
     {
         return ($this->createValueKeyValueLine('actual', $actualValue, '  '))->decreaseIndent();
     }
