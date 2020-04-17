@@ -8,16 +8,16 @@ use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertionSummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\AssertionSummaryLineFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\AttributeIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
+class AssertionSummaryLineFactoryTest extends AbstractBaseTest
 {
     /**
-     * @var FailedAssertionSummaryLineFactory
+     * @var AssertionSummaryLineFactory
      */
     private $factory;
 
@@ -25,7 +25,7 @@ class FailedAssertionSummaryLineFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new FailedAssertionSummaryLineFactory(
+        $this->factory = new AssertionSummaryLineFactory(
             new ConsoleOutputFactory()
         );
     }
