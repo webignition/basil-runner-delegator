@@ -38,7 +38,7 @@ class GenerateRunTest extends TestCase
         $cof = new ConsoleOutputFactory();
 
         return [
-            'default' => [
+            'passing test' => [
                 'source' => './tests/Fixtures/basil-integration/Test',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
@@ -63,6 +63,31 @@ class GenerateRunTest extends TestCase
                     '    ' . $cof->createSuccess('✓') . ' click $"a[id=link-to-form]"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n"
+            ],
+            'failing test' => [
+                'source' => './tests/Fixtures/basil-integration/FailingTest',
+                'target' => './tests/build/target',
+                'expectedOutputBody' =>
+                    $cof->createTestPath('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') .
+                    ' $page.title is "Test fixture web server default document"' . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"h1" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:') .
+                    ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') .
+                    ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('verify links are present') .
+                    "\n" .
+                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
+                        '$"a[id=link-to-assertions]" not-exists'
+                    ) . "\n" .
+                    '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
+                    '      - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
+                    '      - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '      does exist' . "\n"
             ],
         ];
     }
