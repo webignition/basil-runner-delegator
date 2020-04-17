@@ -47,9 +47,9 @@ class ResultPrinter extends Printer implements TestListener
     private $isFirstTest;
 
     /**
-     * @var FailedAssertionSummaryLineFactory
+     * @var AssertionSummaryLineFactory
      */
-    private $failedAssertionSummaryLineFactory;
+    private $assertionSummaryLineFactory;
 
     /**
      * @var DomIdentifierFactory
@@ -68,7 +68,7 @@ class ResultPrinter extends Printer implements TestListener
         $this->isFirstTest = true;
         $this->consoleOutputFactory = $consoleOutputFactory;
         $this->activityLineFactory = new ActivityLineFactory($consoleOutputFactory);
-        $this->failedAssertionSummaryLineFactory = new FailedAssertionSummaryLineFactory($consoleOutputFactory);
+        $this->assertionSummaryLineFactory = new AssertionSummaryLineFactory($consoleOutputFactory);
         $this->domIdentifierFactory = DomIdentifierFactory::createFactory();
     }
 
@@ -199,7 +199,7 @@ class ResultPrinter extends Printer implements TestListener
                     if ($identifier instanceof ElementIdentifierInterface) {
                         if (in_array($comparison, ['exists', 'not-exists'])) {
                             $summaryActivityLine =
-                                $this->failedAssertionSummaryLineFactory->createForElementalExistenceAssertion(
+                                $this->assertionSummaryLineFactory->createForElementalExistenceAssertion(
                                     $identifier,
                                     $comparison
                                 );
@@ -207,7 +207,7 @@ class ResultPrinter extends Printer implements TestListener
 
                         if (in_array($comparison, ['is'])) {
                             $summaryActivityLine =
-                                $this->failedAssertionSummaryLineFactory->createForElementalToScalarComparisonAssertion(
+                                $this->assertionSummaryLineFactory->createForElementalToScalarComparisonAssertion(
                                     $identifier,
                                     $comparison,
                                     $test->getExpectedValue(),
@@ -217,7 +217,7 @@ class ResultPrinter extends Printer implements TestListener
                     } else {
                         if (in_array($comparison, ['is'])) {
                             $summaryActivityLine =
-                                $this->failedAssertionSummaryLineFactory->createForScalarToScalarComparisonAssertion(
+                                $this->assertionSummaryLineFactory->createForScalarToScalarComparisonAssertion(
                                     $identifierString,
                                     $comparison,
                                     $test->getExpectedValue(),
