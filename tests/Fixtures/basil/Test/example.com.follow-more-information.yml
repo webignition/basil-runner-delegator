@@ -3,8 +3,10 @@ config:
   url: https://example.com/
 
 "follow more information":
-  actions:
-    - click $"a"
+#  actions:
+#    - click $"a"
 
   assertions:
-    - $page.url is "https://www.iana.org/domains/reserved"
+    - $page.url is "foo"
+    - $"a" is "More foo ..."
+#    - $page.url is "https://www.iana.org/domains/reserved"

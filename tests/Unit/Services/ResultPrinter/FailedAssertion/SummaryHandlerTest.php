@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\SummaryLine;
-use webignition\BasilRunner\Services\ResultPrinter\AssertionSummaryLineFactory;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertionSummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
+class SummaryHandlerTest extends AbstractBaseTest
 {
     /**
      * @dataProvider handleDataProvider
@@ -26,7 +26,7 @@ class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
         string $actualValue,
         SummaryLine $expectedSummaryLine
     ) {
-        $handler = new FailedAssertionSummaryHandler(
+        $handler = new SummaryHandler(
             DomIdentifierFactory::createFactory(),
             $assertionSummaryLineFactoryCreator()
         );
@@ -45,7 +45,7 @@ class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
             'exists assertion, elemental identifier' => [
                 'assertion' => $assertionParser->parse('$".selector" exists'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(AssertionSummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryLineFactory::class);
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
@@ -68,7 +68,7 @@ class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
             'not-exists assertion, elemental identifier' => [
                 'assertion' => $assertionParser->parse('$".selector" not-exists'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(AssertionSummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryLineFactory::class);
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
@@ -91,7 +91,7 @@ class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
             'is assertion, elemental identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$".selector" is "value"'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(AssertionSummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryLineFactory::class);
                     $factory
                         ->shouldReceive('createForElementalToScalarComparisonAssertion')
                         ->withArgs(function (
@@ -121,7 +121,7 @@ class FailedAssertionSummaryHandlerTest extends AbstractBaseTest
             'is assertion, scalar identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$page.title is "Page Title"'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(AssertionSummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryLineFactory::class);
                     $factory
                         ->shouldReceive('createForScalarToScalarComparisonAssertion')
                         ->withArgs(function (

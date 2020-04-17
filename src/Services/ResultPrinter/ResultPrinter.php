@@ -17,7 +17,8 @@ use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\DomElementIdentifier\ElementIdentifierInterface;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 
 class ResultPrinter extends Printer implements TestListener
 {
@@ -47,14 +48,9 @@ class ResultPrinter extends Printer implements TestListener
     private $isFirstTest;
 
     /**
-     * @var AssertionSummaryLineFactory
+     * @var SummaryHandler
      */
-    private $assertionSummaryLineFactory;
-
-    /**
-     * @var DomIdentifierFactory
-     */
-    private $domIdentifierFactory;
+    private $failedAssertionSummaryHandler;
 
     public function __construct($out = null)
     {
@@ -68,8 +64,10 @@ class ResultPrinter extends Printer implements TestListener
         $this->isFirstTest = true;
         $this->consoleOutputFactory = $consoleOutputFactory;
         $this->activityLineFactory = new ActivityLineFactory($consoleOutputFactory);
-        $this->assertionSummaryLineFactory = new AssertionSummaryLineFactory($consoleOutputFactory);
-        $this->domIdentifierFactory = DomIdentifierFactory::createFactory();
+        $this->failedAssertionSummaryHandler = new SummaryHandler(
+            DomIdentifierFactory::createFactory(),
+            new SummaryLineFactory($consoleOutputFactory)
+        );
     }
 
     /**
@@ -190,41 +188,11 @@ class ResultPrinter extends Printer implements TestListener
                 $summaryActivityLine = null;
 
                 if ($failedStatement instanceof AssertionInterface) {
-                    $assertion = $failedStatement;
-                    $identifierString = $assertion->getIdentifier();
-
-                    $comparison = $assertion->getComparison();
-                    $identifier = $this->domIdentifierFactory->createFromIdentifierString($identifierString);
-
-                    if ($identifier instanceof ElementIdentifierInterface) {
-                        if (in_array($comparison, ['exists', 'not-exists'])) {
-                            $summaryActivityLine =
-                                $this->assertionSummaryLineFactory->createForElementalExistenceAssertion(
-                                    $identifier,
-                                    $comparison
-                                );
-                        }
-
-                        if (in_array($comparison, ['is'])) {
-                            $summaryActivityLine =
-                                $this->assertionSummaryLineFactory->createForElementalToScalarComparisonAssertion(
-                                    $identifier,
-                                    $comparison,
-                                    $test->getExpectedValue(),
-                                    $test->getExaminedValue()
-                                );
-                        }
-                    } else {
-                        if (in_array($comparison, ['is'])) {
-                            $summaryActivityLine =
-                                $this->assertionSummaryLineFactory->createForScalarToScalarComparisonAssertion(
-                                    $identifierString,
-                                    $comparison,
-                                    $test->getExpectedValue(),
-                                    $test->getExaminedValue()
-                                );
-                        }
-                    }
+                    $summaryActivityLine = $this->failedAssertionSummaryHandler->handle(
+                        $failedStatement,
+                        (string) $test->getExpectedValue(),
+                        (string) $test->getExaminedValue()
+                    );
                 }
 
                 if ($summaryActivityLine instanceof ActivityLine) {

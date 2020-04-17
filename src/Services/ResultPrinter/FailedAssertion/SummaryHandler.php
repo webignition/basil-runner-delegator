@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\ResultPrinter;
+namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilRunner\Model\SummaryLine;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class FailedAssertionSummaryHandler
+class SummaryHandler
 {
     /**
-     * @var AssertionSummaryLineFactory
+     * @var SummaryLineFactory
      */
-    private $assertionSummaryLineFactory;
+    private $summaryLineFactory;
 
     /**
      * @var DomIdentifierFactory
@@ -23,9 +23,9 @@ class FailedAssertionSummaryHandler
 
     public function __construct(
         DomIdentifierFactory $domIdentifierFactory,
-        AssertionSummaryLineFactory $assertionSummaryLineFactory
+        SummaryLineFactory $summaryLineFactory
     ) {
-        $this->assertionSummaryLineFactory = $assertionSummaryLineFactory;
+        $this->summaryLineFactory = $summaryLineFactory;
         $this->domIdentifierFactory = $domIdentifierFactory;
     }
 
@@ -40,7 +40,7 @@ class FailedAssertionSummaryHandler
 
         if ($identifier instanceof ElementIdentifierInterface) {
             if (in_array($comparison, ['exists', 'not-exists'])) {
-                $summaryActivityLine = $this->assertionSummaryLineFactory->createForElementalExistenceAssertion(
+                $summaryActivityLine = $this->summaryLineFactory->createForElementalExistenceAssertion(
                     $identifier,
                     $comparison
                 );
@@ -48,7 +48,7 @@ class FailedAssertionSummaryHandler
 
             if (in_array($comparison, ['is'])) {
                 $summaryActivityLine =
-                    $this->assertionSummaryLineFactory->createForElementalToScalarComparisonAssertion(
+                    $this->summaryLineFactory->createForElementalToScalarComparisonAssertion(
                         $identifier,
                         $comparison,
                         $expectedValue,
@@ -58,7 +58,7 @@ class FailedAssertionSummaryHandler
         } else {
             if (in_array($comparison, ['is'])) {
                 $summaryActivityLine =
-                    $this->assertionSummaryLineFactory->createForScalarToScalarComparisonAssertion(
+                    $this->summaryLineFactory->createForScalarToScalarComparisonAssertion(
                         $identifierString,
                         $comparison,
                         $expectedValue,

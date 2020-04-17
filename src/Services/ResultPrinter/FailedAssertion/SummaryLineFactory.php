@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\ResultPrinter;
+namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Model\KeyValueLine;
 use webignition\BasilRunner\Model\SummaryLine;
+use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\DomElementIdentifier\AttributeIdentifierInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class AssertionSummaryLineFactory
+class SummaryLineFactory
 {
     private const EXISTS_OUTCOME = 'does not exist';
     private const NOT_EXISTS_OUTCOME = 'does exist';
