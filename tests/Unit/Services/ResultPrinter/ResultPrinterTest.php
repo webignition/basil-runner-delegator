@@ -23,6 +23,8 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $stepNames
      * @param int[] $endStatuses
      * @param array<int, StatementInterface[]> $handledStatements
+     * @param array<mixed> $expectedValues
+     * @param array<mixed> $examinedValues
      * @param string $expectedOutput
      */
     public function testPrinterOutput(
@@ -30,13 +32,17 @@ class ResultPrinterTest extends AbstractBaseTest
         array $stepNames,
         array $endStatuses,
         array $handledStatements,
+        array $expectedValues,
+        array $examinedValues,
         string $expectedOutput
     ) {
         $tests = $this->createBasilTestCases(
             $testPaths,
             $stepNames,
             $endStatuses,
-            $handledStatements
+            $handledStatements,
+            $expectedValues,
+            $examinedValues
         );
 
         $outResource = fopen('php://memory', 'w+');
@@ -66,27 +72,27 @@ class ResultPrinterTest extends AbstractBaseTest
         $cof = new ConsoleOutputFactory();
 
         return [
-            'single test' => [
-                'testPaths' => [
-                    $root . '/test.yml',
-                ],
-                'stepNames' => [
-                    'step one',
-                ],
-                'endStatuses' => [
-                    BaseTestRunner::STATUS_PASSED,
-                ],
-                'handledStatements' => [
-                    [
-                        $assertionParser->parse('$page.url is "http://example.com/"'),
-                    ],
-                ],
-                'expectedOutput' =>
-                $cof->createTestPath('test.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
-                ,
-            ],
+//            'single test' => [
+//                'testPaths' => [
+//                    $root . '/test.yml',
+//                ],
+//                'stepNames' => [
+//                    'step one',
+//                ],
+//                'endStatuses' => [
+//                    BaseTestRunner::STATUS_PASSED,
+//                ],
+//                'handledStatements' => [
+//                    [
+//                        $assertionParser->parse('$page.url is "http://example.com/"'),
+//                    ],
+//                ],
+//                'expectedOutput' =>
+//                $cof->createTestPath('test.yml') . "\n" .
+//                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
+//                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
+//                ,
+//            ],
             'multiple tests' => [
                 'testPaths' => [
                     $root . '/test1.yml',
@@ -124,6 +130,18 @@ class ResultPrinterTest extends AbstractBaseTest
                         $assertionParser->parse('$page.url is "http://example.com/new/"'),
                     ],
                 ],
+                'expectedValues' => [
+                    null,
+                    null,
+                    null,
+                    'http://example.com/new/',
+                ],
+                'examinedValues' => [
+                    null,
+                    null,
+                    null,
+                    'http://example.com/',
+                ],
                 'expectedOutput' =>
                     $cof->createTestPath('test1.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test one step one') . "\n" .
@@ -143,7 +161,10 @@ class ResultPrinterTest extends AbstractBaseTest
                     '    ' . $cof->createSuccess('✓') . ' click $".new"' . "\n" .
                     '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
                         '$page.url is "http://example.com/new/"'
-                    ) . "\n"
+                    ) . "\n" .
+                    '    * $page.url is not equal to expected value' . "\n" .
+                    '      - expected: ' . $cof->createComment('http://example.com/new/') . "\n" .
+                    '      - actual:   ' . $cof->createComment('http://example.com/') . "\n"
                 ,
             ],
         ];
@@ -166,6 +187,8 @@ class ResultPrinterTest extends AbstractBaseTest
      * @param string[] $stepNames
      * @param int[] $endStatuses
      * @param array<int, StatementInterface[]> $handledStatements
+     * @param array<mixed> $expectedValues
+     * @param array<mixed> $examinedValues
      *
      * @return BasilTestCaseInterface[]
      */
@@ -173,7 +196,9 @@ class ResultPrinterTest extends AbstractBaseTest
         array $testPaths,
         array $stepNames,
         array $endStatuses,
-        array $handledStatements
+        array $handledStatements,
+        array $expectedValues,
+        array $examinedValues
     ): array {
         $testCases = [];
 
@@ -194,6 +219,14 @@ class ResultPrinterTest extends AbstractBaseTest
             $basilTestCase
                 ->shouldReceive('getHandledStatements')
                 ->andReturn($handledStatements[$testIndex]);
+
+            $basilTestCase
+                ->shouldReceive('getExpectedValue')
+                ->andReturn($expectedValues[$testIndex]);
+
+            $basilTestCase
+                ->shouldReceive('getExaminedValue')
+                ->andReturn($examinedValues[$testIndex]);
 
             $testCases[] = $basilTestCase;
         }
