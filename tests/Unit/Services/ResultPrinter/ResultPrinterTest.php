@@ -72,27 +72,33 @@ class ResultPrinterTest extends AbstractBaseTest
         $cof = new ConsoleOutputFactory();
 
         return [
-//            'single test' => [
-//                'testPaths' => [
-//                    $root . '/test.yml',
-//                ],
-//                'stepNames' => [
-//                    'step one',
-//                ],
-//                'endStatuses' => [
-//                    BaseTestRunner::STATUS_PASSED,
-//                ],
-//                'handledStatements' => [
-//                    [
-//                        $assertionParser->parse('$page.url is "http://example.com/"'),
-//                    ],
-//                ],
-//                'expectedOutput' =>
-//                $cof->createTestPath('test.yml') . "\n" .
-//                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
-//                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
-//                ,
-//            ],
+            'single test' => [
+                'testPaths' => [
+                    $root . '/test.yml',
+                ],
+                'stepNames' => [
+                    'step one',
+                ],
+                'endStatuses' => [
+                    BaseTestRunner::STATUS_PASSED,
+                ],
+                'handledStatements' => [
+                    [
+                        $assertionParser->parse('$page.url is "http://example.com/"'),
+                    ],
+                ],
+                'expectedValues' => [
+                    null,
+                ],
+                'examinedValues' => [
+                    null,
+                ],
+                'expectedOutput' =>
+                $cof->createTestPath('test.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
+                ,
+            ],
             'multiple tests' => [
                 'testPaths' => [
                     $root . '/test1.yml',
