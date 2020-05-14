@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssert
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilParser\AssertionParser;
-use webignition\BasilRunner\Model\SummaryLine;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -24,7 +23,7 @@ class SummaryHandlerTest extends AbstractBaseTest
         callable $assertionSummaryLineFactoryCreator,
         string $expectedValue,
         string $actualValue,
-        SummaryLine $expectedSummaryLine
+        string $expectedSummaryLine
     ) {
         $handler = new SummaryHandler(
             DomIdentifierFactory::createFactory(),
@@ -57,13 +56,13 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => '',
                 'actualValue' => '',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'not-exists assertion, elemental identifier' => [
                 'assertion' => $assertionParser->parse('$".selector" not-exists'),
@@ -80,13 +79,13 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => '',
                 'actualValue' => '',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'is assertion, elemental identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$".selector" is "value"'),
@@ -110,13 +109,13 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'expected value',
                 'actualValue' => '$".selector" is "value" actual value',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'is assertion, scalar identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$page.title is "Page Title"'),
@@ -137,13 +136,13 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'Page Title',
                 'actualValue' => 'Different Page Title',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
         ];
     }
