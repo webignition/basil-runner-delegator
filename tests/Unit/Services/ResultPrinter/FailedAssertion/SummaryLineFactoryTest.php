@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
 
-use webignition\BasilRunner\Model\ActivityLine;
-use webignition\BasilRunner\Model\KeyValueLine;
-use webignition\BasilRunner\Model\SummaryLine;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -36,7 +33,7 @@ class SummaryLineFactoryTest extends AbstractBaseTest
     public function testCreateForElementalExistenceAssertion(
         ElementIdentifierInterface $elementIdentifier,
         string $comparison,
-        SummaryLine $expectedSummaryLine
+        string $expectedSummaryLine
     ) {
         $this->assertEquals(
             $expectedSummaryLine,
@@ -46,98 +43,50 @@ class SummaryLineFactoryTest extends AbstractBaseTest
 
     public function createForElementalExistenceAssertionDataProvider(): array
     {
-        $consoleOutputFactory = new ConsoleOutputFactory();
+        $cof = new ConsoleOutputFactory();
+        $grandparentParentChildIdentifier = '$".grandparent":5 >> $".parent":4 >> $".child":3';
 
         return [
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".selector"')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.selector')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived non-descendant element exists assertion, CSS selector, ordinal position 2' => [
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".selector":2')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.selector')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('2')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$".selector":2') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('2') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived non-descendant attribute exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new AttributeIdentifier('.selector', 'attribute_name'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(
-                        sprintf(
-                            'Attribute %s identified by:',
-                            $consoleOutputFactory->createComment('$".selector".attribute_name')
-                        )
-                    ),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.selector')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'attribute name',
-                            $consoleOutputFactory->createComment('attribute_name')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Attribute ' . $cof->createComment('$".selector".attribute_name') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - attribute name: ' . $cof->createComment('attribute_name') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived non-descendant element exists assertion, XPath expression, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$"//div/h1"')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'XPath expression',
-                            $consoleOutputFactory->createComment('//div/h1')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$"//div/h1"') . ' identified by:' . "\n" .
+                    '    - XPath expression: ' . $cof->createComment('//div/h1') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived descendant element exists assertion (parent child)' => [
                 'elementIdentifier' =>
@@ -146,32 +95,15 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                             new ElementIdentifier('.parent')
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".parent" >> $".child"')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.child')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.parent')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$".parent" >> $".child"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.child') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.parent') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived descendant element exists assertion (grandparent parent child)' => [
                 'elementIdentifier' =>
@@ -183,62 +115,28 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                                 )
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".grandparent":5 >> $".parent":4 >> $".child":3')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.child')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('3')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.parent')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('4')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'with parent:'))->decreaseIndent(),
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.grandparent')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('5')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does not exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment($grandparentParentChildIdentifier) . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.child') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('3') . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.parent') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('4') . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.grandparent') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('5') . "\n" .
+                    '  does not exist'
+                ,
             ],
             'non-derived non-descendant element not-exists assertion' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'not-exists',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".selector"')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.selector')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        (new ActivityLine(' ', 'does exist'))->decreaseIndent()
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  does exist'
+                ,
             ],
         ];
     }
@@ -251,7 +149,7 @@ class SummaryLineFactoryTest extends AbstractBaseTest
         string $comparison,
         string $expectedValue,
         string $actualValue,
-        SummaryLine $expectedSummaryLine
+        string $expectedSummaryLine
     ) {
         $this->assertEquals(
             $expectedSummaryLine,
@@ -274,38 +172,14 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine(sprintf(
-                        'Element %s identified by:',
-                        $consoleOutputFactory->createComment('$".selector"')
-                    )),
-                    [
-                        (new KeyValueLine(
-                            'CSS selector',
-                            $consoleOutputFactory->createComment('.selector')
-                        ))->increaseIndent(),
-                        (new KeyValueLine(
-                            'ordinal position',
-                            $consoleOutputFactory->createComment('1')
-                        ))->increaseIndent(),
-                        $this->addChildrenToActivityLine(
-                            (new ActivityLine(
-                                ' ',
-                                'is not equal to expected value'
-                            ))->decreaseIndent(),
-                            [
-                                (new KeyValueLine(
-                                    'expected',
-                                    $consoleOutputFactory->createComment('expected')
-                                ))->decreaseIndent(),
-                                (new KeyValueLine(
-                                    'actual',
-                                    '  ' . $consoleOutputFactory->createComment('actual')
-                                ))->decreaseIndent(),
-                            ]
-                        )
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* Element ' . $consoleOutputFactory->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
+                    '  is not equal to expected value' . "\n" .
+                    '    - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '    - actual:   ' . $consoleOutputFactory->createComment('actual')
+                ,
             ],
         ];
     }
@@ -318,7 +192,7 @@ class SummaryLineFactoryTest extends AbstractBaseTest
         string $comparison,
         string $expectedValue,
         string $actualValue,
-        SummaryLine $expectedSummaryLine
+        string $expectedSummaryLine
     ) {
         $this->assertEquals(
             $expectedSummaryLine,
@@ -341,35 +215,61 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
-                'expectedSummaryLine' => $this->addChildrenToActivityLine(
-                    new SummaryLine('$page.title is not equal to expected value'),
-                    [
-                        new KeyValueLine(
-                            'expected',
-                            $consoleOutputFactory->createComment('expected')
-                        ),
-                        new KeyValueLine(
-                            'actual',
-                            '  ' . $consoleOutputFactory->createComment('actual')
-                        ),
-                    ]
-                ),
+                'expectedSummaryLine' =>
+                    '* $page.title is not equal to expected value' . "\n" .
+                    '    - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '    - actual:   ' . $consoleOutputFactory->createComment('actual')
+                ,
             ],
         ];
     }
 
     /**
-     * @param ActivityLine $summaryLine
-     * @param ActivityLine[] $children
-     *
-     * @return ActivityLine
+     * @dataProvider createForElementalToElementalComparisonAssertionDataProvider
      */
-    private function addChildrenToActivityLine(ActivityLine $summaryLine, array $children): ActivityLine
-    {
-        foreach ($children as $child) {
-            $summaryLine->addChild($child);
-        }
+    public function testCreateForElementalToElementalComparisonAssertion(
+        ElementIdentifierInterface $identifier,
+        ElementIdentifierInterface $valueIdentifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue,
+        string $expectedSummaryLine
+    ) {
+        $this->assertEquals(
+            $expectedSummaryLine,
+            $this->factory->createForElementalToElementalComparisonAssertion(
+                $identifier,
+                $valueIdentifier,
+                $comparison,
+                $expectedValue,
+                $actualValue
+            )
+        );
+    }
 
-        return $summaryLine;
+    public function createForElementalToElementalComparisonAssertionDataProvider(): array
+    {
+        $cof = new ConsoleOutputFactory();
+
+        return [
+            'is' => [
+                'identifier' => new ElementIdentifier('.identifier'),
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummaryLine' =>
+                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  is not equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  Values:' . "\n" .
+                    '    - expected: ' . $cof->createComment('expected') . "\n" .
+                    '    - actual:   ' . $cof->createComment('actual')
+                ,
+            ],
+        ];
     }
 }
