@@ -8,7 +8,6 @@ use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\Assertion\DerivedAssertionInterface;
 use webignition\BasilModels\StatementInterface;
-use webignition\BasilRunner\Model\ActivityLine;
 
 class ActivityLineFactory
 {
@@ -29,7 +28,7 @@ class ActivityLineFactory
         $this->consoleOutputFactory = $consoleOutputFactory;
     }
 
-    public function createStepNameLine(BasilTestCaseInterface $test): ActivityLine
+    public function createStepNameLine(BasilTestCaseInterface $test): string
     {
         $testEndStatus = $test->getStatus();
 
@@ -44,55 +43,53 @@ class ActivityLineFactory
             ? $this->consoleOutputFactory->createSuccess($content)
             : $this->consoleOutputFactory->createFailure($content);
 
-        return new ActivityLine($styledIcon, $styledContent);
+        return $styledIcon . ' ' . $styledContent;
     }
 
-    public function createCompletedStatementLine(StatementInterface $statement): ActivityLine
+    public function createCompletedStatementLine(StatementInterface $statement): string
     {
-        return $this->createStatementLine(
+        return (string) $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement): ActivityLine {
-                return new ActivityLine(
-                    $this->consoleOutputFactory->createSuccess($this->icons[BaseTestRunner::STATUS_PASSED]),
+            function (StatementInterface $statement): string {
+                return
+                    $this->consoleOutputFactory->createSuccess($this->icons[BaseTestRunner::STATUS_PASSED]) . ' ' .
                     $statement->getSource()
-                );
+                ;
             }
         );
     }
 
-    public function createFailedStatementLine(StatementInterface $statement): ActivityLine
+    public function createFailedStatementLine(StatementInterface $statement): string
     {
-        return $this->createStatementLine(
+        return (string) $this->createStatementLine(
             $statement,
-            function (StatementInterface $statement): ActivityLine {
-                return new ActivityLine(
-                    $this->consoleOutputFactory->createFailure($this->icons[BaseTestRunner::STATUS_FAILURE]),
+            function (StatementInterface $statement): string {
+                return
+                    $this->consoleOutputFactory->createFailure($this->icons[BaseTestRunner::STATUS_FAILURE]) . ' ' .
                     $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
-                );
+                ;
             }
         );
     }
 
-    private function createStatementLine(StatementInterface $statement, callable $activityLineCreator): ActivityLine
+    private function createStatementLine(StatementInterface $statement, callable $activityLineCreator): string
     {
         $sourceStatementActivityLine = null;
 
         if ($statement instanceof DerivedAssertionInterface) {
             $sourceStatement = $statement->getSourceStatement();
 
-            $sourceStatementActivityLine = new ActivityLine(
-                $this->consoleOutputFactory->createComment('> derived from:'),
-                $sourceStatement->getSource()
-            );
+            $sourceStatementActivityLine =
+                $this->consoleOutputFactory->createComment('> derived from:') . ' ' . $sourceStatement->getSource();
         }
 
-        /* @var ActivityLine $statementActivityLine */
+        /* @var string $statementActivityLine */
         $statementActivityLine = $activityLineCreator($statement);
 
-        if ($sourceStatementActivityLine instanceof ActivityLine) {
-            $statementActivityLine->addChild($sourceStatementActivityLine);
+        if (null !== $sourceStatementActivityLine) {
+            $statementActivityLine .= "\n" . '  ' . $sourceStatementActivityLine;
         }
 
-        return $statementActivityLine;
+        return (string) $statementActivityLine;
     }
 }

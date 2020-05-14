@@ -9,7 +9,6 @@ use webignition\BasilModels\Assertion\DerivedElementExistsAssertion;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
-use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Services\ResultPrinter\ActivityLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -33,7 +32,7 @@ class ActivityLineFactoryTest extends AbstractBaseTest
     /**
      * @dataProvider createStepNameLineDataProvider
      */
-    public function testCreateStepNameLine(BasilTestCaseInterface $test, ActivityLine $expectedActivityLine)
+    public function testCreateStepNameLine(BasilTestCaseInterface $test, string $expectedActivityLine)
     {
         $this->assertEquals($expectedActivityLine, $this->factory->createStepNameLine($test));
     }
@@ -45,24 +44,24 @@ class ActivityLineFactoryTest extends AbstractBaseTest
         return [
             'passed' => [
                 'test' => $this->createTest(0, 'passed step name'),
-                'expectedActivityLine' => new ActivityLine(
-                    $consoleOutputFactory->createSuccess('✓'),
+                'expectedActivityLine' =>
+                    $consoleOutputFactory->createSuccess('✓') . ' ' .
                     $consoleOutputFactory->createSuccess('passed step name')
-                ),
+                ,
             ],
             'failed' => [
                 'test' => $this->createTest(3, 'failed step name'),
-                'expectedActivityLine' => new ActivityLine(
-                    $consoleOutputFactory->createFailure('x'),
+                'expectedActivityLine' =>
+                    $consoleOutputFactory->createFailure('x') . ' ' .
                     $consoleOutputFactory->createFailure('failed step name')
-                ),
+                ,
             ],
             'unknown' => [
                 'test' => $this->createTest(1, 'unknown step name'),
-                'expectedActivityLine' => new ActivityLine(
-                    $consoleOutputFactory->createFailure('?'),
+                'expectedActivityLine' =>
+                    $consoleOutputFactory->createFailure('?') . ' ' .
                     $consoleOutputFactory->createFailure('unknown step name')
-                ),
+                ,
             ],
         ];
     }
@@ -70,7 +69,7 @@ class ActivityLineFactoryTest extends AbstractBaseTest
     /**
      * @dataProvider createCompletedStatementLineDataProvider
      */
-    public function testCreateCompletedStatementLine(StatementInterface $statement, ActivityLine $expectedActivityLine)
+    public function testCreateCompletedStatementLine(StatementInterface $statement, string $expectedActivityLine)
     {
         $this->assertEquals($expectedActivityLine, $this->factory->createCompletedStatementLine($statement));
     }
@@ -90,24 +89,18 @@ class ActivityLineFactoryTest extends AbstractBaseTest
         return [
             'exists assertion' => [
                 'statement' => $assertionParser->parse('$".selector" exists'),
-                'expectedActivityLine' => new ActivityLine($prefix, $existsAssertion->getSource()),
+                'expectedActivityLine' => $prefix . ' ' . $existsAssertion->getSource(),
             ],
             'click action assertion' => [
                 'statement' => $clickAction,
-                'expectedActivityLine' => new ActivityLine($prefix, $clickAction->getSource()),
+                'expectedActivityLine' => $prefix . ' ' . $clickAction->getSource(),
             ],
             'derived exists assertion' => [
                 'statement' => new DerivedElementExistsAssertion($clickAction, '$".selector"'),
-                'expectedActivityLine' => $this->addChildToActivityLine(
-                    new ActivityLine(
-                        $prefix,
-                        $existsAssertion->getSource()
-                    ),
-                    new ActivityLine(
-                        $consoleOutputFactory->createComment('> derived from:'),
-                        $clickAction->getSource()
-                    )
-                ),
+                'expectedActivityLine' =>
+                    $prefix . ' ' . $existsAssertion->getSource() . "\n" .
+                    '  ' . $consoleOutputFactory->createComment('> derived from:') . ' ' . $clickAction->getSource()
+                ,
             ],
         ];
     }
@@ -115,7 +108,7 @@ class ActivityLineFactoryTest extends AbstractBaseTest
     /**
      * @dataProvider createFailedStatementLineDataProvider
      */
-    public function testCreateFailedStatementLine(StatementInterface $statement, ActivityLine $expectedActivityLine)
+    public function testCreateFailedStatementLine(StatementInterface $statement, string $expectedActivityLine)
     {
         $this->assertEquals($expectedActivityLine, $this->factory->createFailedStatementLine($statement));
     }
@@ -132,41 +125,31 @@ class ActivityLineFactoryTest extends AbstractBaseTest
 
         $prefix = $consoleOutputFactory->createFailure('x');
 
-//        $contentStyle = new Style([
-//            Style::FOREGROUND_COLOUR => Style::COLOUR_WHITE,
-//            Style::BACKGROUND_COLOUR => Style::COLOUR_RED,
-//        ]);
-
         return [
             'exists assertion' => [
                 'statement' => $assertionParser->parse('$".selector" exists'),
-                'expectedActivityLine' => new ActivityLine(
-                    $prefix,
+                'expectedActivityLine' =>
+                    $prefix . ' ' .
                     $consoleOutputFactory->createHighlightedFailure($existsAssertion->getSource())
-                ),
+                ,
             ],
             'click action assertion' => [
                 'statement' => $clickAction,
-                'expectedActivityLine' => new ActivityLine(
-                    $prefix,
+                'expectedActivityLine' =>
+                    $prefix . ' ' .
                     $consoleOutputFactory->createHighlightedFailure($clickAction->getSource())
-                ),
+                ,
             ],
             'derived exists assertion' => [
                 'statement' => new DerivedElementExistsAssertion(
                     $clickAction,
                     '$".selector"'
                 ),
-                'expectedActivityLine' => $this->addChildToActivityLine(
-                    new ActivityLine(
-                        $prefix,
-                        $consoleOutputFactory->createHighlightedFailure($existsAssertion->getSource())
-                    ),
-                    new ActivityLine(
-                        $consoleOutputFactory->createComment('> derived from:'),
-                        $clickAction->getSource()
-                    )
-                ),
+                'expectedActivityLine' =>
+                    $prefix . ' ' .
+                    $consoleOutputFactory->createHighlightedFailure($existsAssertion->getSource()) . "\n" .
+                    '  ' . $consoleOutputFactory->createComment('> derived from:') . ' ' . $clickAction->getSource()
+                ,
             ],
         ];
     }
@@ -183,12 +166,5 @@ class ActivityLineFactoryTest extends AbstractBaseTest
             ->andReturn($basilStepName);
 
         return $test;
-    }
-
-    private function addChildToActivityLine(ActivityLine $activityLine, ActivityLine $child): ActivityLine
-    {
-        $activityLine->addChild($child);
-
-        return $activityLine;
     }
 }
