@@ -9,65 +9,52 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
-use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
-use webignition\BasilModels\Assertion\AssertionInterface;
-use webignition\BasilModels\StatementInterface;
+use webignition\BasilRunner\Model\TestOutput\Step;
+use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\StepRenderer\StatementLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\StepRenderer\StepRenderer;
 
 class ResultPrinter extends Printer implements TestListener
 {
-    private const INDENT = '  ';
-
-    /**
-     * @var ConsoleOutputFactory
-     */
-    private $consoleOutputFactory;
-
-    /**
-     * @var ActivityLineFactory
-     */
-    private $activityLineFactory;
-
     /**
      * @var string
      */
     private $projectRootPath = '';
 
     /**
-     * @var string
+     * @var StepRenderer
      */
-    private $currentTestPath = '';
+    private $stepRenderer;
 
     /**
-     * @var bool
+     * @var TestOutput
      */
-    private $isFirstTest;
+    private $currentTestOutput;
 
-    /**
-     * @var SummaryHandler
-     */
-    private $failedAssertionSummaryHandler;
+    private $testRenderer;
 
     public function __construct($out = null)
     {
         parent::__construct($out);
 
-        $projectRootPath = (ProjectRootPathProvider::create())->get();
+        $this->projectRootPath = (ProjectRootPathProvider::create())->get();
 
         $consoleOutputFactory = new ConsoleOutputFactory();
 
-        $this->projectRootPath = $projectRootPath;
-        $this->isFirstTest = true;
-        $this->consoleOutputFactory = $consoleOutputFactory;
-        $this->activityLineFactory = new ActivityLineFactory($consoleOutputFactory);
-        $this->failedAssertionSummaryHandler = new SummaryHandler(
-            DomIdentifierFactory::createFactory(),
-            new SummaryLineFactory($consoleOutputFactory)
+        $this->testRenderer = new TestRenderer($consoleOutputFactory);
+        $this->stepRenderer = new StepRenderer(
+            $consoleOutputFactory,
+            new StatementLineFactory($consoleOutputFactory),
+            new SummaryHandler(
+                DomIdentifierFactory::createFactory(),
+                new SummaryLineFactory($consoleOutputFactory)
+            )
         );
     }
 
@@ -143,20 +130,24 @@ class ResultPrinter extends Printer implements TestListener
         if ($test instanceof BasilTestCaseInterface) {
             $testPath = $test::getBasilTestPath();
 
-            if ($this->currentTestPath !== $testPath) {
-                $this->currentTestPath = $testPath;
-
-                $relativePath = substr($testPath, strlen($this->projectRootPath) + 1);
-
-                if (false === $this->isFirstTest) {
-                    $this->writeEmptyLine();
-                }
-
-                $this->write($this->consoleOutputFactory->createTestPath($relativePath));
+            $isFirstTest = null === $this->currentTestOutput;
+            if ($isFirstTest) {
+                $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
+                $this->write($this->testRenderer->render($this->currentTestOutput));
                 $this->writeEmptyLine();
+            }
 
-                if ($this->isFirstTest) {
-                    $this->isFirstTest = false;
+            if (null === $this->currentTestOutput) {
+                $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
+                $this->write($this->testRenderer->render($this->currentTestOutput));
+                $this->writeEmptyLine();
+            } else {
+                if (false === $this->currentTestOutput->hasPath($testPath)) {
+                    $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
+
+                    $this->writeEmptyLine();
+                    $this->write($this->testRenderer->render($this->currentTestOutput));
+                    $this->writeEmptyLine();
                 }
             }
         }
@@ -168,67 +159,10 @@ class ResultPrinter extends Printer implements TestListener
     public function endTest(Test $test, float $time): void
     {
         if ($test instanceof BasilTestCaseInterface) {
-            $testEndStatus = $test->getStatus();
-
-            $stepNameLine = $this->activityLineFactory->createStepNameLine($test);
-            $this->write($this->indent($stepNameLine) . "\n");
-
-            $handledStatements = $test->getHandledStatements();
-            $failedStatement = null;
-
-            if (BaseTestRunner::STATUS_PASSED !== $testEndStatus) {
-                $failedStatement = array_pop($handledStatements);
-            }
-
-            $completedStatementLines = [];
-            foreach ($handledStatements as $statement) {
-                $completedStatementLine = $this->activityLineFactory->createCompletedStatementLine($statement);
-
-                $completedStatementLines[] = $this->indent($completedStatementLine, 2);
-            }
-
-            $completedStatementLinesString = implode("\n", $completedStatementLines);
-
-            $this->write($completedStatementLinesString);
-
-            if ($failedStatement instanceof StatementInterface) {
-                if (0 !== count($completedStatementLines)) {
-                    $this->write("\n");
-                }
-
-                $failedStatementLine = $this->activityLineFactory->createFailedStatementLine($failedStatement);
-                $this->write($this->indent($failedStatementLine, 2) . "\n");
-
-                $summaryActivityLine = null;
-
-                if ($failedStatement instanceof AssertionInterface) {
-                    $summaryActivityLine = $this->failedAssertionSummaryHandler->handle(
-                        $failedStatement,
-                        (string) $test->getExpectedValue(),
-                        (string) $test->getExaminedValue()
-                    );
-                }
-
-                if (is_string($summaryActivityLine)) {
-                    $this->write($this->indent($summaryActivityLine, 2));
-                }
-            }
-
+            $step = new Step($test);
+            $this->write($this->stepRenderer->render($step));
             $this->writeEmptyLine();
         }
-    }
-
-    private function indent(string $content, int $depth = 1): string
-    {
-        $indentContent = str_repeat(self::INDENT, $depth);
-
-        $lines = explode("\n", $content);
-
-        array_walk($lines, function (&$line) use ($indentContent) {
-            $line = $indentContent . $line;
-        });
-
-        return implode("\n", $lines);
     }
 
     private function writeEmptyLine(): void
