@@ -177,8 +177,8 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                     '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
                     '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
                     '  is not equal to expected value' . "\n" .
-                    '    - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '    - actual:   ' . $consoleOutputFactory->createComment('actual')
+                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '  - actual:   ' . $consoleOutputFactory->createComment('actual')
                 ,
             ],
         ];
@@ -217,8 +217,8 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                 'actualValue' => 'actual',
                 'expectedSummaryLine' =>
                     '* $page.title is not equal to expected value' . "\n" .
-                    '    - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '    - actual:   ' . $consoleOutputFactory->createComment('actual')
+                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '  - actual:   ' . $consoleOutputFactory->createComment('actual')
                 ,
             ],
         ];
@@ -265,9 +265,9 @@ class SummaryLineFactoryTest extends AbstractBaseTest
                     '  is not equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  Values:' . "\n" .
-                    '    - expected: ' . $cof->createComment('expected') . "\n" .
-                    '    - actual:   ' . $cof->createComment('actual')
+                    "\n" .
+                    '  - expected: ' . $cof->createComment('expected') . "\n" .
+                    '  - actual:   ' . $cof->createComment('actual')
                 ,
             ],
         ];

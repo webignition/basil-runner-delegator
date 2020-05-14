@@ -83,11 +83,10 @@ class SummaryLineFactory
         $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
 
         return sprintf(
-            "%s\n  %s\n%s\n%s\n%s",
+            "%s\n  %s\n%s\n\n%s",
             $identifierExpansion,
             $outcome,
             $valueExpansion,
-            '  Values:',
             $expectedValueActualValueLines
         );
     }
@@ -186,20 +185,21 @@ class SummaryLineFactory
 
     private function createExpectedValueActualValueLines(string $expected, string $actual): string
     {
-        $outcome = '  ' . $this->createExpectedValueKeyValueLine($expected) . "\n";
-        $outcome .= '  ' . $this->createActualValueKeyValueLine($actual);
-
-        return $outcome;
+        return sprintf(
+            "%s\n%s",
+            $this->createExpectedValueKeyValueLine($expected),
+            $this->createActualValueKeyValueLine($actual)
+        );
     }
 
     private function createExpectedValueKeyValueLine(string $expectedValue): string
     {
-        return ($this->createValueKeyValueLine('expected', $expectedValue));
+        return $this->createValueKeyValueLine('expected', $expectedValue);
     }
 
     private function createActualValueKeyValueLine(string $actualValue): string
     {
-        return ($this->createValueKeyValueLine('actual', $actualValue, '  '));
+        return $this->createValueKeyValueLine('actual', $actualValue, '  ');
     }
 
     private function createValueKeyValueLine(string $key, string $value, string $padding = ''): string
