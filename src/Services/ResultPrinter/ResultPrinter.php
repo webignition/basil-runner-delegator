@@ -15,13 +15,14 @@ use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\StatementInterface;
-use webignition\BasilRunner\Model\ActivityLine;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 
 class ResultPrinter extends Printer implements TestListener
 {
+    private const INDENT = '  ';
+
     /**
      * @var ConsoleOutputFactory
      */
@@ -170,6 +171,7 @@ class ResultPrinter extends Printer implements TestListener
             $testEndStatus = $test->getStatus();
 
             $stepNameLine = $this->activityLineFactory->createStepNameLine($test);
+            $this->write($this->indent($stepNameLine) . "\n");
 
             $handledStatements = $test->getHandledStatements();
             $failedStatement = null;
@@ -178,12 +180,24 @@ class ResultPrinter extends Printer implements TestListener
                 $failedStatement = array_pop($handledStatements);
             }
 
+            $completedStatementLines = [];
             foreach ($handledStatements as $statement) {
-                $stepNameLine->addChild($this->activityLineFactory->createCompletedStatementLine($statement));
+                $completedStatementLine = $this->activityLineFactory->createCompletedStatementLine($statement);
+
+                $completedStatementLines[] = $this->indent($completedStatementLine, 2);
             }
 
+            $completedStatementLinesString = implode("\n", $completedStatementLines);
+
+            $this->write($completedStatementLinesString);
+
             if ($failedStatement instanceof StatementInterface) {
-                $stepNameLine->addChild($this->activityLineFactory->createFailedStatementLine($failedStatement));
+                if (0 !== count($completedStatementLines)) {
+                    $this->write("\n");
+                }
+
+                $failedStatementLine = $this->activityLineFactory->createFailedStatementLine($failedStatement);
+                $this->write($this->indent($failedStatementLine, 2) . "\n");
 
                 $summaryActivityLine = null;
 
@@ -195,14 +209,26 @@ class ResultPrinter extends Printer implements TestListener
                     );
                 }
 
-                if ($summaryActivityLine instanceof ActivityLine) {
-                    $stepNameLine->addChild($summaryActivityLine);
+                if (is_string($summaryActivityLine)) {
+                    $this->write($this->indent($summaryActivityLine, 2));
                 }
             }
 
-            $this->write((string) $stepNameLine);
             $this->writeEmptyLine();
         }
+    }
+
+    private function indent(string $content, int $depth = 1): string
+    {
+        $indentContent = str_repeat(self::INDENT, $depth);
+
+        $lines = explode("\n", $content);
+
+        array_walk($lines, function (&$line) use ($indentContent) {
+            $line = $indentContent . $line;
+        });
+
+        return implode("\n", $lines);
     }
 
     private function writeEmptyLine(): void
