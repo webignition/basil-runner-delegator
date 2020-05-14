@@ -48,7 +48,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             "locator": "a"
         }'));
         $element->click();
-        self::$crawler = self::$client->refreshCrawler();
+        $this->refreshCrawlerAndNavigator();
 
         // $page.url is "https://www.iana.org/domains/reserved"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
