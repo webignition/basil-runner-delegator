@@ -12,8 +12,8 @@ class SummaryFactory
 {
     private const EXISTS_OUTCOME = 'does not exist';
     private const NOT_EXISTS_OUTCOME = 'does exist';
-    private const IS_OUTCOME = 'is not equal to %s';
-    private const IS_NOT_OUTCOME = 'is equal to %s';
+    private const IS_OUTCOME = 'is not equal to';
+    private const IS_NOT_OUTCOME = 'is equal to';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
@@ -51,19 +51,21 @@ class SummaryFactory
     ): string {
         $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
 
-        $outcome = sprintf(
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            'expected value'
-        );
-
-        $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
-
-        return sprintf(
-            "%s\n  %s\n%s",
+        $elementalToScalarSummary = sprintf(
+            "%s\n  %s %s %s",
             $identifierExpansion,
-            $outcome,
-            $expectedValueActualValueLines
+            'with value ' . $this->consoleOutputFactory->createComment($actualValue),
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->consoleOutputFactory->createComment($expectedValue)
         );
+
+        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+            $comparison,
+            $expectedValue,
+            $actualValue
+        );
+
+        return $elementalToScalarSummary . "\n\n" . $scalarToScalarSummary;
     }
 
     public function createForElementalToElementalComparisonAssertion(
@@ -75,19 +77,15 @@ class SummaryFactory
     ): string {
         $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
 
-        $outcome = sprintf(
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            $this->createElementIdentifiedByString($valueIdentifier)
-        );
-
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
         $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
 
         return sprintf(
-            "%s\n  %s\n%s\n\n%s",
+            "%s\n  %s %s\n%s\n\n%s",
             $identifierExpansion,
-            $outcome,
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $expectedValueActualValueLines
         );
@@ -99,12 +97,10 @@ class SummaryFactory
         string $actualValue
     ): string {
         return sprintf(
-            "* %s %s",
+            "* %s %s %s",
             $this->consoleOutputFactory->createComment($actualValue),
-            sprintf(
-                self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-                $this->consoleOutputFactory->createComment($expectedValue)
-            )
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->consoleOutputFactory->createComment($expectedValue)
         );
     }
 
@@ -115,19 +111,15 @@ class SummaryFactory
         string $expectedValue,
         string $actualValue
     ): string {
-        $outcome = sprintf(
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            $this->createElementIdentifiedByString($valueIdentifier)
-        );
-
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
         $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
 
         return sprintf(
-            "* %s %s\n%s\n\n%s",
+            "* %s %s %s\n%s\n\n%s",
             $identifier,
-            $outcome,
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $expectedValueActualValueLines
         );
