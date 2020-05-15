@@ -48,10 +48,7 @@ class SummaryHandlerTest extends AbstractBaseTest
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
-                            $this->assertEquals(
-                                new ElementIdentifier('.selector'),
-                                $identifier
-                            );
+                            $this->assertEquals(new ElementIdentifier('.selector'), $identifier);
                             $this->assertSame('exists', $comparison);
 
                             return true;
@@ -71,21 +68,18 @@ class SummaryHandlerTest extends AbstractBaseTest
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
-                            $this->assertEquals(
-                                new ElementIdentifier('.selector'),
-                                $identifier
-                            );
+                            $this->assertEquals(new ElementIdentifier('.selector'), $identifier);
                             $this->assertSame('not-exists', $comparison);
 
                             return true;
                         })
-                        ->andReturn('createForElementalExistenceAssertion');
+                        ->andReturn('createForElementalNonExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => '',
                 'actualValue' => '',
-                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
+                'expectedSummaryLine' => 'createForElementalNonExistenceAssertion',
             ],
             'is assertion, elemental identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$".selector" is "value"'),
@@ -99,23 +93,20 @@ class SummaryHandlerTest extends AbstractBaseTest
                             string $expectedValue,
                             string $actualValue
                         ) {
-                            $this->assertEquals(
-                                new ElementIdentifier('.selector'),
-                                $identifier
-                            );
+                            $this->assertEquals(new ElementIdentifier('.selector'), $identifier);
                             $this->assertSame('is', $comparison);
                             $this->assertSame('expected value', $expectedValue);
                             $this->assertSame('$".selector" is "value" actual value', $actualValue);
 
                             return true;
                         })
-                        ->andReturn('createForElementalExistenceAssertion');
+                        ->andReturn('createForElementalToScalarComparisonAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'expected value',
                 'actualValue' => '$".selector" is "value" actual value',
-                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
+                'expectedSummaryLine' => 'createForElementalToScalarComparisonAssertion',
             ],
             'is assertion, scalar identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$page.title is "Page Title"'),
@@ -136,13 +127,42 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn('createForElementalExistenceAssertion');
+                        ->andReturn('createForScalarToScalarComparisonAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'Page Title',
                 'actualValue' => 'Different Page Title',
-                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
+                'expectedSummaryLine' => 'createForScalarToScalarComparisonAssertion',
+            ],
+            'is assertion, scalar identifier, elemental value' => [
+                'assertion' => $assertionParser->parse('$page.title is $".value"'),
+                'assertionSummaryLineFactoryCreator' => function () {
+                    $factory = \Mockery::mock(SummaryFactory::class);
+                    $factory
+                        ->shouldReceive('createForScalarToElementalComparisonAssertion')
+                        ->withArgs(function (
+                            string $identifier,
+                            ElementIdentifierInterface $valueIdentifier,
+                            string $comparison,
+                            string $expectedValue,
+                            string $actualValue
+                        ) {
+                            $this->assertEquals('$page.title', $identifier);
+                            $this->assertEquals(new ElementIdentifier('.value'), $valueIdentifier);
+                            $this->assertSame('is', $comparison);
+                            $this->assertSame('Page Title', $expectedValue);
+                            $this->assertSame('Different Page Title', $actualValue);
+
+                            return true;
+                        })
+                        ->andReturn('createForScalarToElementalComparisonAssertion');
+
+                    return $factory;
+                },
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToElementalComparisonAssertion',
             ],
         ];
     }

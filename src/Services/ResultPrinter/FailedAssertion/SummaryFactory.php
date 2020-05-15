@@ -110,6 +110,31 @@ class SummaryFactory
         );
     }
 
+    public function createForScalarToElementalComparisonAssertion(
+        string $identifier,
+        ElementIdentifierInterface $valueIdentifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue
+    ): string {
+        $outcome = sprintf(
+            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            $this->createElementIdentifiedByString($valueIdentifier)
+        );
+
+        $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
+
+        $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
+
+        return sprintf(
+            "* %s %s\n%s\n\n%s",
+            $identifier,
+            $outcome,
+            $valueExpansion,
+            $expectedValueActualValueLines
+        );
+    }
+
     private function createElementIdentifiedByWithExpansion(ElementIdentifierInterface $identifier): string
     {
         return sprintf(

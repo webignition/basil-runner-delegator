@@ -14,7 +14,7 @@ class SummaryHandler
     /**
      * @var SummaryFactory
      */
-    private $summaryLineFactory;
+    private $summaryFactory;
 
     /**
      * @var DomIdentifierFactory
@@ -25,7 +25,7 @@ class SummaryHandler
         DomIdentifierFactory $domIdentifierFactory,
         SummaryFactory $summaryLineFactory
     ) {
-        $this->summaryLineFactory = $summaryLineFactory;
+        $this->summaryFactory = $summaryLineFactory;
         $this->domIdentifierFactory = $domIdentifierFactory;
     }
 
@@ -47,7 +47,7 @@ class SummaryHandler
             $valueIdentifier instanceof ElementIdentifierInterface
         ) {
             if (in_array($comparison, ['is'])) {
-                return $this->summaryLineFactory->createForElementalToElementalComparisonAssertion(
+                return $this->summaryFactory->createForElementalToElementalComparisonAssertion(
                     $identifier,
                     $valueIdentifier,
                     $comparison,
@@ -57,20 +57,26 @@ class SummaryHandler
             }
         }
 
-//        if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
-//            // identifier is scalar, value is element
-//        }
+        if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
+            return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
+                $identifierString,
+                $valueIdentifier,
+                $comparison,
+                $expectedValue,
+                $actualValue
+            );
+        }
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
             if (in_array($comparison, ['exists', 'not-exists'])) {
-                return $this->summaryLineFactory->createForElementalExistenceAssertion(
+                return $this->summaryFactory->createForElementalExistenceAssertion(
                     $identifier,
                     $comparison
                 );
             }
 
             if (in_array($comparison, ['is'])) {
-                return $this->summaryLineFactory->createForElementalToScalarComparisonAssertion(
+                return $this->summaryFactory->createForElementalToScalarComparisonAssertion(
                     $identifier,
                     $comparison,
                     $expectedValue,
@@ -81,7 +87,7 @@ class SummaryHandler
 
         if (null === $identifier && null === $valueIdentifier) {
             if (in_array($comparison, ['is'])) {
-                return $this->summaryLineFactory->createForScalarToScalarComparisonAssertion(
+                return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
                     $identifierString,
                     $comparison,
                     $expectedValue,
