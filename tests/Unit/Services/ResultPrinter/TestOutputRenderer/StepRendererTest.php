@@ -7,6 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRe
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\Step;
@@ -161,6 +162,14 @@ class StepRendererTest extends AbstractBaseTest
         ];
     }
 
+    /**
+     * @param int $status
+     * @param string $basilStepName
+     * @param StatementInterface[] $handledStatements
+     * @param string $expectedValue
+     * @param string $actualValue
+     * @return BasilTestCaseInterface
+     */
     private function createTest(
         int $status,
         string $basilStepName,
