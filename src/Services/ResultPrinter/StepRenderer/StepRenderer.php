@@ -6,35 +6,28 @@ namespace webignition\BasilRunner\Services\ResultPrinter\StepRenderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\AssertionInterface;
-use webignition\BasilModels\StatementInterface;
+use webignition\BasilRunner\Model\TestOutput\IconMap;
+use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\StatementLineRenderer;
 
 class StepRenderer
 {
     private const INDENT = '  ';
-    private const DEFAULT_ICON = '?';
 
     private $consoleOutputFactory;
-    private $statementLineFactory;
+    private $statementLineRenderer;
     private $summaryHandler;
-
-    /**
-     * @var array<int, string>
-     */
-    private $icons = [
-        BaseTestRunner::STATUS_PASSED => '✓',
-        BaseTestRunner::STATUS_FAILURE => 'x',
-    ];
 
     public function __construct(
         ConsoleOutputFactory $consoleOutputFactory,
-        StatementLineFactory $statementLineFactory,
+        StatementLineRenderer $statementLineRenderer,
         SummaryHandler $summaryHandler
     ) {
         $this->consoleOutputFactory = $consoleOutputFactory;
-        $this->statementLineFactory = $statementLineFactory;
+        $this->statementLineRenderer = $statementLineRenderer;
         $this->summaryHandler = $summaryHandler;
     }
 
@@ -43,15 +36,15 @@ class StepRenderer
         $content = $this->indent($this->renderName($step)) . "\n";
         $content .= $this->renderCompletedStatements($step);
 
-        $failedStatement = $step->getFailedStatement();
+        $failedStatementLine = $step->getFailedStatementLine();
 
-        if ($failedStatement instanceof StatementInterface) {
-            if (0 !== count($step->getCompletedStatements())) {
+        if ($failedStatementLine instanceof StatementLine) {
+            if (0 !== count($step->getCompletedStatementLines())) {
                 $content .= "\n";
             }
 
             $content .= $this->renderFailedStatement(
-                $failedStatement,
+                $failedStatementLine,
                 $step->getExpectedValue(),
                 $step->getActualValue()
             );
@@ -64,7 +57,7 @@ class StepRenderer
     {
         $status = $step->getStatus();
 
-        $icon = $this->icons[$status] ?? self::DEFAULT_ICON;
+        $icon = IconMap::get($status);
         $content = $step->getName();
 
         $styledIcon = $status === BaseTestRunner::STATUS_PASSED
@@ -82,8 +75,8 @@ class StepRenderer
     {
         $renderedStatements = [];
 
-        foreach ($step->getCompletedStatements() as $statement) {
-            $renderedStatement = $this->statementLineFactory->createCompletedLine($statement);
+        foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
+            $renderedStatement = $this->statementLineRenderer->render($completedStatementLine);
             $renderedStatements[] = $this->indent($renderedStatement, 2);
         }
 
@@ -91,11 +84,12 @@ class StepRenderer
     }
 
     private function renderFailedStatement(
-        StatementInterface $statement,
+        StatementLine $statementLine,
         string $expectedValue,
         string $actualValue
     ): string {
-        $renderedStatement = $this->statementLineFactory->createFailedLine($statement);
+        $renderedStatement = $this->statementLineRenderer->render($statementLine);
+        $statement = $statementLine->getStatement();
 
         $content = $this->indent($renderedStatement, 2);
 

@@ -2,52 +2,56 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\ResultPrinter\StepRenderer;
+namespace webignition\BasilRunner\Services\ResultPrinter;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\DerivedAssertionInterface;
 use webignition\BasilModels\StatementInterface;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
+use webignition\BasilRunner\Model\TestOutput\IconMap;
+use webignition\BasilRunner\Model\TestOutput\StatementLine;
 
-class StatementLineFactory
+class StatementLineRenderer
 {
     private $consoleOutputFactory;
-
-    /**
-     * @var array<int, string>
-     */
-    private $icons = [
-        BaseTestRunner::STATUS_PASSED => '✓',
-        BaseTestRunner::STATUS_FAILURE => 'x',
-    ];
 
     public function __construct(ConsoleOutputFactory $consoleOutputFactory)
     {
         $this->consoleOutputFactory = $consoleOutputFactory;
     }
 
-    public function createCompletedLine(StatementInterface $statement): string
+    public function render(StatementLine $statementLine): string
+    {
+        $statement = $statementLine->getStatement();
+
+        if ($statementLine->getHasPassed()) {
+            return $this->renderedPassedStatement($statement);
+        }
+
+        return $this->renderedFailedStatement($statement);
+    }
+
+    private function renderedPassedStatement(StatementInterface $statement): string
     {
         return (string) $this->create(
             $statement,
             function (StatementInterface $statement): string {
                 return
-                    $this->consoleOutputFactory->createSuccess($this->icons[BaseTestRunner::STATUS_PASSED]) . ' ' .
+                    $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) . ' ' .
                     $statement->getSource()
-                ;
+                    ;
             }
         );
     }
 
-    public function createFailedLine(StatementInterface $statement): string
+    private function renderedFailedStatement(StatementInterface $statement): string
     {
         return (string) $this->create(
             $statement,
             function (StatementInterface $statement): string {
                 return
-                    $this->consoleOutputFactory->createFailure($this->icons[BaseTestRunner::STATUS_FAILURE]) . ' ' .
+                    $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) . ' ' .
                     $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
-                ;
+                    ;
             }
         );
     }

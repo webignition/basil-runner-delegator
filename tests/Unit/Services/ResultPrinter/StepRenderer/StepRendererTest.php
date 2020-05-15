@@ -13,7 +13,7 @@ use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
-use webignition\BasilRunner\Services\ResultPrinter\StepRenderer\StatementLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\StatementLineRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\StepRenderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -32,7 +32,7 @@ class StepRendererTest extends AbstractBaseTest
 
         $this->renderer = new StepRenderer(
             new ConsoleOutputFactory(),
-            new StatementLineFactory($consoleOutputFactory),
+            new StatementLineRenderer($consoleOutputFactory),
             new SummaryHandler(
                 Factory::createFactory(),
                 new SummaryLineFactory($consoleOutputFactory)
