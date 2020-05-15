@@ -314,7 +314,6 @@ class SummaryFactoryTest extends AbstractBaseTest
      * @dataProvider createForScalarToElementalComparisonDataProvider
      */
     public function testCreateForScalarToElementalComparison(
-        string $identifier,
         ElementIdentifierInterface $valueIdentifier,
         string $comparison,
         string $expectedValue,
@@ -324,7 +323,6 @@ class SummaryFactoryTest extends AbstractBaseTest
         $this->assertSame(
             $expectedSummary,
             $this->factory->createForScalarToElementalComparisonAssertion(
-                $identifier,
                 $valueIdentifier,
                 $comparison,
                 $expectedValue,
@@ -339,35 +337,33 @@ class SummaryFactoryTest extends AbstractBaseTest
 
         return [
             'is' => [
-                'identifier' => '$page.title',
                 'valueIdentifier' => new ElementIdentifier('.value'),
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* $page.title is not equal to element ' .
+                    '* ' . $cof->createComment('actual') . ' is not equal to element ' .
                     $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
-                    '  - expected: ' . $cof->createComment('expected') . "\n" .
-                    '  - actual:   ' . $cof->createComment('actual')
+                    '* ' . $cof->createComment('actual') . ' is not equal to ' . $cof->createComment('expected')
                 ,
             ],
             'is-not' => [
-                'identifier' => '$page.title',
                 'valueIdentifier' => new ElementIdentifier('.value'),
                 'comparison' => 'is-not',
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* $page.title is equal to element ' .
+                    '* ' . $cof->createComment('expected') . ' is equal to element ' .
                     $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
-                    '  - expected: ' . $cof->createComment('expected') . "\n" .
-                    '  - actual:   ' . $cof->createComment('expected')
+                    '* ' . $cof->createComment('expected') . ' is equal to ' . $cof->createComment('expected')
                 ,
             ],
         ];
