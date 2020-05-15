@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\AttributeIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class SummaryLineFactoryTest extends AbstractBaseTest
+class SummaryFactoryTest extends AbstractBaseTest
 {
     /**
-     * @var SummaryLineFactory
+     * @var SummaryFactory
      */
     private $factory;
 
@@ -22,7 +22,7 @@ class SummaryLineFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new SummaryLineFactory(
+        $this->factory = new SummaryFactory(
             new ConsoleOutputFactory()
         );
     }

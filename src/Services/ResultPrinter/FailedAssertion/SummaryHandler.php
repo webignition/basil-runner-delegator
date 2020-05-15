@@ -12,7 +12,7 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 class SummaryHandler
 {
     /**
-     * @var SummaryLineFactory
+     * @var SummaryFactory
      */
     private $summaryLineFactory;
 
@@ -23,7 +23,7 @@ class SummaryHandler
 
     public function __construct(
         DomIdentifierFactory $domIdentifierFactory,
-        SummaryLineFactory $summaryLineFactory
+        SummaryFactory $summaryLineFactory
     ) {
         $this->summaryLineFactory = $summaryLineFactory;
         $this->domIdentifierFactory = $domIdentifierFactory;

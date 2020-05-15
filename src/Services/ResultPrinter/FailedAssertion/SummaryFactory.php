@@ -8,7 +8,7 @@ use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\DomElementIdentifier\AttributeIdentifierInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class SummaryLineFactory
+class SummaryFactory
 {
     private const EXISTS_OUTCOME = 'does not exist';
     private const NOT_EXISTS_OUTCOME = 'does exist';
