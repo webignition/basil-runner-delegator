@@ -13,11 +13,13 @@ class SummaryFactory
     private const EXISTS_OUTCOME = 'does not exist';
     private const NOT_EXISTS_OUTCOME = 'does exist';
     private const IS_OUTCOME = 'is not equal to %s';
+    private const IS_NOT_OUTCOME = 'is equal to %s';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
         'not-exists' => self::NOT_EXISTS_OUTCOME,
         'is' => self::IS_OUTCOME,
+        'is-not' => self::IS_NOT_OUTCOME,
     ];
 
     private $consoleOutputFactory;

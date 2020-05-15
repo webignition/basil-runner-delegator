@@ -42,11 +42,13 @@ class SummaryHandler
             $valueIdentifier = $this->domIdentifierFactory->createFromIdentifierString($valueString);
         }
 
+        $handledComparisons = ['is', 'is-not'];
+
         if (
             $identifier instanceof ElementIdentifierInterface &&
             $valueIdentifier instanceof ElementIdentifierInterface
         ) {
-            if (in_array($comparison, ['is'])) {
+            if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForElementalToElementalComparisonAssertion(
                     $identifier,
                     $valueIdentifier,
@@ -58,13 +60,15 @@ class SummaryHandler
         }
 
         if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
-            return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
-                $identifierString,
-                $valueIdentifier,
-                $comparison,
-                $expectedValue,
-                $actualValue
-            );
+            if (in_array($comparison, $handledComparisons)) {
+                return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
+                    $identifierString,
+                    $valueIdentifier,
+                    $comparison,
+                    $expectedValue,
+                    $actualValue
+                );
+            }
         }
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
@@ -75,7 +79,7 @@ class SummaryHandler
                 );
             }
 
-            if (in_array($comparison, ['is'])) {
+            if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForElementalToScalarComparisonAssertion(
                     $identifier,
                     $comparison,
@@ -86,7 +90,7 @@ class SummaryHandler
         }
 
         if (null === $identifier && null === $valueIdentifier) {
-            if (in_array($comparison, ['is'])) {
+            if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
                     $identifierString,
                     $comparison,

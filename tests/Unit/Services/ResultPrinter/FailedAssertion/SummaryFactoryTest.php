@@ -181,6 +181,20 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '  - actual:   ' . $consoleOutputFactory->createComment('actual')
                 ,
             ],
+            'is-not' => [
+                'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'is-not',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* Element ' . $consoleOutputFactory->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
+                    '  is equal to expected value' . "\n" .
+                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '  - actual:   ' . $consoleOutputFactory->createComment('expected')
+                ,
+            ],
         ];
     }
 
@@ -219,6 +233,17 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* $page.title is not equal to expected value' . "\n" .
                     '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
                     '  - actual:   ' . $consoleOutputFactory->createComment('actual')
+                ,
+            ],
+            'is-not' => [
+                'identifier' => '$page.title',
+                'comparison' => 'is-not',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* $page.title is equal to expected value' . "\n" .
+                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
+                    '  - actual:   ' . $consoleOutputFactory->createComment('expected')
                 ,
             ],
         ];
@@ -270,6 +295,24 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '  - actual:   ' . $cof->createComment('actual')
                 ,
             ],
+            'is-not' => [
+                'identifier' => new ElementIdentifier('.identifier'),
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is-not',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  is equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    "\n" .
+                    '  - expected: ' . $cof->createComment('expected') . "\n" .
+                    '  - actual:   ' . $cof->createComment('expected')
+                ,
+            ],
         ];
     }
 
@@ -315,6 +358,22 @@ class SummaryFactoryTest extends AbstractBaseTest
                     "\n" .
                     '  - expected: ' . $cof->createComment('expected') . "\n" .
                     '  - actual:   ' . $cof->createComment('actual')
+                ,
+            ],
+            'is-not' => [
+                'identifier' => '$page.title',
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is-not',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* $page.title is equal to element ' .
+                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    "\n" .
+                    '  - expected: ' . $cof->createComment('expected') . "\n" .
+                    '  - actual:   ' . $cof->createComment('expected')
                 ,
             ],
         ];
