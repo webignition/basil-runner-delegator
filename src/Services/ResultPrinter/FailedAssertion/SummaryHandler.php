@@ -62,7 +62,6 @@ class SummaryHandler
         if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
             if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
-                    $identifierString,
                     $valueIdentifier,
                     $comparison,
                     $expectedValue,

@@ -105,7 +105,6 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'summaryFactory' => $this->createSummaryFactory(
                     'createForScalarToElementalComparisonAssertion',
                     [
-                        '$page.title',
                         IsEqual::equalTo(new ElementIdentifier('.value')),
                         'is',
                         'Page Title',
@@ -170,7 +169,6 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'summaryFactory' => $this->createSummaryFactory(
                     'createForScalarToElementalComparisonAssertion',
                     [
-                        '$page.title',
                         IsEqual::equalTo(new ElementIdentifier('.value')),
                         'is-not',
                         'Page Title',

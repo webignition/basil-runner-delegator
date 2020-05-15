@@ -105,7 +105,6 @@ class SummaryFactory
     }
 
     public function createForScalarToElementalComparisonAssertion(
-        string $identifier,
         ElementIdentifierInterface $valueIdentifier,
         string $comparison,
         string $expectedValue,
@@ -113,16 +112,22 @@ class SummaryFactory
     ): string {
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
-        $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
-
-        return sprintf(
-            "* %s %s %s\n%s\n\n%s",
-            $identifier,
+        $scalarToElementalSummary = sprintf(
+            "* %s %s %s\n%s\n  %s",
+            $this->consoleOutputFactory->createComment($actualValue),
             self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
-            $expectedValueActualValueLines
+            'with value ' . $this->consoleOutputFactory->createComment($expectedValue)
         );
+
+        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+            $comparison,
+            $expectedValue,
+            $actualValue
+        );
+
+        return $scalarToElementalSummary . "\n\n" . $scalarToScalarSummary;
     }
 
     private function createElementIdentifiedByWithExpansion(ElementIdentifierInterface $identifier): string
