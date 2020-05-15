@@ -14,12 +14,14 @@ class SummaryFactory
     private const NOT_EXISTS_OUTCOME = 'does exist';
     private const IS_OUTCOME = 'is not equal to';
     private const IS_NOT_OUTCOME = 'is equal to';
+    private const INCLUDES_OUTCOME = 'does not include';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
         'not-exists' => self::NOT_EXISTS_OUTCOME,
         'is' => self::IS_OUTCOME,
         'is-not' => self::IS_NOT_OUTCOME,
+        'includes' => self::INCLUDES_OUTCOME,
     ];
 
     private $consoleOutputFactory;
