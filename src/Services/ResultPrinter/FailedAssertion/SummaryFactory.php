@@ -36,11 +36,7 @@ class SummaryFactory
         $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
         $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
 
-        return sprintf(
-            "%s\n  %s",
-            $identifierExpansion,
-            $outcome
-        );
+        return $identifierExpansion . "\n" . '  ' . $outcome;
     }
 
     public function createForElementalToScalarComparisonAssertion(
@@ -51,21 +47,15 @@ class SummaryFactory
     ): string {
         $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
 
-        $elementalToScalarSummary = sprintf(
+        $summary = sprintf(
             "%s\n  %s %s %s",
             $identifierExpansion,
-            'with value ' . $this->consoleOutputFactory->createComment($actualValue),
+            $this->createWithValuePortion($actualValue),
             self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
             $this->consoleOutputFactory->createComment($expectedValue)
         );
 
-        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
-            $comparison,
-            $expectedValue,
-            $actualValue
-        );
-
-        return $elementalToScalarSummary . "\n\n" . $scalarToScalarSummary;
+        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
     }
 
     public function createForElementalToElementalComparisonAssertion(
@@ -79,23 +69,17 @@ class SummaryFactory
 
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
-        $elementalToElementalSummary = sprintf(
+        $summary = sprintf(
             "%s\n  %s %s %s\n%s\n  %s",
             $identifierExpansion,
-            'with value ' . $this->consoleOutputFactory->createComment($actualValue),
+            $this->createWithValuePortion($actualValue),
             self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
-            'with value ' . $this->consoleOutputFactory->createComment($expectedValue)
+            $this->createWithValuePortion($expectedValue)
         );
 
-        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
-            $comparison,
-            $expectedValue,
-            $actualValue
-        );
-
-        return $elementalToElementalSummary . "\n\n" . $scalarToScalarSummary;
+        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
     }
 
     public function createForScalarToScalarComparisonAssertion(
@@ -119,22 +103,36 @@ class SummaryFactory
     ): string {
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
-        $scalarToElementalSummary = sprintf(
+        $summary = sprintf(
             "* %s %s %s\n%s\n  %s",
             $this->consoleOutputFactory->createComment($actualValue),
             self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
-            'with value ' . $this->consoleOutputFactory->createComment($expectedValue)
+            $this->createWithValuePortion($expectedValue)
         );
 
+        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
+    }
+
+    private function createWithValuePortion(string $value): string
+    {
+        return 'with value ' . $this->consoleOutputFactory->createComment($value);
+    }
+
+    private function appendScalarToScalarSummary(
+        string $summary,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue
+    ): string {
         $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
             $comparison,
             $expectedValue,
             $actualValue
         );
 
-        return $scalarToElementalSummary . "\n\n" . $scalarToScalarSummary;
+        return $summary . "\n\n" . $scalarToScalarSummary;
     }
 
     private function createElementIdentifiedByWithExpansion(ElementIdentifierInterface $identifier): string
