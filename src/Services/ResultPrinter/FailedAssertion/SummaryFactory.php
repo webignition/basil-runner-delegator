@@ -73,7 +73,7 @@ class SummaryFactory
             "%s\n  %s %s %s\n%s\n  %s",
             $identifierExpansion,
             $this->createWithValuePortion($actualValue),
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            (self::COMPARISON_OUTCOME_MAP[$comparison] ?? '') . ' the value of',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $this->createWithValuePortion($expectedValue)
@@ -106,7 +106,7 @@ class SummaryFactory
         $summary = sprintf(
             "* %s %s %s\n%s\n  %s",
             $this->consoleOutputFactory->createComment($actualValue),
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+            (self::COMPARISON_OUTCOME_MAP[$comparison] ?? '') . ' the value of',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $this->createWithValuePortion($expectedValue)

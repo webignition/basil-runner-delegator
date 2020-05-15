@@ -282,7 +282,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '  with value ' . $cof->createComment('actual')
-                    . ' is not equal to element ' . $cof->createComment('$".value"')
+                    . ' is not equal to the value of element ' . $cof->createComment('$".value"')
                     . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -302,7 +302,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '  with value ' . $cof->createComment('expected')
-                    . ' is equal to element ' . $cof->createComment('$".value"')
+                    . ' is equal to the value of element ' . $cof->createComment('$".value"')
                     . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -346,7 +346,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('actual') . ' is not equal to element ' .
+                    '* ' . $cof->createComment('actual') . ' is not equal to the value of element ' .
                     $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -361,7 +361,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('expected') . ' is equal to element ' .
+                    '* ' . $cof->createComment('expected') . ' is equal to the value of element ' .
                     $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
