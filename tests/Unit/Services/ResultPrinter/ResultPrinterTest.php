@@ -168,9 +168,8 @@ class ResultPrinterTest extends AbstractBaseTest
                     '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
                         '$page.url is "http://example.com/new/"'
                     ) . "\n" .
-                    '    * $page.url is not equal to expected value' . "\n" .
-                    '      - expected: ' . $cof->createComment('http://example.com/new/') . "\n" .
-                    '      - actual:   ' . $cof->createComment('http://example.com/') . "\n"
+                    '    * ' . $cof->createComment('http://example.com/')
+                    . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n"
                 ,
             ],
         ];

@@ -92,7 +92,6 @@ class SummaryHandler
         if (null === $identifier && null === $valueIdentifier) {
             if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
-                    $identifierString,
                     $comparison,
                     $expectedValue,
                     $actualValue

@@ -134,9 +134,7 @@ class StepRendererTest extends AbstractBaseTest
                 'expectedRenderedStep' =>
                     '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$page.title is "Foo"') . "\n" .
-                    '    * $page.title is not equal to expected value' . "\n" .
-                    '      - expected: ' . $cof->createComment('Foo') . "\n" .
-                    '      - actual:   ' . $cof->createComment('Bar')
+                    '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
                 ,
             ],
             'failed, first assertion passed, second assertion failed' => [
@@ -154,9 +152,7 @@ class StepRendererTest extends AbstractBaseTest
                     '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
                     '    ' . $successPrefix . ' $page.url is "http://example.com/' . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$page.title is "Foo"') . "\n" .
-                    '    * $page.title is not equal to expected value' . "\n" .
-                    '      - expected: ' . $cof->createComment('Foo') . "\n" .
-                    '      - actual:   ' . $cof->createComment('Bar')
+                    '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
                 ,
             ],
         ];
