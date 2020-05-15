@@ -17,6 +17,7 @@ use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
 use webignition\BasilRunner\Services\TestOutputRenderer\StepRenderer;
 use webignition\BasilRunner\Services\TestOutputRenderer\TestRenderer;
 

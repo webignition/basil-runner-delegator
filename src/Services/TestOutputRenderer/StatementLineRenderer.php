@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\ResultPrinter;
+namespace webignition\BasilRunner\Services\TestOutputRenderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\DerivedAssertionInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
+use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 
 class StatementLineRenderer
 {

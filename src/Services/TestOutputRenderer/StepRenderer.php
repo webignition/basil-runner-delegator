@@ -11,7 +11,7 @@ use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
-use webignition\BasilRunner\Services\ResultPrinter\StatementLineRenderer;
+use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
 
 class StepRenderer
 {

@@ -13,7 +13,7 @@ use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
-use webignition\BasilRunner\Services\ResultPrinter\StatementLineRenderer;
+use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
 use webignition\BasilRunner\Services\TestOutputRenderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
