@@ -164,7 +164,7 @@ class SummaryFactoryTest extends AbstractBaseTest
 
     public function createForElementalToScalarComparisonAssertionDataProvider(): array
     {
-        $consoleOutputFactory = new ConsoleOutputFactory();
+        $cof = new ConsoleOutputFactory();
 
         return [
             'is' => [
@@ -173,12 +173,13 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* Element ' . $consoleOutputFactory->createComment('$".selector"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
-                    '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
-                    '  is not equal to expected value' . "\n" .
-                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '  - actual:   ' . $consoleOutputFactory->createComment('actual')
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('actual')
+                    . ' is not equal to ' . $cof->createComment('expected') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('actual') . ' is not equal to ' . $cof->createComment('expected')
                 ,
             ],
             'is-not' => [
@@ -187,12 +188,13 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* Element ' . $consoleOutputFactory->createComment('$".selector"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
-                    '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
-                    '  is equal to expected value' . "\n" .
-                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '  - actual:   ' . $consoleOutputFactory->createComment('expected')
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected')
+                    . ' is equal to ' . $cof->createComment('expected') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('expected') . ' is equal to ' . $cof->createComment('expected')
                 ,
             ],
         ];
