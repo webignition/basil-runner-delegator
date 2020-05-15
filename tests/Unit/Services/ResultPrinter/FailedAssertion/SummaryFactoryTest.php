@@ -202,7 +202,6 @@ class SummaryFactoryTest extends AbstractBaseTest
      * @dataProvider createForScalarToScalarComparisonAssertionDataProvider
      */
     public function testCreateScalarToScalarComparisonAssertion(
-        string $identifier,
         string $comparison,
         string $expectedValue,
         string $actualValue,
@@ -211,7 +210,6 @@ class SummaryFactoryTest extends AbstractBaseTest
         $this->assertEquals(
             $expectedSummary,
             $this->factory->createForScalarToScalarComparisonAssertion(
-                $identifier,
                 $comparison,
                 $expectedValue,
                 $actualValue
@@ -221,29 +219,23 @@ class SummaryFactoryTest extends AbstractBaseTest
 
     public function createForScalarToScalarComparisonAssertionDataProvider(): array
     {
-        $consoleOutputFactory = new ConsoleOutputFactory();
+        $cof = new ConsoleOutputFactory();
 
         return [
             'is' => [
-                'identifier' => '$page.title',
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* $page.title is not equal to expected value' . "\n" .
-                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '  - actual:   ' . $consoleOutputFactory->createComment('actual')
+                    '* ' . $cof->createComment('actual') . ' is not equal to ' . $cof->createComment('expected')
                 ,
             ],
             'is-not' => [
-                'identifier' => '$page.title',
                 'comparison' => 'is-not',
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* $page.title is equal to expected value' . "\n" .
-                    '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
-                    '  - actual:   ' . $consoleOutputFactory->createComment('expected')
+                    '* ' . $cof->createComment('expected') . ' is equal to ' . $cof->createComment('expected')
                 ,
             ],
         ];

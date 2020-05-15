@@ -90,7 +90,6 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'summaryFactory' => $this->createSummaryFactory(
                     'createForScalarToScalarComparisonAssertion',
                     [
-                        '$page.title',
                         'is',
                         'Page Title',
                         'Different Page Title'
@@ -156,7 +155,6 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'summaryFactory' => $this->createSummaryFactory(
                     'createForScalarToScalarComparisonAssertion',
                     [
-                        '$page.title',
                         'is-not',
                         'Page Title',
                         'Different Page Title'

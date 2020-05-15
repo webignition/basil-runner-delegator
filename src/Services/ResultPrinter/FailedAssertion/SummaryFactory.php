@@ -94,21 +94,17 @@ class SummaryFactory
     }
 
     public function createForScalarToScalarComparisonAssertion(
-        string $identifier,
         string $comparison,
         string $expectedValue,
         string $actualValue
     ): string {
-        $outcome = sprintf(
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            'expected value'
-        );
-
         return sprintf(
-            "* %s %s\n%s",
-            $identifier,
-            $outcome,
-            $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue)
+            "* %s %s",
+            $this->consoleOutputFactory->createComment($actualValue),
+            sprintf(
+                self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
+                $this->consoleOutputFactory->createComment($expectedValue)
+            )
         );
     }
 
