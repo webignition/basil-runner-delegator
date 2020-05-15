@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
 use webignition\BasilModels\Assertion\DerivedElementExistsAssertion;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
-use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class StatementLineRendererTest extends AbstractBaseTest

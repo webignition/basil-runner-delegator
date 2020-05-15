@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\AssertionInterface;
@@ -11,7 +11,6 @@ use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
-use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
 
 class StepRenderer
 {

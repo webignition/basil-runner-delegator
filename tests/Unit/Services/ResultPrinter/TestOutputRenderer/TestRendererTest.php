@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
 use webignition\BasilRunner\Model\TestOutput\Test;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
-use webignition\BasilRunner\Services\TestOutputRenderer\TestRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TestRendererTest extends AbstractBaseTest

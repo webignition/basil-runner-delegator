@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
@@ -13,8 +13,8 @@ use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
-use webignition\BasilRunner\Services\TestOutputRenderer\StatementLineRenderer;
-use webignition\BasilRunner\Services\TestOutputRenderer\StepRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class StepRendererTest extends AbstractBaseTest

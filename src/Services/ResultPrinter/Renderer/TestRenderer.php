@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use webignition\BasilRunner\Model\TestOutput\Test;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;

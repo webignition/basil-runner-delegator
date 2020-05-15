@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\TestOutputRenderer;
+namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\DerivedAssertionInterface;
