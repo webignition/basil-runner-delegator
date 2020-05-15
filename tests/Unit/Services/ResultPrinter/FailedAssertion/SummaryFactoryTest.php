@@ -281,12 +281,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  is not equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '  with value ' . $cof->createComment('actual')
+                    . ' is not equal to element ' . $cof->createComment('$".value"')
+                    . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
-                    '  - expected: ' . $cof->createComment('expected') . "\n" .
-                    '  - actual:   ' . $cof->createComment('actual')
+                    '* ' . $cof->createComment('actual') . ' is not equal to ' . $cof->createComment('expected')
                 ,
             ],
             'is-not' => [
@@ -299,12 +301,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  is equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '  with value ' . $cof->createComment('expected')
+                    . ' is equal to element ' . $cof->createComment('$".value"')
+                    . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
-                    '  - expected: ' . $cof->createComment('expected') . "\n" .
-                    '  - actual:   ' . $cof->createComment('expected')
+                    '* ' . $cof->createComment('expected') . ' is equal to ' . $cof->createComment('expected')
                 ,
             ],
         ];
