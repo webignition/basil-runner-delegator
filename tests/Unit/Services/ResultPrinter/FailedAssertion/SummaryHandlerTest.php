@@ -7,8 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssert
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilParser\AssertionParser;
-use webignition\BasilRunner\Model\SummaryLine;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
@@ -24,7 +23,7 @@ class SummaryHandlerTest extends AbstractBaseTest
         callable $assertionSummaryLineFactoryCreator,
         string $expectedValue,
         string $actualValue,
-        SummaryLine $expectedSummaryLine
+        string $expectedSummaryLine
     ) {
         $handler = new SummaryHandler(
             DomIdentifierFactory::createFactory(),
@@ -45,7 +44,7 @@ class SummaryHandlerTest extends AbstractBaseTest
             'exists assertion, elemental identifier' => [
                 'assertion' => $assertionParser->parse('$".selector" exists'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(SummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryFactory::class);
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
@@ -57,18 +56,18 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => '',
                 'actualValue' => '',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'not-exists assertion, elemental identifier' => [
                 'assertion' => $assertionParser->parse('$".selector" not-exists'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(SummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryFactory::class);
                     $factory
                         ->shouldReceive('createForElementalExistenceAssertion')
                         ->withArgs(function (ElementIdentifierInterface $identifier, string $comparison) {
@@ -80,18 +79,18 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => '',
                 'actualValue' => '',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'is assertion, elemental identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$".selector" is "value"'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(SummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryFactory::class);
                     $factory
                         ->shouldReceive('createForElementalToScalarComparisonAssertion')
                         ->withArgs(function (
@@ -110,18 +109,18 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'expected value',
                 'actualValue' => '$".selector" is "value" actual value',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
             'is assertion, scalar identifier, scalar value' => [
                 'assertion' => $assertionParser->parse('$page.title is "Page Title"'),
                 'assertionSummaryLineFactoryCreator' => function () {
-                    $factory = \Mockery::mock(SummaryLineFactory::class);
+                    $factory = \Mockery::mock(SummaryFactory::class);
                     $factory
                         ->shouldReceive('createForScalarToScalarComparisonAssertion')
                         ->withArgs(function (
@@ -137,13 +136,13 @@ class SummaryHandlerTest extends AbstractBaseTest
 
                             return true;
                         })
-                        ->andReturn(new SummaryLine('createForElementalExistenceAssertion'));
+                        ->andReturn('createForElementalExistenceAssertion');
 
                     return $factory;
                 },
                 'expectedValue' => 'Page Title',
                 'actualValue' => 'Different Page Title',
-                'expectedSummaryLine' => new SummaryLine('createForElementalExistenceAssertion'),
+                'expectedSummaryLine' => 'createForElementalExistenceAssertion',
             ],
         ];
     }
