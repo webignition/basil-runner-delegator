@@ -79,16 +79,23 @@ class SummaryFactory
 
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
-        $expectedValueActualValueLines = $this->createExpectedValueActualValueLines($expectedValue, $actualValue);
-
-        return sprintf(
-            "%s\n  %s %s\n%s\n\n%s",
+        $elementalToElementalSummary = sprintf(
+            "%s\n  %s %s %s\n%s\n  %s",
             $identifierExpansion,
+            'with value ' . $this->consoleOutputFactory->createComment($actualValue),
             self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
-            $expectedValueActualValueLines
+            'with value ' . $this->consoleOutputFactory->createComment($expectedValue)
         );
+
+        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+            $comparison,
+            $expectedValue,
+            $actualValue
+        );
+
+        return $elementalToElementalSummary . "\n\n" . $scalarToScalarSummary;
     }
 
     public function createForScalarToScalarComparisonAssertion(
@@ -201,25 +208,6 @@ class SummaryFactory
         );
 
         return $summaryLines;
-    }
-
-    private function createExpectedValueActualValueLines(string $expected, string $actual): string
-    {
-        return sprintf(
-            "%s\n%s",
-            $this->createExpectedValueKeyValueLine($expected),
-            $this->createActualValueKeyValueLine($actual)
-        );
-    }
-
-    private function createExpectedValueKeyValueLine(string $expectedValue): string
-    {
-        return $this->createValueKeyValueLine('expected', $expectedValue);
-    }
-
-    private function createActualValueKeyValueLine(string $actualValue): string
-    {
-        return $this->createValueKeyValueLine('actual', $actualValue, '  ');
     }
 
     private function createValueKeyValueLine(string $key, string $value, string $padding = ''): string
