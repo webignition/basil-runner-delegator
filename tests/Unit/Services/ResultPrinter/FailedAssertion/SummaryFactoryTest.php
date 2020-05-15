@@ -33,10 +33,10 @@ class SummaryFactoryTest extends AbstractBaseTest
     public function testCreateForElementalExistenceAssertion(
         ElementIdentifierInterface $elementIdentifier,
         string $comparison,
-        string $expectedSummaryLine
+        string $expectedSummary
     ) {
         $this->assertEquals(
-            $expectedSummaryLine,
+            $expectedSummary,
             $this->factory->createForElementalExistenceAssertion($elementIdentifier, $comparison)
         );
     }
@@ -50,7 +50,7 @@ class SummaryFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -60,7 +60,7 @@ class SummaryFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, CSS selector, ordinal position 2' => [
                 'elementIdentifier' => new ElementIdentifier('.selector', 2),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$".selector":2') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('2') . "\n" .
@@ -70,7 +70,7 @@ class SummaryFactoryTest extends AbstractBaseTest
             'non-derived non-descendant attribute exists assertion, CSS selector, default ordinal position' => [
                 'elementIdentifier' => new AttributeIdentifier('.selector', 'attribute_name'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Attribute ' . $cof->createComment('$".selector".attribute_name') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
                     '    - attribute name: ' . $cof->createComment('attribute_name') . "\n" .
@@ -81,7 +81,7 @@ class SummaryFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element exists assertion, XPath expression, default ordinal position' => [
                 'elementIdentifier' => new ElementIdentifier('//div/h1'),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$"//div/h1"') . ' identified by:' . "\n" .
                     '    - XPath expression: ' . $cof->createComment('//div/h1') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -95,7 +95,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                             new ElementIdentifier('.parent')
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$".parent" >> $".child"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.child') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -115,7 +115,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                                 )
                         ),
                 'comparison' => 'exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment($grandparentParentChildIdentifier) . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.child') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('3') . "\n" .
@@ -131,7 +131,7 @@ class SummaryFactoryTest extends AbstractBaseTest
             'non-derived non-descendant element not-exists assertion' => [
                 'elementIdentifier' => new ElementIdentifier('.selector'),
                 'comparison' => 'not-exists',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
@@ -149,10 +149,10 @@ class SummaryFactoryTest extends AbstractBaseTest
         string $comparison,
         string $expectedValue,
         string $actualValue,
-        string $expectedSummaryLine
+        string $expectedSummary
     ) {
         $this->assertEquals(
-            $expectedSummaryLine,
+            $expectedSummary,
             $this->factory->createForElementalToScalarComparisonAssertion(
                 $elementIdentifier,
                 $comparison,
@@ -172,7 +172,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $consoleOutputFactory->createComment('$".selector"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $consoleOutputFactory->createComment('.selector') . "\n" .
                     '    - ordinal position: ' . $consoleOutputFactory->createComment('1') . "\n" .
@@ -192,10 +192,10 @@ class SummaryFactoryTest extends AbstractBaseTest
         string $comparison,
         string $expectedValue,
         string $actualValue,
-        string $expectedSummaryLine
+        string $expectedSummary
     ) {
         $this->assertEquals(
-            $expectedSummaryLine,
+            $expectedSummary,
             $this->factory->createForScalarToScalarComparisonAssertion(
                 $identifier,
                 $comparison,
@@ -215,7 +215,7 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* $page.title is not equal to expected value' . "\n" .
                     '  - expected: ' . $consoleOutputFactory->createComment('expected') . "\n" .
                     '  - actual:   ' . $consoleOutputFactory->createComment('actual')
@@ -233,10 +233,10 @@ class SummaryFactoryTest extends AbstractBaseTest
         string $comparison,
         string $expectedValue,
         string $actualValue,
-        string $expectedSummaryLine
+        string $expectedSummary
     ) {
         $this->assertEquals(
-            $expectedSummaryLine,
+            $expectedSummary,
             $this->factory->createForElementalToElementalComparisonAssertion(
                 $identifier,
                 $valueIdentifier,
@@ -258,11 +258,58 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
-                'expectedSummaryLine' =>
+                'expectedSummary' =>
                     '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '  is not equal to element ' . $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    "\n" .
+                    '  - expected: ' . $cof->createComment('expected') . "\n" .
+                    '  - actual:   ' . $cof->createComment('actual')
+                ,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createForScalarToElementalComparisonDataProvider
+     */
+    public function testCreateForScalarToElementalComparison(
+        string $identifier,
+        ElementIdentifierInterface $valueIdentifier,
+        string $comparison,
+        string $expectedValue,
+        string $actualValue,
+        string $expectedSummary
+    ) {
+        $this->assertSame(
+            $expectedSummary,
+            $this->factory->createForScalarToElementalComparisonAssertion(
+                $identifier,
+                $valueIdentifier,
+                $comparison,
+                $expectedValue,
+                $actualValue
+            )
+        );
+    }
+
+    public function createForScalarToElementalComparisonDataProvider(): array
+    {
+        $cof = new ConsoleOutputFactory();
+
+        return [
+            'is' => [
+                'identifier' => '$page.title',
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* $page.title is not equal to element ' .
+                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
                     '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
                     '    - ordinal position: ' . $cof->createComment('1') . "\n" .
                     "\n" .
