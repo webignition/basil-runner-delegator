@@ -44,6 +44,7 @@ class StepRenderer
         $content .= $this->renderCompletedStatements($step);
 
         $failedStatement = $step->getFailedStatement();
+
         if ($failedStatement instanceof StatementInterface) {
             if (0 !== count($step->getCompletedStatements())) {
                 $content .= "\n";
