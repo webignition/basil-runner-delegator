@@ -15,6 +15,7 @@ class SummaryFactory
     private const IS_OUTCOME = 'is not equal to';
     private const IS_NOT_OUTCOME = 'is equal to';
     private const INCLUDES_OUTCOME = 'does not include';
+    private const EXCLUDES_OUTCOME = 'does not exclude';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
@@ -22,6 +23,7 @@ class SummaryFactory
         'is' => self::IS_OUTCOME,
         'is-not' => self::IS_NOT_OUTCOME,
         'includes' => self::INCLUDES_OUTCOME,
+        'excludes' => self::EXCLUDES_OUTCOME,
     ];
 
     private $consoleOutputFactory;

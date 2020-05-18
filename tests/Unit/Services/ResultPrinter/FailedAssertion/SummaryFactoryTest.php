@@ -212,6 +212,21 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* ' . $cof->createComment('expected') . ' does not include ' . $cof->createComment('expected')
                 ,
             ],
+            'excludes' => [
+                'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'excludes',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected')
+                    . ' does not exclude ' . $cof->createComment('expected') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
+                ,
+            ],
         ];
     }
 
@@ -261,6 +276,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'actualValue' => 'actual',
                 'expectedSummary' =>
                     '* ' . $cof->createComment('actual') . ' does not include ' . $cof->createComment('expected')
+                ,
+            ],
+            'excludes' => [
+                'comparison' => 'excludes',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* ' . $cof->createComment('actual') . ' does not exclude ' . $cof->createComment('expected')
                 ,
             ],
         ];
@@ -354,6 +377,26 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* ' . $cof->createComment('expected') . ' does not include ' . $cof->createComment('expected')
                 ,
             ],
+            'excludes' => [
+                'identifier' => new ElementIdentifier('.identifier'),
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'excludes',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected')
+                    . ' does not exclude the value of element ' . $cof->createComment('$".value"')
+                    . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
+                ,
+            ],
         ];
     }
 
@@ -426,6 +469,21 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
                     '* ' . $cof->createComment('expected') . ' does not include ' . $cof->createComment('expected')
+                ,
+            ],
+            'excludes' => [
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'excludes',
+                'expectedValue' => 'expected',
+                'actualValue' => 'expected',
+                'expectedSummary' =>
+                    '* ' . $cof->createComment('expected') . ' does not exclude the value of element ' .
+                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
                 ,
             ],
         ];

@@ -42,7 +42,7 @@ class SummaryHandler
             $valueIdentifier = $this->domIdentifierFactory->createFromIdentifierString($valueString);
         }
 
-        $handledComparisons = ['is', 'is-not', 'includes'];
+        $handledComparisons = ['is', 'is-not', 'includes', 'excludes'];
 
         if (
             $identifier instanceof ElementIdentifierInterface &&

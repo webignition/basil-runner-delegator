@@ -197,6 +197,134 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'actualValue' => 'actual value',
                 'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
             ],
+            'includes assertion, elemental to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" includes "value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToScalarComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        'includes',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToScalarComparisonAssertion',
+            ],
+            'includes assertion, scalar to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$page.title includes "Page Title"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToScalarComparisonAssertion',
+                    [
+                        'includes',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToScalarComparisonAssertion',
+            ],
+            'includes assertion, scalar to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$page.title includes $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'includes',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToElementalComparisonAssertion',
+            ],
+            'includes assertion, elemental to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" includes $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'includes',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
+            ],
+            'excludes assertion, elemental to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" excludes "value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToScalarComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        'excludes',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToScalarComparisonAssertion',
+            ],
+            'excludes assertion, scalar to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$page.title excludes "Page Title"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToScalarComparisonAssertion',
+                    [
+                        'excludes',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToScalarComparisonAssertion',
+            ],
+            'excludes assertion, scalar to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$page.title excludes $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'excludes',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToElementalComparisonAssertion',
+            ],
+            'excludes assertion, elemental to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" excludes $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'excludes',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
+            ],
         ];
     }
 
