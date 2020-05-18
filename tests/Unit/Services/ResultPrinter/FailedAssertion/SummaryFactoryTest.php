@@ -227,6 +227,22 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
                 ,
             ],
+            'matches' => [
+                'elementIdentifier' => new ElementIdentifier('.selector'),
+                'comparison' => 'matches',
+                'expectedValue' => '/expected/',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('actual')
+                    . ' does not match regular expression ' . $cof->createComment('/expected/') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('actual')
+                    . ' does not match regular expression ' . $cof->createComment('/expected/')
+                ,
+            ],
         ];
     }
 
@@ -284,6 +300,15 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'actualValue' => 'actual',
                 'expectedSummary' =>
                     '* ' . $cof->createComment('actual') . ' does not exclude ' . $cof->createComment('expected')
+                ,
+            ],
+            'matches' => [
+                'comparison' => 'matches',
+                'expectedValue' => '/expected/',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* ' . $cof->createComment('actual')
+                    . ' does not match regular expression ' . $cof->createComment('/expected/')
                 ,
             ],
         ];
@@ -397,6 +422,28 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
                 ,
             ],
+            'matches' => [
+                'identifier' => new ElementIdentifier('.identifier'),
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'matches',
+                'expectedValue' => '/expected/',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('actual')
+                    . ' does not match regular expression within the value of element '
+                    . $cof->createComment('$".value"')
+                    . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('/expected/') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('actual') . ' does not match regular expression '
+                    . $cof->createComment('/expected/')
+                ,
+            ],
         ];
     }
 
@@ -484,6 +531,23 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '  with value ' . $cof->createComment('expected') . "\n" .
                     "\n" .
                     '* ' . $cof->createComment('expected') . ' does not exclude ' . $cof->createComment('expected')
+                ,
+            ],
+            'matches' => [
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'matches',
+                'expectedValue' => '/expected/',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* ' . $cof->createComment('actual')
+                    . ' does not match regular expression within the value of element ' .
+                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  with value ' . $cof->createComment('/expected/') . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('actual') . ' does not match regular expression '
+                    . $cof->createComment('/expected/')
                 ,
             ],
         ];

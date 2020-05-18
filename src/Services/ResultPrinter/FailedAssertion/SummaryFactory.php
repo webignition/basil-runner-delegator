@@ -16,6 +16,7 @@ class SummaryFactory
     private const IS_NOT_OUTCOME = 'is equal to';
     private const INCLUDES_OUTCOME = 'does not include';
     private const EXCLUDES_OUTCOME = 'does not exclude';
+    private const MATCHES_OUTCOME = 'does not match regular expression';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
@@ -24,6 +25,7 @@ class SummaryFactory
         'is-not' => self::IS_NOT_OUTCOME,
         'includes' => self::INCLUDES_OUTCOME,
         'excludes' => self::EXCLUDES_OUTCOME,
+        'matches' => self::MATCHES_OUTCOME,
     ];
 
     private $consoleOutputFactory;
@@ -73,11 +75,16 @@ class SummaryFactory
 
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
+        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
+        $outcomeSuffix = $comparison === 'matches'
+            ? 'within the value of'
+            : 'the value of';
+
         $summary = sprintf(
             "%s\n  %s %s %s\n%s\n  %s",
             $identifierExpansion,
             $this->createWithValuePortion($actualValue),
-            (self::COMPARISON_OUTCOME_MAP[$comparison] ?? '') . ' the value of',
+            $outcome . ' ' . $outcomeSuffix,
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $this->createWithValuePortion($expectedValue)
@@ -107,10 +114,15 @@ class SummaryFactory
     ): string {
         $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
 
+        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
+        $outcomeSuffix = $comparison === 'matches'
+            ? 'within the value of'
+            : 'the value of';
+
         $summary = sprintf(
             "* %s %s %s\n%s\n  %s",
             $this->consoleOutputFactory->createComment($actualValue),
-            (self::COMPARISON_OUTCOME_MAP[$comparison] ?? '') . ' the value of',
+            $outcome . ' ' . $outcomeSuffix,
             $this->createElementIdentifiedByString($valueIdentifier),
             $valueExpansion,
             $this->createWithValuePortion($expectedValue)
