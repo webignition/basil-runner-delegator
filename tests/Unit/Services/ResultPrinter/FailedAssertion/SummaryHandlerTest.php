@@ -325,6 +325,70 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'actualValue' => 'actual value',
                 'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
             ],
+            'matches assertion, elemental to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" matches "/value/"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToScalarComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        'matches',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToScalarComparisonAssertion',
+            ],
+            'matches assertion, scalar to scalar comparison' => [
+                'assertion' => $assertionParser->parse('$page.title matches "/Page Title/"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToScalarComparisonAssertion',
+                    [
+                        'matches',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToScalarComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToScalarComparisonAssertion',
+            ],
+            'matches assertion, scalar to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$page.title matches $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'matches',
+                        'Page Title',
+                        'Different Page Title'
+                    ],
+                    'createForScalarToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'Page Title',
+                'actualValue' => 'Different Page Title',
+                'expectedSummaryLine' => 'createForScalarToElementalComparisonAssertion',
+            ],
+            'matches assertion, elemental to elemental comparison' => [
+                'assertion' => $assertionParser->parse('$".selector" matches $".value"'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalToElementalComparisonAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        IsEqual::equalTo(new ElementIdentifier('.value')),
+                        'matches',
+                        'expected value',
+                        'actual value'
+                    ],
+                    'createForElementalToElementalComparisonAssertion'
+                ),
+                'expectedValue' => 'expected value',
+                'actualValue' => 'actual value',
+                'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
+            ],
         ];
     }
 
