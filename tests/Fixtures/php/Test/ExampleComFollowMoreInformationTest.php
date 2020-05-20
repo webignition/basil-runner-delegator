@@ -20,6 +20,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // $"a" exists <- click $"a"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "operator": "exists",
             "source_type": "action",
             "source": {
                 "source": "click $\\"a\\"",
@@ -27,14 +28,16 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
                 "arguments": "$\\"a\\"",
                 "identifier": "$\\"a\\""
             },
-            "identifier": "$\\"a\\""
+            "value": "$\\"a\\""
         }');
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
         }');
-        $this->examinedValue = $this->navigator->hasOne($this->examinedElementIdentifier);
+        $this->setBooleanExaminedValue(
+            $this->navigator->hasOne($this->examinedElementIdentifier)
+        );
         $this->assertTrue(
-            $this->examinedValue
+            $this->getBooleanExaminedValue()
         );
 
         // click $"a"
@@ -57,11 +60,11 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             "comparison": "is",
             "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
         }');
-        $this->expectedValue = "https://www.iana.org/domains/reserved" ?? null;
-        $this->examinedValue = self::$client->getCurrentURL() ?? null;
+        $this->setExpectedValue("https://www.iana.org/domains/reserved" ?? null);
+        $this->setExaminedValue(self::$client->getCurrentURL() ?? null);
         $this->assertEquals(
-            $this->expectedValue,
-            $this->examinedValue
+            $this->getExpectedValue(),
+            $this->getExaminedValue()
         );
     }
 }
