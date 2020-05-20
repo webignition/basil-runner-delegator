@@ -552,4 +552,68 @@ class SummaryFactoryTest extends AbstractBaseTest
             ],
         ];
     }
+
+    /**
+     * @dataProvider createForElementalIsRegExpAssertionDataProvider
+     */
+    public function testCreateForElementalIsRegExpAssertion(
+        ElementIdentifierInterface $identifier,
+        string $regexp,
+        string $expectedSummary
+    ) {
+        $this->assertSame(
+            $expectedSummary,
+            $this->factory->createForElementalIsRegExpAssertion(
+                $identifier,
+                $regexp
+            )
+        );
+    }
+
+    public function createForElementalIsRegExpAssertionDataProvider(): array
+    {
+        $cof = new ConsoleOutputFactory();
+
+        return [
+            'default' => [
+                'identifier' => new ElementIdentifier('.selector'),
+                'regexp' => 'invalid-regex',
+                'expectedSummary' =>
+                    '* The value of element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '    - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '  is not a valid regular expression' . "\n" .
+                    "\n" .
+                    '* ' . $cof->createComment('invalid-regex') . ' is not a valid regular expression'
+                ,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider createForScalarsRegExpAssertionDataProvider
+     */
+    public function testCreateForScalarIsRegExpAssertion(
+        string $regexp,
+        string $expectedSummary
+    ) {
+        $this->assertSame(
+            $expectedSummary,
+            $this->factory->createForScalarIsRegExpAssertion($regexp)
+        );
+    }
+
+    public function createForScalarsRegExpAssertionDataProvider(): array
+    {
+        $cof = new ConsoleOutputFactory();
+
+        return [
+            'default' => [
+                'regexp' => 'invalid-regex',
+                'expectedSummary' =>
+                    '* ' . $cof->createComment('invalid-regex') . ' is not a valid regular expression'
+                ,
+            ],
+        ];
+    }
 }

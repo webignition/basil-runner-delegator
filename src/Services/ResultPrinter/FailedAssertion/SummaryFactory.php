@@ -17,6 +17,7 @@ class SummaryFactory
     private const INCLUDES_OUTCOME = 'does not include';
     private const EXCLUDES_OUTCOME = 'does not exclude';
     private const MATCHES_OUTCOME = 'does not match regular expression';
+    private const IS_REGEXP_OUTCOME = 'is not a valid regular expression';
 
     private const COMPARISON_OUTCOME_MAP = [
         'exists' => self::EXISTS_OUTCOME,
@@ -26,6 +27,7 @@ class SummaryFactory
         'includes' => self::INCLUDES_OUTCOME,
         'excludes' => self::EXCLUDES_OUTCOME,
         'matches' => self::MATCHES_OUTCOME,
+        'is-regexp' => self::IS_REGEXP_OUTCOME,
     ];
 
     private $consoleOutputFactory;
@@ -43,6 +45,28 @@ class SummaryFactory
         $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
 
         return $identifierExpansion . "\n" . '  ' . $outcome;
+    }
+
+    public function createForElementalIsRegExpAssertion(ElementIdentifierInterface $identifier, string $regexp): string
+    {
+        $elementalSummary = sprintf(
+            "* %s %s\n%s\n  %s",
+            'The value of',
+            $this->createElementIdentifiedByString($identifier),
+            $this->createIdentifierExpansion($identifier),
+            self::COMPARISON_OUTCOME_MAP['is-regexp'] ?? ''
+        );
+
+        return $elementalSummary . "\n\n" . $this->createForScalarIsRegExpAssertion($regexp);
+    }
+
+    public function createForScalarIsRegExpAssertion(string $regexp): string
+    {
+        return sprintf(
+            '* %s %s',
+            $this->consoleOutputFactory->createComment($regexp),
+            self::COMPARISON_OUTCOME_MAP['is-regexp'] ?? ''
+        );
     }
 
     public function createForElementalToScalarComparisonAssertion(
