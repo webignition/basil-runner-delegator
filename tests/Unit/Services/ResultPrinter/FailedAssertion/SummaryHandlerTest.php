@@ -389,6 +389,33 @@ class SummaryHandlerTest extends AbstractBaseTest
                 'actualValue' => 'actual value',
                 'expectedSummaryLine' => 'createForElementalToElementalComparisonAssertion',
             ],
+            'is-regexp assertion, elemental value' => [
+                'assertion' => $assertionParser->parse('$".selector" is-regexp'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForElementalIsRegExpAssertion',
+                    [
+                        IsEqual::equalTo(new ElementIdentifier('.selector')),
+                        'invalid-regexp'
+                    ],
+                    'createForElementalIsRegExpAssertion'
+                ),
+                'expectedValue' => '',
+                'actualValue' => 'invalid-regexp',
+                'expectedSummaryLine' => 'createForElementalIsRegExpAssertion',
+            ],
+            'is-regexp assertion, scalar value' => [
+                'assertion' => $assertionParser->parse('"invalid-regexp" is-regexp'),
+                'summaryFactory' => $this->createSummaryFactory(
+                    'createForScalarIsRegExpAssertion',
+                    [
+                        'invalid-regexp'
+                    ],
+                    'createForScalarIsRegExpAssertion'
+                ),
+                'expectedValue' => '',
+                'actualValue' => 'invalid-regexp',
+                'expectedSummaryLine' => 'createForScalarIsRegExpAssertion',
+            ],
         ];
     }
 

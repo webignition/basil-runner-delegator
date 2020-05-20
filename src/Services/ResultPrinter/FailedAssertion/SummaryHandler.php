@@ -72,10 +72,11 @@ class SummaryHandler
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
             if (in_array($comparison, ['exists', 'not-exists'])) {
-                return $this->summaryFactory->createForElementalExistenceAssertion(
-                    $identifier,
-                    $comparison
-                );
+                return $this->summaryFactory->createForElementalExistenceAssertion($identifier, $comparison);
+            }
+
+            if (in_array($comparison, ['is-regexp'])) {
+                return $this->summaryFactory->createForElementalIsRegExpAssertion($identifier, $actualValue);
             }
 
             if (in_array($comparison, $handledComparisons)) {
@@ -89,6 +90,10 @@ class SummaryHandler
         }
 
         if (null === $identifier && null === $valueIdentifier) {
+            if (in_array($comparison, ['is-regexp'])) {
+                return $this->summaryFactory->createForScalarIsRegExpAssertion($actualValue);
+            }
+
             if (in_array($comparison, $handledComparisons)) {
                 return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
                     $comparison,
