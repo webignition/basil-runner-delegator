@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
-use webignition\BasilModels\Assertion\DerivedElementExistsAssertion;
+use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
@@ -60,7 +60,7 @@ class StatementLineRendererTest extends AbstractBaseTest
             ],
             'passed derived exists assertion' => [
                 'statementLine' => StatementLine::createPassedStatementLine(
-                    new DerivedElementExistsAssertion($clickAction, '$".selector"')
+                    new DerivedValueOperationAssertion($clickAction, '$".selector"', 'exists')
                 ),
                 'expectedRenderedStatementLine' =>
                     $passedPrefix . ' ' . $existsAssertion->getSource() . "\n" .
@@ -83,7 +83,7 @@ class StatementLineRendererTest extends AbstractBaseTest
             ],
             'failed derived exists assertion' => [
                 'statementLine' => StatementLine::createFailedStatementLine(
-                    new DerivedElementExistsAssertion($clickAction, '$".selector"')
+                    new DerivedValueOperationAssertion($clickAction, '$".selector"', 'exists')
                 ),
                 'expectedRenderedStatementLine' =>
                     $failedPrefix . ' ' .

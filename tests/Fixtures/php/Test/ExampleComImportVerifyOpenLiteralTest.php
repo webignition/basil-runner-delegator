@@ -24,11 +24,11 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
             "comparison": "is",
             "value": "\\"https:\\/\\/example.com\\/\\""
         }');
-        $this->expectedValue = "https://example.com/" ?? null;
-        $this->examinedValue = self::$client->getCurrentURL() ?? null;
+        $this->setExpectedValue("https://example.com/" ?? null);
+        $this->setExaminedValue(self::$client->getCurrentURL() ?? null);
         $this->assertEquals(
-            $this->expectedValue,
-            $this->examinedValue
+            $this->getExpectedValue(),
+            $this->getExaminedValue()
         );
     }
 }
