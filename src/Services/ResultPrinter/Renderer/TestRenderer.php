@@ -9,7 +9,7 @@ use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 
 class TestRenderer
 {
-    private $consoleOutputFactory;
+    private ConsoleOutputFactory $consoleOutputFactory;
 
     public function __construct(ConsoleOutputFactory $consoleOutputFactory)
     {

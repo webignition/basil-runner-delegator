@@ -42,7 +42,7 @@ class ErrorOutputFactory
     /**
      * @var array<mixed>
      */
-    private $unparseableStatementErrorMessages = [
+    private array $unparseableStatementErrorMessages = [
         'action' => [
             UnparseableActionException::CODE_EMPTY => self::UNPARSEABLE_ACTION_EMPTY,
             UnparseableActionException::CODE_EMPTY_INPUT_ACTION_VALUE => self::UNPARSEABLE_ACTION_EMPTY_VALUE,
@@ -59,7 +59,7 @@ class ErrorOutputFactory
     /**
      * @var array<int, string>
      */
-    private $configurationErrorMessages = [
+    private array $configurationErrorMessages = [
         ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
             'source empty; call with --source=SOURCE',
         ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
@@ -78,8 +78,8 @@ class ErrorOutputFactory
             'base class invalid: does not exist'
     ];
 
-    private $generateCommandConfigurationValidator;
-    private $validatorInvalidResultSerializer;
+    private ConfigurationValidator $generateCommandConfigurationValidator;
+    private ValidatorInvalidResultSerializer $validatorInvalidResultSerializer;
 
     public function __construct(
         ConfigurationValidator $generateCommandConfigurationValidator,

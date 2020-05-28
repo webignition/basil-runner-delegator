@@ -9,10 +9,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class ConsoleOutputFactoryTest extends AbstractBaseTest
 {
-    /**
-     * @var ConsoleOutputFactory
-     */
-    private $factory;
+    private ConsoleOutputFactory $factory;
 
     protected function setUp(): void
     {

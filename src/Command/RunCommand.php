@@ -22,7 +22,7 @@ class RunCommand extends Command
     private const NAME = 'basil-runner:run';
     private const DEFAULT_RELATIVE_PATH = '/generated';
 
-    private $projectRootPath;
+    private string $projectRootPath;
 
     public function __construct(ProjectRootPathProvider $projectRootPathProvider)
     {

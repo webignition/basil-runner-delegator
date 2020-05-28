@@ -29,7 +29,7 @@ class GenerateCommandTest extends AbstractBaseTest
      *
      * @param array<string, string> $input
      * @param TestGenerator $testGenerator
-     * @param \webignition\BasilRunner\Model\GenerateCommand\SuccessOutput $expectedCommandOutput
+     * @param SuccessOutput $expectedCommandOutput
      *
      */
     public function testRunSuccess(

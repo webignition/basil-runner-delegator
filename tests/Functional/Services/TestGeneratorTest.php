@@ -18,10 +18,7 @@ use webignition\BasilRunner\Tests\Services\ObjectReflector;
 
 class TestGeneratorTest extends AbstractFunctionalTest
 {
-    /**
-     * @var TestGenerator
-     */
-    private $testGenerator;
+    private TestGenerator $testGenerator;
 
     protected function setUp(): void
     {

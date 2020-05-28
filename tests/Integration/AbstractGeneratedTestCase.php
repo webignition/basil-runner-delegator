@@ -10,10 +10,7 @@ abstract class AbstractGeneratedTestCase extends AbstractBaseTest
 {
     private const WEB_SERVER_DIR = __DIR__ . '/../Fixtures/html';
 
-    /**
-     * @var WebServerRunner
-     */
-    private static $webServerRunner;
+    private static WebServerRunner $webServerRunner;
 
     public static function setUpBeforeClass(): void
     {

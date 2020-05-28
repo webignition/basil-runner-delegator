@@ -9,10 +9,7 @@ use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCom
 
 class Renderer
 {
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private OutputInterface $output;
 
     public function setOutput(OutputInterface $output): void
     {

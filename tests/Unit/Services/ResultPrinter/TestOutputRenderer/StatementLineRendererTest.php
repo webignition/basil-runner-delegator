@@ -14,10 +14,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class StatementLineRendererTest extends AbstractBaseTest
 {
-    /**
-     * @var StatementLineRenderer
-     */
-    private $renderer;
+    private StatementLineRenderer $renderer;
 
     protected function setUp(): void
     {

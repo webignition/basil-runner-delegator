@@ -8,8 +8,8 @@ use Symfony\Component\Console\Application;
 
 class ApplicationConfiguration
 {
-    private $name;
-    private $version;
+    private string $name;
+    private string $version;
 
     public function __construct(string $name)
     {

@@ -16,9 +16,9 @@ class StepRenderer
 {
     private const INDENT = '  ';
 
-    private $consoleOutputFactory;
-    private $statementLineRenderer;
-    private $summaryHandler;
+    private ConsoleOutputFactory $consoleOutputFactory;
+    private StatementLineRenderer $statementLineRenderer;
+    private SummaryHandler $summaryHandler;
 
     public function __construct(
         ConsoleOutputFactory $consoleOutputFactory,

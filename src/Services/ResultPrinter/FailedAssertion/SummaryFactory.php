@@ -30,7 +30,7 @@ class SummaryFactory
         'is-regexp' => self::IS_REGEXP_OUTCOME,
     ];
 
-    private $consoleOutputFactory;
+    private ConsoleOutputFactory $consoleOutputFactory;
 
     public function __construct(ConsoleOutputFactory $consoleOutputFactory)
     {

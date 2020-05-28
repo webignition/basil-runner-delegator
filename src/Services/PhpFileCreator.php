@@ -6,10 +6,7 @@ namespace webignition\BasilRunner\Services;
 
 class PhpFileCreator
 {
-    /**
-     * @var string
-     */
-    private $outputDirectory = '';
+    private string $outputDirectory = '';
 
     public function setOutputDirectory(string $outputDirectory): void
     {

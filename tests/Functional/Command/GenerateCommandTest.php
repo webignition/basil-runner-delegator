@@ -30,10 +30,7 @@ use webignition\BasilRunner\Tests\Services\ObjectReflector;
 
 class GenerateCommandTest extends AbstractFunctionalTest
 {
-    /**
-     * @var GenerateCommand
-     */
-    private $command;
+    private GenerateCommand $command;
 
     protected function setUp(): void
     {

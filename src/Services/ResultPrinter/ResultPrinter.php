@@ -6,7 +6,7 @@ namespace webignition\BasilRunner\Services\ResultPrinter;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
@@ -21,24 +21,12 @@ use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRendere
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 
-class ResultPrinter extends Printer implements TestListener
+class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 {
-    /**
-     * @var string
-     */
-    private $projectRootPath = '';
-
-    /**
-     * @var StepRenderer
-     */
-    private $stepRenderer;
-
-    /**
-     * @var TestOutput
-     */
-    private $currentTestOutput;
-
-    private $testRenderer;
+    private string $projectRootPath = '';
+    private StepRenderer $stepRenderer;
+    private ?TestOutput $currentTestOutput = null;
+    private TestRenderer $testRenderer;
 
     public function __construct($out = null)
     {
@@ -169,5 +157,10 @@ class ResultPrinter extends Printer implements TestListener
     private function writeEmptyLine(): void
     {
         $this->write("\n");
+    }
+
+    public function printResult(TestResult $result): void
+    {
+        // @todo: Implement in #361
     }
 }

@@ -11,10 +11,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class TestRendererTest extends AbstractBaseTest
 {
-    /**
-     * @var TestRenderer
-     */
-    private $renderer;
+    private TestRenderer $renderer;
 
     protected function setUp(): void
     {

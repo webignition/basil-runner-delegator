@@ -8,9 +8,9 @@ use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 
 class Test
 {
-    private $test;
-    private $testPath;
-    private $projectRootPath;
+    private BasilTestCaseInterface $test;
+    private string $testPath;
+    private string $projectRootPath;
 
     public function __construct(BasilTestCaseInterface $test, string $testPath, string $projectRootPath)
     {

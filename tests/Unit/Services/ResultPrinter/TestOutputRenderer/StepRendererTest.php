@@ -20,10 +20,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class StepRendererTest extends AbstractBaseTest
 {
-    /**
-     * @var StepRenderer
-     */
-    private $renderer;
+    private StepRenderer $renderer;
 
     protected function setUp(): void
     {

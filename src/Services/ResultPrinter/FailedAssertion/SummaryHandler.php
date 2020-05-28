@@ -11,15 +11,8 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class SummaryHandler
 {
-    /**
-     * @var SummaryFactory
-     */
-    private $summaryFactory;
-
-    /**
-     * @var DomIdentifierFactory
-     */
-    private $domIdentifierFactory;
+    private SummaryFactory $summaryFactory;
+    private DomIdentifierFactory $domIdentifierFactory;
 
     public function __construct(
         DomIdentifierFactory $domIdentifierFactory,

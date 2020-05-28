@@ -13,7 +13,7 @@ class SuccessOutput extends AbstractOutput implements \JsonSerializable
     /**
      * @var array<GeneratedTestOutput>
      */
-    private $output;
+    private array $output;
 
     /**
      * @param Configuration $configuration

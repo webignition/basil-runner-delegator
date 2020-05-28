@@ -9,9 +9,9 @@ abstract class AbstractOutput implements OutputInterface
     protected const STATUS_SUCCESS = 'success';
     protected const STATUS_FAILURE = 'failure';
 
-    private $configuration;
-    private $status;
-    private $code;
+    private Configuration $configuration;
+    private string $status;
+    private int $code;
 
     public function __construct(Configuration $configuration, string $status, int $code)
     {

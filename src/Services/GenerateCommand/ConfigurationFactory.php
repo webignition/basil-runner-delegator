@@ -9,7 +9,7 @@ use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ConfigurationFactory
 {
-    private $projectRootPath;
+    private string $projectRootPath;
 
     public function __construct(ProjectRootPathProvider $projectRootPathProvider)
     {
