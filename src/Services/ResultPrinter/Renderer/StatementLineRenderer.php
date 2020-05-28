@@ -13,7 +13,7 @@ use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 
 class StatementLineRenderer
 {
-    private $consoleOutputFactory;
+    private ConsoleOutputFactory $consoleOutputFactory;
 
     public function __construct(ConsoleOutputFactory $consoleOutputFactory)
     {

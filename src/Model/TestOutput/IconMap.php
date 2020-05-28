@@ -13,7 +13,7 @@ class IconMap
     /**
      * @var array<int, string>
      */
-    private static $icons = [
+    private static array $icons = [
         BaseTestRunner::STATUS_PASSED => '✓',
         BaseTestRunner::STATUS_FAILURE => 'x',
     ];

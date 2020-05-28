@@ -10,17 +10,14 @@ use webignition\BasilModels\StatementInterface;
 
 class Step
 {
-    private $test;
+    private BasilTestCaseInterface $test;
 
     /**
      * @var StatementLine[]
      */
-    private $completedStatementLines = [];
+    private array $completedStatementLines = [];
 
-    /**
-     * @var StatementLine|null
-     */
-    private $failedStatementLine;
+    private ?StatementLine $failedStatementLine = null;
 
     public function __construct(BasilTestCaseInterface $test)
     {

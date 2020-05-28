@@ -6,8 +6,8 @@ namespace webignition\BasilRunner\Model;
 
 class GeneratedTestOutput implements \JsonSerializable
 {
-    private $source;
-    private $target;
+    private string $source;
+    private string $target;
 
     public function __construct(string $source, string $target)
     {

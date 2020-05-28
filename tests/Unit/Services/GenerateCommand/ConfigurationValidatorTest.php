@@ -14,10 +14,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class ConfigurationValidatorTest extends AbstractBaseTest
 {
-    /**
-     * @var ConfigurationValidator
-     */
-    private $validator;
+    private ConfigurationValidator $validator;
 
     protected function setUp(): void
     {

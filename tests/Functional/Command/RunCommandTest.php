@@ -11,10 +11,7 @@ use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 
 class RunCommandTest extends AbstractFunctionalTest
 {
-    /**
-     * @var RunCommand
-     */
-    private $command;
+    private RunCommand $command;
 
     protected function setUp(): void
     {

@@ -12,8 +12,8 @@ use webignition\BasilRunner\Model\GeneratedTestOutput;
 
 class TestGenerator
 {
-    private $compiler;
-    private $phpFileCreator;
+    private Compiler $compiler;
+    private PhpFileCreator $phpFileCreator;
 
     public function __construct(Compiler $compiler, PhpFileCreator $phpFileCreator)
     {

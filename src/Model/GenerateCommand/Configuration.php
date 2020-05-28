@@ -6,9 +6,9 @@ namespace webignition\BasilRunner\Model\GenerateCommand;
 
 class Configuration implements \JsonSerializable
 {
-    private $source;
-    private $target;
-    private $baseClass;
+    private string $source;
+    private string $target;
+    private string $baseClass;
 
     public function __construct(
         string $source,

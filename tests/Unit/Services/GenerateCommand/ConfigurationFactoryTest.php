@@ -12,10 +12,7 @@ use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class ConfigurationFactoryTest extends AbstractBaseTest
 {
-    /**
-     * @var ConfigurationFactory
-     */
-    private $factory;
+    private ConfigurationFactory $factory;
 
     protected function setUp(): void
     {

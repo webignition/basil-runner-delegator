@@ -20,10 +20,7 @@ use webignition\BasilValidationResult\InvalidResultInterface;
 
 class ValidatorInvalidResultSerializerTest extends AbstractBaseTest
 {
-    /**
-     * @var ValidatorInvalidResultSerializer
-     */
-    private $serializer;
+    private ValidatorInvalidResultSerializer $serializer;
 
     protected function setUp(): void
     {

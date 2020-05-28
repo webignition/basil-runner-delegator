@@ -4,15 +4,8 @@ namespace webignition\BasilRunner\Tests\Model;
 
 class PhpUnitOutput
 {
-    /**
-     * @var string
-     */
-    private $header = '';
-
-    /**
-     * @var string
-     */
-    private $body = '';
+    private string $header = '';
+    private string $body = '';
 
     public function __construct(string $content)
     {

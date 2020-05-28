@@ -13,10 +13,7 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class SummaryFactoryTest extends AbstractBaseTest
 {
-    /**
-     * @var SummaryFactory
-     */
-    private $factory;
+    private SummaryFactory $factory;
 
     protected function setUp(): void
     {

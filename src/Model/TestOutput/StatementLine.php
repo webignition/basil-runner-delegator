@@ -8,8 +8,8 @@ use webignition\BasilModels\StatementInterface;
 
 class StatementLine
 {
-    private $statement;
-    private $hasPassed;
+    private StatementInterface $statement;
+    private bool $hasPassed;
 
     private function __construct(StatementInterface $statement, bool $hasPassed)
     {

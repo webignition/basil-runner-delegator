@@ -41,13 +41,13 @@ class GenerateCommand extends Command
 
     private const NAME = 'generate';
 
-    private $sourceLoader;
-    private $testGenerator;
-    private $projectRootPath;
-    private $configurationFactory;
-    private $configurationValidator;
-    private $errorOutputFactory;
-    private $outputRenderer;
+    private SourceLoader $sourceLoader;
+    private TestGenerator $testGenerator;
+    private string $projectRootPath;
+    private ConfigurationFactory $configurationFactory;
+    private ConfigurationValidator $configurationValidator;
+    private ErrorOutputFactory $errorOutputFactory;
+    private Renderer $outputRenderer;
 
     public function __construct(
         SourceLoader $sourceLoader,
