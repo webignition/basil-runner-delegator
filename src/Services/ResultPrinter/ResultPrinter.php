@@ -119,26 +119,25 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         if ($test instanceof BasilTestCaseInterface) {
             $testPath = $test::getBasilTestPath();
 
-            $isFirstTest = null === $this->currentTestOutput;
-            if ($isFirstTest) {
-                $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
-                $this->write($this->testRenderer->render($this->currentTestOutput));
-                $this->writeEmptyLine();
-            }
+            $currentTestOutput = $this->currentTestOutput;
 
             if (null === $this->currentTestOutput) {
-                $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
-                $this->write($this->testRenderer->render($this->currentTestOutput));
+                $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
+                $this->write($this->testRenderer->render($currentTestOutput));
                 $this->writeEmptyLine();
             } else {
                 if (false === $this->currentTestOutput->hasPath($testPath)) {
-                    $this->currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
+                    $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
 
                     $this->writeEmptyLine();
-                    $this->write($this->testRenderer->render($this->currentTestOutput));
+                    $this->write($this->testRenderer->render($currentTestOutput));
                     $this->writeEmptyLine();
+
+                    $this->currentTestOutput = $currentTestOutput;
                 }
             }
+
+            $this->currentTestOutput = $currentTestOutput;
         }
     }
 
