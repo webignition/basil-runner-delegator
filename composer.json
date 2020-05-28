@@ -44,13 +44,13 @@
         "symfony/finder": "^5.0",
         "symfony/http-kernel": "^5.0",
         "symfony/yaml": "^5.0",
-        "webignition/base-basil-test-case": "^0.22.0",
-        "webignition/basil-compiler": "^0.12.0",
+        "webignition/base-basil-test-case": "^0.23.0",
+        "webignition/basil-compiler": "^0.13.0",
         "webignition/basil-dom-identifier-factory": "^0.13.0",
         "webignition/basil-identifier-analyser": ">=0.7,<1",
-        "webignition/basil-loader": "^0.25.0",
-        "webignition/basil-models": "0.43",
-        "webignition/php-basil-compilable-source-factory": "^0.39.0",
+        "webignition/basil-loader": "^0.26.0",
+        "webignition/basil-models": "^0.47",
+        "webignition/php-basil-compilable-source-factory": "^0.40.0",
         "webignition/symfony-console-typed-input": "^0.5.0"
     },
     "require-dev": {
@@ -61,9 +61,9 @@
         "phpstan/phpstan": "^0.12.0",
         "phpstan/phpstan-mockery": "^0.12.0",
         "squizlabs/php_codesniffer": "3.*",
-        "webignition/basil-data-validator": "0.11",
-        "webignition/basil-parser": "0.21.1",
-        "webignition/symfony-panther-webserver-runner": "^0.3.0"
+        "webignition/basil-data-validator": ">=0.12,<1",
+        "webignition/basil-parser": ">=0.23,<1",
+        "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
     },
     "bin": [
         "bin/basil-runner"
