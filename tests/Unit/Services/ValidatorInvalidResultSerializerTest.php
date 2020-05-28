@@ -112,9 +112,9 @@ class ValidatorInvalidResultSerializerTest extends AbstractBaseTest
                 'invalidResult' => $assertionWithInvalidComparisonResult,
                 'expectedData' => [
                     'type' => ResultType::ASSERTION,
-                    'reason' => AssertionValidator::REASON_INVALID_COMPARISON,
+                    'reason' => AssertionValidator::REASON_INVALID_OPERATOR,
                     'context' => [
-                        'comparison' => 'glows',
+                        'operator' => 'glows',
                     ],
                     'subject' => '"$\".button\" glows"',
                 ],

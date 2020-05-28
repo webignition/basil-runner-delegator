@@ -20,15 +20,18 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // $"a" exists <- click $"a"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
-            "operator": "exists",
-            "source_type": "action",
-            "source": {
+            "container": {
+                "type": "derived-value-operation-assertion",
+                "value": "$\\"a\\"",
+                "operator": "exists"
+            },
+            "statement": {
+                "statement-type": "action",
                 "source": "click $\\"a\\"",
                 "type": "click",
                 "arguments": "$\\"a\\"",
                 "identifier": "$\\"a\\""
-            },
-            "value": "$\\"a\\""
+            }
         }');
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
@@ -42,6 +45,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // click $"a"
         $this->handledStatements[] = $this->actionFactory->createFromJson('{
+            "statement-type": "action",
             "source": "click $\\"a\\"",
             "type": "click",
             "arguments": "$\\"a\\"",
@@ -55,9 +59,10 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 
         // $page.url is "https://www.iana.org/domains/reserved"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "statement-type": "assertion",
             "source": "$page.url is \\"https:\\/\\/www.iana.org\\/domains\\/reserved\\"",
             "identifier": "$page.url",
-            "comparison": "is",
+            "operator": "is",
             "value": "\\"https:\\/\\/www.iana.org\\/domains\\/reserved\\""
         }');
         $this->setExpectedValue("https://www.iana.org/domains/reserved" ?? null);

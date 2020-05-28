@@ -19,9 +19,10 @@ class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
 
         // $page.url is "https://example.com/"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
+            "statement-type": "assertion",
             "source": "$page.url is \\"https:\\/\\/example.com\\/\\"",
             "identifier": "$page.url",
-            "comparison": "is",
+            "operator": "is",
             "value": "\\"https:\\/\\/example.com\\/\\""
         }');
         $this->setExpectedValue("https://example.com/" ?? null);

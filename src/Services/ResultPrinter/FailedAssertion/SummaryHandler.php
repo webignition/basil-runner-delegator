@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
-use webignition\BasilModels\Assertion\ComparisonAssertionInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class SummaryHandler
@@ -26,26 +25,26 @@ class SummaryHandler
     {
         $identifierString = $assertion->getIdentifier();
 
-        $comparison = $assertion->getComparison();
+        $operator = $assertion->getOperator();
         $identifier = $this->domIdentifierFactory->createFromIdentifierString($identifierString);
         $valueIdentifier = null;
 
-        if ($assertion instanceof ComparisonAssertionInterface) {
-            $valueString = $assertion->getValue();
+        if ($assertion->isComparison()) {
+            $valueString = (string) $assertion->getValue();
             $valueIdentifier = $this->domIdentifierFactory->createFromIdentifierString($valueString);
         }
 
-        $handledComparisons = ['is', 'is-not', 'includes', 'excludes', 'matches'];
+        $handledOperators = ['is', 'is-not', 'includes', 'excludes', 'matches'];
 
         if (
             $identifier instanceof ElementIdentifierInterface &&
             $valueIdentifier instanceof ElementIdentifierInterface
         ) {
-            if (in_array($comparison, $handledComparisons)) {
+            if (in_array($operator, $handledOperators)) {
                 return $this->summaryFactory->createForElementalToElementalComparisonAssertion(
                     $identifier,
                     $valueIdentifier,
-                    $comparison,
+                    $operator,
                     $expectedValue,
                     $actualValue
                 );
@@ -53,10 +52,10 @@ class SummaryHandler
         }
 
         if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
-            if (in_array($comparison, $handledComparisons)) {
+            if (in_array($operator, $handledOperators)) {
                 return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
                     $valueIdentifier,
-                    $comparison,
+                    $operator,
                     $expectedValue,
                     $actualValue
                 );
@@ -64,18 +63,18 @@ class SummaryHandler
         }
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
-            if (in_array($comparison, ['exists', 'not-exists'])) {
-                return $this->summaryFactory->createForElementalExistenceAssertion($identifier, $comparison);
+            if (in_array($operator, ['exists', 'not-exists'])) {
+                return $this->summaryFactory->createForElementalExistenceAssertion($identifier, $operator);
             }
 
-            if (in_array($comparison, ['is-regexp'])) {
+            if (in_array($operator, ['is-regexp'])) {
                 return $this->summaryFactory->createForElementalIsRegExpAssertion($identifier, $actualValue);
             }
 
-            if (in_array($comparison, $handledComparisons)) {
+            if (in_array($operator, $handledOperators)) {
                 return $this->summaryFactory->createForElementalToScalarComparisonAssertion(
                     $identifier,
-                    $comparison,
+                    $operator,
                     $expectedValue,
                     $actualValue
                 );
@@ -83,13 +82,13 @@ class SummaryHandler
         }
 
         if (null === $identifier && null === $valueIdentifier) {
-            if (in_array($comparison, ['is-regexp'])) {
+            if (in_array($operator, ['is-regexp'])) {
                 return $this->summaryFactory->createForScalarIsRegExpAssertion($actualValue);
             }
 
-            if (in_array($comparison, $handledComparisons)) {
+            if (in_array($operator, $handledOperators)) {
                 return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
-                    $comparison,
+                    $operator,
                     $expectedValue,
                     $actualValue
                 );
