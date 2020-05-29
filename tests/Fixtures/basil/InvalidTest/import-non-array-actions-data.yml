@@ -1,0 +1,10 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  steps:
+    invalid_actions_data: "../Step/non-array-actions-data.yml"
+
+"use invalid_actions_data":
+  use: invalid_actions_data

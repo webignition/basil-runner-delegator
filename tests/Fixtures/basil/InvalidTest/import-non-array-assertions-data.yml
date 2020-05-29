@@ -1,0 +1,10 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+imports:
+  steps:
+    invalid_assertions_data: "../Step/non-array-assertions-data.yml"
+
+"use invalid_assertions_data":
+  use: invalid_assertions_data

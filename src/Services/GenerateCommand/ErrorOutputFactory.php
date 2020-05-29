@@ -38,6 +38,8 @@ class ErrorOutputFactory
     public const UNPARSEABLE_ASSERTION_EMPTY_COMPARISON = 'empty-comparison';
     public const UNPARSEABLE_ASSERTION_EMPTY_IDENTIFIER = 'empty-identifier';
     public const UNPARSEABLE_ASSERTION_EMPTY_VALUE = 'empty-value';
+    public const UNPARSEABLE_STEP_INVALID_ACTIONS_DATA = 'invalid-actions-data';
+    public const UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA = 'invalid-assertions-data';
 
     /**
      * @var array<mixed>
@@ -295,10 +297,29 @@ class ErrorOutputFactory
             $unparseableStepException = $unparseableDataException->getUnparseableStepException();
 
             $context['step_name'] = $unparseableStepException->getStepName();
+
+            $unparseableStepCode = $unparseableStepException->getCode();
+
+            if (UnparseableStepException::CODE_INVALID_ACTIONS_DATA === $unparseableStepCode) {
+                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ACTIONS_DATA;
+            }
+
+            if (UnparseableStepException::CODE_INVALID_ASSERTIONS_DATA === $unparseableStepCode) {
+                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA;
+            }
         }
 
         if ($unparseableDataException instanceof UnparseableStepException) {
             $context['step_path'] = $parseException->getSubjectPath();
+            $code = $unparseableDataException->getCode();
+
+            if (UnparseableStepException::CODE_INVALID_ACTIONS_DATA === $code) {
+                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ACTIONS_DATA;
+            }
+
+            if (UnparseableStepException::CODE_INVALID_ASSERTIONS_DATA === $code) {
+                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA;
+            }
         }
 
         if (
