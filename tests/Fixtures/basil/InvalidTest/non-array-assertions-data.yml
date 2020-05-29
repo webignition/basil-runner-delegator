@@ -1,0 +1,6 @@
+config:
+  browser: chrome
+  url: https://example.com
+
+"non-array assertions data":
+  assertions: "not an array"

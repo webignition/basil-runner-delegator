@@ -793,6 +793,96 @@ class GenerateCommandTest extends AbstractFunctionalTest
                     ]
                 ),
             ],
+            'test declares step, step contains non-array actions data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable test',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'test',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
+                        'step_name' => 'non-array actions data',
+                        'reason' => 'invalid-actions-data',
+
+                    ]
+                ),
+            ],
+            'test declares step, step contains non-array assertions data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable test',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'test',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
+                        'step_name' => 'non-array assertions data',
+                        'reason' => 'invalid-assertions-data',
+
+                    ]
+                ),
+            ],
+            'test imports step, step contains non-array actions data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable step',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'step',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
+                        'step_path' => $root . '/tests/Fixtures/basil/Step/non-array-actions-data.yml',
+                        'reason' => 'invalid-actions-data',
+                    ]
+                ),
+            ],
+            'test imports step, step contains non-array assertions data' => [
+                'input' => [
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
+                    '--target' => 'tests/build/target',
+                ],
+                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedCommandOutput' => new ErrorOutput(
+                    new Configuration(
+                        $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
+                        $root . '/tests/build/target',
+                        AbstractBaseTest::class
+                    ),
+                    'Unparseable step',
+                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    [
+                        'type' => 'step',
+                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
+                        'step_path' => $root . '/tests/Fixtures/basil/Step/non-array-assertions-data.yml',
+                        'reason' => 'invalid-assertions-data',
+                    ]
+                ),
+            ],
         ];
     }
 
@@ -1293,23 +1383,6 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         /* @var ObjectReflector $objectReflector */
         $objectReflector = self::$container->get(ObjectReflector::class);
-
-//        $testGenerator = $objectReflector->getProperty($command, 'testGenerator');
-//        $compiler = $objectReflector->getProperty($testGenerator, 'compiler');
-//
-//        $objectReflector->setProperty(
-//            $compiler,
-//            Compiler::class,
-//            'externalVariableIdentifiers',
-//            $updatedExternalVariableIdentifiers
-//        );
-//
-//        $objectReflector->setProperty(
-//            $testGenerator,
-//            TestGenerator::class,
-//            'compiler',
-//            $compiler
-//        );
 
         $objectReflector->setProperty(
             $command,
