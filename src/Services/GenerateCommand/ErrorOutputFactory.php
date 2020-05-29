@@ -40,6 +40,7 @@ class ErrorOutputFactory
     public const UNPARSEABLE_ASSERTION_EMPTY_VALUE = 'empty-value';
     public const UNPARSEABLE_STEP_INVALID_ACTIONS_DATA = 'invalid-actions-data';
     public const UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA = 'invalid-assertions-data';
+    public const REASON_UNKNOWN = 'unknown';
 
     /**
      * @var array<mixed>
@@ -297,29 +298,12 @@ class ErrorOutputFactory
             $unparseableStepException = $unparseableDataException->getUnparseableStepException();
 
             $context['step_name'] = $unparseableStepException->getStepName();
-
-            $unparseableStepCode = $unparseableStepException->getCode();
-
-            if (UnparseableStepException::CODE_INVALID_ACTIONS_DATA === $unparseableStepCode) {
-                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ACTIONS_DATA;
-            }
-
-            if (UnparseableStepException::CODE_INVALID_ASSERTIONS_DATA === $unparseableStepCode) {
-                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA;
-            }
+            $context['reason'] = $this->createInvalidStepStatementsDataReason($unparseableStepException->getCode());
         }
 
         if ($unparseableDataException instanceof UnparseableStepException) {
             $context['step_path'] = $parseException->getSubjectPath();
-            $code = $unparseableDataException->getCode();
-
-            if (UnparseableStepException::CODE_INVALID_ACTIONS_DATA === $code) {
-                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ACTIONS_DATA;
-            }
-
-            if (UnparseableStepException::CODE_INVALID_ASSERTIONS_DATA === $code) {
-                $context['reason'] = self::UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA;
-            }
+            $context['reason'] = $this->createInvalidStepStatementsDataReason($unparseableDataException->getCode());
         }
 
         if (
@@ -334,7 +318,8 @@ class ErrorOutputFactory
 
             $context['statement_type'] = $statementType;
             $context['statement'] = $unparseableStatementException->getStatement();
-            $context['reason'] = $this->unparseableStatementErrorMessages[$statementType][$code] ?? 'unknown';
+            $context['reason'] =
+                $this->unparseableStatementErrorMessages[$statementType][$code] ?? self::REASON_UNKNOWN;
         }
 
         return new ErrorOutput(
@@ -500,7 +485,7 @@ class ErrorOutputFactory
 
     private function createForConfigurationErrorCode(Configuration $configuration, int $errorCode): ErrorOutput
     {
-        $errorMessage = $this->configurationErrorMessages[$errorCode] ?? 'unknown';
+        $errorMessage = $this->configurationErrorMessages[$errorCode] ?? self::REASON_UNKNOWN;
 
         return new ErrorOutput(
             $configuration,
@@ -516,5 +501,18 @@ class ErrorOutputFactory
             'An unknown error has occurred',
             ErrorOutput::CODE_UNKNOWN
         );
+    }
+
+    private function createInvalidStepStatementsDataReason(int $code): string
+    {
+        if (UnparseableStepException::CODE_INVALID_ACTIONS_DATA === $code) {
+            return self::UNPARSEABLE_STEP_INVALID_ACTIONS_DATA;
+        }
+
+        if (UnparseableStepException::CODE_INVALID_ASSERTIONS_DATA === $code) {
+            return self::UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA;
+        }
+
+        return self::REASON_UNKNOWN;
     }
 }
