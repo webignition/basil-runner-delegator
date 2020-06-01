@@ -35,49 +35,52 @@ class StatementLineRenderer
 
     private function renderedPassedStatement(StatementInterface $statement): string
     {
-        return (string) $this->create(
-            $statement,
-            function (StatementInterface $statement): string {
-                return
-                    $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) . ' ' .
-                    $statement->getSource()
-                    ;
-            }
-        );
+        $content = $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) .
+            ' ' .
+            $statement->getSource();
+
+        if ($statement instanceof EncapsulatingStatementInterface) {
+            $content .= "\n" . $this->renderEncapsulatedSource($statement);
+        }
+
+        return $content;
     }
 
     private function renderedFailedStatement(StatementInterface $statement): string
     {
-        return (string) $this->create(
-            $statement,
-            function (StatementInterface $statement): string {
-                return
-                    $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) . ' ' .
-                    $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
-                    ;
-            }
-        );
-    }
-
-    private function create(StatementInterface $statement, callable $activityLineCreator): string
-    {
-        /* @var string $statementActivityLine */
-        $statementActivityLine = $activityLineCreator($statement);
-        $sourceStatementActivityLine = null;
+        $content = $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) .
+            ' ' .
+            $this->consoleOutputFactory->createHighlightedFailure($statement->getSource());
 
         if ($statement instanceof EncapsulatingStatementInterface) {
-            $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
-                ? 'resolved from'
-                : 'derived from';
-
-            $statementActivityLine .=
-                "\n" .
-                '  ' .
-                $this->consoleOutputFactory->createComment('> ' . $label . ':') .
-                ' ' .
-                $statement->getSourceStatement()->getSource();
+            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($statement);
         }
 
-        return (string) $statementActivityLine;
+        return $content;
+    }
+
+    private function renderEncapsulatedSource(EncapsulatingStatementInterface $statement): string
+    {
+        $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
+            ? 'resolved from'
+            : 'derived from';
+
+        return
+            '  ' .
+            $this->consoleOutputFactory->createComment('> ' . $label . ':') .
+            ' ' .
+            $statement->getSourceStatement()->getSource();
+    }
+
+    private function renderEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): string
+    {
+        $content = $this->renderEncapsulatedSource($statement);
+
+        $sourceStatement = $statement->getSourceStatement();
+        if ($sourceStatement instanceof ResolvedAction || $sourceStatement instanceof ResolvedAssertion) {
+            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($sourceStatement);
+        }
+
+        return $content;
     }
 }
