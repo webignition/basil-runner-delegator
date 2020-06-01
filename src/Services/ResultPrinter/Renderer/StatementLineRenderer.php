@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use PHPUnit\Runner\BaseTestRunner;
-use webignition\BasilModels\Assertion\DerivedAssertionInterface;
+use webignition\BasilModels\EncapsulatingStatementInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
@@ -61,7 +61,7 @@ class StatementLineRenderer
     {
         $sourceStatementActivityLine = null;
 
-        if ($statement instanceof DerivedAssertionInterface) {
+        if ($statement instanceof EncapsulatingStatementInterface) {
             $sourceStatement = $statement->getSourceStatement();
 
             $sourceStatementActivityLine =
