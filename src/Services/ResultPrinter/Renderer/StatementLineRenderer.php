@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use PHPUnit\Runner\BaseTestRunner;
+use webignition\BasilModels\Action\ResolvedAction;
+use webignition\BasilModels\Assertion\ResolvedAssertion;
 use webignition\BasilModels\EncapsulatingStatementInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
@@ -59,20 +61,21 @@ class StatementLineRenderer
 
     private function create(StatementInterface $statement, callable $activityLineCreator): string
     {
+        /* @var string $statementActivityLine */
+        $statementActivityLine = $activityLineCreator($statement);
         $sourceStatementActivityLine = null;
 
         if ($statement instanceof EncapsulatingStatementInterface) {
-            $sourceStatement = $statement->getSourceStatement();
+            $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
+                ? 'resolved from'
+                : 'derived from';
 
-            $sourceStatementActivityLine =
-                $this->consoleOutputFactory->createComment('> derived from:') . ' ' . $sourceStatement->getSource();
-        }
-
-        /* @var string $statementActivityLine */
-        $statementActivityLine = $activityLineCreator($statement);
-
-        if (null !== $sourceStatementActivityLine) {
-            $statementActivityLine .= "\n" . '  ' . $sourceStatementActivityLine;
+            $statementActivityLine .=
+                "\n" .
+                '  ' .
+                $this->consoleOutputFactory->createComment('> ' . $label . ':') .
+                ' ' .
+                $statement->getSourceStatement()->getSource();
         }
 
         return (string) $statementActivityLine;
