@@ -35,49 +35,50 @@ class StatementLineRenderer
 
     private function renderedPassedStatement(StatementInterface $statement): string
     {
-        return (string) $this->create(
+        return $this->renderStatement(
             $statement,
-            function (StatementInterface $statement): string {
-                return
-                    $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) . ' ' .
-                    $statement->getSource()
-                    ;
-            }
+            $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) .
+            ' ' .
+            $statement->getSource()
         );
     }
 
     private function renderedFailedStatement(StatementInterface $statement): string
     {
-        return (string) $this->create(
+        return $this->renderStatement(
             $statement,
-            function (StatementInterface $statement): string {
-                return
-                    $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) . ' ' .
-                    $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
-                    ;
-            }
+            $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) .
+            ' ' .
+            $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
         );
     }
 
-    private function create(StatementInterface $statement, callable $activityLineCreator): string
+    private function renderStatement(StatementInterface $statement, string $renderedStatement): string
     {
-        /* @var string $statementActivityLine */
-        $statementActivityLine = $activityLineCreator($statement);
-        $sourceStatementActivityLine = null;
+        $content = $renderedStatement;
 
+        $renderedEncapsulatedStatement = $this->renderEncapsulatedStatement($statement);
+        if (null !== $renderedEncapsulatedStatement) {
+            $content .= "\n" . $renderedEncapsulatedStatement;
+        }
+
+        return $content;
+    }
+
+    private function renderEncapsulatedStatement(StatementInterface $statement): ?string
+    {
         if ($statement instanceof EncapsulatingStatementInterface) {
             $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
                 ? 'resolved from'
                 : 'derived from';
 
-            $statementActivityLine .=
-                "\n" .
+            return
                 '  ' .
                 $this->consoleOutputFactory->createComment('> ' . $label . ':') .
                 ' ' .
                 $statement->getSourceStatement()->getSource();
         }
 
-        return (string) $statementActivityLine;
+        return null;
     }
 }
