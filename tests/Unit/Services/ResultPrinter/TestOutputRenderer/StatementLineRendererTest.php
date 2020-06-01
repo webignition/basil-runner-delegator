@@ -43,7 +43,7 @@ class StatementLineRendererTest extends AbstractBaseTest
         $assertionParser = AssertionParser::create();
 
         $existsAssertion = $assertionParser->parse('$".selector" exists');
-        $clickAction = $actionParser->parse('click $".selector');
+        $clickAction = $actionParser->parse('click $".selector"');
         $unresolvedIsAssertion = new Assertion(
             '$page_import_name.elements.selector is "value"',
             '$page_import_name.elements.selector',
@@ -136,6 +136,19 @@ class StatementLineRendererTest extends AbstractBaseTest
                 'expectedRenderedStatementLine' =>
                     $failedPrefix . ' ' .
                     $consoleOutputFactory->createHighlightedFailure('click $".selector"') . "\n" .
+                    '  ' . $consoleOutputFactory->createComment('> resolved from:') .
+                    ' ' . $unresolvedClickAction->getSource()
+                ,
+            ],
+            'failed derived resolved exists assertion' => [
+                'statementLine' => StatementLine::createFailedStatementLine(
+                    new DerivedValueOperationAssertion($resolvedClickAction, '$".selector"', 'exists')
+                ),
+                'expectedRenderedStatementLine' =>
+                    $failedPrefix . ' ' .
+                    $consoleOutputFactory->createHighlightedFailure($existsAssertion->getSource()) . "\n" .
+                    '  ' . $consoleOutputFactory->createComment('> derived from:') .
+                    ' ' . $clickAction->getSource() . "\n" .
                     '  ' . $consoleOutputFactory->createComment('> resolved from:') .
                     ' ' . $unresolvedClickAction->getSource()
                 ,

@@ -35,50 +35,52 @@ class StatementLineRenderer
 
     private function renderedPassedStatement(StatementInterface $statement): string
     {
-        return $this->renderStatement(
-            $statement,
-            $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) .
+        $content = $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) .
             ' ' .
-            $statement->getSource()
-        );
-    }
+            $statement->getSource();
 
-    private function renderedFailedStatement(StatementInterface $statement): string
-    {
-        return $this->renderStatement(
-            $statement,
-            $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) .
-            ' ' .
-            $this->consoleOutputFactory->createHighlightedFailure($statement->getSource())
-        );
-    }
-
-    private function renderStatement(StatementInterface $statement, string $renderedStatement): string
-    {
-        $content = $renderedStatement;
-
-        $renderedEncapsulatedStatement = $this->renderEncapsulatedStatement($statement);
-        if (null !== $renderedEncapsulatedStatement) {
-            $content .= "\n" . $renderedEncapsulatedStatement;
+        if ($statement instanceof EncapsulatingStatementInterface) {
+            $content .= "\n" . $this->renderEncapsulatedSource($statement);
         }
 
         return $content;
     }
 
-    private function renderEncapsulatedStatement(StatementInterface $statement): ?string
+    private function renderedFailedStatement(StatementInterface $statement): string
     {
-        if ($statement instanceof EncapsulatingStatementInterface) {
-            $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
-                ? 'resolved from'
-                : 'derived from';
+        $content = $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) .
+            ' ' .
+            $this->consoleOutputFactory->createHighlightedFailure($statement->getSource());
 
-            return
-                '  ' .
-                $this->consoleOutputFactory->createComment('> ' . $label . ':') .
-                ' ' .
-                $statement->getSourceStatement()->getSource();
+        if ($statement instanceof EncapsulatingStatementInterface) {
+            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($statement);
         }
 
-        return null;
+        return $content;
+    }
+
+    private function renderEncapsulatedSource(EncapsulatingStatementInterface $statement): string
+    {
+        $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
+            ? 'resolved from'
+            : 'derived from';
+
+        return
+            '  ' .
+            $this->consoleOutputFactory->createComment('> ' . $label . ':') .
+            ' ' .
+            $statement->getSourceStatement()->getSource();
+    }
+
+    private function renderEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): string
+    {
+        $content = $this->renderEncapsulatedSource($statement);
+
+        $sourceStatement = $statement->getSourceStatement();
+        if ($sourceStatement instanceof ResolvedAction || $sourceStatement instanceof ResolvedAssertion) {
+            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($sourceStatement);
+        }
+
+        return $content;
     }
 }
