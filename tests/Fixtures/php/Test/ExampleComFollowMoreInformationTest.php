@@ -51,10 +51,12 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
             "arguments": "$\\"a\\"",
             "identifier": "$\\"a\\""
         }');
-        $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
-            "locator": "a"
-        }'));
-        $element->click();
+        (function () {
+            $element = $this->navigator->findOne(ElementIdentifier::fromJson('{
+                "locator": "a"
+            }'));
+            $element->click();
+        })();
         $this->refreshCrawlerAndNavigator();
 
         // $page.url is "https://www.iana.org/domains/reserved"
