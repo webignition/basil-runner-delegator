@@ -17,6 +17,7 @@ use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
@@ -43,7 +44,8 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
             new SummaryHandler(
                 DomIdentifierFactory::createFactory(),
                 new SummaryFactory($consoleOutputFactory)
-            )
+            ),
+            new ExceptionRenderer($consoleOutputFactory)
         );
     }
 

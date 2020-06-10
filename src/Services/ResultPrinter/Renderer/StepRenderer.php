@@ -11,6 +11,7 @@ use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class StepRenderer
 {
@@ -19,15 +20,18 @@ class StepRenderer
     private ConsoleOutputFactory $consoleOutputFactory;
     private StatementLineRenderer $statementLineRenderer;
     private SummaryHandler $summaryHandler;
+    private ExceptionRenderer $exceptionRenderer;
 
     public function __construct(
         ConsoleOutputFactory $consoleOutputFactory,
         StatementLineRenderer $statementLineRenderer,
-        SummaryHandler $summaryHandler
+        SummaryHandler $summaryHandler,
+        ExceptionRenderer $exceptionRenderer
     ) {
         $this->consoleOutputFactory = $consoleOutputFactory;
         $this->statementLineRenderer = $statementLineRenderer;
         $this->summaryHandler = $summaryHandler;
+        $this->exceptionRenderer = $exceptionRenderer;
     }
 
     public function render(Step $step): string
@@ -47,6 +51,13 @@ class StepRenderer
                 $step->getExpectedValue(),
                 $step->getActualValue()
             );
+        }
+
+        $lastException = $step->getLastException();
+        if ($lastException instanceof \Throwable) {
+            $exceptionContent = $this->renderException($lastException);
+
+            $content .= "\n" . $this->indent($exceptionContent, 2);
         }
 
         return $content;
@@ -108,6 +119,11 @@ class StepRenderer
         }
 
         return $content;
+    }
+
+    private function renderException(\Throwable $exception): string
+    {
+        return '* ' . $this->exceptionRenderer->render($exception);
     }
 
     private function indent(string $content, int $depth = 1): string

@@ -4,6 +4,7 @@ namespace webignition\BasilRunner\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
+use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class ExampleComFollowMoreInformationTest extends AbstractBaseTest
 {
@@ -36,9 +37,14 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         $this->examinedElementIdentifier = ElementIdentifier::fromJson('{
             "locator": "a"
         }');
-        $this->setBooleanExaminedValue(
-            $this->navigator->hasOne($this->examinedElementIdentifier)
-        );
+        try {
+            $this->setBooleanExaminedValue(
+                $this->navigator->hasOne($this->examinedElementIdentifier)
+            );
+        } catch (InvalidLocatorException $exception) {
+            $this->setLastException($exception);
+            $this->fail("Invalid locator");
+        }
         $this->assertTrue(
             $this->getBooleanExaminedValue()
         );
