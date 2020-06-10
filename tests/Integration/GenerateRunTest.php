@@ -38,8 +38,8 @@ class GenerateRunTest extends TestCase
         $cof = new ConsoleOutputFactory();
 
         return [
-            'passing test' => [
-                'source' => './tests/Fixtures/basil-integration/Test',
+            'passing: single test' => [
+                'source' => './tests/Fixtures/basil-integration/Test/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
                     $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
@@ -64,8 +64,8 @@ class GenerateRunTest extends TestCase
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n"
             ],
-            'failing test' => [
-                'source' => './tests/Fixtures/basil-integration/FailingTest',
+            'failing: single test' => [
+                'source' => './tests/Fixtures/basil-integration/FailingTest/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
                     $cof->createTestPath('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
@@ -88,6 +88,34 @@ class GenerateRunTest extends TestCase
                     '        - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
                     '        - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '      does exist' . "\n"
+            ],
+            'passing: page import with element de-referencing' => [
+                'source' => './tests/Fixtures/basil-integration/Test/form-page-test.yml',
+                'target' => './tests/build/target',
+                'expectedOutputBody' =>
+                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
+                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"form[action=\'/action1\']" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:')
+                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
+                    '    ' . $cof->createSuccess('✓')
+                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:')
+                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
+                    '    ' . $cof->createSuccess('✓')
+                    . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" exists' . "\n" .
+                    '      ' . $cof->createComment('> derived from:')
+                    . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" is "textarea content"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n" .
+                    '    ' . $cof->createSuccess('✓')
+                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
+                    '      ' . $cof->createComment('> resolved from:')
+                    . ' $form_page.elements.input_with_value is "test"' . "\n" .
+                    '    ' . $cof->createSuccess('✓')
+                    . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" is "textarea content"' . "\n" .
+                    '      ' . $cof->createComment('> resolved from:')
+                    . ' $form_page.elements.textarea_within_form_one is "textarea content"' . "\n"
             ],
         ];
     }
