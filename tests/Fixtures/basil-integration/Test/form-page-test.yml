@@ -1,0 +1,14 @@
+config:
+  browser: chrome
+  url: $form_page.url
+
+imports:
+  pages:
+    form_page: "../Page/form.yml"
+
+"verify page is open":
+  assertions:
+    - $page.url is "http://127.0.0.1:9080/form.html"
+    - $page.title is "Form"
+    - $form_page.elements.input_with_value is "test"
+    - $form_page.elements.textarea_within_form_one is "textarea content"
