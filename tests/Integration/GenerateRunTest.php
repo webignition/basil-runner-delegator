@@ -44,9 +44,13 @@ class GenerateRunTest extends TestCase
                 'expectedOutputBody' =>
                     $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' "/fixture web server/" is-regexp' . "\n" .
+                    '      ' . $cof->createComment('> derived from:') .
+                    ' $page.title matches "/fixture web server/"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $page.title matches "/fixture web server/"' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $"h1" exists' . "\n" .
                     '      ' . $cof->createComment('> derived from:') .

@@ -6,6 +6,7 @@ config:
   assertions:
     - $page.url is "http://127.0.0.1:9080/index.html"
     - $page.title is "Test fixture web server default document"
+    - $page.title matches "/fixture web server/"
 
 "verify primary heading":
   assertions:
