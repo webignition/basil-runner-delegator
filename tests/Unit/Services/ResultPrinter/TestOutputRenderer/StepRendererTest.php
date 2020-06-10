@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
+use Facebook\WebDriver\Exception\InvalidSelectorException;
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory;
@@ -14,9 +15,12 @@ use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
+use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
+use webignition\DomElementIdentifier\ElementIdentifier;
+use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class StepRendererTest extends AbstractBaseTest
 {
@@ -34,6 +38,9 @@ class StepRendererTest extends AbstractBaseTest
             new SummaryHandler(
                 Factory::createFactory(),
                 new SummaryFactory($consoleOutputFactory)
+            ),
+            new ExceptionRenderer(
+                $consoleOutputFactory
             )
         );
     }
@@ -60,7 +67,10 @@ class StepRendererTest extends AbstractBaseTest
                 'step' => new Step($this->createTest(
                     BaseTestRunner::STATUS_PASSED,
                     'passed step name',
-                    []
+                    [],
+                    '',
+                    '',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name') . "\n"
@@ -70,7 +80,10 @@ class StepRendererTest extends AbstractBaseTest
                 'step' => new Step($this->createTest(
                     BaseTestRunner::STATUS_FAILURE,
                     'failed step name',
-                    []
+                    [],
+                    '',
+                    '',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $failurePrefix . ' ' .
@@ -81,7 +94,10 @@ class StepRendererTest extends AbstractBaseTest
                 'step' => new Step($this->createTest(
                     BaseTestRunner::STATUS_ERROR,
                     'unknown step name',
-                    []
+                    [],
+                    '',
+                    '',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $cof->createFailure('?') . ' ' .
@@ -94,7 +110,10 @@ class StepRendererTest extends AbstractBaseTest
                     'passed step name',
                     [
                         $actionParser->parse('click $".selector"'),
-                    ]
+                    ],
+                    '',
+                    '',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name') . "\n" .
@@ -107,7 +126,10 @@ class StepRendererTest extends AbstractBaseTest
                     'failed step name',
                     [
                         $assertionParser->parse('$".selector" exists'),
-                    ]
+                    ],
+                    '',
+                    '',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
@@ -126,7 +148,8 @@ class StepRendererTest extends AbstractBaseTest
                         $assertionParser->parse('$page.title is "Foo"'),
                     ],
                     'Foo',
-                    'Bar'
+                    'Bar',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
@@ -143,13 +166,40 @@ class StepRendererTest extends AbstractBaseTest
                         $assertionParser->parse('$page.title is "Foo"'),
                     ],
                     'Foo',
-                    'Bar'
+                    'Bar',
+                    null
                 )),
                 'expectedRenderedStep' =>
                     '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
                     '    ' . $successPrefix . ' $page.url is "http://example.com/' . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$page.title is "Foo"') . "\n" .
                     '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
+                ,
+            ],
+            'failed, elemental assertion uses invalid CSS selector' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [
+                        $assertionParser->parse('$"a[href=https://example.com]" exists'),
+                    ],
+                    'Foo',
+                    'Bar',
+                    new InvalidLocatorException(
+                        new ElementIdentifier('a[href=https://example.com]'),
+                        \Mockery::mock(InvalidSelectorException::class)
+                    )
+                )),
+                'expectedRenderedStep' =>
+                    '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
+                    '    ' . $failurePrefix . ' '
+                    . $cof->createHighlightedFailure('$"a[href=https://example.com]" exists') . "\n" .
+                    '    * Element '
+                    . $cof->createComment('$"a[href=https://example.com]"') . ' identified by:' . "\n" .
+                    '        - CSS selector: ' . $cof->createComment('a[href=https://example.com]') . "\n" .
+                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '      does not exist' . "\n" .
+                    '    * CSS selector ' . $cof->createComment('a[href=https://example.com]') . ' is not valid'
                 ,
             ],
         ];
@@ -167,8 +217,9 @@ class StepRendererTest extends AbstractBaseTest
         int $status,
         string $basilStepName,
         array $handledStatements,
-        string $expectedValue = '',
-        string $actualValue = ''
+        string $expectedValue,
+        string $actualValue,
+        ?\Throwable $lastException
     ): BasilTestCaseInterface {
         $test = \Mockery::mock(BasilTestCaseInterface::class);
         $test
@@ -190,6 +241,10 @@ class StepRendererTest extends AbstractBaseTest
         $test
             ->shouldReceive('getExaminedValue')
             ->andReturn($actualValue);
+
+        $test
+            ->shouldReceive('getLastException')
+            ->andReturn($lastException);
 
         return $test;
     }

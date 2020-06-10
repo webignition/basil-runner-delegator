@@ -71,4 +71,9 @@ class Step
     {
         return (string) $this->test->getExaminedValue();
     }
+
+    public function getLastException(): ?\Throwable
+    {
+        return $this->test->getLastException();
+    }
 }
