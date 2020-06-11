@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\TestOutput;
 
+use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilModels\StatementInterface;
 
 class StatementLine
@@ -35,5 +36,10 @@ class StatementLine
     public function getHasPassed(): bool
     {
         return $this->hasPassed;
+    }
+
+    public function getIsDerived(): bool
+    {
+        return $this->statement instanceof DerivedValueOperationAssertion;
     }
 }

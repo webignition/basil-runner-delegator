@@ -44,26 +44,17 @@ class GenerateRunTest extends TestCase
                 'expectedOutputBody' =>
                     $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' "/fixture web server/" is-regexp' . "\n" .
-                    '      ' . $cof->createComment('> derived from:') .
-                    ' $page.title matches "/fixture web server/"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title matches "/fixture web server/"' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"h1" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:') .
-                    ' $"h1" is "Test fixture web server default document"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') .
-                    ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify links are present') .
                     "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-assertions]" exists' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('navigate to form') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:') . ' click $"a[id=link-to-form]"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' click $"a[id=link-to-form]"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n"
@@ -78,11 +69,7 @@ class GenerateRunTest extends TestCase
                     '    ' . $cof->createSuccess('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"h1" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:') .
-                    ' $"h1" is "Test fixture web server default document"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') .
-                    ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '    ' . $cof->createSuccess('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
                     '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('verify links are present') .
                     "\n" .
                     '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
@@ -99,17 +86,6 @@ class GenerateRunTest extends TestCase
                 'expectedOutputBody' =>
                     $cof->createTestPath('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"form[action=\'/action1\']" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:')
-                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
-                    '    ' . $cof->createSuccess('✓')
-                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:')
-                    . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
-                    '    ' . $cof->createSuccess('✓')
-                    . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" exists' . "\n" .
-                    '      ' . $cof->createComment('> derived from:')
-                    . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" is "textarea content"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n" .
                     '    ' . $cof->createSuccess('✓')

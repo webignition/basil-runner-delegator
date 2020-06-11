@@ -86,8 +86,10 @@ class StepRenderer
         $renderedStatements = [];
 
         foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
-            $renderedStatement = $this->statementLineRenderer->render($completedStatementLine);
-            $renderedStatements[] = $this->indent($renderedStatement, 2);
+            if (false === $completedStatementLine->getIsDerived()) {
+                $renderedStatement = $this->statementLineRenderer->render($completedStatementLine);
+                $renderedStatements[] = $this->indent($renderedStatement, 2);
+            }
         }
 
         return implode("\n", $renderedStatements);
