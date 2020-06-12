@@ -18,6 +18,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
     public function test1()
     {
         $this->setBasilStepName('follow more information');
+        $this->setCurrentDataSet(null);
 
         // $"a" exists <- click $"a"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
