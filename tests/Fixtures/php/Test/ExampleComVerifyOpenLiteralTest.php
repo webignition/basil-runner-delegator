@@ -13,7 +13,7 @@ class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
         self::setBasilTestPath('{{ test_path }}');
     }
 
-    public function testF0f81bc625442f2edd8f05ccc64de6b1()
+    public function test1()
     {
         $this->setBasilStepName('verify page is open');
 
