@@ -15,7 +15,7 @@ class ExampleComFollowMoreInformationTest extends AbstractBaseTest
         self::setBasilTestPath('{{ test_path }}');
     }
 
-    public function test0b4535a573cf4196b7e26f0f41e6e2e7()
+    public function test1()
     {
         $this->setBasilStepName('follow more information');
 
