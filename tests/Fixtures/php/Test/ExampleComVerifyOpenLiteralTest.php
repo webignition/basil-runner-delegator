@@ -16,6 +16,7 @@ class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
     public function test1()
     {
         $this->setBasilStepName('verify page is open');
+        $this->setCurrentDataSet(null);
 
         // $page.url is "https://example.com/"
         $this->handledStatements[] = $this->assertionFactory->createFromJson('{
