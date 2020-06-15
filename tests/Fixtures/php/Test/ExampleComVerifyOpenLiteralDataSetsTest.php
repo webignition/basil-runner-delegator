@@ -11,7 +11,7 @@ class ExampleComVerifyOpenLiteralDataSetsTest extends AbstractBaseTest
     {
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
-        self::setBasilTestPath('/home/jon/www/lib/webignition/basil-runner/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
+        self::setBasilTestPath('{{ test_path }}');
     }
 
     /**
