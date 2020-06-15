@@ -6,12 +6,12 @@ namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\AssertionInterface;
+use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
-use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class StepRenderer
 {
@@ -36,7 +36,20 @@ class StepRenderer
 
     public function render(Step $step): string
     {
-        $content = $this->indent($this->renderName($step)) . "\n";
+        $stepNameLine = $this->renderName($step);
+        $content = $this->indent($stepNameLine) . "\n";
+
+        $dataSet = $step->getCurrentDataSet();
+        if ($dataSet instanceof DataSetInterface) {
+            $dataSetList = '';
+
+            foreach ($dataSet->getData() as $key => $value) {
+                $dataSetList .= '$' . $key . ': ' . $this->consoleOutputFactory->createComment($value) . "\n";
+            }
+
+            $content .= $this->indent($dataSetList, 3) . "\n";
+        }
+
         $content .= $this->renderCompletedStatements($step);
 
         $failedStatementLine = $step->getFailedStatementLine();
@@ -69,6 +82,11 @@ class StepRenderer
 
         $icon = IconMap::get($status);
         $content = $step->getName();
+
+        $dataSet = $step->getCurrentDataSet();
+        if ($dataSet instanceof DataSetInterface) {
+            $content .= ': ' . $dataSet->getName();
+        }
 
         $styledIcon = $status === BaseTestRunner::STATUS_PASSED
             ? $this->consoleOutputFactory->createSuccess($icon)

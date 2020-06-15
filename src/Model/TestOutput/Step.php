@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Model\TestOutput;
 
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
+use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilModels\StatementInterface;
 
 class Step
@@ -75,5 +76,10 @@ class Step
     public function getLastException(): ?\Throwable
     {
         return $this->test->getLastException();
+    }
+
+    public function getCurrentDataSet(): ?DataSetInterface
+    {
+        return $this->test->getCurrentDataSet();
     }
 }

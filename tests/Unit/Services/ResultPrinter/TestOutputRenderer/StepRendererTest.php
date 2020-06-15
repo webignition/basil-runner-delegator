@@ -8,6 +8,8 @@ use Facebook\WebDriver\Exception\InvalidSelectorException;
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory;
+use webignition\BasilModels\DataSet\DataSet;
+use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
@@ -70,6 +72,7 @@ class StepRendererTest extends AbstractBaseTest
                     [],
                     '',
                     '',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -83,6 +86,7 @@ class StepRendererTest extends AbstractBaseTest
                     [],
                     '',
                     '',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -97,6 +101,7 @@ class StepRendererTest extends AbstractBaseTest
                     [],
                     '',
                     '',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -113,6 +118,7 @@ class StepRendererTest extends AbstractBaseTest
                     ],
                     '',
                     '',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -129,6 +135,7 @@ class StepRendererTest extends AbstractBaseTest
                     ],
                     '',
                     '',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -149,6 +156,7 @@ class StepRendererTest extends AbstractBaseTest
                     ],
                     'Foo',
                     'Bar',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -167,6 +175,7 @@ class StepRendererTest extends AbstractBaseTest
                     ],
                     'Foo',
                     'Bar',
+                    null,
                     null
                 )),
                 'expectedRenderedStep' =>
@@ -185,6 +194,7 @@ class StepRendererTest extends AbstractBaseTest
                     ],
                     'Foo',
                     'Bar',
+                    null,
                     new InvalidLocatorException(
                         new ElementIdentifier('a[href=https://example.com]'),
                         \Mockery::mock(InvalidSelectorException::class)
@@ -200,6 +210,34 @@ class StepRendererTest extends AbstractBaseTest
                     '        - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '      does not exist' . "\n" .
                     '    * CSS selector ' . $cof->createComment('a[href=https://example.com]') . ' is not valid'
+                ,
+            ],
+            'passed, has data' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_PASSED,
+                    'passed step name',
+                    [
+                        $actionParser->parse('set $".search" to $data.search'),
+                        $assertionParser->parse('$page.title matches $data.expected_title_pattern'),
+                    ],
+                    '',
+                    '',
+                    new DataSet(
+                        'data set name',
+                        [
+                            'search' => 'value1',
+                            'expected_title_pattern' => 'value2',
+                        ]
+                    ),
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name: data set name') . "\n" .
+                    '      $search: ' . $cof->createComment('value1') . "\n" .
+                    '      $expected_title_pattern: ' . $cof->createComment('value2') . "\n" .
+                    '      ' . "\n" .
+                    '    ' . $successPrefix . ' set $".search" to $data.search' . "\n" .
+                    '    ' . $successPrefix . ' $page.title matches $data.expected_title_pattern'
                 ,
             ],
         ];
@@ -219,6 +257,7 @@ class StepRendererTest extends AbstractBaseTest
         array $handledStatements,
         string $expectedValue,
         string $actualValue,
+        ?DataSetInterface $currentDataSet,
         ?\Throwable $lastException
     ): BasilTestCaseInterface {
         $test = \Mockery::mock(BasilTestCaseInterface::class);
@@ -241,6 +280,10 @@ class StepRendererTest extends AbstractBaseTest
         $test
             ->shouldReceive('getExaminedValue')
             ->andReturn($actualValue);
+
+        $test
+            ->shouldReceive('getCurrentDataSet')
+            ->andReturn($currentDataSet);
 
         $test
             ->shouldReceive('getLastException')
