@@ -96,7 +96,8 @@ class ResultPrinterTest extends AbstractBaseTest
                 'expectedOutput' =>
                 $cof->createTestPath('test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n"
+                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                    "\n"
                 ,
             ],
             'multiple tests' => [
@@ -158,6 +159,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step one') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' click $".successful"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step two') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' click $".back"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
@@ -169,7 +171,8 @@ class ResultPrinterTest extends AbstractBaseTest
                         '$page.url is "http://example.com/new/"'
                     ) . "\n" .
                     '    * ' . $cof->createComment('http://example.com/')
-                    . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n"
+                    . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n" .
+                    "\n"
                 ,
             ],
         ];

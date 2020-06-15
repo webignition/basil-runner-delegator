@@ -24,7 +24,7 @@ use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 
 class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 {
-    private string $projectRootPath = '';
+    private string $projectRootPath;
     private StepRenderer $stepRenderer;
     private ?TestOutput $currentTestOutput = null;
     private TestRenderer $testRenderer;
@@ -121,25 +121,17 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         if ($test instanceof BasilTestCaseInterface) {
             $testPath = $test::getBasilTestPath();
 
-            $currentTestOutput = $this->currentTestOutput;
+            $isNewTest = $this->currentTestOutput instanceof TestOutput
+                ? false === $this->currentTestOutput->hasPath($testPath)
+                : true;
 
-            if (null === $this->currentTestOutput) {
+            if ($isNewTest) {
                 $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
                 $this->write($this->testRenderer->render($currentTestOutput));
                 $this->writeEmptyLine();
-            } else {
-                if (false === $this->currentTestOutput->hasPath($testPath)) {
-                    $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
 
-                    $this->writeEmptyLine();
-                    $this->write($this->testRenderer->render($currentTestOutput));
-                    $this->writeEmptyLine();
-
-                    $this->currentTestOutput = $currentTestOutput;
-                }
+                $this->currentTestOutput = $currentTestOutput;
             }
-
-            $this->currentTestOutput = $currentTestOutput;
         }
     }
 
@@ -151,6 +143,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         if ($test instanceof BasilTestCaseInterface) {
             $step = new Step($test);
             $this->write($this->stepRenderer->render($step));
+            $this->writeEmptyLine();
             $this->writeEmptyLine();
         }
     }
