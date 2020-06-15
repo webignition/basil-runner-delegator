@@ -165,10 +165,13 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         'ExampleComImportVerifyOpenLiteralTest',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         'ExampleComVerifyOpenLiteralTest',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
+                        'ExampleComVerifyOpenLiteralDataSetsTest',
                 ],
                 'expectedGeneratedTestOutputSources' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
                 'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
@@ -176,6 +179,8 @@ class GenerateCommandTest extends AbstractFunctionalTest
                         $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
                         $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
+                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
+                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralDataSetsTest.php',
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
                 ]),

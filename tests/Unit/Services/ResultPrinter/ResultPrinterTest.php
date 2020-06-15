@@ -240,6 +240,10 @@ class ResultPrinterTest extends AbstractBaseTest
                 ->shouldReceive('getLastException')
                 ->andReturnNull();
 
+            $basilTestCase
+                ->shouldReceive('getCurrentDataSet')
+                ->andReturnNull();
+
             $testCases[] = $basilTestCase;
         }
 
