@@ -63,6 +63,8 @@ class RunCommand extends Command
         $process = popen($this->createPhpUnitCommand($path), 'r');
 
         if (is_resource($process)) {
+            $output->setDecorated(true);
+
             while ($buffer = fgets($process)) {
                 $formattedLine = $this->consoleOutputFormatter->format($buffer);
 
