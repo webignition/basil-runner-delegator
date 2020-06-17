@@ -94,7 +94,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     null,
                 ],
                 'expectedOutput' =>
-                $cof->createTestPath('test.yml') . "\n" .
+                '<test-name>test.yml</test-name>' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
                     "\n"
@@ -150,12 +150,12 @@ class ResultPrinterTest extends AbstractBaseTest
                     'http://example.com/',
                 ],
                 'expectedOutput' =>
-                    $cof->createTestPath('test1.yml') . "\n" .
+                    '<test-name>test1.yml</test-name>' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test one step one') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Hello, World!"' . "\n" .
                     "\n" .
-                    $cof->createTestPath('test2.yml') . "\n" .
+                    '<test-name>test2.yml</test-name>' . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step one') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' click $".successful"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/successful/"' . "\n" .
@@ -164,7 +164,7 @@ class ResultPrinterTest extends AbstractBaseTest
                     '    ' . $cof->createSuccess('✓') . ' click $".back"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
                     "\n" .
-                    $cof->createTestPath('test3.yml') . "\n" .
+                    '<test-name>test3.yml</test-name>' . "\n" .
                     '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('test three step one') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' click $".new"' . "\n" .
                     '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
