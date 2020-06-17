@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
+use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
+use webignition\BasilRunner\Model\ResultPrinter\TestName;
 use webignition\BasilRunner\Model\TestOutput\Test;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 
 class TestRenderer
 {
-    private ConsoleOutputFactory $consoleOutputFactory;
-
-    public function __construct(ConsoleOutputFactory $consoleOutputFactory)
+    /**
+     * @param Test $test
+     *
+     * @return RenderableInterface
+     */
+    public function render(Test $test): RenderableInterface
     {
-        $this->consoleOutputFactory = $consoleOutputFactory;
-    }
-
-    public function render(Test $test): string
-    {
-        return $this->consoleOutputFactory->createTestPath($test->getRelativePath());
+        return new TestName($test->getRelativePath());
     }
 }
