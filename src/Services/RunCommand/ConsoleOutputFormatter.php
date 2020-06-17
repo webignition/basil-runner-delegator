@@ -26,7 +26,7 @@ class ConsoleOutputFormatter
 
     private function formatTestNameLine(string $line): string
     {
-        return preg_replace(
+        return (string) preg_replace(
             [
                 '/^' . preg_quote(TestName::START, '/') . '/',
                 '/' . preg_quote(TestName::END, '/') . '$/',
