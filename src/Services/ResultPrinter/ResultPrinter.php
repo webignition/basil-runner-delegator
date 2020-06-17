@@ -37,7 +37,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 
         $consoleOutputFactory = new ConsoleOutputFactory();
 
-        $this->testRenderer = new TestRenderer($consoleOutputFactory);
+        $this->testRenderer = new TestRenderer();
         $this->stepRenderer = new StepRenderer(
             $consoleOutputFactory,
             new StatementLineRenderer($consoleOutputFactory),
@@ -127,7 +127,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 
             if ($isNewTest) {
                 $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
-                $this->write($this->testRenderer->render($currentTestOutput));
+                $this->write($this->testRenderer->render($currentTestOutput)->render());
                 $this->writeEmptyLine();
 
                 $this->currentTestOutput = $currentTestOutput;
