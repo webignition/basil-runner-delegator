@@ -8,6 +8,7 @@ use phpmock\mockery\PHPMockery;
 use Symfony\Component\Console\Tester\CommandTester;
 use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
+use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class RunCommandTest extends AbstractBaseTest
@@ -20,7 +21,7 @@ class RunCommandTest extends AbstractBaseTest
             '--path' => $projectRootPathProvider->get() . '/tests/build/target',
         ];
 
-        $command = new RunCommand($projectRootPathProvider);
+        $command = new RunCommand($projectRootPathProvider, new ConsoleOutputFormatter());
 
         $commandTester = new CommandTester($command);
 

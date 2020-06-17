@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
+use webignition\BasilRunner\Model\ResultPrinter\TestName;
 use webignition\BasilRunner\Model\TestOutput\Test;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -17,29 +17,23 @@ class TestRendererTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->renderer = new TestRenderer(
-            new ConsoleOutputFactory()
-        );
+        $this->renderer = new TestRenderer();
     }
 
     /**
      * @dataProvider renderDataProvider
      */
-    public function testRender(Test $test, string $expectedRenderedTest)
+    public function testRender(Test $test, TestName $expectedTestName)
     {
-        $this->assertSame($expectedRenderedTest, $this->renderer->render($test));
+        $this->assertEquals($expectedTestName, $this->renderer->render($test));
     }
 
     public function renderDataProvider(): array
     {
-        $consoleOutputFactory = new ConsoleOutputFactory();
-
         return [
             'default' => [
                 'test' => $this->createTest('/relative/path.yml'),
-                'expectedRenderedTest' =>
-                    $consoleOutputFactory->createTestPath('/relative/path.yml')
-                ,
+                'expectedTestName' => new TestName('/relative/path.yml'),
             ],
         ];
     }
