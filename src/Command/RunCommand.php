@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
+use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class RunCommand extends Command
@@ -23,10 +24,14 @@ class RunCommand extends Command
     private const DEFAULT_RELATIVE_PATH = '/generated';
 
     private string $projectRootPath;
+    private ConsoleOutputFormatter $consoleOutputFormatter;
 
-    public function __construct(ProjectRootPathProvider $projectRootPathProvider)
-    {
+    public function __construct(
+        ProjectRootPathProvider $projectRootPathProvider,
+        ConsoleOutputFormatter $consoleOutputFormatter
+    ) {
         $this->projectRootPath = $projectRootPathProvider->get();
+        $this->consoleOutputFormatter = $consoleOutputFormatter;
 
         parent::__construct();
     }
@@ -59,7 +64,9 @@ class RunCommand extends Command
 
         if (is_resource($process)) {
             while ($buffer = fgets($process)) {
-                $output->write($buffer);
+                $formattedLine = $this->consoleOutputFormatter->format($buffer);
+
+                $output->write($formattedLine);
             }
 
             return pclose($process);
