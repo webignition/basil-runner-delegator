@@ -11,6 +11,3 @@ services:
 
   webignition\BasilRunner\Services\TestGenerator:
     public: true
-
-  webignition\BasilRunner\Tests\Services\ObjectReflector:
-    public: true

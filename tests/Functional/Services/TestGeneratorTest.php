@@ -14,7 +14,7 @@ use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
-use webignition\BasilRunner\Tests\Services\ObjectReflector;
+use webignition\ObjectReflector\ObjectReflector;
 
 class TestGeneratorTest extends AbstractFunctionalTest
 {
@@ -96,32 +96,29 @@ class TestGeneratorTest extends AbstractFunctionalTest
      */
     private function mockClassNameFactory(string $className): void
     {
-        /* @var ObjectReflector $objectReflector */
-        $objectReflector = self::$container->get(ObjectReflector::class);
-
         $classNameFactory = \Mockery::mock(ClassNameFactory::class);
         $classNameFactory
             ->shouldReceive('create')
             ->andReturn($className);
 
-        $compiler = $objectReflector->getProperty($this->testGenerator, 'compiler');
-        $classDefinitionFactory = $objectReflector->getProperty($compiler, 'classDefinitionFactory');
+        $compiler = ObjectReflector::getProperty($this->testGenerator, 'compiler');
+        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $classDefinitionFactory,
             ClassDefinitionFactory::class,
             'classNameFactory',
             $classNameFactory
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $compiler,
             Compiler::class,
             'classDefinitionFactory',
             $classDefinitionFactory
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $this->testGenerator,
             GenerateCommand::class,
             'compiler',
