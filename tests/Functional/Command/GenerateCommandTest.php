@@ -26,7 +26,7 @@ use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
-use webignition\BasilRunner\Tests\Services\ObjectReflector;
+use webignition\ObjectReflector\ObjectReflector;
 
 class GenerateCommandTest extends AbstractFunctionalTest
 {
@@ -1386,10 +1386,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
     private function mockTestGenerator(GenerateCommand $command, TestGenerator $mockTestGenerator): void
     {
-        /* @var ObjectReflector $objectReflector */
-        $objectReflector = self::$container->get(ObjectReflector::class);
-
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $command,
             GenerateCommand::class,
             'testGenerator',
@@ -1401,27 +1398,24 @@ class GenerateCommandTest extends AbstractFunctionalTest
         GenerateCommand $command,
         ExternalVariableIdentifiers $updatedExternalVariableIdentifiers
     ): void {
-        /* @var ObjectReflector $objectReflector */
-        $objectReflector = self::$container->get(ObjectReflector::class);
+        $testGenerator = ObjectReflector::getProperty($command, 'testGenerator');
+        $compiler = ObjectReflector::getProperty($testGenerator, 'compiler');
 
-        $testGenerator = $objectReflector->getProperty($command, 'testGenerator');
-        $compiler = $objectReflector->getProperty($testGenerator, 'compiler');
-
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $compiler,
             Compiler::class,
             'externalVariableIdentifiers',
             $updatedExternalVariableIdentifiers
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $testGenerator,
             TestGenerator::class,
             'compiler',
             $compiler
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $command,
             GenerateCommand::class,
             'testGenerator',
@@ -1441,9 +1435,6 @@ class GenerateCommandTest extends AbstractFunctionalTest
      */
     private function mockClassNameFactory(array $classNames): void
     {
-        /* @var ObjectReflector $objectReflector */
-        $objectReflector = self::$container->get(ObjectReflector::class);
-
         $classNameFactory = \Mockery::mock(ClassNameFactory::class);
         $classNameFactory
             ->shouldReceive('create')
@@ -1451,32 +1442,32 @@ class GenerateCommandTest extends AbstractFunctionalTest
                 return $classNames[$test->getPath()] ?? null;
             });
 
-        $testGenerator = $objectReflector->getProperty($this->command, 'testGenerator');
-        $compiler = $objectReflector->getProperty($testGenerator, 'compiler');
-        $classDefinitionFactory = $objectReflector->getProperty($compiler, 'classDefinitionFactory');
+        $testGenerator = ObjectReflector::getProperty($this->command, 'testGenerator');
+        $compiler = ObjectReflector::getProperty($testGenerator, 'compiler');
+        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $classDefinitionFactory,
             ClassDefinitionFactory::class,
             'classNameFactory',
             $classNameFactory
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $compiler,
             Compiler::class,
             'classDefinitionFactory',
             $classDefinitionFactory
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $testGenerator,
             TestGenerator::class,
             'compiler',
             $compiler
         );
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $this->command,
             GenerateCommand::class,
             'testGenerator',
@@ -1486,15 +1477,12 @@ class GenerateCommandTest extends AbstractFunctionalTest
 
     private function mockConfigurationValidator(): void
     {
-        /* @var ObjectReflector $objectReflector */
-        $objectReflector = self::$container->get(ObjectReflector::class);
-
         $generateCommandValidator = \Mockery::mock(ConfigurationValidator::class);
         $generateCommandValidator
             ->shouldReceive('isValid')
             ->andReturn(true);
 
-        $objectReflector->setProperty(
+        ObjectReflector::setProperty(
             $this->command,
             GenerateCommand::class,
             'generateCommandValidator',
