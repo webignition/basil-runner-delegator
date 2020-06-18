@@ -231,9 +231,9 @@ class StepRendererTest extends AbstractBaseTest
                 )),
                 'expectedRenderedStep' =>
                     '  <icon-success /> <success>passed step name: data set name</success>' . "\n" .
-                    '      $search: ' . $cof->createComment('value1') . "\n" .
-                    '      $expected_title_pattern: ' . $cof->createComment('value2') . "\n" .
-                    '      ' . "\n" .
+                    '      $search: <comment>value1</comment>' . "\n" .
+                    '      $expected_title_pattern: <comment>value2</comment>' . "\n" .
+                    "\n" .
                     '    ' . $successPrefix . ' set $".search" to $data.search' . "\n" .
                     '    ' . $successPrefix . ' $page.title matches $data.expected_title_pattern'
                 ,

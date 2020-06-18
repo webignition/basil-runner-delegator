@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
+use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
@@ -41,13 +42,8 @@ class StepRenderer
 
         $dataSet = $step->getCurrentDataSet();
         if ($dataSet instanceof DataSetInterface) {
-            $dataSetList = '';
-
-            foreach ($dataSet->getData() as $key => $value) {
-                $dataSetList .= '$' . $key . ': ' . $this->consoleOutputFactory->createComment($value) . "\n";
-            }
-
-            $content .= $this->indent($dataSetList, 3) . "\n";
+            $keyValueCollection = KeyValueCollection::fromDataSet($dataSet);
+            $content .= $keyValueCollection->render() . "\n\n";
         }
 
         $content .= $this->renderCompletedStatements($step);
