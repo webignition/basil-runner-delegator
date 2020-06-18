@@ -7,8 +7,10 @@ namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
+use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
+use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
@@ -36,8 +38,9 @@ class StepRenderer
 
     public function render(Step $step): string
     {
-        $stepNameLine = $this->renderName($step);
-        $content = $this->indent($stepNameLine) . "\n";
+        $stepName = new StepName($step);
+
+        $content = $stepName->render() . "\n";
 
         $dataSet = $step->getCurrentDataSet();
         if ($dataSet instanceof DataSetInterface) {
@@ -88,11 +91,11 @@ class StepRenderer
             $content .= ': ' . $dataSet->getName();
         }
 
-        $styledIcon = $status === BaseTestRunner::STATUS_PASSED
+        $styledIcon = $status === Status::SUCCESS
             ? $this->consoleOutputFactory->createSuccess($icon)
             : $this->consoleOutputFactory->createFailure($icon);
 
-        $styledContent = $status === BaseTestRunner::STATUS_PASSED
+        $styledContent = $status === Status::SUCCESS
             ? $this->consoleOutputFactory->createSuccess($content)
             : $this->consoleOutputFactory->createFailure($content);
 
