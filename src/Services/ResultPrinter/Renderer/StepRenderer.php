@@ -10,25 +10,21 @@ use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 
 class StepRenderer
 {
     private const INDENT = '  ';
 
-    private ConsoleOutputFactory $consoleOutputFactory;
     private StatementLineRenderer $statementLineRenderer;
     private SummaryHandler $summaryHandler;
     private ExceptionRenderer $exceptionRenderer;
 
     public function __construct(
-        ConsoleOutputFactory $consoleOutputFactory,
         StatementLineRenderer $statementLineRenderer,
         SummaryHandler $summaryHandler,
         ExceptionRenderer $exceptionRenderer
     ) {
-        $this->consoleOutputFactory = $consoleOutputFactory;
         $this->statementLineRenderer = $statementLineRenderer;
         $this->summaryHandler = $summaryHandler;
         $this->exceptionRenderer = $exceptionRenderer;
@@ -78,8 +74,7 @@ class StepRenderer
 
         foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
             if (false === $completedStatementLine->getIsDerived()) {
-                $renderedStatement = $this->statementLineRenderer->render($completedStatementLine);
-                $renderedStatements[] = $this->indent($renderedStatement, 2);
+                $renderedStatements[] = $this->statementLineRenderer->render($completedStatementLine);
             }
         }
 
@@ -91,13 +86,10 @@ class StepRenderer
         string $expectedValue,
         string $actualValue
     ): string {
-        $renderedStatement = $this->statementLineRenderer->render($statementLine);
-        $statement = $statementLine->getStatement();
-
-        $content = $this->indent($renderedStatement, 2);
-
+        $content = $this->statementLineRenderer->render($statementLine);
         $summary = null;
 
+        $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
             $summary = $this->summaryHandler->handle(
                 $statement,

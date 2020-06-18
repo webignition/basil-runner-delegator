@@ -39,8 +39,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 
         $this->testRenderer = new TestRenderer();
         $this->stepRenderer = new StepRenderer(
-            $consoleOutputFactory,
-            new StatementLineRenderer($consoleOutputFactory),
+            new StatementLineRenderer(),
             new SummaryHandler(
                 DomIdentifierFactory::createFactory(),
                 new SummaryFactory($consoleOutputFactory)
