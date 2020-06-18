@@ -186,8 +186,8 @@ class StepRendererTest extends AbstractBaseTest
                     [
                         $assertionParser->parse('$"a[href=https://example.com]" exists'),
                     ],
-                    'Foo',
-                    'Bar',
+                    '',
+                    '',
                     null,
                     new InvalidLocatorException(
                         new ElementIdentifier('a[href=https://example.com]'),
@@ -203,7 +203,7 @@ class StepRendererTest extends AbstractBaseTest
                     '        - CSS selector: ' . $cof->createComment('a[href=https://example.com]') . "\n" .
                     '        - ordinal position: ' . $cof->createComment('1') . "\n" .
                     '      does not exist' . "\n" .
-                    '    * CSS selector ' . $cof->createComment('a[href=https://example.com]') . ' is not valid'
+                    '    * CSS selector <comment>a[href=https://example.com]</comment> is not valid'
                 ,
             ],
             'passed, has data' => [
@@ -232,6 +232,32 @@ class StepRendererTest extends AbstractBaseTest
                     "\n" .
                     '    <icon-success /> set $".search" to $data.search' . "\n" .
                     '    <icon-success /> $page.title matches $data.expected_title_pattern'
+                ,
+            ],
+            'foo' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [
+                        $assertionParser->parse('$".selector" exists'),
+                    ],
+                    '',
+                    '',
+                    null,
+                    new \RuntimeException('exception message')
+                )),
+                'expectedRenderedStep' =>
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
+                    '    <icon-failure /> '
+                    . '<highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
+                    '    * Element '
+                    . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
+                    '        - CSS selector: ' . $cof->createComment('.selector') . "\n" .
+                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '      does not exist' . "\n" .
+                    '    * An unknown exception has occurred:' . "\n" .
+                    '        - RuntimeException' . "\n" .
+                    '        - exception message'
                 ,
             ],
         ];
