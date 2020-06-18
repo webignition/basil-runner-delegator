@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\TestOutput;
 
-use PHPUnit\Runner\BaseTestRunner;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilModels\StatementInterface;
@@ -27,7 +26,7 @@ class Step
         $completedStatements = $test->getHandledStatements();
         $failedStatement = null;
 
-        if (BaseTestRunner::STATUS_PASSED !== $test->getStatus()) {
+        if (Status::SUCCESS !== $test->getStatus()) {
             $failedStatement = array_pop($completedStatements);
         }
 

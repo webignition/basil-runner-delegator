@@ -11,6 +11,7 @@ use webignition\BasilModels\EncapsulatingStatementInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
+use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 
 class StatementLineRenderer
@@ -35,7 +36,7 @@ class StatementLineRenderer
 
     private function renderedPassedStatement(StatementInterface $statement): string
     {
-        $content = $this->consoleOutputFactory->createSuccess(IconMap::get(BaseTestRunner::STATUS_PASSED)) .
+        $content = $this->consoleOutputFactory->createSuccess(IconMap::get(Status::SUCCESS)) .
             ' ' .
             $statement->getSource();
 
@@ -48,7 +49,7 @@ class StatementLineRenderer
 
     private function renderedFailedStatement(StatementInterface $statement): string
     {
-        $content = $this->consoleOutputFactory->createFailure(IconMap::get(BaseTestRunner::STATUS_FAILURE)) .
+        $content = $this->consoleOutputFactory->createFailure(IconMap::get(Status::FAILURE)) .
             ' ' .
             $this->consoleOutputFactory->createHighlightedFailure($statement->getSource());
 

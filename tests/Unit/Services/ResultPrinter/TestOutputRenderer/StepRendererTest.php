@@ -76,7 +76,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name') . "\n"
+                    '  <icon-success /> <success>passed step name</success>' . "\n"
                 ,
             ],
             'failed, no statements' => [
@@ -90,8 +90,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $failurePrefix . ' ' .
-                    $cof->createFailure('failed step name') . "\n"
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n"
                 ,
             ],
             'unknown, no statements' => [
@@ -105,8 +104,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $cof->createFailure('?') . ' ' .
-                    $cof->createFailure('unknown step name') . "\n"
+                    '  <icon-unknown /> <failure>unknown step name</failure>' . "\n"
                 ,
             ],
             'passed, click statement completed' => [
@@ -122,7 +120,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name') . "\n" .
+                    '  <icon-success /> <success>passed step name</success>' . "\n" .
                     '    ' . $successPrefix . ' click $".selector"'
                 ,
             ],
@@ -139,7 +137,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$".selector" exists') . "\n" .
                     '    * Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
                     '        - CSS selector: ' . $cof->createComment('.selector') . "\n" .
@@ -160,7 +158,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$page.title is "Foo"') . "\n" .
                     '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
                 ,
@@ -179,7 +177,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    ' . $successPrefix . ' $page.url is "http://example.com/' . "\n" .
                     '    ' . $failurePrefix . ' ' . $cof->createHighlightedFailure('$page.title is "Foo"') . "\n" .
                     '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
@@ -201,7 +199,7 @@ class StepRendererTest extends AbstractBaseTest
                     )
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $failurePrefix . ' ' . $cof->createFailure('failed step name') . "\n" .
+                    '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    ' . $failurePrefix . ' '
                     . $cof->createHighlightedFailure('$"a[href=https://example.com]" exists') . "\n" .
                     '    * Element '
@@ -232,7 +230,7 @@ class StepRendererTest extends AbstractBaseTest
                     null
                 )),
                 'expectedRenderedStep' =>
-                    '  ' . $successPrefix . ' ' . $cof->createSuccess('passed step name: data set name') . "\n" .
+                    '  <icon-success /> <success>passed step name: data set name</success>' . "\n" .
                     '      $search: ' . $cof->createComment('value1') . "\n" .
                     '      $expected_title_pattern: ' . $cof->createComment('value2') . "\n" .
                     '      ' . "\n" .
