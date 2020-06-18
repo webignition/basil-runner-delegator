@@ -9,11 +9,6 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 
 class ConsoleOutputFactory
 {
-    public function createTestPath(string $path): string
-    {
-        return $this->applyStyle($path, new OutputFormatterStyle(null, null, ['bold']));
-    }
-
     public function createSuccess(string $text): string
     {
         return $this->applyStyle($text, new OutputFormatterStyle('green'));

@@ -19,28 +19,6 @@ class ConsoleOutputFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createTestPathDataProvider
-     */
-    public function testCreateTestPath(string $text, string $expectedText)
-    {
-        $this->assertSame($expectedText, $this->factory->createTestPath($text));
-    }
-
-    public function createTestPathDataProvider(): array
-    {
-        return [
-            'empty' => [
-                'text' => '',
-                'expectedText' => '',
-            ],
-            'non-empty' => [
-                'text' => 'test.yml',
-                'expectedText' => "\e[1m" . 'test.yml' . "\e[22m",
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider createSuccessDataProvider
      */
     public function testCreateSuccess(string $text, string $expectedText)

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
+use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
 class GenerateRunTest extends TestCase
 {
@@ -36,13 +37,14 @@ class GenerateRunTest extends TestCase
     public function generateAndRunDataProvider(): array
     {
         $cof = new ConsoleOutputFactory();
+        $styler = new ConsoleStyler();
 
         return [
             'passing: single test' => [
                 'source' => './tests/Fixtures/basil-integration/Test/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
+                    $styler->bold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') .
@@ -67,7 +69,7 @@ class GenerateRunTest extends TestCase
                 'source' => './tests/Fixtures/basil-integration/FailingTest/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
+                    $styler->bold('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') .
@@ -91,7 +93,7 @@ class GenerateRunTest extends TestCase
                 'source' => './tests/Fixtures/basil-integration/Test/form-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
+                    $styler->bold('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
                     '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
                     '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n" .
