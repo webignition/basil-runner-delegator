@@ -78,9 +78,9 @@ class GenerateRunTest extends TestCase
                     '  ' . $styler->success('✓') . ' ' . $styler->success('verify primary heading') . "\n" .
                     '    ' . $styler->success('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('verify links are present') .
+                    '  ' . $styler->failure('x') . ' ' . $styler->failure('verify links are present') .
                     "\n" .
-                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
+                    '    ' . $styler->failure('x') . ' ' . $cof->createHighlightedFailure(
                         '$"a[id=link-to-assertions]" not-exists'
                     ) . "\n" .
                     '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
