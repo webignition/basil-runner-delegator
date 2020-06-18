@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
-use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
-use webignition\BasilRunner\Model\TestOutput\IconMap;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
-use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
@@ -77,29 +74,6 @@ class StepRenderer
         }
 
         return $content;
-    }
-
-    private function renderName(Step $step): string
-    {
-        $status = $step->getStatus();
-
-        $icon = IconMap::get($status);
-        $content = $step->getName();
-
-        $dataSet = $step->getCurrentDataSet();
-        if ($dataSet instanceof DataSetInterface) {
-            $content .= ': ' . $dataSet->getName();
-        }
-
-        $styledIcon = $status === Status::SUCCESS
-            ? $this->consoleOutputFactory->createSuccess($icon)
-            : $this->consoleOutputFactory->createFailure($icon);
-
-        $styledContent = $status === Status::SUCCESS
-            ? $this->consoleOutputFactory->createSuccess($content)
-            : $this->consoleOutputFactory->createFailure($content);
-
-        return $styledIcon . ' ' . $styledContent;
     }
 
     private function renderCompletedStatements(Step $step): string
