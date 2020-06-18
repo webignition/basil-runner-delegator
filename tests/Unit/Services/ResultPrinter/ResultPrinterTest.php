@@ -96,7 +96,7 @@ class ResultPrinterTest extends AbstractBaseTest
                 'expectedOutput' =>
                 '<test-name>test.yml</test-name>' . "\n" .
                     '  <icon-success /> <success>step one</success>' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
                     "\n"
                 ,
             ],
@@ -152,24 +152,23 @@ class ResultPrinterTest extends AbstractBaseTest
                 'expectedOutput' =>
                     '<test-name>test1.yml</test-name>' . "\n" .
                     '  <icon-success /> <success>test one step one</success>' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Hello, World!"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
+                    '    <icon-success /> $page.title is "Hello, World!"' . "\n" .
                     "\n" .
                     '<test-name>test2.yml</test-name>' . "\n" .
                     '  <icon-success /> <success>test two step one</success>' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".successful"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    '    <icon-success /> click $".successful"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/successful/"' . "\n" .
                     "\n" .
                     '  <icon-success /> <success>test two step two</success>' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".back"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                    '    <icon-success /> click $".back"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
                     "\n" .
                     '<test-name>test3.yml</test-name>' . "\n" .
                     '  <icon-failure /> <failure>test three step one</failure>' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".new"' . "\n" .
-                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
-                        '$page.url is "http://example.com/new/"'
-                    ) . "\n" .
+                    '    <icon-success /> click $".new"' . "\n" .
+                    '    <icon-failure /> '
+                    . '<highlighted-failure>$page.url is "http://example.com/new/"</highlighted-failure>' . "\n" .
                     '    * ' . $cof->createComment('http://example.com/')
                     . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n" .
                     "\n"

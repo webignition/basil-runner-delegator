@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\RunCommand;
 
 use webignition\BasilRunner\Model\ResultPrinter\Failure;
+use webignition\BasilRunner\Model\ResultPrinter\HighlightedFailure;
 use webignition\BasilRunner\Model\ResultPrinter\StatusIcon;
 use webignition\BasilRunner\Model\ResultPrinter\Success;
 use webignition\BasilRunner\Model\ResultPrinter\TestName;
@@ -36,6 +37,9 @@ class ConsoleOutputFormatter
 
         $line = str_replace(Failure::START, '<fg=red>', $line);
         $line = str_replace(Failure::END, '</>', $line);
+
+        $line = str_replace(HighlightedFailure::START, '<fg=white;bg=red>', $line);
+        $line = str_replace(HighlightedFailure::END, '</>', $line);
 
         return $line;
     }
