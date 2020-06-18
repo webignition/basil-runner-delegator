@@ -19,28 +19,6 @@ class ConsoleOutputFactoryTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider createSuccessDataProvider
-     */
-    public function testCreateSuccess(string $text, string $expectedText)
-    {
-        $this->assertSame($expectedText, $this->factory->createSuccess($text));
-    }
-
-    public function createSuccessDataProvider(): array
-    {
-        return [
-            'empty' => [
-                'text' => '',
-                'expectedText' => '',
-            ],
-            'non-empty' => [
-                'text' => 'content',
-                'expectedText' => "\e[32m" . 'content' . "\e[39m",
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider createFailureDataProvider
      */
     public function testCreateFailure(string $text, string $expectedText)

@@ -14,6 +14,11 @@ class ConsoleStyler
         return $this->applyStyle($path, new OutputFormatterStyle(null, null, ['bold']));
     }
 
+    public function success(string $text): string
+    {
+        return $this->applyStyle($text, new OutputFormatterStyle('green'));
+    }
+
     private function applyStyle(string $text, OutputFormatterStyleInterface $style): string
     {
         if ('' === $text) {
