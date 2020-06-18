@@ -15,6 +15,9 @@ class KeyValueCollection implements RenderableInterface
      */
     private array $keyValues;
 
+    /**
+     * @param KeyValue[] $keyValues
+     */
     public function __construct(array $keyValues)
     {
         $this->keyValues = array_filter($keyValues, function ($item) {
@@ -27,7 +30,7 @@ class KeyValueCollection implements RenderableInterface
         $keyValues = [];
 
         foreach ($dataSet->getData() as $key => $value) {
-            $keyValues[] = new KeyValue($key, $value);
+            $keyValues[] = new KeyValue((string) $key, $value);
         }
 
         return new KeyValueCollection($keyValues);
