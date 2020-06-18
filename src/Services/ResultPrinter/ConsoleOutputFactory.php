@@ -9,11 +9,6 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 
 class ConsoleOutputFactory
 {
-    public function createHighlightedFailure(string $text): string
-    {
-        return $this->applyStyle($text, new OutputFormatterStyle('white', 'red'));
-    }
-
     public function createComment(string $text): string
     {
         return $this->applyStyle($text, new OutputFormatterStyle('yellow'));

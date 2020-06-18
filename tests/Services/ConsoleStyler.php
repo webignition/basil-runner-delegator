@@ -24,6 +24,11 @@ class ConsoleStyler
         return $this->applyStyle($text, new OutputFormatterStyle('red'));
     }
 
+    public function highlightedFailure(string $text): string
+    {
+        return $this->applyStyle($text, new OutputFormatterStyle('white', 'red'));
+    }
+
     private function applyStyle(string $text, OutputFormatterStyleInterface $style): string
     {
         if ('' === $text) {

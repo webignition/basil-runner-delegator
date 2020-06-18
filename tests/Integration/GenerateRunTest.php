@@ -80,7 +80,7 @@ class GenerateRunTest extends TestCase
                     "\n" .
                     '  ' . $styler->failure('x') . ' ' . $styler->failure('verify links are present') .
                     "\n" .
-                    '    ' . $styler->failure('x') . ' ' . $cof->createHighlightedFailure(
+                    '    ' . $styler->failure('x') . ' ' . $styler->highlightedFailure(
                         '$"a[id=link-to-assertions]" not-exists'
                     ) . "\n" .
                     '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
