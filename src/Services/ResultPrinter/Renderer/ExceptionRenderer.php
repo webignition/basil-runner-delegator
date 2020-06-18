@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
+use webignition\BasilRunner\Model\ResultPrinter\Exception\InvalidLocator;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
@@ -19,7 +20,7 @@ class ExceptionRenderer
     public function render(\Throwable $exception): string
     {
         if ($exception instanceof InvalidLocatorException) {
-            return $this->renderInvalidLocatorException($exception);
+            return (new InvalidLocator($exception))->render();
         }
 
         return sprintf(
@@ -28,17 +29,6 @@ class ExceptionRenderer
             '    - %s',
             get_class($exception),
             $exception->getMessage()
-        );
-    }
-
-    private function renderInvalidLocatorException(InvalidLocatorException $exception): string
-    {
-        $identifier = $exception->getElementIdentifier();
-
-        return sprintf(
-            '%s %s is not valid',
-            $identifier->isCssSelector() ? 'CSS selector' : 'XPath expression',
-            $this->consoleOutputFactory->createComment($identifier->getLocator())
         );
     }
 }

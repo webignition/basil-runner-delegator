@@ -34,8 +34,6 @@ class ExceptionRendererTest extends AbstractBaseTest
 
     public function renderDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
-
         return [
             'InvalidLocatorException: CSS selector' => [
                 'exception' => new InvalidLocatorException(
@@ -43,7 +41,7 @@ class ExceptionRendererTest extends AbstractBaseTest
                     \Mockery::mock(InvalidSelectorException::class)
                 ),
                 'expectedRenderedException' =>
-                    'CSS selector ' . $cof->createComment('a[href=https://example.com]') . ' is not valid'
+                    'CSS selector <comment>a[href=https://example.com]</comment> is not valid'
                 ,
             ],
             'InvalidLocatorException: XPath expression' => [
@@ -52,7 +50,7 @@ class ExceptionRendererTest extends AbstractBaseTest
                     \Mockery::mock(InvalidSelectorException::class)
                 ),
                 'expectedRenderedException' =>
-                    'XPath expression ' . $cof->createComment('//?') . ' is not valid'
+                    'XPath expression <comment>//?</comment> is not valid'
                 ,
             ],
             'unknown exception' => [
