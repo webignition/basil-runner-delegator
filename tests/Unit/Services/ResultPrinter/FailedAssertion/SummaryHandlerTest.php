@@ -8,6 +8,7 @@ use Hamcrest\Core\IsEqual;
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilParser\AssertionParser;
+use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -432,7 +433,7 @@ class SummaryHandlerTest extends AbstractBaseTest
         $factory
             ->shouldReceive($methodName)
             ->withArgs($args)
-            ->andReturn($return);
+            ->andReturn(new Literal($return));
 
         return $factory;
     }
