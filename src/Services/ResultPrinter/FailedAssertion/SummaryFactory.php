@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalToElementalComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalToScalarComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ExistenceSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalIsRegExpSummary;
@@ -76,32 +77,15 @@ class SummaryFactory
         string $expectedValue,
         string $actualValue
     ): string {
-        $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
-
-        $valueExpansion = $this->createIdentifierExpansion($valueIdentifier);
-
-        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
-        $outcomeSuffix = $comparison === 'matches'
-            ? 'within the value of'
-            : 'the value of';
-
-        $summary = sprintf(
-            "%s\n  %s %s %s\n%s\n  %s",
-            $identifierExpansion,
-            $this->createWithValuePortion($actualValue),
-            $outcome . ' ' . $outcomeSuffix,
-            $this->createElementIdentifiedByString($valueIdentifier),
-            $valueExpansion,
-            $this->createWithValuePortion($expectedValue)
-        );
-
-        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+        $summary = new ElementalToElementalComparisonSummary(
+            $identifier,
+            $valueIdentifier,
             $comparison,
             $expectedValue,
             $actualValue
         );
 
-        return $summary . "\n\n" . $scalarToScalarSummary;
+        return $summary->render();
     }
 
     public function createForScalarToScalarComparisonAssertion(
@@ -146,15 +130,6 @@ class SummaryFactory
     private function createWithValuePortion(string $value): string
     {
         return 'with value ' . $this->consoleOutputFactory->createComment($value);
-    }
-
-    private function createElementIdentifiedByWithExpansion(ElementIdentifierInterface $identifier): string
-    {
-        return sprintf(
-            "* %s\n%s",
-            ucfirst($this->createElementIdentifiedByString($identifier)),
-            $this->createIdentifierExpansion($identifier)
-        );
     }
 
     private function createIdentifierExpansion(ElementIdentifierInterface $identifier): string

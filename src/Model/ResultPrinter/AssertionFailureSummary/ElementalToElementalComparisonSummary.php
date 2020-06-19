@@ -8,10 +8,15 @@ use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class ExistenceSummary extends RenderableCollection
+class ElementalToElementalComparisonSummary extends RenderableCollection
 {
-    public function __construct(ElementIdentifierInterface $identifier, string $comparison)
-    {
+    public function __construct(
+        ElementIdentifierInterface $identifier,
+        ElementIdentifierInterface $valueIdentifier,
+        string $operator,
+        string $expectedValue,
+        string $actualValue
+    ) {
         $ancestorHierarchy = null === $identifier->getParentIdentifier()
             ? null
             : new AncestorHierarchy($identifier);
@@ -20,7 +25,11 @@ class ExistenceSummary extends RenderableCollection
             new ComponentIdentifiedBy($identifier),
             new IdentifierProperties($identifier),
             $ancestorHierarchy,
-            new Literal(('exists' === $comparison ? 'does not exist' : 'does exist'), 1)
+            new WithValueElemental($actualValue, $valueIdentifier, $operator, 1),
+            new IdentifierProperties($valueIdentifier),
+            new WithValue($expectedValue, 1),
+            new Literal(''),
+            new ScalarToScalarComparisonSummary($operator, $expectedValue, $actualValue)
         ]);
     }
 

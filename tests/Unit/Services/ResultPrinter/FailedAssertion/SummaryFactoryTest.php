@@ -337,25 +337,83 @@ class SummaryFactoryTest extends AbstractBaseTest
 
     public function createForElementalToElementalComparisonAssertionDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
-
         return [
-            'is' => [
+            'is, element identifier, element value' => [
                 'identifier' => new ElementIdentifier('.identifier'),
                 'valueIdentifier' => new ElementIdentifier('.value'),
                 'comparison' => 'is',
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('actual')
-                    . ' is not equal to the value of element ' . $cof->createComment('$".value"')
-                    . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, element identifier, attribute value' => [
+                'identifier' => new ElementIdentifier('.identifier'),
+                'valueIdentifier' => new AttributeIdentifier('.value', 'attribute_name'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of attribute '
+                    . '<comment>$".value".attribute_name</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - attribute name: <comment>attribute_name</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, attribute identifier, element value' => [
+                'identifier' => new AttributeIdentifier('.identifier', 'attribute_name'),
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Attribute <comment>$".identifier".attribute_name</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - attribute name: <comment>attribute_name</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, attribute identifier, attribute value' => [
+                'identifier' => new AttributeIdentifier('.identifier', 'identifier_attribute'),
+                'valueIdentifier' => new AttributeIdentifier('.value', 'value_attribute'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Attribute <comment>$".identifier".identifier_attribute</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - attribute name: <comment>identifier_attribute</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of attribute '
+                    . '<comment>$".value".value_attribute</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - attribute name: <comment>value_attribute</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> is not equal to <comment>expected</comment>'
                 ,
@@ -367,15 +425,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected')
-                    . ' is equal to the value of element ' . $cof->createComment('$".value"')
-                    . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment> is equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>expected</comment> is equal to <comment>expected</comment>'
                 ,
@@ -387,15 +444,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('actual')
-                    . ' does not include the value of element ' . $cof->createComment('$".value"')
-                    . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> does not include the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> does not include <comment>expected</comment>'
                 ,
@@ -407,15 +463,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected')
-                    . ' does not exclude the value of element ' . $cof->createComment('$".value"')
-                    . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment> does not exclude the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>expected</comment> does not exclude <comment>expected</comment>'
                 ,
@@ -427,16 +482,14 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => '/expected/',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* Element ' . $cof->createComment('$".identifier"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.identifier') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('actual')
-                    . ' does not match regular expression within the value of element '
-                    . $cof->createComment('$".value"')
-                    . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('/expected/') . "\n" .
+                    '* Element <comment>$".identifier"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> does not match regular expression the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>/expected/</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> does not match regular expression <comment>/expected/</comment>'
                 ,
