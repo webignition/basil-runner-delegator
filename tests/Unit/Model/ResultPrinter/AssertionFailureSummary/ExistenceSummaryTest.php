@@ -34,6 +34,22 @@ class ExistenceSummaryTest extends AbstractBaseTest
                     '  does not exist'
                 ,
             ],
+            'descendant element exists' => [
+                'existenceSummary' => new ExistenceSummary(
+                    (new ElementIdentifier('.child'))
+                        ->withParentIdentifier(new ElementIdentifier('.parent')),
+                    'exists'
+                ),
+                'expectedRenderedString' =>
+                    '* Element <comment>$".parent" >> $".child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  does not exist'
+                ,
+            ],
             'element not-exists' => [
                 'existenceSummary' => new ExistenceSummary(
                     new ElementIdentifier('.selector'),

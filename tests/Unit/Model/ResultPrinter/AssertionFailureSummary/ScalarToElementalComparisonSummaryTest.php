@@ -29,10 +29,33 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     'expected',
                     'actual'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>actual</comment> is not equal to the value of element '
                     . '<comment>$".value"</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, descendant element value' => [
+                'summary' => new ScalarToElementalComparisonSummary(
+                    (new ElementIdentifier('.child'))
+                        ->withParentIdentifier(
+                            new ElementIdentifier('.parent')
+                        ),
+                    'is',
+                    'expected',
+                    'actual'
+                ),
+                'expectedRenderedString' =>
+                    '* <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".parent" >> $".child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
                     '    - ordinal position: <comment>1</comment>' . "\n" .
                     '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
@@ -46,7 +69,7 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     'expected',
                     'actual'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>actual</comment> is not equal to the value of attribute '
                     . '<comment>$".value".attribute_name</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .
@@ -64,7 +87,7 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     'expected',
                     'expected'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>expected</comment> is equal to the value of element '
                     . '<comment>$".value"</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .
@@ -81,7 +104,7 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     'expected',
                     'actual'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>actual</comment> does not include the value of element '
                     . '<comment>$".value"</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .
@@ -98,7 +121,7 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     'expected',
                     'expected'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>expected</comment> does not exclude the value of element '
                     . '<comment>$".value"</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .
@@ -115,7 +138,7 @@ class ScalarToElementalComparisonSummaryTest extends AbstractBaseTest
                     '/expected/',
                     'actual'
                 ),
-                'expectedSummary' =>
+                'expectedRenderedString' =>
                     '* <comment>actual</comment> does not match regular expression the value of element '
                     . '<comment>$".value"</comment> identified by:' . "\n" .
                     '    - CSS selector: <comment>.value</comment>' . "\n" .

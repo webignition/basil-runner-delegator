@@ -36,6 +36,26 @@ class ElementalIsRegExpSummaryTest extends AbstractBaseTest
                     '* <comment>/invalid/</comment> is not a valid regular expression'
                 ,
             ],
+            'descendant element identifier' => [
+                'elementalIsRegExpSummary' => new ElementalIsRegExpSummary(
+                    (new ElementIdentifier('.child'))
+                        ->withParentIdentifier(
+                            new ElementIdentifier('.parent')
+                        ),
+                    '/invalid/'
+                ),
+                'expectedRenderedString' =>
+                    '* The value of element <comment>$".parent" >> $".child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  is not a valid regular expression' . "\n" .
+                    "\n" .
+                    '* <comment>/invalid/</comment> is not a valid regular expression'
+                ,
+            ],
             'element identifier with ordinal position' => [
                 'elementalIsRegExpSummary' => new ElementalIsRegExpSummary(
                     new ElementIdentifier('.selector', 2),

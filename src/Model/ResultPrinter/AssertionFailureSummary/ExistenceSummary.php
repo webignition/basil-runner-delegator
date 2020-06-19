@@ -10,7 +10,7 @@ use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class ExistenceSummary extends RenderableCollection
 {
-    public function __construct(ElementIdentifierInterface $identifier, string $comparison)
+    public function __construct(ElementIdentifierInterface $identifier, string $operator)
     {
         $ancestorHierarchy = null === $identifier->getParentIdentifier()
             ? null
@@ -20,7 +20,7 @@ class ExistenceSummary extends RenderableCollection
             new ComponentIdentifiedBy($identifier),
             new IdentifierProperties($identifier),
             $ancestorHierarchy,
-            new Literal(('exists' === $comparison ? 'does not exist' : 'does exist'), 1)
+            new Literal(('exists' === $operator ? 'does not exist' : 'does exist'), 1)
         ]);
     }
 
