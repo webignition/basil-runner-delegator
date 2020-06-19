@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
+use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
 class SummaryHandler
@@ -21,8 +22,19 @@ class SummaryHandler
         $this->domIdentifierFactory = $domIdentifierFactory;
     }
 
-    public function handle(AssertionInterface $assertion, string $expectedValue, string $actualValue): ?string
+    public static function createHandler(): self
     {
+        return new SummaryHandler(
+            DomIdentifierFactory::createFactory(),
+            new SummaryFactory()
+        );
+    }
+
+    public function handle(
+        AssertionInterface $assertion,
+        string $expectedValue,
+        string $actualValue
+    ): ?RenderableInterface {
         $identifierString = $assertion->getIdentifier();
 
         $operator = $assertion->getOperator();
@@ -41,63 +53,63 @@ class SummaryHandler
             $valueIdentifier instanceof ElementIdentifierInterface
         ) {
             if (in_array($operator, $handledOperators)) {
-                return ($this->summaryFactory->createForElementalToElementalComparisonAssertion(
+                return $this->summaryFactory->createForElementalToElementalComparisonAssertion(
                     $identifier,
                     $valueIdentifier,
                     $operator,
                     $expectedValue,
                     $actualValue
-                ))->render();
+                );
             }
         }
 
         if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
             if (in_array($operator, $handledOperators)) {
-                return ($this->summaryFactory->createForScalarToElementalComparisonAssertion(
+                return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
                     $valueIdentifier,
                     $operator,
                     $expectedValue,
                     $actualValue
-                ))->render();
+                );
             }
         }
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
             if (in_array($operator, ['exists', 'not-exists'])) {
-                return ($this->summaryFactory->createForElementalExistenceAssertion(
+                return $this->summaryFactory->createForElementalExistenceAssertion(
                     $identifier,
                     $operator
-                ))->render();
+                );
             }
 
             if (in_array($operator, ['is-regexp'])) {
-                return ($this->summaryFactory->createForElementalIsRegExpAssertion(
+                return $this->summaryFactory->createForElementalIsRegExpAssertion(
                     $identifier,
                     $actualValue
-                ))->render();
+                );
             }
 
             if (in_array($operator, $handledOperators)) {
-                return ($this->summaryFactory->createForElementalToScalarComparisonAssertion(
+                return $this->summaryFactory->createForElementalToScalarComparisonAssertion(
                     $identifier,
                     $operator,
                     $expectedValue,
                     $actualValue
-                ))->render();
+                );
             }
         }
 
         if (null === $identifier && null === $valueIdentifier) {
             if (in_array($operator, ['is-regexp'])) {
-                return ($this->summaryFactory->createForScalarIsRegExpAssertion($actualValue))->render();
+                return $this->summaryFactory->createForScalarIsRegExpAssertion($actualValue);
             }
 
             if (in_array($operator, $handledOperators)) {
-                return ($this->summaryFactory->createForScalarToScalarComparisonAssertion(
+                return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
                     $operator,
                     $expectedValue,
                     $actualValue
-                ))->render();
+                );
             }
         }
 

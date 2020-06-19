@@ -8,6 +8,7 @@ use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
+use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
@@ -96,11 +97,15 @@ class StepRenderer
 
         $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
-            $summary = $this->summaryHandler->handle(
+            $summaryModel = $this->summaryHandler->handle(
                 $statement,
                 $expectedValue,
                 $actualValue
             );
+
+            if ($summaryModel instanceof RenderableInterface) {
+                $summary = $summaryModel->render();
+            }
         }
 
         if (is_string($summary)) {
