@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
+namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\ModelFactory;
 
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilParser\AssertionParser;
@@ -14,25 +14,25 @@ use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarIs
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarToElementalComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarToScalarComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
 
-class SummaryHandlerTest extends AbstractBaseTest
+class SummaryFactoryTest extends AbstractBaseTest
 {
-    private SummaryHandler $handler;
+    private SummaryFactory $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->handler = SummaryHandler::createHandler();
+        $this->factory = SummaryFactory::createFactory();
     }
 
     /**
-     * @dataProvider handleDataProvider
+     * @dataProvider createDataProvider
      */
-    public function testHandle(
+    public function testCreate(
         AssertionInterface $assertion,
         string $expectedValue,
         string $actualValue,
@@ -40,11 +40,11 @@ class SummaryHandlerTest extends AbstractBaseTest
     ) {
         $this->assertEquals(
             $expectedModel,
-            $this->handler->handle($assertion, $expectedValue, $actualValue)
+            $this->factory->create($assertion, $expectedValue, $actualValue)
         );
     }
 
-    public function handleDataProvider(): array
+    public function createDataProvider(): array
     {
         $assertionParser = AssertionParser::create();
 

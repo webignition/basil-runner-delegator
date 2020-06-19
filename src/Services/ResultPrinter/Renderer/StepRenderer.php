@@ -12,25 +12,25 @@ use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 
 class StepRenderer
 {
     private const INDENT = '  ';
 
     private StatementLineFactory $statementLineFactory;
-    private SummaryHandler $summaryHandler;
+    private SummaryFactory $summaryFactory;
     private ExceptionFactory $exceptionFactory;
 
     public function __construct(
         StatementLineFactory $statementLineFactory,
-        SummaryHandler $summaryHandler,
+        SummaryFactory $summaryFactory,
         ExceptionFactory $exceptionFactory
     ) {
         $this->statementLineFactory = $statementLineFactory;
-        $this->summaryHandler = $summaryHandler;
+        $this->summaryFactory = $summaryFactory;
         $this->exceptionFactory = $exceptionFactory;
     }
 
@@ -97,7 +97,7 @@ class StepRenderer
 
         $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
-            $summaryModel = $this->summaryHandler->handle(
+            $summaryModel = $this->summaryFactory->create(
                 $statement,
                 $expectedValue,
                 $actualValue
