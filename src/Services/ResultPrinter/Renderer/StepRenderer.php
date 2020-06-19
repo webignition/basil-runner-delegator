@@ -11,6 +11,7 @@ use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
 
 class StepRenderer
 {
@@ -18,16 +19,16 @@ class StepRenderer
 
     private StatementLineRenderer $statementLineRenderer;
     private SummaryHandler $summaryHandler;
-    private ExceptionRenderer $exceptionRenderer;
+    private ExceptionFactory $exceptionFactory;
 
     public function __construct(
         StatementLineRenderer $statementLineRenderer,
         SummaryHandler $summaryHandler,
-        ExceptionRenderer $exceptionRenderer
+        ExceptionFactory $exceptionFactory
     ) {
         $this->statementLineRenderer = $statementLineRenderer;
         $this->summaryHandler = $summaryHandler;
-        $this->exceptionRenderer = $exceptionRenderer;
+        $this->exceptionFactory = $exceptionFactory;
     }
 
     public function render(Step $step): string
@@ -60,7 +61,8 @@ class StepRenderer
 
         $lastException = $step->getLastException();
         if ($lastException instanceof \Throwable) {
-            $exceptionContent = $this->renderException($lastException);
+            $exceptionModel = $this->exceptionFactory->create($lastException);
+            $exceptionContent = '* ' . $exceptionModel->render();
 
             $content .= "\n" . $this->indent($exceptionContent, 2);
         }
@@ -104,11 +106,6 @@ class StepRenderer
         }
 
         return $content;
-    }
-
-    private function renderException(\Throwable $exception): string
-    {
-        return '* ' . $this->exceptionRenderer->render($exception);
     }
 
     private function indent(string $content, int $depth = 1): string
