@@ -357,6 +357,62 @@ class SummaryFactoryTest extends AbstractBaseTest
                     '* <comment>actual</comment> is not equal to <comment>expected</comment>'
                 ,
             ],
+            'is, descendant element identifier, element value' => [
+                'identifier' =>
+                    (new ElementIdentifier('.child'))
+                        ->withParentIdentifier(new ElementIdentifier('.parent'))
+                ,
+                'valueIdentifier' => new ElementIdentifier('.value'),
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Element <comment>$".parent" >> $".child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, descendant element identifier, descendant element value' => [
+                'identifier' =>
+                    (new ElementIdentifier('.identifier-child'))
+                        ->withParentIdentifier(new ElementIdentifier('.identifier-parent'))
+                ,
+                'valueIdentifier' =>
+                    (new ElementIdentifier('.value-child'))
+                        ->withParentIdentifier(new ElementIdentifier('.value-parent'))
+                ,
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* Element <comment>$".identifier-parent" >> $".identifier-child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.identifier-child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.identifier-parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".value-parent" >> $".value-child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value-child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.value-parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
             'is, element identifier, attribute value' => [
                 'identifier' => new ElementIdentifier('.identifier'),
                 'valueIdentifier' => new AttributeIdentifier('.value', 'attribute_name'),

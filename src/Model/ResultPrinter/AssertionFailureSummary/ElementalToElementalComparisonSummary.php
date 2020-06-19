@@ -17,16 +17,21 @@ class ElementalToElementalComparisonSummary extends RenderableCollection
         string $expectedValue,
         string $actualValue
     ) {
-        $ancestorHierarchy = null === $identifier->getParentIdentifier()
+        $identifierAncestorHierarchy = null === $identifier->getParentIdentifier()
             ? null
             : new AncestorHierarchy($identifier);
+
+        $valueAncestorHierarchy = null === $valueIdentifier->getParentIdentifier()
+            ? null
+            : new AncestorHierarchy($valueIdentifier);
 
         parent::__construct([
             new ComponentIdentifiedBy($identifier),
             new IdentifierProperties($identifier),
-            $ancestorHierarchy,
+            $identifierAncestorHierarchy,
             new WithValueElemental($actualValue, $valueIdentifier, $operator, 1),
             new IdentifierProperties($valueIdentifier),
+            $valueAncestorHierarchy,
             new WithValue($expectedValue, 1),
             new Literal(''),
             new ScalarToScalarComparisonSummary($operator, $expectedValue, $actualValue)
