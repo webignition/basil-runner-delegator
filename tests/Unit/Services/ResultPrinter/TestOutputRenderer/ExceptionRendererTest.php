@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\TestOutputRenderer;
 
 use Facebook\WebDriver\Exception\InvalidSelectorException;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
@@ -19,9 +18,7 @@ class ExceptionRendererTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->renderer = new ExceptionRenderer(
-            new ConsoleOutputFactory()
-        );
+        $this->renderer = new ExceptionRenderer();
     }
 
     /**

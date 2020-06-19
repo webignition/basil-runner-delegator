@@ -15,6 +15,10 @@ class RenderableCollection implements RenderableInterface
 
     private int $indentDepth;
 
+    /**
+     * @param array<mixed> $items
+     * @param int $indentDepth
+     */
     public function __construct(array $items, int $indentDepth = 0)
     {
         $this->items = array_filter($items, function ($item) {
