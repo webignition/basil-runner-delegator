@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter;
+namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter\StatementLine;
 
 use webignition\BasilModels\Action\Action;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\LabelledStatement;
