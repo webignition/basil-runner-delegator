@@ -14,10 +14,9 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\Step;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
@@ -33,9 +32,8 @@ class StepRendererTest extends AbstractBaseTest
 
         $this->renderer = new StepRenderer(
             new StatementLineFactory(),
-            new SummaryHandler(
-                Factory::createFactory(),
-                new SummaryFactory()
+            new SummaryFactory(
+                Factory::createFactory()
             ),
             new ExceptionFactory()
         );

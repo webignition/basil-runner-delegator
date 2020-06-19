@@ -15,10 +15,9 @@ use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 
@@ -38,9 +37,8 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         $this->testRenderer = new TestRenderer();
         $this->stepRenderer = new StepRenderer(
             new StatementLineFactory(),
-            new SummaryHandler(
-                DomIdentifierFactory::createFactory(),
-                new SummaryFactory()
+            new SummaryFactory(
+                DomIdentifierFactory::createFactory()
             ),
             new ExceptionFactory()
         );

@@ -2,35 +2,37 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
+namespace webignition\BasilRunner\Services\ResultPrinter\ModelFactory;
 
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilModels\Assertion\AssertionInterface;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalIsRegExpSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalToElementalComparisonSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalToScalarComparisonSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ExistenceSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarIsRegExpSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarToElementalComparisonSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarToScalarComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
-class SummaryHandler
+class SummaryFactory
 {
-    private SummaryFactory $summaryFactory;
     private DomIdentifierFactory $domIdentifierFactory;
 
-    public function __construct(
-        DomIdentifierFactory $domIdentifierFactory,
-        SummaryFactory $summaryLineFactory
-    ) {
-        $this->summaryFactory = $summaryLineFactory;
+    public function __construct(DomIdentifierFactory $domIdentifierFactory)
+    {
         $this->domIdentifierFactory = $domIdentifierFactory;
     }
 
-    public static function createHandler(): self
+    public static function createFactory(): self
     {
-        return new SummaryHandler(
-            DomIdentifierFactory::createFactory(),
-            new SummaryFactory()
+        return new SummaryFactory(
+            DomIdentifierFactory::createFactory()
         );
     }
 
-    public function handle(
+    public function create(
         AssertionInterface $assertion,
         string $expectedValue,
         string $actualValue
@@ -53,7 +55,7 @@ class SummaryHandler
             $valueIdentifier instanceof ElementIdentifierInterface
         ) {
             if (in_array($operator, $handledOperators)) {
-                return $this->summaryFactory->createForElementalToElementalComparisonAssertion(
+                return new ElementalToElementalComparisonSummary(
                     $identifier,
                     $valueIdentifier,
                     $operator,
@@ -65,7 +67,7 @@ class SummaryHandler
 
         if (null === $identifier && $valueIdentifier instanceof ElementIdentifierInterface) {
             if (in_array($operator, $handledOperators)) {
-                return $this->summaryFactory->createForScalarToElementalComparisonAssertion(
+                return new ScalarToElementalComparisonSummary(
                     $valueIdentifier,
                     $operator,
                     $expectedValue,
@@ -76,40 +78,25 @@ class SummaryHandler
 
         if ($identifier instanceof ElementIdentifierInterface && null === $valueIdentifier) {
             if (in_array($operator, ['exists', 'not-exists'])) {
-                return $this->summaryFactory->createForElementalExistenceAssertion(
-                    $identifier,
-                    $operator
-                );
+                return new ExistenceSummary($identifier, $operator);
             }
 
             if (in_array($operator, ['is-regexp'])) {
-                return $this->summaryFactory->createForElementalIsRegExpAssertion(
-                    $identifier,
-                    $actualValue
-                );
+                return new ElementalIsRegExpSummary($identifier, $actualValue);
             }
 
             if (in_array($operator, $handledOperators)) {
-                return $this->summaryFactory->createForElementalToScalarComparisonAssertion(
-                    $identifier,
-                    $operator,
-                    $expectedValue,
-                    $actualValue
-                );
+                return new ElementalToScalarComparisonSummary($identifier, $operator, $expectedValue, $actualValue);
             }
         }
 
         if (null === $identifier && null === $valueIdentifier) {
             if (in_array($operator, ['is-regexp'])) {
-                return $this->summaryFactory->createForScalarIsRegExpAssertion($actualValue);
+                return new ScalarIsRegExpSummary($actualValue);
             }
 
             if (in_array($operator, $handledOperators)) {
-                return $this->summaryFactory->createForScalarToScalarComparisonAssertion(
-                    $operator,
-                    $expectedValue,
-                    $actualValue
-                );
+                return new ScalarToScalarComparisonSummary($operator, $expectedValue, $actualValue);
             }
         }
 
