@@ -29,6 +29,11 @@ class ConsoleStyler
         return $this->applyStyle($text, new OutputFormatterStyle('white', 'red'));
     }
 
+    public function comment(string $text): string
+    {
+        return $this->applyStyle($text, new OutputFormatterStyle('yellow'));
+    }
+
     private function applyStyle(string $text, OutputFormatterStyleInterface $style): string
     {
         if ('' === $text) {

@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
@@ -36,7 +35,6 @@ class GenerateRunTest extends TestCase
 
     public function generateAndRunDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
         $styler = new ConsoleStyler();
 
         return [
@@ -83,9 +81,9 @@ class GenerateRunTest extends TestCase
                     '    ' . $styler->failure('x') . ' ' . $styler->highlightedFailure(
                         '$"a[id=link-to-assertions]" not-exists'
                     ) . "\n" .
-                    '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
-                    '        - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
-                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '    * Element ' . $styler->comment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
+                    '        - CSS selector: ' . $styler->comment('a[id=link-to-assertions]') . "\n" .
+                    '        - ordinal position: ' . $styler->comment('1') . "\n" .
                     '      does exist' . "\n" .
                     "\n"
             ],
@@ -99,11 +97,11 @@ class GenerateRunTest extends TestCase
                     '    ' . $styler->success('✓') . ' $page.title is "Form"' . "\n" .
                     '    ' . $styler->success('✓')
                     . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
-                    '      ' . $cof->createComment('> resolved from:')
+                    '      ' . $styler->comment('> resolved from:')
                     . ' $form_page.elements.input_with_value is "test"' . "\n" .
                     '    ' . $styler->success('✓')
                     . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" is "textarea content"' . "\n" .
-                    '      ' . $cof->createComment('> resolved from:')
+                    '      ' . $styler->comment('> resolved from:')
                     . ' $form_page.elements.textarea_within_form_one is "textarea content"' . "\n" .
                     "\n"
             ],
