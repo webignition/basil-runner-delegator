@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ExistenceSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalIsRegExpSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarIsRegExpSummary;
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarToScalarComparisonSummary;
 use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\DomElementIdentifier\AttributeIdentifierInterface;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
@@ -41,32 +45,17 @@ class SummaryFactory
         ElementIdentifierInterface $identifier,
         string $comparison
     ): string {
-        $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
-        $outcome = self::COMPARISON_OUTCOME_MAP[$comparison] ?? '';
-
-        return $identifierExpansion . "\n" . '  ' . $outcome;
+        return (new ExistenceSummary($identifier, $comparison))->render();
     }
 
     public function createForElementalIsRegExpAssertion(ElementIdentifierInterface $identifier, string $regexp): string
     {
-        $elementalSummary = sprintf(
-            "* %s %s\n%s\n  %s",
-            'The value of',
-            $this->createElementIdentifiedByString($identifier),
-            $this->createIdentifierExpansion($identifier),
-            self::COMPARISON_OUTCOME_MAP['is-regexp'] ?? ''
-        );
-
-        return $elementalSummary . "\n\n" . $this->createForScalarIsRegExpAssertion($regexp);
+        return (new ElementalIsRegExpSummary($identifier, $regexp))->render();
     }
 
     public function createForScalarIsRegExpAssertion(string $regexp): string
     {
-        return sprintf(
-            '* %s %s',
-            $this->consoleOutputFactory->createComment($regexp),
-            self::COMPARISON_OUTCOME_MAP['is-regexp'] ?? ''
-        );
+        return (new ScalarIsRegExpSummary($regexp))->render();
     }
 
     public function createForElementalToScalarComparisonAssertion(
@@ -85,7 +74,13 @@ class SummaryFactory
             $this->consoleOutputFactory->createComment($expectedValue)
         );
 
-        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
+        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+            $comparison,
+            $expectedValue,
+            $actualValue
+        );
+
+        return $summary . "\n\n" . $scalarToScalarSummary;
     }
 
     public function createForElementalToElementalComparisonAssertion(
@@ -114,7 +109,13 @@ class SummaryFactory
             $this->createWithValuePortion($expectedValue)
         );
 
-        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
+        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
+            $comparison,
+            $expectedValue,
+            $actualValue
+        );
+
+        return $summary . "\n\n" . $scalarToScalarSummary;
     }
 
     public function createForScalarToScalarComparisonAssertion(
@@ -122,12 +123,7 @@ class SummaryFactory
         string $expectedValue,
         string $actualValue
     ): string {
-        return sprintf(
-            "* %s %s %s",
-            $this->consoleOutputFactory->createComment($actualValue),
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            $this->consoleOutputFactory->createComment($expectedValue)
-        );
+        return (new ScalarToScalarComparisonSummary($comparison, $expectedValue, $actualValue))->render();
     }
 
     public function createForScalarToElementalComparisonAssertion(
@@ -152,20 +148,6 @@ class SummaryFactory
             $this->createWithValuePortion($expectedValue)
         );
 
-        return $this->appendScalarToScalarSummary($summary, $comparison, $expectedValue, $actualValue);
-    }
-
-    private function createWithValuePortion(string $value): string
-    {
-        return 'with value ' . $this->consoleOutputFactory->createComment($value);
-    }
-
-    private function appendScalarToScalarSummary(
-        string $summary,
-        string $comparison,
-        string $expectedValue,
-        string $actualValue
-    ): string {
         $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
             $comparison,
             $expectedValue,
@@ -173,6 +155,11 @@ class SummaryFactory
         );
 
         return $summary . "\n\n" . $scalarToScalarSummary;
+    }
+
+    private function createWithValuePortion(string $value): string
+    {
+        return 'with value ' . $this->consoleOutputFactory->createComment($value);
     }
 
     private function createElementIdentifiedByWithExpansion(ElementIdentifierInterface $identifier): string

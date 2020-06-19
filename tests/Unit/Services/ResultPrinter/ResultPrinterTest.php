@@ -10,7 +10,6 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -68,8 +67,6 @@ class ResultPrinterTest extends AbstractBaseTest
 
         $actionParser = ActionParser::create();
         $assertionParser = AssertionParser::create();
-
-        $cof = new ConsoleOutputFactory();
 
         return [
             'single test' => [
@@ -169,8 +166,8 @@ class ResultPrinterTest extends AbstractBaseTest
                     '    <icon-success /> click $".new"' . "\n" .
                     '    <icon-failure /> '
                     . '<highlighted-failure>$page.url is "http://example.com/new/"</highlighted-failure>' . "\n" .
-                    '    * ' . $cof->createComment('http://example.com/')
-                    . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n" .
+                    '    * <comment>http://example.com/</comment> is not equal to '
+                    . '<comment>http://example.com/new/</comment>' . "\n" .
                     "\n"
                 ,
             ],
