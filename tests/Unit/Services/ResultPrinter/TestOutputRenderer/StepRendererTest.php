@@ -14,7 +14,6 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\Step;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
@@ -32,17 +31,13 @@ class StepRendererTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $consoleOutputFactory = new ConsoleOutputFactory();
-
         $this->renderer = new StepRenderer(
             new StatementLineRenderer(),
             new SummaryHandler(
                 Factory::createFactory(),
-                new SummaryFactory($consoleOutputFactory)
+                new SummaryFactory()
             ),
-            new ExceptionRenderer(
-                $consoleOutputFactory
-            )
+            new ExceptionRenderer()
         );
     }
 
@@ -56,7 +51,6 @@ class StepRendererTest extends AbstractBaseTest
 
     public function renderDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
         $actionParser = ActionParser::create();
         $assertionParser = AssertionParser::create();
 
@@ -135,9 +129,9 @@ class StepRendererTest extends AbstractBaseTest
                 'expectedRenderedStep' =>
                     '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
-                    '    * Element ' . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
-                    '        - CSS selector: ' . $cof->createComment('.selector') . "\n" .
-                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '    * Element <comment>$".selector"</comment> identified by:' . "\n" .
+                    '        - CSS selector: <comment>.selector</comment>' . "\n" .
+                    '        - ordinal position: <comment>1</comment>' . "\n" .
                     '      does not exist'
                 ,
             ],
@@ -156,7 +150,7 @@ class StepRendererTest extends AbstractBaseTest
                 'expectedRenderedStep' =>
                     '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
-                    '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
+                    '    * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
                 ,
             ],
             'failed, first assertion passed, second assertion failed' => [
@@ -176,7 +170,7 @@ class StepRendererTest extends AbstractBaseTest
                     '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
                     '    <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
-                    '    * ' . $cof->createComment('Bar') . ' is not equal to ' . $cof->createComment('Foo')
+                    '    * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
                 ,
             ],
             'failed, elemental assertion uses invalid CSS selector' => [
@@ -198,10 +192,9 @@ class StepRendererTest extends AbstractBaseTest
                     '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    <icon-failure /> '
                     . '<highlighted-failure>$"a[href=https://example.com]" exists</highlighted-failure>' . "\n" .
-                    '    * Element '
-                    . $cof->createComment('$"a[href=https://example.com]"') . ' identified by:' . "\n" .
-                    '        - CSS selector: ' . $cof->createComment('a[href=https://example.com]') . "\n" .
-                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '    * Element <comment>$"a[href=https://example.com]"</comment> identified by:' . "\n" .
+                    '        - CSS selector: <comment>a[href=https://example.com]</comment>' . "\n" .
+                    '        - ordinal position: <comment>1</comment>' . "\n" .
                     '      does not exist' . "\n" .
                     '    * CSS selector <comment>a[href=https://example.com]</comment> is not valid'
                 ,
@@ -234,7 +227,7 @@ class StepRendererTest extends AbstractBaseTest
                     '    <icon-success /> $page.title matches $data.expected_title_pattern'
                 ,
             ],
-            'foo' => [
+            'failed, unknown exception' => [
                 'step' => new Step($this->createTest(
                     BaseTestRunner::STATUS_FAILURE,
                     'failed step name',
@@ -250,10 +243,9 @@ class StepRendererTest extends AbstractBaseTest
                     '  <icon-failure /> <failure>failed step name</failure>' . "\n" .
                     '    <icon-failure /> '
                     . '<highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
-                    '    * Element '
-                    . $cof->createComment('$".selector"') . ' identified by:' . "\n" .
-                    '        - CSS selector: ' . $cof->createComment('.selector') . "\n" .
-                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '    * Element <comment>$".selector"</comment> identified by:' . "\n" .
+                    '        - CSS selector: <comment>.selector</comment>' . "\n" .
+                    '        - ordinal position: <comment>1</comment>' . "\n" .
                     '      does not exist' . "\n" .
                     '    * An unknown exception has occurred:' . "\n" .
                     '        - RuntimeException' . "\n" .

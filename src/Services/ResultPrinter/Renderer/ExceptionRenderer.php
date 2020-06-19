@@ -5,18 +5,10 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 
 use webignition\BasilRunner\Model\ResultPrinter\Exception\InvalidLocator;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class ExceptionRenderer
 {
-    private ConsoleOutputFactory $consoleOutputFactory;
-
-    public function __construct(ConsoleOutputFactory $consoleOutputFactory)
-    {
-        $this->consoleOutputFactory = $consoleOutputFactory;
-    }
-
     public function render(\Throwable $exception): string
     {
         if ($exception instanceof InvalidLocatorException) {
