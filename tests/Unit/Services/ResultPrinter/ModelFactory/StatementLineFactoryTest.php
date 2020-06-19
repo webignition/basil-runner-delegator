@@ -8,7 +8,6 @@ use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StatementLine\EncapsulatingStatementLine;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine as RenderableStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
@@ -51,7 +50,7 @@ class StatementLineFactoryTest extends AbstractBaseTest
                 'statementLine' => StatementLine::createFailedStatementLine(
                     new DerivedValueOperationAssertion($clickAction, '$".selector"', 'exists')
                 ),
-                'expectedModel' => new EncapsulatingStatementLine(
+                'expectedModel' => new RenderableStatementLine(
                     new DerivedValueOperationAssertion($clickAction, '$".selector"', 'exists'),
                     Status::FAILURE
                 ),

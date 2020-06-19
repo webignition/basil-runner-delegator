@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\StatementLine;
 
+use webignition\BasilModels\Action\ResolvedAction;
+use webignition\BasilModels\Assertion\ResolvedAssertion;
+use webignition\BasilModels\EncapsulatingStatementInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\HighlightedFailure;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
@@ -41,5 +44,35 @@ class StatementLine implements RenderableInterface
             $this->statusIcon->render(),
             $this->statementContent->render()
         );
+
+        if ($this->statement instanceof EncapsulatingStatementInterface) {
+            $content .= "\n";
+            $content .= Status::SUCCESS === $this->status
+                ? $this->renderEncapsulatedSource($this->statement)
+                : $this->renderEncapsulatedSourceRecursive($this->statement);
+        }
+
+        return $content;
+    }
+
+    private function renderEncapsulatedSource(EncapsulatingStatementInterface $statement): string
+    {
+        $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
+            ? 'resolved from'
+            : 'derived from';
+
+        return (new LabelledStatement($label, $statement->getSourceStatement()))->render();
+    }
+
+    private function renderEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): string
+    {
+        $content = $this->renderEncapsulatedSource($statement);
+
+        $sourceStatement = $statement->getSourceStatement();
+        if ($sourceStatement instanceof ResolvedAction || $sourceStatement instanceof ResolvedAssertion) {
+            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($sourceStatement);
+        }
+
+        return $content;
     }
 }
