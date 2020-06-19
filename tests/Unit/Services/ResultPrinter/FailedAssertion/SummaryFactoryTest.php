@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\FailedAssertion;
 
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 use webignition\DomElementIdentifier\AttributeIdentifier;
@@ -19,9 +18,7 @@ class SummaryFactoryTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $this->factory = new SummaryFactory(
-            new ConsoleOutputFactory()
-        );
+        $this->factory = new SummaryFactory();
     }
 
     /**
@@ -576,8 +573,6 @@ class SummaryFactoryTest extends AbstractBaseTest
 
     public function createForScalarToElementalComparisonDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
-
         return [
             'is' => [
                 'valueIdentifier' => new ElementIdentifier('.value'),
@@ -585,11 +580,32 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('actual') . ' is not equal to the value of element ' .
-                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
+                    "\n" .
+                    '* <comment>actual</comment> is not equal to <comment>expected</comment>'
+                ,
+            ],
+            'is, descendant identifier' => [
+                'valueIdentifier' =>
+                    (new ElementIdentifier('.child'))
+                        ->withParentIdentifier(new ElementIdentifier('.parent'))
+                ,
+                'comparison' => 'is',
+                'expectedValue' => 'expected',
+                'actualValue' => 'actual',
+                'expectedSummary' =>
+                    '* <comment>actual</comment> is not equal to the value of element '
+                    . '<comment>$".parent" >> $".child"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.child</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with parent:' . "\n" .
+                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> is not equal to <comment>expected</comment>'
                 ,
@@ -600,11 +616,11 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('expected') . ' is equal to the value of element ' .
-                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* <comment>expected</comment> is equal to the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>expected</comment> is equal to <comment>expected</comment>'
                 ,
@@ -615,11 +631,11 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('actual') . ' does not include the value of element ' .
-                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* <comment>actual</comment> does not include the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> does not include <comment>expected</comment>'
                 ,
@@ -630,11 +646,11 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => 'expected',
                 'actualValue' => 'expected',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('expected') . ' does not exclude the value of element ' .
-                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('expected') . "\n" .
+                    '* <comment>expected</comment> does not exclude the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>expected</comment>' . "\n" .
                     "\n" .
                     '* <comment>expected</comment> does not exclude <comment>expected</comment>'
                 ,
@@ -645,12 +661,11 @@ class SummaryFactoryTest extends AbstractBaseTest
                 'expectedValue' => '/expected/',
                 'actualValue' => 'actual',
                 'expectedSummary' =>
-                    '* ' . $cof->createComment('actual')
-                    . ' does not match regular expression within the value of element ' .
-                    $cof->createComment('$".value"') . ' identified by:' . "\n" .
-                    '    - CSS selector: ' . $cof->createComment('.value') . "\n" .
-                    '    - ordinal position: ' . $cof->createComment('1') . "\n" .
-                    '  with value ' . $cof->createComment('/expected/') . "\n" .
+                    '* <comment>actual</comment> does not match regular expression the value of element '
+                    . '<comment>$".value"</comment> identified by:' . "\n" .
+                    '    - CSS selector: <comment>.value</comment>' . "\n" .
+                    '    - ordinal position: <comment>1</comment>' . "\n" .
+                    '  with value <comment>/expected/</comment>' . "\n" .
                     "\n" .
                     '* <comment>actual</comment> does not match regular expression <comment>/expected/</comment>'
                 ,

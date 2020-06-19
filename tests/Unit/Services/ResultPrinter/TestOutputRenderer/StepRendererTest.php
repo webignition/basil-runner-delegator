@@ -14,7 +14,6 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\Step;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
@@ -32,13 +31,11 @@ class StepRendererTest extends AbstractBaseTest
     {
         parent::setUp();
 
-        $consoleOutputFactory = new ConsoleOutputFactory();
-
         $this->renderer = new StepRenderer(
             new StatementLineRenderer(),
             new SummaryHandler(
                 Factory::createFactory(),
-                new SummaryFactory($consoleOutputFactory)
+                new SummaryFactory()
             ),
             new ExceptionRenderer()
         );
