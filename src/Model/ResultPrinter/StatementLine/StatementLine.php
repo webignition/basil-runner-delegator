@@ -12,6 +12,7 @@ use webignition\BasilRunner\Model\ResultPrinter\HighlightedFailure;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StatusIcon;
+use webignition\BasilRunner\Model\TestOutput\StatementLine as OutputStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 
 class StatementLine implements RenderableInterface
@@ -30,6 +31,14 @@ class StatementLine implements RenderableInterface
         $this->statementContent = Status::SUCCESS === $status
             ? new Literal($statement->getSource())
             : new HighlightedFailure($statement->getSource());
+    }
+
+    public static function fromOutputStatementLine(OutputStatementLine $statementLine): self
+    {
+        return new StatementLine(
+            $statementLine->getStatement(),
+            $statementLine->getHasPassed() ? Status::SUCCESS : Status::FAILURE
+        );
     }
 
     protected function getStatus(): int

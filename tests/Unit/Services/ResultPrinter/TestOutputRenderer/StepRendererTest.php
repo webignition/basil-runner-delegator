@@ -15,7 +15,6 @@ use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
-use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -31,7 +30,6 @@ class StepRendererTest extends AbstractBaseTest
         parent::setUp();
 
         $this->renderer = new StepRenderer(
-            new StatementLineFactory(),
             new SummaryFactory(
                 Factory::createFactory()
             ),
