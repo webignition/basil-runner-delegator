@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Model\ResultPrinter\Exception;
 
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
 class Unknown implements RenderableInterface
 {
     private \Throwable $exception;
 
-    public function __construct(InvalidLocatorException $exception)
+    public function __construct(\Throwable $exception)
     {
         $this->exception = $exception;
     }
