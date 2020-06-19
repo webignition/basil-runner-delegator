@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\FailedAssertion;
 
+use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalToScalarComparisonSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ExistenceSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ElementalIsRegExpSummary;
 use webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary\ScalarIsRegExpSummary;
@@ -64,23 +65,8 @@ class SummaryFactory
         string $expectedValue,
         string $actualValue
     ): string {
-        $identifierExpansion = $this->createElementIdentifiedByWithExpansion($identifier);
-
-        $summary = sprintf(
-            "%s\n  %s %s %s",
-            $identifierExpansion,
-            $this->createWithValuePortion($actualValue),
-            self::COMPARISON_OUTCOME_MAP[$comparison] ?? '',
-            $this->consoleOutputFactory->createComment($expectedValue)
-        );
-
-        $scalarToScalarSummary = $this->createForScalarToScalarComparisonAssertion(
-            $comparison,
-            $expectedValue,
-            $actualValue
-        );
-
-        return $summary . "\n\n" . $scalarToScalarSummary;
+        return
+            (new ElementalToScalarComparisonSummary($identifier, $comparison, $expectedValue, $actualValue))->render();
     }
 
     public function createForElementalToElementalComparisonAssertion(
