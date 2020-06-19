@@ -7,26 +7,28 @@ namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
+use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
 
 class StepRenderer
 {
     private const INDENT = '  ';
 
-    private StatementLineRenderer $statementLineRenderer;
+    private StatementLineFactory $statementLineFactory;
     private SummaryHandler $summaryHandler;
     private ExceptionFactory $exceptionFactory;
 
     public function __construct(
-        StatementLineRenderer $statementLineRenderer,
+        StatementLineFactory $statementLineFactory,
         SummaryHandler $summaryHandler,
         ExceptionFactory $exceptionFactory
     ) {
-        $this->statementLineRenderer = $statementLineRenderer;
+        $this->statementLineFactory = $statementLineFactory;
         $this->summaryHandler = $summaryHandler;
         $this->exceptionFactory = $exceptionFactory;
     }
@@ -72,15 +74,14 @@ class StepRenderer
 
     private function renderCompletedStatements(Step $step): string
     {
-        $renderedStatements = [];
-
+        $renderableStatements = [];
         foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
             if (false === $completedStatementLine->getIsDerived()) {
-                $renderedStatements[] = $this->statementLineRenderer->render($completedStatementLine);
+                $renderableStatements[] = $this->statementLineFactory->create($completedStatementLine);
             }
         }
 
-        return implode("\n", $renderedStatements);
+        return (new RenderableCollection($renderableStatements))->render();
     }
 
     private function renderFailedStatement(
@@ -88,7 +89,9 @@ class StepRenderer
         string $expectedValue,
         string $actualValue
     ): string {
-        $content = $this->statementLineRenderer->render($statementLine);
+        $renderableStatement = $this->statementLineFactory->create($statementLine);
+
+        $content = $renderableStatement->render();
         $summary = null;
 
         $statement = $statementLine->getStatement();
