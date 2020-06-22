@@ -6,8 +6,8 @@ namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
+use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
 class GenerateRunTest extends TestCase
 {
@@ -35,55 +35,55 @@ class GenerateRunTest extends TestCase
 
     public function generateAndRunDataProvider(): array
     {
-        $cof = new ConsoleOutputFactory();
+        $styler = new ConsoleStyler();
 
         return [
             'passing: single test' => [
                 'source' => './tests/Fixtures/basil-integration/Test/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') .
+                    $styler->bold('tests/Fixtures/basil-integration/Test/index-page-test.yml') . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify page is open') . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
+                    '    ' . $styler->success('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.title matches "/fixture web server/"' . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.title matches "/fixture web server/"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify primary heading') . "\n" .
+                    '    ' . $styler->success('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify links are present') .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify links are present') .
                     "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-assertions]" exists' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
+                    '    ' . $styler->success('✓') . ' $"a[id=link-to-assertions]" exists' . "\n" .
+                    '    ' . $styler->success('✓') . ' $"a[id=link-to-form]" exists' . "\n" .
                     "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('navigate to form') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $"a[id=link-to-form]"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('navigate to form') . "\n" .
+                    '    ' . $styler->success('✓') . ' click $"a[id=link-to-form]"' . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.title is "Form"' . "\n" .
                     "\n"
             ],
             'failing: single test' => [
                 'source' => './tests/Fixtures/basil-integration/FailingTest/index-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') .
+                    $styler->bold('tests/Fixtures/basil-integration/FailingTest/index-page-test.yml') . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify page is open') . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.url is "http://127.0.0.1:9080/index.html"' . "\n" .
+                    '    ' . $styler->success('✓') .
                     ' $page.title is "Test fixture web server default document"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify primary heading') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify primary heading') . "\n" .
+                    '    ' . $styler->success('✓') . ' $"h1" is "Test fixture web server default document"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('verify links are present') .
+                    '  ' . $styler->failure('x') . ' ' . $styler->failure('verify links are present') .
                     "\n" .
-                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
+                    '    ' . $styler->failure('x') . ' ' . $styler->highlightedFailure(
                         '$"a[id=link-to-assertions]" not-exists'
                     ) . "\n" .
-                    '    * Element ' . $cof->createComment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
-                    '        - CSS selector: ' . $cof->createComment('a[id=link-to-assertions]') . "\n" .
-                    '        - ordinal position: ' . $cof->createComment('1') . "\n" .
+                    '    * Element ' . $styler->comment('$"a[id=link-to-assertions]"') . ' identified by:' . "\n" .
+                    '        - CSS selector: ' . $styler->comment('a[id=link-to-assertions]') . "\n" .
+                    '        - ordinal position: ' . $styler->comment('1') . "\n" .
                     '      does exist' . "\n" .
                     "\n"
             ],
@@ -91,17 +91,17 @@ class GenerateRunTest extends TestCase
                 'source' => './tests/Fixtures/basil-integration/Test/form-page-test.yml',
                 'target' => './tests/build/target',
                 'expectedOutputBody' =>
-                    $cof->createTestPath('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('verify page is open') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Form"' . "\n" .
-                    '    ' . $cof->createSuccess('✓')
+                    $styler->bold('tests/Fixtures/basil-integration/Test/form-page-test.yml') . "\n" .
+                    '  ' . $styler->success('✓') . ' ' . $styler->success('verify page is open') . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.url is "http://127.0.0.1:9080/form.html"' . "\n" .
+                    '    ' . $styler->success('✓') . ' $page.title is "Form"' . "\n" .
+                    '    ' . $styler->success('✓')
                     . ' $"form[action=\'/action1\']" >> $"input[name=\'input-with-value\']" is "test"' . "\n" .
-                    '      ' . $cof->createComment('> resolved from:')
+                    '      ' . $styler->comment('> resolved from:')
                     . ' $form_page.elements.input_with_value is "test"' . "\n" .
-                    '    ' . $cof->createSuccess('✓')
+                    '    ' . $styler->success('✓')
                     . ' $"form[action=\'/action1\']" >> $".textarea-non-empty" is "textarea content"' . "\n" .
-                    '      ' . $cof->createComment('> resolved from:')
+                    '      ' . $styler->comment('> resolved from:')
                     . ' $form_page.elements.textarea_within_form_one is "textarea content"' . "\n" .
                     "\n"
             ],

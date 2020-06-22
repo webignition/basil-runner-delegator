@@ -11,42 +11,24 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
-use webignition\BasilRunner\Model\TestOutput\Step;
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
+use webignition\BasilRunner\Model\ResultPrinter\TestName;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryFactory;
-use webignition\BasilRunner\Services\ResultPrinter\FailedAssertion\SummaryHandler;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\ExceptionRenderer;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\StatementLineRenderer;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StepFactory;
 
 class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 {
     private string $projectRootPath;
-    private StepRenderer $stepRenderer;
     private ?TestOutput $currentTestOutput = null;
-    private TestRenderer $testRenderer;
+    private StepFactory $stepFactory;
 
     public function __construct($out = null)
     {
         parent::__construct($out);
 
         $this->projectRootPath = (ProjectRootPathProvider::create())->get();
-
-        $consoleOutputFactory = new ConsoleOutputFactory();
-
-        $this->testRenderer = new TestRenderer($consoleOutputFactory);
-        $this->stepRenderer = new StepRenderer(
-            $consoleOutputFactory,
-            new StatementLineRenderer($consoleOutputFactory),
-            new SummaryHandler(
-                DomIdentifierFactory::createFactory(),
-                new SummaryFactory($consoleOutputFactory)
-            ),
-            new ExceptionRenderer($consoleOutputFactory)
-        );
+        $this->stepFactory = StepFactory::createFactory();
     }
 
     /**
@@ -127,7 +109,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 
             if ($isNewTest) {
                 $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
-                $this->write($this->testRenderer->render($currentTestOutput));
+                $this->write((new TestName($currentTestOutput->getRelativePath()))->render());
                 $this->writeEmptyLine();
 
                 $this->currentTestOutput = $currentTestOutput;
@@ -141,8 +123,11 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
     public function endTest(Test $test, float $time): void
     {
         if ($test instanceof BasilTestCaseInterface) {
-            $step = new Step($test);
-            $this->write($this->stepRenderer->render($step));
+            $indentedRenderedStep = new IndentedContent(
+                $this->stepFactory->create($test)
+            );
+
+            $this->write($indentedRenderedStep->render());
             $this->writeEmptyLine();
             $this->writeEmptyLine();
         }

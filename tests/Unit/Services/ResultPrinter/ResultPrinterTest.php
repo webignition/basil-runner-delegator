@@ -10,7 +10,6 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\ConsoleOutputFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -69,8 +68,6 @@ class ResultPrinterTest extends AbstractBaseTest
         $actionParser = ActionParser::create();
         $assertionParser = AssertionParser::create();
 
-        $cof = new ConsoleOutputFactory();
-
         return [
             'single test' => [
                 'testPaths' => [
@@ -94,9 +91,9 @@ class ResultPrinterTest extends AbstractBaseTest
                     null,
                 ],
                 'expectedOutput' =>
-                $cof->createTestPath('test.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                '<test-name>test.yml</test-name>' . "\n" .
+                    '  <icon-success /> <success>step one</success>' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
                     "\n"
                 ,
             ],
@@ -150,28 +147,27 @@ class ResultPrinterTest extends AbstractBaseTest
                     'http://example.com/',
                 ],
                 'expectedOutput' =>
-                    $cof->createTestPath('test1.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test one step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.title is "Hello, World!"' . "\n" .
+                    '<test-name>test1.yml</test-name>' . "\n" .
+                    '  <icon-success /> <success>test one step one</success>' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
+                    '    <icon-success /> $page.title is "Hello, World!"' . "\n" .
                     "\n" .
-                    $cof->createTestPath('test2.yml') . "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".successful"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/successful/"' . "\n" .
+                    '<test-name>test2.yml</test-name>' . "\n" .
+                    '  <icon-success /> <success>test two step one</success>' . "\n" .
+                    '    <icon-success /> click $".successful"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/successful/"' . "\n" .
                     "\n" .
-                    '  ' . $cof->createSuccess('✓') . ' ' . $cof->createSuccess('test two step two') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".back"' . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' $page.url is "http://example.com/"' . "\n" .
+                    '  <icon-success /> <success>test two step two</success>' . "\n" .
+                    '    <icon-success /> click $".back"' . "\n" .
+                    '    <icon-success /> $page.url is "http://example.com/"' . "\n" .
                     "\n" .
-                    $cof->createTestPath('test3.yml') . "\n" .
-                    '  ' . $cof->createFailure('x') . ' ' . $cof->createFailure('test three step one') . "\n" .
-                    '    ' . $cof->createSuccess('✓') . ' click $".new"' . "\n" .
-                    '    ' . $cof->createFailure('x') . ' ' . $cof->createHighlightedFailure(
-                        '$page.url is "http://example.com/new/"'
-                    ) . "\n" .
-                    '    * ' . $cof->createComment('http://example.com/')
-                    . ' is not equal to ' . $cof->createComment('http://example.com/new/') . "\n" .
+                    '<test-name>test3.yml</test-name>' . "\n" .
+                    '  <icon-failure /> <failure>test three step one</failure>' . "\n" .
+                    '    <icon-success /> click $".new"' . "\n" .
+                    '    <icon-failure /> '
+                    . '<highlighted-failure>$page.url is "http://example.com/new/"</highlighted-failure>' . "\n" .
+                    '    * <comment>http://example.com/</comment> is not equal to '
+                    . '<comment>http://example.com/new/</comment>' . "\n" .
                     "\n"
                 ,
             ],
