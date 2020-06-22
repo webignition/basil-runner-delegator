@@ -9,6 +9,7 @@ use webignition\BasilModels\Action\ResolvedAction;
 use webignition\BasilModels\Assertion\Assertion;
 use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilModels\Assertion\ResolvedAssertion;
+use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\StatementLine as OutputStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
@@ -161,6 +162,18 @@ class StatementLineTest extends AbstractBaseTest
                     '<icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
                     '  <comment>> derived from:</comment> click $".selector"' . "\n" .
                     '  <comment>> resolved from:</comment> click $page_import_name.elements.selector'
+                ,
+            ],
+            'failure, non-derived, has failure summary' => [
+                'statementLine' =>
+                    (new StatementLine(
+                        $clickAction,
+                        Status::FAILURE
+                    ))->withFailureSummary(new Literal('Failure summary content'))
+                ,
+                'expectedRenderedString' =>
+                    '<icon-failure /> <highlighted-failure>click $".selector"</highlighted-failure>' . "\n" .
+                    'Failure summary content'
                 ,
             ],
         ];

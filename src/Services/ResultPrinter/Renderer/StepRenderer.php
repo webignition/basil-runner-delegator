@@ -91,10 +91,7 @@ class StepRenderer
         string $expectedValue,
         string $actualValue
     ): string {
-        $renderableStatement = new IndentedContent(RenderableStatementLine::fromOutputStatementLine($statementLine));
-
-        $content = $renderableStatement->render();
-        $summary = null;
+        $renderableStatement = RenderableStatementLine::fromOutputStatementLine($statementLine);
 
         $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
@@ -104,17 +101,11 @@ class StepRenderer
                 $actualValue
             );
 
-            if ($summaryModel instanceof RenderableInterface) {
-                $indentedSummaryModel = new IndentedContent($summaryModel);
-                $summary = $indentedSummaryModel->render();
-            }
+            $renderableStatement = $renderableStatement->withFailureSummary($summaryModel);
         }
 
-        if (is_string($summary)) {
-            $content .= "\n";
-            $content .= $summary;
-        }
+        $renderableStatement = new IndentedContent($renderableStatement);
 
-        return $content;
+        return $renderableStatement->render();
     }
 }

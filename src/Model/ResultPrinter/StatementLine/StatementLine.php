@@ -18,7 +18,6 @@ class StatementLine implements RenderableInterface
 {
     private StatementInterface $statement;
     private int $status;
-
     private RenderableCollection $renderableCollection;
 
     public function __construct(StatementInterface $statement, int $status)
@@ -53,9 +52,12 @@ class StatementLine implements RenderableInterface
         );
     }
 
-    protected function getStatus(): int
+    public function withFailureSummary(RenderableInterface $failureSummary): self
     {
-        return $this->status;
+        $new = clone $this;
+        $new->renderableCollection = $new->renderableCollection->append($failureSummary);
+
+        return $new;
     }
 
     public function render(): string
