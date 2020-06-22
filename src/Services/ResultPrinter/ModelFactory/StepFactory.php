@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services\ResultPrinter\ModelFactory;
 
+use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
@@ -11,7 +12,6 @@ use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
 use webignition\BasilRunner\Model\ResultPrinter\Step\Step;
 use webignition\BasilRunner\Model\TestOutput\Status;
-use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 
 class StepFactory
 {
@@ -32,30 +32,32 @@ class StepFactory
         );
     }
 
-    public function create(OutputStep $step): Step
+    public function create(BasilTestCaseInterface $test): Step
     {
-        $renderableStep = new Step($step);
+        $step = new Step($test);
 
-        $failedStatement = $step->getFailedStatement();
-        if ($failedStatement instanceof StatementInterface) {
-            $renderableStep->setFailedStatement($this->createFailedStatement(
+        if (Status::FAILURE === $test->getStatus()) {
+            $handledStatements = $test->getHandledStatements();
+            $failedStatement = array_pop($handledStatements);
+
+            $step->setFailedStatement($this->createFailedStatement(
                 $failedStatement,
-                $step->getExpectedValue(),
-                $step->getActualValue()
+                (string) $test->getExpectedValue(),
+                (string) $test->getExaminedValue()
             ));
         }
 
-        $lastException = $step->getLastException();
+        $lastException = $test->getLastException();
         if ($lastException instanceof \Throwable) {
             $exceptionModel = $this->exceptionFactory->create($lastException);
             $exceptionContent = new Literal(
                 '* ' . $exceptionModel->render()
             );
 
-            $renderableStep->setLastException($exceptionContent);
+            $step->setLastException($exceptionContent);
         }
 
-        return $renderableStep;
+        return $step;
     }
 
     private function createFailedStatement(
