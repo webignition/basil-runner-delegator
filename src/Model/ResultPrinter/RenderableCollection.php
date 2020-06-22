@@ -21,6 +21,14 @@ class RenderableCollection implements RenderableInterface
         });
     }
 
+    public function append(RenderableInterface $item): RenderableCollection
+    {
+        $new = clone $this;
+        $new->items[] = $item;
+
+        return $new;
+    }
+
     public function render(): string
     {
         $renderedItems = [];
