@@ -11,25 +11,20 @@ use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
+use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine as RenderableStatementLine;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
 use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
-use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StatementLineFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 
 class StepRenderer
 {
-    private StatementLineFactory $statementLineFactory;
     private SummaryFactory $summaryFactory;
     private ExceptionFactory $exceptionFactory;
 
-    public function __construct(
-        StatementLineFactory $statementLineFactory,
-        SummaryFactory $summaryFactory,
-        ExceptionFactory $exceptionFactory
-    ) {
-        $this->statementLineFactory = $statementLineFactory;
+    public function __construct(SummaryFactory $summaryFactory, ExceptionFactory $exceptionFactory)
+    {
         $this->summaryFactory = $summaryFactory;
         $this->exceptionFactory = $exceptionFactory;
     }
@@ -82,7 +77,7 @@ class StepRenderer
         $renderableStatements = [];
         foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
             if (false === $completedStatementLine->getIsDerived()) {
-                $renderableStatements[] = $this->statementLineFactory->create($completedStatementLine);
+                $renderableStatements[] = RenderableStatementLine::fromOutputStatementLine($completedStatementLine);
             }
         }
 
@@ -96,10 +91,7 @@ class StepRenderer
         string $expectedValue,
         string $actualValue
     ): string {
-        $renderableStatement = new IndentedContent($this->statementLineFactory->create($statementLine));
-
-        $content = $renderableStatement->render();
-        $summary = null;
+        $renderableStatement = RenderableStatementLine::fromOutputStatementLine($statementLine);
 
         $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
@@ -110,16 +102,12 @@ class StepRenderer
             );
 
             if ($summaryModel instanceof RenderableInterface) {
-                $indentedSummaryModel = new IndentedContent($summaryModel);
-                $summary = $indentedSummaryModel->render();
+                $renderableStatement = $renderableStatement->withFailureSummary($summaryModel);
             }
         }
 
-        if (is_string($summary)) {
-            $content .= "\n";
-            $content .= $summary;
-        }
+        $renderableStatement = new IndentedContent($renderableStatement);
 
-        return $content;
+        return $renderableStatement->render();
     }
 }
