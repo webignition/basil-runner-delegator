@@ -40,11 +40,13 @@ class StepFactory
             $handledStatements = $test->getHandledStatements();
             $failedStatement = array_pop($handledStatements);
 
-            $step->setFailedStatement($this->createFailedStatement(
-                $failedStatement,
-                (string) $test->getExpectedValue(),
-                (string) $test->getExaminedValue()
-            ));
+            if ($failedStatement instanceof StatementInterface) {
+                $step->setFailedStatement($this->createFailedStatement(
+                    $failedStatement,
+                    (string) $test->getExpectedValue(),
+                    (string) $test->getExaminedValue()
+                ));
+            }
         }
 
         $lastException = $test->getLastException();

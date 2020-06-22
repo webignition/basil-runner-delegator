@@ -180,7 +180,6 @@ class StepFactoryTest extends AbstractBaseTest
      * @param int $status
      * @param string $name
      * @param StatementInterface[] $handledStatements
-     * @param StatementInterface|null $failedStatement
      * @param string $expectedValue
      * @param string $examinedValue
      * @param \Throwable|null $lastException
