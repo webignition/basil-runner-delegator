@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary;
 
 use webignition\BasilRunner\Model\ResultPrinter\Comment;
-use webignition\BasilRunner\Model\ResultPrinter\IndentTrait;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 
 class Property implements RenderableInterface
 {
-    use IndentTrait;
-
     private string $key;
     private Comment $value;
     private string $padding;
@@ -26,8 +23,7 @@ class Property implements RenderableInterface
     public function render(): string
     {
         return sprintf(
-            '%s- %s: %s%s',
-            $this->createIndentContent(1),
+            '- %s: %s%s',
             $this->key,
             $this->padding,
             $this->value->render()

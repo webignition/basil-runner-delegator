@@ -7,13 +7,11 @@ namespace webignition\BasilRunner\Model\ResultPrinter\StatementLine;
 use webignition\BasilModels\Action\ResolvedAction;
 use webignition\BasilModels\Assertion\ResolvedAssertion;
 use webignition\BasilModels\EncapsulatingStatementInterface;
-use webignition\BasilRunner\Model\ResultPrinter\IndentTrait;
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\TestOutput\Status;
 
 class EncapsulatingStatementLine extends StatementLine
 {
-    use IndentTrait;
-
     private EncapsulatingStatementInterface $statement;
 
     public function __construct(EncapsulatingStatementInterface $statement, int $status)
@@ -39,7 +37,10 @@ class EncapsulatingStatementLine extends StatementLine
             ? 'resolved from'
             : 'derived from';
 
-        return (new LabelledStatement($label, $statement->getSourceStatement()))->render();
+        $labelledStatement = new LabelledStatement($label, $statement->getSourceStatement());
+        $indentedStatement = new IndentedContent($labelledStatement);
+
+        return $indentedStatement->render();
     }
 
     private function renderEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): string

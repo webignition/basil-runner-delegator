@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\DataSet;
 
-use webignition\BasilModels\DataSet\DataSetCollectionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 

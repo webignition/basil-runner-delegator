@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Model\ResultPrinter\StatementLine;
 
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\HighlightedFailure;
-use webignition\BasilRunner\Model\ResultPrinter\IndentTrait;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StatusIcon;
@@ -14,8 +13,6 @@ use webignition\BasilRunner\Model\TestOutput\Status;
 
 class StatementLine implements RenderableInterface
 {
-    use IndentTrait;
-
     private StatementInterface $statement;
     private int $status;
     private StatusIcon $statusIcon;
@@ -40,8 +37,7 @@ class StatementLine implements RenderableInterface
     public function render(): string
     {
         return sprintf(
-            '%s%s %s',
-            $this->createIndentContent(2),
+            '%s %s',
             $this->statusIcon->render(),
             $this->statementContent->render()
         );

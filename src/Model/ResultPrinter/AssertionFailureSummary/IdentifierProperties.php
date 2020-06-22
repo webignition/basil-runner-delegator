@@ -25,9 +25,6 @@ class IdentifierProperties extends RenderableCollection
 
         $properties[] = new Property('ordinal position', (string) ($identifier->getOrdinalPosition() ?? 1));
 
-        parent::__construct(
-            $properties,
-            1
-        );
+        parent::__construct($properties);
     }
 }

@@ -31,8 +31,8 @@ class KeyValueCollectionTest extends AbstractBaseTest
                     new KeyValue('key2', 'value2'),
                 ]),
                 'expectedRenderedString' =>
-                    '      $key1: <comment>value1</comment>' . "\n" .
-                    '      $key2: <comment>value2</comment>'
+                    '$key1: <comment>value1</comment>' . "\n" .
+                    '$key2: <comment>value2</comment>'
                 ,
             ],
         ];

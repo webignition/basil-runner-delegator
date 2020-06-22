@@ -7,6 +7,8 @@ namespace webignition\BasilRunner\Services\ResultPrinter\Renderer;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
+use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StepName;
@@ -42,7 +44,7 @@ class StepRenderer
 
         $dataSet = $step->getCurrentDataSet();
         if ($dataSet instanceof DataSetInterface) {
-            $keyValueCollection = KeyValueCollection::fromDataSet($dataSet);
+            $keyValueCollection = new IndentedContent(KeyValueCollection::fromDataSet($dataSet), 2);
             $content .= $keyValueCollection->render() . "\n\n";
         }
 
@@ -65,9 +67,13 @@ class StepRenderer
         $lastException = $step->getLastException();
         if ($lastException instanceof \Throwable) {
             $exceptionModel = $this->exceptionFactory->create($lastException);
-            $exceptionContent = '* ' . $exceptionModel->render();
+            $exceptionContent = new IndentedContent(
+                new Literal(
+                    '* ' . $exceptionModel->render()
+                )
+            );
 
-            $content .= "\n" . $this->indent($exceptionContent, 2);
+            $content .= "\n" . $exceptionContent->render();
         }
 
         return $content;
@@ -82,7 +88,9 @@ class StepRenderer
             }
         }
 
-        return (new RenderableCollection($renderableStatements))->render();
+        $statementCollection = new IndentedContent(new RenderableCollection($renderableStatements));
+
+        return $statementCollection->render();
     }
 
     private function renderFailedStatement(
@@ -90,7 +98,7 @@ class StepRenderer
         string $expectedValue,
         string $actualValue
     ): string {
-        $renderableStatement = $this->statementLineFactory->create($statementLine);
+        $renderableStatement = new IndentedContent($this->statementLineFactory->create($statementLine));
 
         $content = $renderableStatement->render();
         $summary = null;
@@ -104,28 +112,16 @@ class StepRenderer
             );
 
             if ($summaryModel instanceof RenderableInterface) {
-                $summary = $summaryModel->render();
+                $indentedSummaryModel = new IndentedContent($summaryModel);
+                $summary = $indentedSummaryModel->render();
             }
         }
 
         if (is_string($summary)) {
             $content .= "\n";
-            $content .= $this->indent($summary, 2);
+            $content .= $summary;
         }
 
         return $content;
-    }
-
-    private function indent(string $content, int $depth = 1): string
-    {
-        $indentContent = str_repeat(self::INDENT, $depth);
-
-        $lines = explode("\n", $content);
-
-        array_walk($lines, function (&$line) use ($indentContent) {
-            $line = $indentContent . $line;
-        });
-
-        return implode("\n", $lines);
     }
 }

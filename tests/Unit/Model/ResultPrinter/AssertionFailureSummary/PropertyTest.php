@@ -22,15 +22,15 @@ class PropertyTest extends AbstractBaseTest
         return [
             'no padding' => [
                 'property' => new Property('key', 'value'),
-                'expectedRenderedString' => '  - key: <comment>value</comment>',
+                'expectedRenderedString' => '- key: <comment>value</comment>',
             ],
             'padding single space' => [
                 'property' => new Property('key', 'value', ' '),
-                'expectedRenderedString' => '  - key:  <comment>value</comment>',
+                'expectedRenderedString' => '- key:  <comment>value</comment>',
             ],
             'padding two spaces' => [
                 'property' => new Property('key', 'value', '  '),
-                'expectedRenderedString' => '  - key:   <comment>value</comment>',
+                'expectedRenderedString' => '- key:   <comment>value</comment>',
             ],
         ];
     }

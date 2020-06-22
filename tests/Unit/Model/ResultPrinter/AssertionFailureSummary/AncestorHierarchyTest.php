@@ -27,9 +27,9 @@ class AncestorHierarchyTest extends AbstractBaseTest
                         ->withParentIdentifier(new ElementIdentifier('.parent'))
                 ),
                 'expectedRenderedString' =>
-                    '  with parent:' . "\n" .
-                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
-                    '    - ordinal position: <comment>1</comment>'
+                    'with parent:' . "\n" .
+                    '  - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '  - ordinal position: <comment>1</comment>'
                 ,
             ],
             'grandparent > parent > child' => [
@@ -43,12 +43,12 @@ class AncestorHierarchyTest extends AbstractBaseTest
                         )
                 ),
                 'expectedRenderedString' =>
-                    '  with parent:' . "\n" .
-                    '    - CSS selector: <comment>.parent</comment>' . "\n" .
-                    '    - ordinal position: <comment>1</comment>' . "\n" .
-                    '  with parent:' . "\n" .
-                    '    - CSS selector: <comment>.grandparent</comment>' . "\n" .
-                    '    - ordinal position: <comment>1</comment>'
+                    'with parent:' . "\n" .
+                    '  - CSS selector: <comment>.parent</comment>' . "\n" .
+                    '  - ordinal position: <comment>1</comment>' . "\n" .
+                    'with parent:' . "\n" .
+                    '  - CSS selector: <comment>.grandparent</comment>' . "\n" .
+                    '  - ordinal position: <comment>1</comment>'
                 ,
             ],
         ];

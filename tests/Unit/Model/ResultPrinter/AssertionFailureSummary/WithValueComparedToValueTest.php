@@ -29,16 +29,6 @@ class WithValueComparedToValueTest extends AbstractBaseTest
                 'expectedRenderedString' =>
                     'with value <comment>actual</comment> is not equal to <comment>expected</comment>',
             ],
-            'is, indented' => [
-                'withValueComparedToValue' => new WithValueComparedToValue(
-                    'actual',
-                    'expected',
-                    'is',
-                    1
-                ),
-                'expectedRenderedString' =>
-                    '  with value <comment>actual</comment> is not equal to <comment>expected</comment>',
-            ],
             'is-not' => [
                 'withValueComparedToValue' => new WithValueComparedToValue(
                     'actual',

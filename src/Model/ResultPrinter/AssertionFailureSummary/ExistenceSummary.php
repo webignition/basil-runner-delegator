@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary;
 
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
@@ -14,13 +15,13 @@ class ExistenceSummary extends RenderableCollection
     {
         $ancestorHierarchy = null === $identifier->getParentIdentifier()
             ? null
-            : new AncestorHierarchy($identifier);
+            : new IndentedContent(new AncestorHierarchy($identifier));
 
         parent::__construct([
             new ComponentIdentifiedBy($identifier),
-            new IdentifierProperties($identifier),
+            new IndentedContent(new IdentifierProperties($identifier), 2),
             $ancestorHierarchy,
-            new Literal(('exists' === $operator ? 'does not exist' : 'does exist'), 1)
+            new IndentedContent(new Literal('exists' === $operator ? 'does not exist' : 'does exist'))
         ]);
     }
 

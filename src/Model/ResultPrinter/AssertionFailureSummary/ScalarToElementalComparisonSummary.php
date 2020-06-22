@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary;
 
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
@@ -18,13 +19,13 @@ class ScalarToElementalComparisonSummary extends RenderableCollection
     ) {
         $valueAncestorHierarchy = null === $valueIdentifier->getParentIdentifier()
             ? null
-            : new AncestorHierarchy($valueIdentifier);
+            : new IndentedContent(new AncestorHierarchy($valueIdentifier));
 
         parent::__construct([
             new ScalarValueComparedToElementalValue($actualValue, $operator, $valueIdentifier),
-            new IdentifierProperties($valueIdentifier),
+            new IndentedContent(new IdentifierProperties($valueIdentifier), 2),
             $valueAncestorHierarchy,
-            new WithValue($expectedValue, 1),
+            new IndentedContent(new WithValue($expectedValue)),
             new Literal(''),
             new ScalarToScalarComparisonSummary($operator, $expectedValue, $actualValue)
         ]);

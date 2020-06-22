@@ -12,6 +12,8 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
+use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
@@ -137,7 +139,11 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
     {
         if ($test instanceof BasilTestCaseInterface) {
             $step = new Step($test);
-            $this->write($this->stepRenderer->render($step));
+
+            $renderedStep = $this->stepRenderer->render($step);
+            $indentedRenderedStep = (new IndentedContent(new Literal($renderedStep)))->render();
+
+            $this->write($indentedRenderedStep);
             $this->writeEmptyLine();
             $this->writeEmptyLine();
         }
