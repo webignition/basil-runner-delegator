@@ -11,23 +11,19 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
-use webignition\BasilDomIdentifierFactory\Factory as DomIdentifierFactory;
 use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
-use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
-use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\StepRenderer;
+use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StepFactory;
 use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 
 class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 {
     private string $projectRootPath;
-    private StepRenderer $stepRenderer;
     private ?TestOutput $currentTestOutput = null;
     private TestRenderer $testRenderer;
+    private StepFactory $stepFactory;
 
     public function __construct($out = null)
     {
@@ -36,12 +32,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         $this->projectRootPath = (ProjectRootPathProvider::create())->get();
 
         $this->testRenderer = new TestRenderer();
-        $this->stepRenderer = new StepRenderer(
-            new SummaryFactory(
-                DomIdentifierFactory::createFactory()
-            ),
-            new ExceptionFactory()
-        );
+        $this->stepFactory = StepFactory::createFactory();
     }
 
     /**
@@ -138,10 +129,11 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         if ($test instanceof BasilTestCaseInterface) {
             $step = new Step($test);
 
-            $renderedStep = $this->stepRenderer->render($step);
-            $indentedRenderedStep = (new IndentedContent(new Literal($renderedStep)))->render();
+            $indentedRenderedStep = new IndentedContent(
+                $this->stepFactory->create($step)
+            );
 
-            $this->write($indentedRenderedStep);
+            $this->write($indentedRenderedStep->render());
             $this->writeEmptyLine();
             $this->writeEmptyLine();
         }
