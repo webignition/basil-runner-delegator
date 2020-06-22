@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter\Step;
 
+use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\DataSet\DataSet;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\Step\Name;
 use webignition\BasilRunner\Model\TestOutput\Status;
-use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class NameTest extends AbstractBaseTest
@@ -25,15 +25,15 @@ class NameTest extends AbstractBaseTest
     {
         return [
             'success' => [
-                'stepName' => new Name($this->createStep('success step name', Status::SUCCESS)),
+                'stepName' => new Name($this->createBasilTestCase('success step name', Status::SUCCESS)),
                 'expectedRenderedString' => '<icon-success /> <success>success step name</success>',
             ],
             'failure' => [
-                'stepName' => new Name($this->createStep('failure step name', Status::FAILURE)),
+                'stepName' => new Name($this->createBasilTestCase('failure step name', Status::FAILURE)),
                 'expectedRenderedString' => '<icon-failure /> <failure>failure step name</failure>',
             ],
             'success with data set' => [
-                'stepName' => new Name($this->createStep(
+                'stepName' => new Name($this->createBasilTestCase(
                     'success step name',
                     Status::SUCCESS,
                     new DataSet('data set name', [])
@@ -43,12 +43,15 @@ class NameTest extends AbstractBaseTest
         ];
     }
 
-    private function createStep(string $name, int $status, ?DataSetInterface $currentDataSet = null): Step
-    {
-        $step = \Mockery::mock(Step::class);
+    private function createBasilTestCase(
+        string $name,
+        int $status,
+        ?DataSetInterface $currentDataSet = null
+    ): BasilTestCaseInterface {
+        $step = \Mockery::mock(BasilTestCaseInterface::class);
 
         $step
-            ->shouldReceive('getName')
+            ->shouldReceive('getBasilStepName')
             ->andReturn($name);
 
         $step

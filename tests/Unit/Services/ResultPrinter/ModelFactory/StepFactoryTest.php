@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\ModelFactory;
 
+use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilModels\StatementInterface;
@@ -12,9 +13,8 @@ use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
-use webignition\BasilRunner\Model\ResultPrinter\Step\Step as RenderableStep;
+use webignition\BasilRunner\Model\ResultPrinter\Step\Step;
 use webignition\BasilRunner\Model\TestOutput\Status;
-use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StepFactory;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
@@ -25,9 +25,9 @@ class StepFactoryTest extends AbstractBaseTest
     /**
      * @dataProvider renderDataProvider
      */
-    public function testCreate(StepFactory $factory, OutputStep $outputStep, RenderableStep $expectedRenderableStep)
+    public function testCreate(StepFactory $factory, BasilTestCaseInterface $test, Step $expectedStep)
     {
-        $this->assertEquals($expectedRenderableStep, $factory->create($outputStep));
+        $this->assertEquals($expectedStep, $factory->create($test));
     }
 
     public function renderDataProvider(): array
@@ -35,24 +35,24 @@ class StepFactoryTest extends AbstractBaseTest
         $actionParser = ActionParser::create();
         $assertionParser = AssertionParser::create();
 
-        $passedNoStatementsOutputStep = $this->createOutputStep(
+        $passedNoStatementsTest = $this->createBasilTestCase(
             Status::SUCCESS,
             'passed, no failed statement line, no last exception',
             [],
-            null,
             '',
             '',
             null,
             null
         );
 
-        $failedActionOutputStatement = $actionParser->parse('click $".selector"');
+        $clickAction = $actionParser->parse('click $".selector"');
 
-        $failedActionOutputStep = $this->createOutputStep(
+        $failedActionTest = $this->createBasilTestCase(
             Status::FAILURE,
             'failed, has failed action statement line',
-            [],
-            $failedActionOutputStatement,
+            [
+                $clickAction
+            ],
             '',
             '',
             null,
@@ -60,13 +60,13 @@ class StepFactoryTest extends AbstractBaseTest
         );
 
         $existsAssertion = $assertionParser->parse('$".selector" exists');
-        $failedAssertionOutputStatement = $existsAssertion;
 
-        $failedAssertionOutputStep = $this->createOutputStep(
+        $failedAssertionTest = $this->createBasilTestCase(
             Status::FAILURE,
             'failed, has failed assertion statement line',
-            [],
-            $failedAssertionOutputStatement,
+            [
+                $existsAssertion
+            ],
             '',
             '',
             null,
@@ -75,11 +75,12 @@ class StepFactoryTest extends AbstractBaseTest
 
         $exception = new \Exception('exception message');
 
-        $failedAssertionWithExceptionOutputStep = $this->createOutputStep(
+        $failedAssertionTestWithException = $this->createBasilTestCase(
             Status::FAILURE,
             'failed, has failed assertion statement line, has last exception',
-            [],
-            $failedAssertionOutputStatement,
+            [
+                $existsAssertion
+            ],
             '',
             '',
             $exception,
@@ -89,15 +90,15 @@ class StepFactoryTest extends AbstractBaseTest
         return [
             'passed, no failed statement line, no last exception' => [
                 'factory' => StepFactory::createFactory(),
-                'outputStep' => $passedNoStatementsOutputStep,
-                'expectedRenderableStep' => new RenderableStep($passedNoStatementsOutputStep),
+                'test' => $passedNoStatementsTest,
+                'expectedStep' => new Step($passedNoStatementsTest),
             ],
             'failed, has failed action statement line' => [
                 'factory' => StepFactory::createFactory(),
-                'outputStep' => $failedActionOutputStep,
-                'expectedRenderableStep' => $this->setFailedStatementOnStep(
-                    new RenderableStep($failedActionOutputStep),
-                    new StatementLine($failedActionOutputStatement, Status::FAILURE)
+                'test' => $failedActionTest,
+                'expectedStep' => $this->setFailedStatementOnStep(
+                    new Step($failedActionTest),
+                    new StatementLine($clickAction, Status::FAILURE)
                 ),
             ],
             'failed, has failed assertion statement line' => [
@@ -110,11 +111,11 @@ class StepFactoryTest extends AbstractBaseTest
                     ),
                     new ExceptionFactory()
                 ),
-                'outputStep' => $failedAssertionOutputStep,
-                'expectedRenderableStep' => $this->setFailedStatementOnStep(
-                    new RenderableStep($failedAssertionOutputStep),
+                'test' => $failedAssertionTest,
+                'expectedStep' => $this->setFailedStatementOnStep(
+                    new Step($failedAssertionTest),
                     (new StatementLine(
-                        $failedAssertionOutputStatement,
+                        $existsAssertion,
                         Status::FAILURE
                     ))->withFailureSummary(new Literal('failed assertion summary'))
                 ),
@@ -132,12 +133,12 @@ class StepFactoryTest extends AbstractBaseTest
                         new Literal('exception content')
                     )
                 ),
-                'outputStep' => $failedAssertionWithExceptionOutputStep,
-                'expectedRenderableStep' => $this->setLastExceptionOnStep(
+                'test' => $failedAssertionTestWithException,
+                'expectedStep' => $this->setLastExceptionOnStep(
                     $this->setFailedStatementOnStep(
-                        new RenderableStep($failedAssertionWithExceptionOutputStep),
+                        new Step($failedAssertionTestWithException),
                         (new StatementLine(
-                            $failedAssertionOutputStatement,
+                            $existsAssertion,
                             Status::FAILURE
                         ))->withFailureSummary(new Literal('failed assertion summary'))
                     ),
@@ -178,50 +179,44 @@ class StepFactoryTest extends AbstractBaseTest
     /**
      * @param int $status
      * @param string $name
-     * @param StatementInterface[] $completedStatements
-     * @param StatementInterface|null $failedStatement
+     * @param StatementInterface[] $handledStatements
      * @param string $expectedValue
-     * @param string $actualValue
+     * @param string $examinedValue
      * @param \Throwable|null $lastException
      * @param DataSetInterface|null $dataSet
      *
-     * @return OutputStep
+     * @return BasilTestCaseInterface
      */
-    private function createOutputStep(
+    private function createBasilTestCase(
         int $status,
         string $name,
-        array $completedStatements,
-        ?StatementInterface $failedStatement,
+        array $handledStatements,
         string $expectedValue,
-        string $actualValue,
+        string $examinedValue,
         ?\Throwable $lastException,
         ?DataSetInterface $dataSet
-    ): OutputStep {
-        $step = \Mockery::mock(OutputStep::class);
+    ): BasilTestCaseInterface {
+        $step = \Mockery::mock(BasilTestCaseInterface::class);
 
         $step
             ->shouldReceive('getStatus')
             ->andReturn($status);
 
         $step
-            ->shouldReceive('getName')
+            ->shouldReceive('getBasilStepName')
             ->andReturn($name);
 
         $step
-            ->shouldReceive('getCompletedStatements')
-            ->andReturn($completedStatements);
-
-        $step
-            ->shouldReceive('getFailedStatement')
-            ->andReturn($failedStatement);
+            ->shouldReceive('getHandledStatements')
+            ->andReturn($handledStatements);
 
         $step
             ->shouldReceive('getExpectedValue')
             ->andReturn($expectedValue);
 
         $step
-            ->shouldReceive('getActualValue')
-            ->andReturn($actualValue);
+            ->shouldReceive('getExaminedValue')
+            ->andReturn($examinedValue);
 
         $step
             ->shouldReceive('getLastException')
@@ -234,14 +229,14 @@ class StepFactoryTest extends AbstractBaseTest
         return $step;
     }
 
-    private function setFailedStatementOnStep(RenderableStep $step, RenderableInterface $renderable): RenderableStep
+    private function setFailedStatementOnStep(Step $step, RenderableInterface $renderable): Step
     {
         $step->setFailedStatement($renderable);
 
         return $step;
     }
 
-    private function setLastExceptionOnStep(RenderableStep $step, RenderableInterface $renderable): RenderableStep
+    private function setLastExceptionOnStep(Step $step, RenderableInterface $renderable): Step
     {
         $step->setLastException($renderable);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\Step;
 
+use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
@@ -13,7 +14,6 @@ use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
-use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 
 class Step implements RenderableInterface
 {
@@ -23,11 +23,11 @@ class Step implements RenderableInterface
     private ?RenderableInterface $failedStatement = null;
     private ?RenderableInterface $lastException = null;
 
-    public function __construct(OutputStep $outputStep)
+    public function __construct(BasilTestCaseInterface $test)
     {
-        $this->name = new Name($outputStep);
-        $this->dataSet = $this->createDataSet($outputStep);
-        $this->completedStatements = $this->createCompletedStatements($outputStep);
+        $this->name = new Name($test);
+        $this->dataSet = $this->createDataSet($test);
+        $this->completedStatements = $this->createCompletedStatements($test);
     }
 
     public function setFailedStatement(RenderableInterface $failedStatement): void
@@ -68,9 +68,9 @@ class Step implements RenderableInterface
         return (new RenderableCollection($items))->render();
     }
 
-    private function createDataSet(OutputStep $step): ?RenderableInterface
+    private function createDataSet(BasilTestCaseInterface $test): ?RenderableInterface
     {
-        $dataSet = $step->getCurrentDataSet();
+        $dataSet = $test->getCurrentDataSet();
         if ($dataSet instanceof DataSetInterface) {
             return new RenderableCollection([
                 KeyValueCollection::fromDataSet($dataSet),
@@ -80,9 +80,13 @@ class Step implements RenderableInterface
         return null;
     }
 
-    private function createCompletedStatements(OutputStep $step): ?RenderableInterface
+    private function createCompletedStatements(BasilTestCaseInterface $test): ?RenderableInterface
     {
-        $completedStatements = $step->getCompletedStatements();
+        $completedStatements = $test->getHandledStatements();
+        if (Status::FAILURE === $test->getStatus()) {
+            array_pop($completedStatements);
+        }
+
         if (0 === count($completedStatements)) {
             return null;
         }
