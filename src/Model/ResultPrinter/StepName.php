@@ -10,8 +10,6 @@ use webignition\BasilRunner\Model\TestOutput\Step;
 
 class StepName implements RenderableInterface
 {
-    use IndentTrait;
-
     private StatusIcon $statusIcon;
     private RenderableInterface $nameLine;
 
@@ -29,8 +27,7 @@ class StepName implements RenderableInterface
     public function render(): string
     {
         return sprintf(
-            '%s%s %s',
-            $this->createIndentContent(1),
+            '%s %s',
             $this->statusIcon->render(),
             $this->nameLine->render()
         );

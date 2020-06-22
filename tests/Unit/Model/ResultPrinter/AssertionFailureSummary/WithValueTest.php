@@ -20,13 +20,9 @@ class WithValueTest extends AbstractBaseTest
     public function renderDataProvider(): array
     {
         return [
-            'indent depth 0' => [
+            'default' => [
                 'withValue' => new WithValue('no indent'),
                 'expectedRenderedString' => 'with value <comment>no indent</comment>',
-            ],
-            'indent depth 1' => [
-                'withValue' => new WithValue('indent depth 1', 1),
-                'expectedRenderedString' => '  with value <comment>indent depth 1</comment>',
             ],
         ];
     }

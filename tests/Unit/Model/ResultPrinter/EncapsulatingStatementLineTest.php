@@ -51,8 +51,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::SUCCESS
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-success /> $".selector" exists' . "\n" .
-                    '      <comment>> derived from:</comment> click $".selector"'
+                    '<icon-success /> $".selector" exists' . "\n" .
+                    '  <comment>> derived from:</comment> click $".selector"'
                 ,
             ],
             'passed resolved assertion' => [
@@ -61,8 +61,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::SUCCESS
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-success /> $".selector" is "value"' . "\n" .
-                    '      <comment>> resolved from:</comment> $page_import_name.elements.selector is "value"'
+                    '<icon-success /> $".selector" is "value"' . "\n" .
+                    '  <comment>> resolved from:</comment> $page_import_name.elements.selector is "value"'
                 ,
             ],
             'passed resolved action' => [
@@ -71,8 +71,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::SUCCESS
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-success /> click $".selector"' . "\n" .
-                    '      <comment>> resolved from:</comment> click $page_import_name.elements.selector'
+                    '<icon-success /> click $".selector"' . "\n" .
+                    '  <comment>> resolved from:</comment> click $page_import_name.elements.selector'
                 ,
             ],
             'failed derived exists assertion' => [
@@ -81,8 +81,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::FAILURE
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
-                    '      <comment>> derived from:</comment> click $".selector"'
+                    '<icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
+                    '  <comment>> derived from:</comment> click $".selector"'
                 ,
             ],
             'failed resolved assertion' => [
@@ -91,8 +91,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::FAILURE
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-failure /> <highlighted-failure>$".selector" is "value"</highlighted-failure>' . "\n" .
-                    '      <comment>> resolved from:</comment> $page_import_name.elements.selector is "value"'
+                    '<icon-failure /> <highlighted-failure>$".selector" is "value"</highlighted-failure>' . "\n" .
+                    '  <comment>> resolved from:</comment> $page_import_name.elements.selector is "value"'
                 ,
             ],
             'failed resolved action' => [
@@ -101,8 +101,8 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::FAILURE
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-failure /> <highlighted-failure>click $".selector"</highlighted-failure>' . "\n" .
-                    '      <comment>> resolved from:</comment> click $page_import_name.elements.selector'
+                    '<icon-failure /> <highlighted-failure>click $".selector"</highlighted-failure>' . "\n" .
+                    '  <comment>> resolved from:</comment> click $page_import_name.elements.selector'
                 ,
             ],
             'failed derived resolved exists assertion' => [
@@ -111,9 +111,9 @@ class EncapsulatingStatementLineTest extends AbstractBaseTest
                     Status::FAILURE
                 ),
                 'expectedRenderedStatementLine' =>
-                    '    <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
-                    '      <comment>> derived from:</comment> click $".selector"' . "\n" .
-                    '      <comment>> resolved from:</comment> click $page_import_name.elements.selector'
+                    '<icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
+                    '  <comment>> derived from:</comment> click $".selector"' . "\n" .
+                    '  <comment>> resolved from:</comment> click $page_import_name.elements.selector'
                 ,
             ],
         ];

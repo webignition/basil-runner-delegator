@@ -8,8 +8,8 @@ use webignition\BasilRunner\Model\ResultPrinter\Literal;
 
 class WithParent extends Literal
 {
-    public function __construct(int $indentDepth = 0)
+    public function __construct()
     {
-        parent::__construct('with parent:', $indentDepth);
+        parent::__construct('with parent:');
     }
 }

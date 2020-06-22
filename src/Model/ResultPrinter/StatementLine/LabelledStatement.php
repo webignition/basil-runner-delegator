@@ -6,13 +6,10 @@ namespace webignition\BasilRunner\Model\ResultPrinter\StatementLine;
 
 use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\Comment;
-use webignition\BasilRunner\Model\ResultPrinter\IndentTrait;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 
 class LabelledStatement implements RenderableInterface
 {
-    use IndentTrait;
-
     private Comment $label;
     private StatementInterface $statement;
 
@@ -25,8 +22,7 @@ class LabelledStatement implements RenderableInterface
     public function render(): string
     {
         return sprintf(
-            '%s%s %s',
-            $this->createIndentContent(3),
+            '%s %s',
             $this->label->render(),
             $this->statement->getSource()
         );

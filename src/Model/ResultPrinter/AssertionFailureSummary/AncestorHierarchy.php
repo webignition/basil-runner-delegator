@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\AssertionFailureSummary;
 
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\DomElementIdentifier\ElementIdentifierInterface;
 
@@ -16,8 +17,8 @@ class AncestorHierarchy extends RenderableCollection
         $parent = $identifier->getParentIdentifier();
 
         while ($parent instanceof ElementIdentifierInterface) {
-            $items[] = new WithParent(1);
-            $items[] = new IdentifierProperties($parent);
+            $items[] = new WithParent();
+            $items[] = new IndentedContent(new IdentifierProperties($parent));
 
             $parent = $parent->getParentIdentifier();
         }

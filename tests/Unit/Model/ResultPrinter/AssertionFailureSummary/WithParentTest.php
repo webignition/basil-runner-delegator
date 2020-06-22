@@ -20,13 +20,9 @@ class WithParentTest extends AbstractBaseTest
     public function renderDataProvider(): array
     {
         return [
-            'indent depth 0' => [
+            'default' => [
                 'withParent' => new WithParent(),
                 'expectedRenderedString' => 'with parent:',
-            ],
-            'indent depth 1' => [
-                'withParent' => new WithParent(1),
-                'expectedRenderedString' => '  with parent:',
             ],
         ];
     }

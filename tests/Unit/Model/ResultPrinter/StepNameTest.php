@@ -26,11 +26,11 @@ class StepNameTest extends AbstractBaseTest
         return [
             'success' => [
                 'stepName' => new StepName($this->createStep('success step name', Status::SUCCESS)),
-                'expectedRenderedString' => '  <icon-success /> <success>success step name</success>',
+                'expectedRenderedString' => '<icon-success /> <success>success step name</success>',
             ],
             'failure' => [
                 'stepName' => new StepName($this->createStep('failure step name', Status::FAILURE)),
-                'expectedRenderedString' => '  <icon-failure /> <failure>failure step name</failure>',
+                'expectedRenderedString' => '<icon-failure /> <failure>failure step name</failure>',
             ],
             'success with data set' => [
                 'stepName' => new StepName($this->createStep(
@@ -38,7 +38,7 @@ class StepNameTest extends AbstractBaseTest
                     Status::SUCCESS,
                     new DataSet('data set name', [])
                 )),
-                'expectedRenderedString' => '  <icon-success /> <success>success step name: data set name</success>',
+                'expectedRenderedString' => '<icon-success /> <success>success step name: data set name</success>',
             ],
         ];
     }

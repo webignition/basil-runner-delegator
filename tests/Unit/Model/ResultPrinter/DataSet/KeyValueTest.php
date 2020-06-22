@@ -22,7 +22,7 @@ class KeyValueTest extends AbstractBaseTest
         return [
             'default' => [
                 'keyValue' => new KeyValue('key', 'value'),
-                'expectedRenderedString' => '      $key: <comment>value</comment>',
+                'expectedRenderedString' => '$key: <comment>value</comment>',
             ],
         ];
     }

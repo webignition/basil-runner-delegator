@@ -30,7 +30,7 @@ class LabelledStatementTest extends AbstractBaseTest
                         '$".selector'
                     )
                 ),
-                'expectedRenderedString' => '      <comment>> label:</comment> click $".selector"',
+                'expectedRenderedString' => '<comment>> label:</comment> click $".selector"',
             ],
         ];
     }

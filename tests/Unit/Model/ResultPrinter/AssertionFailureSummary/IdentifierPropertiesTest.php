@@ -27,8 +27,8 @@ class IdentifierPropertiesTest extends AbstractBaseTest
                     new ElementIdentifier('.selector')
                 ),
                 'expectedRenderedString' =>
-                    '    - CSS selector: <comment>.selector</comment>' . "\n" .
-                    '    - ordinal position: <comment>1</comment>'
+                    '- CSS selector: <comment>.selector</comment>' . "\n" .
+                    '- ordinal position: <comment>1</comment>'
                 ,
             ],
             'element with ordinal position' => [
@@ -36,8 +36,8 @@ class IdentifierPropertiesTest extends AbstractBaseTest
                     new ElementIdentifier('.selector', 2)
                 ),
                 'expectedRenderedString' =>
-                    '    - CSS selector: <comment>.selector</comment>' . "\n" .
-                    '    - ordinal position: <comment>2</comment>'
+                    '- CSS selector: <comment>.selector</comment>' . "\n" .
+                    '- ordinal position: <comment>2</comment>'
                 ,
             ],
             'attribute' => [
@@ -45,9 +45,9 @@ class IdentifierPropertiesTest extends AbstractBaseTest
                     new AttributeIdentifier('.selector', 'attribute_name')
                 ),
                 'expectedRenderedString' =>
-                    '    - CSS selector: <comment>.selector</comment>' . "\n" .
-                    '    - attribute name: <comment>attribute_name</comment>' . "\n" .
-                    '    - ordinal position: <comment>1</comment>'
+                    '- CSS selector: <comment>.selector</comment>' . "\n" .
+                    '- attribute name: <comment>attribute_name</comment>' . "\n" .
+                    '- ordinal position: <comment>1</comment>'
                 ,
             ],
         ];

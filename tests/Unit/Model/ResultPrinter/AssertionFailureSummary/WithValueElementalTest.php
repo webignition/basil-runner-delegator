@@ -32,17 +32,6 @@ class WithValueElementalTest extends AbstractBaseTest
                     'with value <comment>actual</comment> is not equal to the value of element ' .
                     '<comment>$".expected"</comment> identified by:',
             ],
-            'is, element value, indented' => [
-                'withValueElemental' => new WithValueElemental(
-                    'actual',
-                    new ElementIdentifier('.expected'),
-                    'is',
-                    1
-                ),
-                'expectedRenderedString' =>
-                    '  with value <comment>actual</comment> is not equal to the value of element ' .
-                    '<comment>$".expected"</comment> identified by:',
-            ],
             'is, attribute value' => [
                 'withValueElemental' => new WithValueElemental(
                     'actual',

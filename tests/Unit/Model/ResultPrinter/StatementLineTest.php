@@ -33,7 +33,7 @@ class StatementLineTest extends AbstractBaseTest
                     $statement,
                     Status::SUCCESS
                 ),
-                'expectedRenderedString' => '    <icon-success /> click $".selector"',
+                'expectedRenderedString' => '<icon-success /> click $".selector"',
             ],
             'failure' => [
                 'statementLine' => new StatementLine(
@@ -41,7 +41,7 @@ class StatementLineTest extends AbstractBaseTest
                     Status::FAILURE
                 ),
                 'expectedRenderedString' =>
-                    '    <icon-failure /> <highlighted-failure>click $".selector"</highlighted-failure>',
+                    '<icon-failure /> <highlighted-failure>click $".selector"</highlighted-failure>',
             ],
         ];
     }
