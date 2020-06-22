@@ -163,6 +163,14 @@ class StepTest extends AbstractBaseTest
         ];
     }
 
+    /**
+     * @param int $status
+     * @param string $name
+     * @param StatementLine[] $completedStatementLines
+     * @param DataSetInterface|null $dataSet
+     *
+     * @return OutputStep
+     */
     private function createOutputStep(
         int $status,
         string $name,

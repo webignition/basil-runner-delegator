@@ -175,6 +175,18 @@ class StepFactoryTest extends AbstractBaseTest
         return $exceptionFactory;
     }
 
+    /**
+     * @param int $status
+     * @param string $name
+     * @param StatementLine[] $completedStatementLines
+     * @param StatementLine|null $failedStatementLine
+     * @param string $expectedValue
+     * @param string $actualValue
+     * @param \Throwable|null $lastException
+     * @param DataSetInterface|null $dataSet
+     *
+     * @return OutputStep
+     */
     private function createOutputStep(
         int $status,
         string $name,
