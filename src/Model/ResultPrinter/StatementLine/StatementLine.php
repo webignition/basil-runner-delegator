@@ -11,7 +11,6 @@ use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\TestOutput\StatementLine as OutputStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 
 class StatementLine implements RenderableInterface
@@ -42,14 +41,6 @@ class StatementLine implements RenderableInterface
                 );
             }
         }
-    }
-
-    public static function fromOutputStatementLine(OutputStatementLine $statementLine): self
-    {
-        return new StatementLine(
-            $statementLine->getStatement(),
-            $statementLine->getHasPassed() ? Status::SUCCESS : Status::FAILURE
-        );
     }
 
     public function withFailureSummary(RenderableInterface $failureSummary): self

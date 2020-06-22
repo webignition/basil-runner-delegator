@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Model\ResultPrinter\Step;
 
+use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilModels\DataSet\DataSetInterface;
 use webignition\BasilRunner\Model\ResultPrinter\DataSet\KeyValueCollection;
 use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine as RenderableStatementLine;
+use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
+use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 
 class Step implements RenderableInterface
@@ -80,15 +82,15 @@ class Step implements RenderableInterface
 
     private function createCompletedStatements(OutputStep $step): ?RenderableInterface
     {
-        $completedStatementLines = $step->getCompletedStatementLines();
-        if (0 === count($completedStatementLines)) {
+        $completedStatements = $step->getCompletedStatements();
+        if (0 === count($completedStatements)) {
             return null;
         }
 
         $renderableStatements = [];
-        foreach ($step->getCompletedStatementLines() as $completedStatementLine) {
-            if (false === $completedStatementLine->getIsDerived()) {
-                $renderableStatements[] = RenderableStatementLine::fromOutputStatementLine($completedStatementLine);
+        foreach ($completedStatements as $completedStatement) {
+            if (false === $completedStatement instanceof DerivedValueOperationAssertion) {
+                $renderableStatements[] = new StatementLine($completedStatement, Status::SUCCESS);
             }
         }
 

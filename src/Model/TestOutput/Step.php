@@ -13,11 +13,11 @@ class Step
     private BasilTestCaseInterface $test;
 
     /**
-     * @var StatementLine[]
+     * @var StatementInterface[]
      */
-    private array $completedStatementLines = [];
+    private array $completedStatements;
 
-    private ?StatementLine $failedStatementLine = null;
+    private ?StatementInterface $failedStatement = null;
 
     public function __construct(BasilTestCaseInterface $test)
     {
@@ -27,16 +27,10 @@ class Step
         $failedStatement = null;
 
         if (Status::SUCCESS !== $test->getStatus()) {
-            $failedStatement = array_pop($completedStatements);
+            $this->failedStatement = array_pop($completedStatements);
         }
 
-        foreach ($completedStatements as $completedStatement) {
-            $this->completedStatementLines[] = StatementLine::createPassedStatementLine($completedStatement);
-        }
-
-        if ($failedStatement instanceof StatementInterface) {
-            $this->failedStatementLine = StatementLine::createFailedStatementLine($failedStatement);
-        }
+        $this->completedStatements = $completedStatements;
     }
 
     public function getName(): string
@@ -50,16 +44,16 @@ class Step
     }
 
     /**
-     * @return StatementLine[]
+     * @return StatementInterface[]
      */
-    public function getCompletedStatementLines(): array
+    public function getCompletedStatements(): array
     {
-        return $this->completedStatementLines;
+        return $this->completedStatements;
     }
 
-    public function getFailedStatementLine(): ?StatementLine
+    public function getFailedStatement(): ?StatementInterface
     {
-        return $this->failedStatementLine;
+        return $this->failedStatement;
     }
 
     public function getExpectedValue(): string

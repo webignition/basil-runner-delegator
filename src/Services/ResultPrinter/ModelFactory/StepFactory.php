@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\ResultPrinter\ModelFactory;
 
 use webignition\BasilModels\Assertion\AssertionInterface;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine as RenderableStatementLine;
+use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
 use webignition\BasilRunner\Model\ResultPrinter\Step\Step;
-use webignition\BasilRunner\Model\TestOutput\StatementLine;
+use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 
 class StepFactory
@@ -35,10 +36,10 @@ class StepFactory
     {
         $renderableStep = new Step($step);
 
-        $failedStatementLine = $step->getFailedStatementLine();
-        if ($failedStatementLine instanceof StatementLine) {
+        $failedStatement = $step->getFailedStatement();
+        if ($failedStatement instanceof StatementInterface) {
             $renderableStep->setFailedStatement($this->createFailedStatement(
-                $failedStatementLine,
+                $failedStatement,
                 $step->getExpectedValue(),
                 $step->getActualValue()
             ));
@@ -58,13 +59,12 @@ class StepFactory
     }
 
     private function createFailedStatement(
-        StatementLine $statementLine,
+        StatementInterface $statement,
         string $expectedValue,
         string $actualValue
     ): RenderableInterface {
-        $renderableStatement = RenderableStatementLine::fromOutputStatementLine($statementLine);
+        $renderableStatement = new StatementLine($statement, Status::FAILURE);
 
-        $statement = $statementLine->getStatement();
         if ($statement instanceof AssertionInterface) {
             $summaryModel = $this->summaryFactory->create(
                 $statement,

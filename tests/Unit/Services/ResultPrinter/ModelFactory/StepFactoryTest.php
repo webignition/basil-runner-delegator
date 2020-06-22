@@ -6,13 +6,13 @@ namespace webignition\BasilRunner\Tests\Unit\Services\ResultPrinter\ModelFactory
 
 use webignition\BasilModels\Assertion\AssertionInterface;
 use webignition\BasilModels\DataSet\DataSetInterface;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine as RenderableStatementLine;
+use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
 use webignition\BasilRunner\Model\ResultPrinter\Step\Step as RenderableStep;
-use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\ExceptionFactory;
@@ -46,15 +46,13 @@ class StepFactoryTest extends AbstractBaseTest
             null
         );
 
-        $failedActionOutputStatementLine = StatementLine::createFailedStatementLine(
-            $actionParser->parse('click $".selector"')
-        );
+        $failedActionOutputStatement = $actionParser->parse('click $".selector"');
 
         $failedActionOutputStep = $this->createOutputStep(
             Status::FAILURE,
             'failed, has failed action statement line',
             [],
-            $failedActionOutputStatementLine,
+            $failedActionOutputStatement,
             '',
             '',
             null,
@@ -62,13 +60,13 @@ class StepFactoryTest extends AbstractBaseTest
         );
 
         $existsAssertion = $assertionParser->parse('$".selector" exists');
-        $failedAssertionOutputStatementLine = StatementLine::createFailedStatementLine($existsAssertion);
+        $failedAssertionOutputStatement = $existsAssertion;
 
         $failedAssertionOutputStep = $this->createOutputStep(
             Status::FAILURE,
             'failed, has failed assertion statement line',
             [],
-            $failedAssertionOutputStatementLine,
+            $failedAssertionOutputStatement,
             '',
             '',
             null,
@@ -81,7 +79,7 @@ class StepFactoryTest extends AbstractBaseTest
             Status::FAILURE,
             'failed, has failed assertion statement line, has last exception',
             [],
-            $failedAssertionOutputStatementLine,
+            $failedAssertionOutputStatement,
             '',
             '',
             $exception,
@@ -99,7 +97,7 @@ class StepFactoryTest extends AbstractBaseTest
                 'outputStep' => $failedActionOutputStep,
                 'expectedRenderableStep' => $this->setFailedStatementOnStep(
                     new RenderableStep($failedActionOutputStep),
-                    RenderableStatementLine::fromOutputStatementLine($failedActionOutputStatementLine)
+                    new StatementLine($failedActionOutputStatement, Status::FAILURE)
                 ),
             ],
             'failed, has failed assertion statement line' => [
@@ -115,9 +113,10 @@ class StepFactoryTest extends AbstractBaseTest
                 'outputStep' => $failedAssertionOutputStep,
                 'expectedRenderableStep' => $this->setFailedStatementOnStep(
                     new RenderableStep($failedAssertionOutputStep),
-                    RenderableStatementLine::fromOutputStatementLine(
-                        $failedAssertionOutputStatementLine
-                    )->withFailureSummary(new Literal('failed assertion summary'))
+                    (new StatementLine(
+                        $failedAssertionOutputStatement,
+                        Status::FAILURE
+                    ))->withFailureSummary(new Literal('failed assertion summary'))
                 ),
             ],
             'failed, has failed assertion statement line, has last exception' => [
@@ -137,9 +136,10 @@ class StepFactoryTest extends AbstractBaseTest
                 'expectedRenderableStep' => $this->setLastExceptionOnStep(
                     $this->setFailedStatementOnStep(
                         new RenderableStep($failedAssertionWithExceptionOutputStep),
-                        RenderableStatementLine::fromOutputStatementLine(
-                            $failedAssertionOutputStatementLine
-                        )->withFailureSummary(new Literal('failed assertion summary'))
+                        (new StatementLine(
+                            $failedAssertionOutputStatement,
+                            Status::FAILURE
+                        ))->withFailureSummary(new Literal('failed assertion summary'))
                     ),
                     new Literal('* exception content')
                 ),
@@ -178,8 +178,8 @@ class StepFactoryTest extends AbstractBaseTest
     /**
      * @param int $status
      * @param string $name
-     * @param StatementLine[] $completedStatementLines
-     * @param StatementLine|null $failedStatementLine
+     * @param StatementInterface[] $completedStatements
+     * @param StatementInterface|null $failedStatement
      * @param string $expectedValue
      * @param string $actualValue
      * @param \Throwable|null $lastException
@@ -190,8 +190,8 @@ class StepFactoryTest extends AbstractBaseTest
     private function createOutputStep(
         int $status,
         string $name,
-        array $completedStatementLines,
-        ?StatementLine $failedStatementLine,
+        array $completedStatements,
+        ?StatementInterface $failedStatement,
         string $expectedValue,
         string $actualValue,
         ?\Throwable $lastException,
@@ -208,12 +208,12 @@ class StepFactoryTest extends AbstractBaseTest
             ->andReturn($name);
 
         $step
-            ->shouldReceive('getCompletedStatementLines')
-            ->andReturn($completedStatementLines);
+            ->shouldReceive('getCompletedStatements')
+            ->andReturn($completedStatements);
 
         $step
-            ->shouldReceive('getFailedStatementLine')
-            ->andReturn($failedStatementLine);
+            ->shouldReceive('getFailedStatement')
+            ->andReturn($failedStatement);
 
         $step
             ->shouldReceive('getExpectedValue')
