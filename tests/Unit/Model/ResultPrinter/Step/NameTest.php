@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter;
+namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter\Step;
 
 use webignition\BasilModels\DataSet\DataSet;
 use webignition\BasilModels\DataSet\DataSetInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StepName;
+use webignition\BasilRunner\Model\ResultPrinter\Step\Name;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
-class StepNameTest extends AbstractBaseTest
+class NameTest extends AbstractBaseTest
 {
     /**
      * @dataProvider renderDataProvider
      */
-    public function testRender(StepName $stepName, string $expectedRenderedString)
+    public function testRender(Name $stepName, string $expectedRenderedString)
     {
         $this->assertSame($expectedRenderedString, $stepName->render());
     }
@@ -25,15 +25,15 @@ class StepNameTest extends AbstractBaseTest
     {
         return [
             'success' => [
-                'stepName' => new StepName($this->createStep('success step name', Status::SUCCESS)),
+                'stepName' => new Name($this->createStep('success step name', Status::SUCCESS)),
                 'expectedRenderedString' => '<icon-success /> <success>success step name</success>',
             ],
             'failure' => [
-                'stepName' => new StepName($this->createStep('failure step name', Status::FAILURE)),
+                'stepName' => new Name($this->createStep('failure step name', Status::FAILURE)),
                 'expectedRenderedString' => '<icon-failure /> <failure>failure step name</failure>',
             ],
             'success with data set' => [
-                'stepName' => new StepName($this->createStep(
+                'stepName' => new Name($this->createStep(
                     'success step name',
                     Status::SUCCESS,
                     new DataSet('data set name', [])

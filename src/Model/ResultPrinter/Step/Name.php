@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Model\ResultPrinter;
+namespace webignition\BasilRunner\Model\ResultPrinter\Step;
 
 use webignition\BasilModels\DataSet\DataSetInterface;
+use webignition\BasilRunner\Model\ResultPrinter\Failure;
+use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
+use webignition\BasilRunner\Model\ResultPrinter\StatusIcon;
+use webignition\BasilRunner\Model\ResultPrinter\Success;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step;
 
-class StepName implements RenderableInterface
+class Name implements RenderableInterface
 {
     private StatusIcon $statusIcon;
     private RenderableInterface $nameLine;
