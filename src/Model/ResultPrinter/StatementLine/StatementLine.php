@@ -8,10 +8,9 @@ use webignition\BasilModels\Action\ResolvedAction;
 use webignition\BasilModels\Assertion\ResolvedAssertion;
 use webignition\BasilModels\EncapsulatingStatementInterface;
 use webignition\BasilModels\StatementInterface;
-use webignition\BasilRunner\Model\ResultPrinter\HighlightedFailure;
-use webignition\BasilRunner\Model\ResultPrinter\Literal;
+use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
+use webignition\BasilRunner\Model\ResultPrinter\RenderableCollection;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\StatusIcon;
 use webignition\BasilRunner\Model\TestOutput\StatementLine as OutputStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 
@@ -19,18 +18,31 @@ class StatementLine implements RenderableInterface
 {
     private StatementInterface $statement;
     private int $status;
-    private StatusIcon $statusIcon;
-    private RenderableInterface $statementContent;
+
+    private RenderableCollection $renderableCollection;
 
     public function __construct(StatementInterface $statement, int $status)
     {
         $this->statement = $statement;
         $this->status = $status;
 
-        $this->statusIcon = new StatusIcon($status);
-        $this->statementContent = Status::SUCCESS === $status
-            ? new Literal($statement->getSource())
-            : new HighlightedFailure($statement->getSource());
+        $this->renderableCollection = new RenderableCollection([
+            new Header($statement, $status),
+        ]);
+
+        if ($statement instanceof EncapsulatingStatementInterface) {
+            if (Status::SUCCESS === $status) {
+                $this->renderableCollection = $this->renderableCollection->append(
+                    new IndentedContent($this->createEncapsulatedSource($statement))
+                );
+            }
+
+            if (Status::FAILURE === $status) {
+                $this->renderableCollection = $this->renderableCollection->append(
+                    new IndentedContent($this->createEncapsulatedSourceRecursive($statement))
+                );
+            }
+        }
     }
 
     public static function fromOutputStatementLine(OutputStatementLine $statementLine): self
@@ -48,40 +60,31 @@ class StatementLine implements RenderableInterface
 
     public function render(): string
     {
-        return sprintf(
-            '%s %s',
-            $this->statusIcon->render(),
-            $this->statementContent->render()
-        );
-
-        if ($this->statement instanceof EncapsulatingStatementInterface) {
-            $content .= "\n";
-            $content .= Status::SUCCESS === $this->status
-                ? $this->renderEncapsulatedSource($this->statement)
-                : $this->renderEncapsulatedSourceRecursive($this->statement);
-        }
-
-        return $content;
+        return $this->renderableCollection->render();
     }
 
-    private function renderEncapsulatedSource(EncapsulatingStatementInterface $statement): string
+    private function createEncapsulatedSource(EncapsulatingStatementInterface $statement): RenderableInterface
     {
         $label = $statement instanceof ResolvedAction || $statement instanceof ResolvedAssertion
             ? 'resolved from'
             : 'derived from';
 
-        return (new LabelledStatement($label, $statement->getSourceStatement()))->render();
+        return new LabelledStatement($label, $statement->getSourceStatement());
     }
 
-    private function renderEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): string
+    private function createEncapsulatedSourceRecursive(EncapsulatingStatementInterface $statement): RenderableInterface
     {
-        $content = $this->renderEncapsulatedSource($statement);
+        $renderableContent = new RenderableCollection([
+            $this->createEncapsulatedSource($statement)
+        ]);
 
         $sourceStatement = $statement->getSourceStatement();
         if ($sourceStatement instanceof ResolvedAction || $sourceStatement instanceof ResolvedAssertion) {
-            $content .= "\n" . $this->renderEncapsulatedSourceRecursive($sourceStatement);
+            $renderableContent = $renderableContent->append(
+                $this->createEncapsulatedSourceRecursive($sourceStatement)
+            );
         }
 
-        return $content;
+        return $renderableContent;
     }
 }
