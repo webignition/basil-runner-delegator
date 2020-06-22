@@ -7,12 +7,12 @@ namespace webignition\BasilRunner\Tests\Unit\Model\ResultPrinter\Step;
 use PHPUnit\Runner\BaseTestRunner;
 use webignition\BasilModels\DataSet\DataSet;
 use webignition\BasilModels\DataSet\DataSetInterface;
+use webignition\BasilModels\StatementInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
 use webignition\BasilRunner\Model\ResultPrinter\Step\Step as RenderableStep;
-use webignition\BasilRunner\Model\TestOutput\StatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Model\TestOutput\Step as OutputStep;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
@@ -62,7 +62,7 @@ class StepTest extends AbstractBaseTest
                     BaseTestRunner::STATUS_PASSED,
                     'passed step name',
                     [
-                        StatementLine::createPassedStatementLine($actionParser->parse('click $".selector"')),
+                        $actionParser->parse('click $".selector"'),
                     ]
                 )),
                 'expectedRenderedStep' =>
@@ -75,12 +75,8 @@ class StepTest extends AbstractBaseTest
                     BaseTestRunner::STATUS_PASSED,
                     'passed step name',
                     [
-                        StatementLine::createPassedStatementLine(
-                            $actionParser->parse('set $".search" to $data.search')
-                        ),
-                        StatementLine::createPassedStatementLine(
-                            $assertionParser->parse('$page.title matches $data.expected_title_pattern')
-                        ),
+                        $actionParser->parse('set $".search" to $data.search'),
+                        $assertionParser->parse('$page.title matches $data.expected_title_pattern'),
                     ],
                     new DataSet(
                         'data set name',
@@ -104,15 +100,12 @@ class StepTest extends AbstractBaseTest
                     new RenderableStep($this->createOutputStep(
                         BaseTestRunner::STATUS_FAILURE,
                         'failed step name',
-                        [
-                            StatementLine::createFailedStatementLine($assertionParser->parse('$".selector" exists')),
-                        ]
+                        []
                     )),
                     new Literal('failure statement')
                 ),
                 'expectedRenderedStep' =>
                     '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-                    '  <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
                     '  failure statement'
                 ,
             ],
@@ -121,18 +114,12 @@ class StepTest extends AbstractBaseTest
                     new RenderableStep($this->createOutputStep(
                         BaseTestRunner::STATUS_FAILURE,
                         'failed step name',
-                        [
-                            StatementLine::createFailedStatementLine(
-                                $assertionParser->parse('$"a[href=https://example.com]" exists')
-                            ),
-                        ]
+                        []
                     )),
                     new Literal('last exception')
                 ),
                 'expectedRenderedStep' =>
                     '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-                    '  <icon-failure /> '
-                    . '<highlighted-failure>$"a[href=https://example.com]" exists</highlighted-failure>' . "\n" .
                     '  last exception'
                 ,
             ],
@@ -142,11 +129,7 @@ class StepTest extends AbstractBaseTest
                         new RenderableStep($this->createOutputStep(
                             BaseTestRunner::STATUS_FAILURE,
                             'failed step name',
-                            [
-                                StatementLine::createFailedStatementLine(
-                                    $assertionParser->parse('$"a[href=https://example.com]" exists')
-                                ),
-                            ]
+                            []
                         )),
                         new Literal('failure statement')
                     ),
@@ -154,8 +137,6 @@ class StepTest extends AbstractBaseTest
                 ),
                 'expectedRenderedStep' =>
                     '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-                    '  <icon-failure /> '
-                    . '<highlighted-failure>$"a[href=https://example.com]" exists</highlighted-failure>' . "\n" .
                     '  failure statement' . "\n" .
                     '  last exception'
                 ,
@@ -166,7 +147,7 @@ class StepTest extends AbstractBaseTest
     /**
      * @param int $status
      * @param string $name
-     * @param StatementLine[] $completedStatementLines
+     * @param StatementInterface[] $completedStatements
      * @param DataSetInterface|null $dataSet
      *
      * @return OutputStep
@@ -174,7 +155,7 @@ class StepTest extends AbstractBaseTest
     private function createOutputStep(
         int $status,
         string $name,
-        array $completedStatementLines,
+        array $completedStatements,
         ?DataSetInterface $dataSet = null
     ): OutputStep {
         $step = \Mockery::mock(OutputStep::class);
@@ -188,8 +169,8 @@ class StepTest extends AbstractBaseTest
             ->andReturn($name);
 
         $step
-            ->shouldReceive('getCompletedStatementLines')
-            ->andReturn($completedStatementLines);
+            ->shouldReceive('getCompletedStatements')
+            ->andReturn($completedStatements);
 
         $step
             ->shouldReceive('getCurrentDataSet')

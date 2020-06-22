@@ -11,42 +11,11 @@ use webignition\BasilModels\Assertion\DerivedValueOperationAssertion;
 use webignition\BasilModels\Assertion\ResolvedAssertion;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\StatementLine\StatementLine;
-use webignition\BasilRunner\Model\TestOutput\StatementLine as OutputStatementLine;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class StatementLineTest extends AbstractBaseTest
 {
-    /**
-     * @dataProvider createFromOutputStatementLineDataProvider
-     */
-    public function testCreateFromOutputStatementLine(
-        OutputStatementLine $outputStatementLine,
-        StatementLine $expectedStatementLine
-    ) {
-        $this->assertEquals($expectedStatementLine, StatementLine::fromOutputStatementLine($outputStatementLine));
-    }
-
-    public function createFromOutputStatementLineDataProvider(): array
-    {
-        $statement = new Action(
-            'click $".selector"',
-            'click',
-            '$".selector'
-        );
-
-        return [
-            'success' => [
-                'outputStatementLine' => OutputStatementLine::createPassedStatementLine($statement),
-                'expectedStatementLint' => new StatementLine($statement, Status::SUCCESS),
-            ],
-            'failure' => [
-                'outputStatementLine' => OutputStatementLine::createFailedStatementLine($statement),
-                'expectedStatementLint' => new StatementLine($statement, Status::FAILURE),
-            ],
-        ];
-    }
-
     /**
      * @dataProvider renderDataProvider
      */
