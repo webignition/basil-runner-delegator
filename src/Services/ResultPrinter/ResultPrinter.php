@@ -12,16 +12,15 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
+use webignition\BasilRunner\Model\ResultPrinter\TestName;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StepFactory;
-use webignition\BasilRunner\Services\ResultPrinter\Renderer\TestRenderer;
 
 class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 {
     private string $projectRootPath;
     private ?TestOutput $currentTestOutput = null;
-    private TestRenderer $testRenderer;
     private StepFactory $stepFactory;
 
     public function __construct($out = null)
@@ -29,8 +28,6 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
         parent::__construct($out);
 
         $this->projectRootPath = (ProjectRootPathProvider::create())->get();
-
-        $this->testRenderer = new TestRenderer();
         $this->stepFactory = StepFactory::createFactory();
     }
 
@@ -112,7 +109,7 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
 
             if ($isNewTest) {
                 $currentTestOutput = new TestOutput($test, $testPath, $this->projectRootPath);
-                $this->write($this->testRenderer->render($currentTestOutput)->render());
+                $this->write((new TestName($currentTestOutput->getRelativePath()))->render());
                 $this->writeEmptyLine();
 
                 $this->currentTestOutput = $currentTestOutput;
