@@ -20,8 +20,6 @@ use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\SummaryFactory;
 
 class StepRenderer
 {
-    private const INDENT = '  ';
-
     private StatementLineFactory $statementLineFactory;
     private SummaryFactory $summaryFactory;
     private ExceptionFactory $exceptionFactory;

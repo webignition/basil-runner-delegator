@@ -53,124 +53,124 @@ class StepRendererTest extends AbstractBaseTest
         $assertionParser = AssertionParser::create();
 
         return [
-//            'passed, no statements' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_PASSED,
-//                    'passed step name',
-//                    [],
-//                    '',
-//                    '',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-success /> <success>passed step name</success>' . "\n"
-//                ,
-//            ],
-//            'failed, no statements' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_FAILURE,
-//                    'failed step name',
-//                    [],
-//                    '',
-//                    '',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-failure /> <failure>failed step name</failure>' . "\n"
-//                ,
-//            ],
-//            'unknown, no statements' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_ERROR,
-//                    'unknown step name',
-//                    [],
-//                    '',
-//                    '',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-unknown /> <failure>unknown step name</failure>' . "\n"
-//                ,
-//            ],
-//            'passed, click statement completed' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_PASSED,
-//                    'passed step name',
-//                    [
-//                        $actionParser->parse('click $".selector"'),
-//                    ],
-//                    '',
-//                    '',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-success /> <success>passed step name</success>' . "\n" .
-//                    '  <icon-success /> click $".selector"'
-//                ,
-//            ],
-//            'failed, exists assertion failed' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_FAILURE,
-//                    'failed step name',
-//                    [
-//                        $assertionParser->parse('$".selector" exists'),
-//                    ],
-//                    '',
-//                    '',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-//                    '  <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
-//                    '  * Element <comment>$".selector"</comment> identified by:' . "\n" .
-//                    '      - CSS selector: <comment>.selector</comment>' . "\n" .
-//                    '      - ordinal position: <comment>1</comment>' . "\n" .
-//                    '    does not exist'
-//                ,
-//            ],
-//            'failed, is assertion failed' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_FAILURE,
-//                    'failed step name',
-//                    [
-//                        $assertionParser->parse('$page.title is "Foo"'),
-//                    ],
-//                    'Foo',
-//                    'Bar',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-//                    '  <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
-//                    '  * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
-//                ,
-//            ],
-//            'failed, first assertion passed, second assertion failed' => [
-//                'step' => new Step($this->createTest(
-//                    BaseTestRunner::STATUS_FAILURE,
-//                    'failed step name',
-//                    [
-//                        $assertionParser->parse('$page.url is "http://example.com/"'),
-//                        $assertionParser->parse('$page.title is "Foo"'),
-//                    ],
-//                    'Foo',
-//                    'Bar',
-//                    null,
-//                    null
-//                )),
-//                'expectedRenderedStep' =>
-//                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
-//                    '  <icon-success /> $page.url is "http://example.com/"' . "\n" .
-//                    '  <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
-//                    '  * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
-//                ,
-//            ],
+            'passed, no statements' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_PASSED,
+                    'passed step name',
+                    [],
+                    '',
+                    '',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-success /> <success>passed step name</success>' . "\n"
+                ,
+            ],
+            'failed, no statements' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [],
+                    '',
+                    '',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-failure /> <failure>failed step name</failure>' . "\n"
+                ,
+            ],
+            'unknown, no statements' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_ERROR,
+                    'unknown step name',
+                    [],
+                    '',
+                    '',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-unknown /> <failure>unknown step name</failure>' . "\n"
+                ,
+            ],
+            'passed, click statement completed' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_PASSED,
+                    'passed step name',
+                    [
+                        $actionParser->parse('click $".selector"'),
+                    ],
+                    '',
+                    '',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-success /> <success>passed step name</success>' . "\n" .
+                    '  <icon-success /> click $".selector"'
+                ,
+            ],
+            'failed, exists assertion failed' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [
+                        $assertionParser->parse('$".selector" exists'),
+                    ],
+                    '',
+                    '',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
+                    '  <icon-failure /> <highlighted-failure>$".selector" exists</highlighted-failure>' . "\n" .
+                    '  * Element <comment>$".selector"</comment> identified by:' . "\n" .
+                    '      - CSS selector: <comment>.selector</comment>' . "\n" .
+                    '      - ordinal position: <comment>1</comment>' . "\n" .
+                    '    does not exist'
+                ,
+            ],
+            'failed, is assertion failed' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [
+                        $assertionParser->parse('$page.title is "Foo"'),
+                    ],
+                    'Foo',
+                    'Bar',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
+                    '  <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
+                    '  * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
+                ,
+            ],
+            'failed, first assertion passed, second assertion failed' => [
+                'step' => new Step($this->createTest(
+                    BaseTestRunner::STATUS_FAILURE,
+                    'failed step name',
+                    [
+                        $assertionParser->parse('$page.url is "http://example.com/"'),
+                        $assertionParser->parse('$page.title is "Foo"'),
+                    ],
+                    'Foo',
+                    'Bar',
+                    null,
+                    null
+                )),
+                'expectedRenderedStep' =>
+                    '<icon-failure /> <failure>failed step name</failure>' . "\n" .
+                    '  <icon-success /> $page.url is "http://example.com/"' . "\n" .
+                    '  <icon-failure /> <highlighted-failure>$page.title is "Foo"</highlighted-failure>' . "\n" .
+                    '  * <comment>Bar</comment> is not equal to <comment>Foo</comment>'
+                ,
+            ],
             'failed, elemental assertion uses invalid CSS selector' => [
                 'step' => new Step($this->createTest(
                     BaseTestRunner::STATUS_FAILURE,
