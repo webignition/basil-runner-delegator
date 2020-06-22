@@ -101,7 +101,9 @@ class StepRenderer
                 $actualValue
             );
 
-            $renderableStatement = $renderableStatement->withFailureSummary($summaryModel);
+            if ($summaryModel instanceof RenderableInterface) {
+                $renderableStatement = $renderableStatement->withFailureSummary($summaryModel);
+            }
         }
 
         $renderableStatement = new IndentedContent($renderableStatement);
