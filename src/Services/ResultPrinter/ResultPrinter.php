@@ -12,7 +12,6 @@ use PHPUnit\Framework\Warning;
 use PHPUnit\Util\Printer;
 use webignition\BaseBasilTestCase\BasilTestCaseInterface;
 use webignition\BasilRunner\Model\ResultPrinter\IndentedContent;
-use webignition\BasilRunner\Model\TestOutput\Step;
 use webignition\BasilRunner\Model\TestOutput\Test as TestOutput;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\ModelFactory\StepFactory;
@@ -127,10 +126,8 @@ class ResultPrinter extends Printer implements \PHPUnit\TextUI\ResultPrinter
     public function endTest(Test $test, float $time): void
     {
         if ($test instanceof BasilTestCaseInterface) {
-            $step = new Step($test);
-
             $indentedRenderedStep = new IndentedContent(
-                $this->stepFactory->create($step)
+                $this->stepFactory->create($test)
             );
 
             $this->write($indentedRenderedStep->render());

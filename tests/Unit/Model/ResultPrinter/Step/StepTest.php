@@ -13,7 +13,7 @@ use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\BasilRunner\Model\ResultPrinter\Literal;
 use webignition\BasilRunner\Model\ResultPrinter\RenderableInterface;
-use webignition\BasilRunner\Model\ResultPrinter\Step\Step as RenderableStep;
+use webignition\BasilRunner\Model\ResultPrinter\Step\Step;
 use webignition\BasilRunner\Model\TestOutput\Status;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
@@ -22,7 +22,7 @@ class StepTest extends AbstractBaseTest
     /**
      * @dataProvider renderDataProvider
      */
-    public function testRender(RenderableStep $step, string $expectedRenderedStep)
+    public function testRender(Step $step, string $expectedRenderedStep)
     {
         $this->assertSame($expectedRenderedStep, $step->render());
     }
@@ -34,7 +34,7 @@ class StepTest extends AbstractBaseTest
 
         return [
             'passed, no statements' => [
-                'step' => new RenderableStep($this->createBasilTestCase(
+                'step' => new Step($this->createBasilTestCase(
                     Status::SUCCESS,
                     'passed step name',
                     []
@@ -42,7 +42,7 @@ class StepTest extends AbstractBaseTest
                 'expectedRenderedStep' => '<icon-success /> <success>passed step name</success>',
             ],
             'failed, no statements' => [
-                'step' => new RenderableStep($this->createBasilTestCase(
+                'step' => new Step($this->createBasilTestCase(
                     Status::FAILURE,
                     'failed step name',
                     []
@@ -50,7 +50,7 @@ class StepTest extends AbstractBaseTest
                 'expectedRenderedStep' => '<icon-failure /> <failure>failed step name</failure>',
             ],
             'unknown, no statements' => [
-                'step' => new RenderableStep($this->createBasilTestCase(
+                'step' => new Step($this->createBasilTestCase(
                     BaseTestRunner::STATUS_ERROR,
                     'unknown step name',
                     []
@@ -58,7 +58,7 @@ class StepTest extends AbstractBaseTest
                 'expectedRenderedStep' => '<icon-unknown /> <failure>unknown step name</failure>',
             ],
             'passed, click statement completed' => [
-                'step' => new RenderableStep($this->createBasilTestCase(
+                'step' => new Step($this->createBasilTestCase(
                     BaseTestRunner::STATUS_PASSED,
                     'passed step name',
                     [
@@ -71,7 +71,7 @@ class StepTest extends AbstractBaseTest
                 ,
             ],
             'passed, has data' => [
-                'step' => new RenderableStep($this->createBasilTestCase(
+                'step' => new Step($this->createBasilTestCase(
                     BaseTestRunner::STATUS_PASSED,
                     'passed step name',
                     [
@@ -97,7 +97,7 @@ class StepTest extends AbstractBaseTest
             ],
             'failed, has failure statement' => [
                 'step' => $this->setFailedStatementOnStep(
-                    new RenderableStep($this->createBasilTestCase(
+                    new Step($this->createBasilTestCase(
                         BaseTestRunner::STATUS_FAILURE,
                         'failed step name',
                         []
@@ -111,7 +111,7 @@ class StepTest extends AbstractBaseTest
             ],
             'failed, has last exception' => [
                 'step' => $this->setLastExceptionOnStep(
-                    new RenderableStep($this->createBasilTestCase(
+                    new Step($this->createBasilTestCase(
                         BaseTestRunner::STATUS_FAILURE,
                         'failed step name',
                         []
@@ -126,7 +126,7 @@ class StepTest extends AbstractBaseTest
             'failed, has failure statement, has last exception' => [
                 'step' => $this->setLastExceptionOnStep(
                     $this->setFailedStatementOnStep(
-                        new RenderableStep($this->createBasilTestCase(
+                        new Step($this->createBasilTestCase(
                             BaseTestRunner::STATUS_FAILURE,
                             'failed step name',
                             []
@@ -179,14 +179,14 @@ class StepTest extends AbstractBaseTest
         return $step;
     }
 
-    private function setFailedStatementOnStep(RenderableStep $step, RenderableInterface $renderable): RenderableStep
+    private function setFailedStatementOnStep(Step $step, RenderableInterface $renderable): Step
     {
         $step->setFailedStatement($renderable);
 
         return $step;
     }
 
-    private function setLastExceptionOnStep(RenderableStep $step, RenderableInterface $renderable): RenderableStep
+    private function setLastExceptionOnStep(Step $step, RenderableInterface $renderable): Step
     {
         $step->setLastException($renderable);
 
