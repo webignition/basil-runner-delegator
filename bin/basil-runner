@@ -21,7 +21,7 @@ use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 
-require dirname(__DIR__) . '/config/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $projectRootPath = (new ProjectRootPathProvider())->get();
 
