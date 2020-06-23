@@ -14,6 +14,7 @@ use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementExcep
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
+use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModels\Step\Step;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\ActionParser;
@@ -22,13 +23,18 @@ use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
+use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
+use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
+use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
+use webignition\BasilRunner\Services\Generator\Renderer;
+use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
+use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 use webignition\ObjectReflector\ObjectReflector;
 
-class GenerateCommandTest extends AbstractFunctionalTest
+class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
     private GenerateCommand $command;
 
@@ -36,7 +42,22 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         parent::setUp();
 
-        $this->command = self::$container->get(GenerateCommand::class);
+        $projectRootPath = (new ProjectRootPathProvider())->get();
+        $externalVariableIdentifiers = ExternalVariableIdentifiersFactory::create();
+        $configurationValidator = new ConfigurationValidator();
+
+        $this->command = new GenerateCommand(
+            SourceLoader::createLoader(),
+            new TestGenerator(
+                Compiler::create($externalVariableIdentifiers),
+                new PhpFileCreator(),
+            ),
+            $projectRootPath,
+            new ConfigurationFactory($projectRootPath),
+            new ConfigurationValidator(),
+            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            new Renderer()
+        );
     }
 
     /**
@@ -240,8 +261,6 @@ class GenerateCommandTest extends AbstractFunctionalTest
         ErrorOutput $expectedCommandOutput,
         ?callable $initializer = null
     ) {
-        $this->command = self::$container->get(GenerateCommand::class);
-
         if (null !== $initializer) {
             $initializer($this);
         }

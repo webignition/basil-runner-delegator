@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services\GenerateCommand;
 
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
-use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class ConfigurationFactory
 {
     private string $projectRootPath;
 
-    public function __construct(ProjectRootPathProvider $projectRootPathProvider)
+    public function __construct(string $projectRootPath)
     {
-        $this->projectRootPath = $projectRootPathProvider->get();
+        $this->projectRootPath = $projectRootPath;
     }
 
     public function create(string $rawSource, string $rawTarget, string $baseClass): Configuration

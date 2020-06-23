@@ -15,13 +15,13 @@ class RunCommandTest extends AbstractBaseTest
 {
     public function testRunUnableToStartBackgroundProcess()
     {
-        $projectRootPathProvider = new ProjectRootPathProvider();
+        $projectRootPath = (new ProjectRootPathProvider())->get();
 
         $input = [
-            '--path' => $projectRootPathProvider->get() . '/tests/build/target',
+            '--path' => $projectRootPath . '/tests/build/target',
         ];
 
-        $command = new RunCommand($projectRootPathProvider, new ConsoleOutputFormatter());
+        $command = new RunCommand($projectRootPath, new ConsoleOutputFormatter());
 
         $commandTester = new CommandTester($command);
 

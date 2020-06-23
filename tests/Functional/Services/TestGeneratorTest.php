@@ -11,12 +11,13 @@ use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
 use webignition\BasilRunner\Command\GenerateCommand;
+use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
+use webignition\BasilRunner\Services\PhpFileCreator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 use webignition\ObjectReflector\ObjectReflector;
 
-class TestGeneratorTest extends AbstractFunctionalTest
+class TestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     private TestGenerator $testGenerator;
 
@@ -24,7 +25,12 @@ class TestGeneratorTest extends AbstractFunctionalTest
     {
         parent::setUp();
 
-        $this->testGenerator = self::$container->get(TestGenerator::class);
+        $externalVariableIdentifiers = ExternalVariableIdentifiersFactory::create();
+
+        $this->testGenerator = new TestGenerator(
+            Compiler::create($externalVariableIdentifiers),
+            new PhpFileCreator()
+        );
     }
 
     /**

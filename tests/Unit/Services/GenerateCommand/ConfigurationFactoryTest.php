@@ -19,7 +19,7 @@ class ConfigurationFactoryTest extends AbstractBaseTest
         parent::setUp();
 
         $this->factory = new ConfigurationFactory(
-            new ProjectRootPathProvider()
+            (new ProjectRootPathProvider())->get()
         );
     }
 
