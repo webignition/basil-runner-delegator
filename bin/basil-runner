@@ -7,12 +7,10 @@ namespace webignition\BasilRunner\Bin;
 
 use Symfony\Component\Console\Application;
 use webignition\BasilRunner\Services\CommandFactory;
-use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$projectRootPath = (new ProjectRootPathProvider())->get();
-$commandFactory = new CommandFactory($projectRootPath);
+$commandFactory = CommandFactory::createFactory();
 
 $application = new Application();
 
