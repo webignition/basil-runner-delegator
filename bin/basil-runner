@@ -6,49 +6,18 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Bin;
 
 use Symfony\Component\Console\Application;
-use webignition\BasilCompiler\Compiler;
-use webignition\BasilLoader\SourceLoader;
-use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Services\ExternalVariableIdentifiersFactory;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
-use webignition\BasilRunner\Services\Generator\Renderer;
-use webignition\BasilRunner\Services\PhpFileCreator;
+use webignition\BasilRunner\Services\CommandFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
-use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Services\ValidatorInvalidResultSerializer;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $projectRootPath = (new ProjectRootPathProvider())->get();
-
-$runCommand = new RunCommand($projectRootPath, new ConsoleOutputFormatter());
-$externalVariableIdentifiers = ExternalVariableIdentifiersFactory::create();
-$configurationValidator = new ConfigurationValidator();
-
-$generateCommand = new GenerateCommand(
-    SourceLoader::createLoader(),
-    new TestGenerator(
-        Compiler::create($externalVariableIdentifiers),
-        new PhpFileCreator(),
-    ),
-    $projectRootPath,
-    new ConfigurationFactory($projectRootPath),
-    new ConfigurationValidator(),
-    new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
-    new Renderer()
-);
+$commandFactory = new CommandFactory($projectRootPath);
 
 $application = new Application();
 
 $application->setName('Basil Runner');
 $application->setVersion('0.1-beta');
 
-$application->addCommands([
-    $runCommand,
-    $generateCommand,
-]);
+$application->addCommands($commandFactory->createAll());
 $application->run();
