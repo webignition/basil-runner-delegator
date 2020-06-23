@@ -260,10 +260,12 @@ class GenerateCommandTest extends AbstractBaseTest
         ConfigurationValidator $configurationValidator,
         TestGenerator $testGenerator
     ): GenerateCommand {
+        $projectRootPath = (new ProjectRootPathProvider())->get();
+
         return new GenerateCommand(
             SourceLoader::createLoader(),
             $testGenerator,
-            new ProjectRootPathProvider(),
+            $projectRootPath,
             $configurationFactory,
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
@@ -286,7 +288,7 @@ class GenerateCommandTest extends AbstractBaseTest
      * @param array<mixed> $args
      * @param Configuration $configuration
      *
-     * @return \webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory
+     * @return ConfigurationFactory
      */
     private function createConfigurationFactory(
         array $args,

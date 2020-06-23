@@ -7,21 +7,19 @@ namespace webignition\BasilRunner\Tests\Unit\Command;
 use phpmock\mockery\PHPMockery;
 use Symfony\Component\Console\Tester\CommandTester;
 use webignition\BasilRunner\Command\RunCommand;
+use webignition\BasilRunner\Services\CommandFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
-use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 use webignition\BasilRunner\Tests\Unit\AbstractBaseTest;
 
 class RunCommandTest extends AbstractBaseTest
 {
     public function testRunUnableToStartBackgroundProcess()
     {
-        $projectRootPathProvider = new ProjectRootPathProvider();
-
         $input = [
-            '--path' => $projectRootPathProvider->get() . '/tests/build/target',
+            '--path' => (new ProjectRootPathProvider())->get() . '/tests/build/target',
         ];
 
-        $command = new RunCommand($projectRootPathProvider, new ConsoleOutputFormatter());
+        $command = CommandFactory::createFactory()->createRunCommand();
 
         $commandTester = new CommandTester($command);
 

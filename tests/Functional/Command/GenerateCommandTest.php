@@ -22,13 +22,13 @@ use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Model\GenerateCommand\Configuration;
 use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
+use webignition\BasilRunner\Services\CommandFactory;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
-use webignition\BasilRunner\Tests\Functional\AbstractFunctionalTest;
 use webignition\ObjectReflector\ObjectReflector;
 
-class GenerateCommandTest extends AbstractFunctionalTest
+class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
     private GenerateCommand $command;
 
@@ -36,7 +36,7 @@ class GenerateCommandTest extends AbstractFunctionalTest
     {
         parent::setUp();
 
-        $this->command = self::$container->get(GenerateCommand::class);
+        $this->command = CommandFactory::createFactory()->createGenerateCommand();
     }
 
     /**
@@ -240,8 +240,6 @@ class GenerateCommandTest extends AbstractFunctionalTest
         ErrorOutput $expectedCommandOutput,
         ?callable $initializer = null
     ) {
-        $this->command = self::$container->get(GenerateCommand::class);
-
         if (null !== $initializer) {
             $initializer($this);
         }

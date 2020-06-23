@@ -6,26 +6,16 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Bin;
 
 use Symfony\Component\Console\Application;
-use webignition\BasilRunner\ApplicationConfiguration;
-use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Kernel;
+use webignition\BasilRunner\Services\CommandFactory;
 
-require dirname(__DIR__) . '/config/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-$kernel = new Kernel($_SERVER['APP_ENV'], true);
-$kernel->boot();
+$commandFactory = CommandFactory::createFactory();
 
-$container = $kernel->getContainer();
+$application = new Application();
 
-/* @var Application $application */
-$application = $container->get(Application::class);
+$application->setName('Basil Runner');
+$application->setVersion('0.1-beta');
 
-/* @var ApplicationConfiguration $applicationConfiguration */
-$applicationConfiguration = $container->get(ApplicationConfiguration::class);
-$applicationConfiguration->configureApplication($application);
-
-/* @var RunCommand $runCommand */
-$runCommand = $container->get(RunCommand::class);
-$application->setDefaultCommand($runCommand->getName());
-
+$application->addCommands($commandFactory->createAll());
 $application->run();
