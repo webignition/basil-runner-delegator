@@ -29,7 +29,6 @@ use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
 use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
 use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
 use webignition\BasilRunner\Services\Generator\Renderer;
-use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\TestGenerator;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 
@@ -52,7 +51,7 @@ class GenerateCommand extends Command
     public function __construct(
         SourceLoader $sourceLoader,
         TestGenerator $testGenerator,
-        ProjectRootPathProvider $projectRootPathProvider,
+        string $projectRootPath,
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
         ErrorOutputFactory $errorOutputFactory,
@@ -62,7 +61,7 @@ class GenerateCommand extends Command
 
         $this->sourceLoader = $sourceLoader;
         $this->testGenerator = $testGenerator;
-        $this->projectRootPath = $projectRootPathProvider->get();
+        $this->projectRootPath = $projectRootPath;
         $this->configurationFactory = $configurationFactory;
         $this->configurationValidator = $configurationValidator;
         $this->errorOutputFactory = $errorOutputFactory;

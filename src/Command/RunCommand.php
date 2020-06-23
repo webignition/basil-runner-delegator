@@ -8,7 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilRunner\Services\ProjectRootPathProvider;
 use webignition\BasilRunner\Services\ResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
@@ -20,17 +19,17 @@ class RunCommand extends Command
     public const RETURN_CODE_INVALID_PATH = 100;
     public const RETURN_CODE_UNABLE_TO_OPEN_PROCESS = 200;
 
-    private const NAME = 'basil-runner:run';
+    private const NAME = 'run';
     private const DEFAULT_RELATIVE_PATH = '/generated';
 
     private string $projectRootPath;
     private ConsoleOutputFormatter $consoleOutputFormatter;
 
     public function __construct(
-        ProjectRootPathProvider $projectRootPathProvider,
+        string $projectRootPath,
         ConsoleOutputFormatter $consoleOutputFormatter
     ) {
-        $this->projectRootPath = $projectRootPathProvider->get();
+        $this->projectRootPath = $projectRootPath;
         $this->consoleOutputFormatter = $consoleOutputFormatter;
 
         parent::__construct();
