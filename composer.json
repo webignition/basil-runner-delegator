@@ -37,6 +37,7 @@
         "php": ">=7.4",
         "ext-json": "*",
         "phpunit/phpunit": "~9",
+        "symfony/console": "^5.1",
         "symfony/dependency-injection": "^5.1",
         "symfony/yaml": "^5.1",
         "webignition/base-basil-test-case": "^0.27.0",
