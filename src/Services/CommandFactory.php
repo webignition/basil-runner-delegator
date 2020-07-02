@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Services;
 use Symfony\Component\Console\Command\Command;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 
 class CommandFactory
 {
@@ -27,7 +26,7 @@ class CommandFactory
 
     public function createRunCommand(): RunCommand
     {
-        return new RunCommand($this->projectRootPath, new ConsoleOutputFormatter());
+        return new RunCommand($this->projectRootPath);
     }
 
     public function createGenerateCommand(): GenerateCommand

@@ -29,7 +29,7 @@ class RunCommandTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        $this->assertSame(RunCommand::RETURN_CODE_INVALID_PATH, $exitCode);
+        $this->assertSame(100, $exitCode);
 
         $commandOutputContent = $output->fetch();
         $this->assertEquals('', $commandOutputContent);
