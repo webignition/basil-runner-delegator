@@ -6,11 +6,7 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Model\GenerateCommand\Configuration;
-use webignition\BasilRunner\Model\GenerateCommand\ErrorOutput;
-use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Services\CommandFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
@@ -27,56 +23,51 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<string, string> $input
-     * @param array<string> $expectedGeneratedTestOutputSources
      * @param array<string, string> $expectedGeneratedCode
      *
      * @dataProvider runSuccessDataProvider
      */
-    public function testRunSuccess(
-        array $input,
-        array $expectedGeneratedTestOutputSources,
-        array $expectedGeneratedCode
-    ) {
+    public function testRunSuccess(array $input, array $expectedGeneratedCode)
+    {
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        $this->assertSame(0, $exitCode);
+        self::assertSame(0, $exitCode);
 
-        $commandOutput = SuccessOutput::fromJson($output->fetch());
+        $commandOutputText = $output->fetch();
+        $commandOutput = json_decode($commandOutputText, true);
 
-        $outputData = $commandOutput->getOutput();
-        $this->assertCount(count($expectedGeneratedTestOutputSources), $outputData);
+        $commandOutputConfig = $commandOutput['config'] ?? [];
+        $baseTarget = $commandOutputConfig['target'] ?? '';
+        $commandOutputData = $commandOutput['output'] ?? [];
 
-        $generatedTestOutputIndex = 0;
+        self::assertSame(
+            count($expectedGeneratedCode),
+            count($commandOutputData)
+        );
+
         $generatedTestsToRemove = [];
-        foreach ($outputData as $generatedTestOutput) {
-            $expectedGeneratedTestOutputSource = $expectedGeneratedTestOutputSources[$generatedTestOutputIndex] ?? null;
+        foreach ($commandOutputData as $generatedTestData) {
+            $source = $generatedTestData['source'] ?? '';
+            $target = $generatedTestData['target'] ?? '';
 
-            $generatedTestOutputSource = $generatedTestOutput->getSource();
-            $this->assertSame($expectedGeneratedTestOutputSource, $generatedTestOutputSource);
+            self::assertArrayHasKey($source, $expectedGeneratedCode);
 
-            $commandOutputConfiguration = $commandOutput->getConfiguration();
-            $commandOutputTarget = $commandOutputConfiguration->getTarget();
+            $generatedCodePath = $baseTarget . '/' . $target;
 
-            $expectedCodePath = $commandOutputTarget . '/' . $generatedTestOutput->getTarget();
+            self::assertFileExists($generatedCodePath);
+            self::assertFileIsReadable($generatedCodePath);
 
-            $this->assertFileExists($expectedCodePath);
-            $this->assertFileIsReadable($expectedCodePath);
+            $generatedCode = file_get_contents($generatedCodePath);
 
-            $this->assertEquals(
-                $expectedGeneratedCode[$generatedTestOutput->getSource()],
-                file_get_contents($expectedCodePath)
-            );
+            self::assertSame($expectedGeneratedCode[$source], $generatedCode);
 
-            $generatedTestsToRemove[] = $expectedCodePath;
-            $generatedTestOutputIndex++;
+            $generatedTestsToRemove[] = $generatedCodePath;
         }
-
-        $generatedTestsToRemove = array_unique($generatedTestsToRemove);
 
         foreach ($generatedTestsToRemove as $path) {
             $this->assertFileExists($path);
-            $this->assertFileIsReadable($path);
+            $this->assertFileIsWritable($path);
 
             unlink($path);
         }
@@ -92,9 +83,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
                 'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         $root . '/tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
@@ -106,56 +94,28 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @param array<mixed> $input
      * @param int $expectedExitCode
-     * @param ErrorOutput $expectedCommandOutput
      *
      * @dataProvider runFailureEmptyTestDataProvider
      */
     public function testRunFailure(
         array $input,
-        int $expectedExitCode,
-        ErrorOutput $expectedCommandOutput,
-        ?callable $initializer = null
+        int $expectedExitCode
     ) {
-        if (null !== $initializer) {
-            $initializer($this);
-        }
-
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         $this->assertSame($expectedExitCode, $exitCode);
-
-        $commandOutput = ErrorOutput::fromJson($output->fetch());
-
-        $this->assertEquals($expectedCommandOutput, $commandOutput);
     }
 
     public function runFailureEmptyTestDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $emptyTestPath = 'tests/Fixtures/basil/InvalidTest/empty.yml';
-        $emptyTestAbsolutePath = $root . '/' . $emptyTestPath;
-
         return [
             'test file is empty' => [
                 'input' => [
-                    '--source' => $emptyTestPath,
+                    '--source' => 'tests/Fixtures/basil/InvalidTest/empty.yml',
                     '--target' => 'tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_EMPTY_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $emptyTestAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Empty test at path "' . $emptyTestAbsolutePath . '"',
-                    ErrorOutput::CODE_LOADER_EMPTY_TEST,
-                    [
-                        'path' => $emptyTestAbsolutePath,
-                    ]
-                ),
+                'expectedExitCode' => 202,
             ],
         ];
     }

@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilPhpUnitResultPrinter\ResultPrinter;
-use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
@@ -20,18 +19,40 @@ class GenerateRunTest extends TestCase
     public function testGenerateAndRun(string $source, string $target, string $expectedOutputBody)
     {
         $generateCommand = $this->createGenerateCommand($source, $target);
-        $generateCommandOutput = SuccessOutput::fromJson((string) shell_exec($generateCommand));
+        $generateCommandOutputText = (string) shell_exec($generateCommand);
+
+        $generatedCommandOutput = json_decode($generateCommandOutputText, true);
+        $generateCommandOutputConfig = $generatedCommandOutput['config'] ?? [];
+        $baseTarget = $generateCommandOutputConfig['target'] ?? '';
+        $generateCommandOutputData = $generatedCommandOutput['output'] ?? [];
+
+        $generatedTestsToRemove = [];
+        foreach ($generateCommandOutputData as $generatedTestData) {
+            $generatedTestTarget = $generatedTestData['target'] ?? '';
+
+            $generatedCodePath = $baseTarget . '/' . $generatedTestTarget;
+
+            self::assertFileExists($generatedCodePath);
+            self::assertFileIsReadable($generatedCodePath);
+
+            $generatedTestsToRemove[] = $generatedCodePath;
+        }
 
         $runCommand = $this->createRunCommand($target);
 
         $runCommandOutput = (string) shell_exec($runCommand);
         $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
 
-        $this->assertSame($expectedOutputBody, $phpUnitOutput->getBody());
+        self::assertSame($expectedOutputBody, $phpUnitOutput->getBody());
 
-        foreach ($generateCommandOutput->getTestPaths() as $testPath) {
-            unlink($testPath);
+        foreach ($generatedTestsToRemove as $path) {
+            self::assertFileExists($path);
+            self::assertFileIsWritable($path);
+
+            unlink($path);
         }
+
+        self::assertTrue(true);
     }
 
     public function generateAndRunDataProvider(): array
