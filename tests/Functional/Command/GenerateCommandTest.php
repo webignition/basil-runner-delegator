@@ -104,7 +104,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        $this->assertSame($expectedExitCode, $exitCode);
+        self::assertSame($expectedExitCode, $exitCode);
     }
 
     public function runFailureEmptyTestDataProvider(): array

@@ -14,8 +14,7 @@
     "autoload": {
         "psr-4": {
             "webignition\\BasilRunner\\": "src",
-            "webignition\\BasilRunner\\Bin\\": "bin",
-            "webignition\\BasilRunner\\Generated\\": "generated"
+            "webignition\\BasilRunner\\Bin\\": "bin"
         }
     },
     "autoload-dev": {
