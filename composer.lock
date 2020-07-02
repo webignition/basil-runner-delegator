@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b767c1e9ae73dbff16f4c013b38c723",
+    "content-hash": "2f87a93085b3d975f54166d9d99b770a",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3168,330 +3168,6 @@
             "time": "2020-06-12T16:30:01+00:00"
         },
         {
-            "name": "webignition/basil-compilable-source",
-            "version": "0.42",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-compilable-source.git",
-                "reference": "cf56c385c42a32f60ff1ee79d9fd6024a54d96dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compilable-source/zipball/cf56c385c42a32f60ff1ee79d9fd6024a54d96dc",
-                "reference": "cf56c385c42a32f60ff1ee79d9fd6024a54d96dc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "~0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "~3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilCompilableSource\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-compilable-source",
-            "time": "2020-06-12T16:48:35+00:00"
-        },
-        {
-            "name": "webignition/basil-compiler",
-            "version": "0.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-compiler.git",
-                "reference": "b0cc13ff263654964a09234160909d7a2e0ad149"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler/zipball/b0cc13ff263654964a09234160909d7a2e0ad149",
-                "reference": "b0cc13ff263654964a09234160909d7a2e0ad149",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.4",
-                "webignition/basil-compilable-source": ">=0.38,<1",
-                "webignition/basil-models": ">=0.50,<1",
-                "webignition/php-basil-compilable-source-factory": ">=0.45,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.0",
-                "phpstan/phpstan-mockery": "^0.12.0",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/basil-parser": ">=0.24,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilCompiler\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-compiler",
-            "time": "2020-06-10T09:31:30+00:00"
-        },
-        {
-            "name": "webignition/basil-data-validator",
-            "version": "0.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-data-validator.git",
-                "reference": "b1d1bfc838720d680a9eb161b14bcd598e951b4c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/b1d1bfc838720d680a9eb161b14bcd598e951b4c",
-                "reference": "b1d1bfc838720d680a9eb161b14bcd598e951b4c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4",
-                "webignition/basil-dom-identifier-factory": ">=0.13,<1",
-                "webignition/basil-identifier-analyser": ">=0.7,<1",
-                "webignition/basil-models": ">=0.54,<1",
-                "webignition/basil-validation-result": ">=0.1,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/basil-parser": ">=0.25,<1",
-                "webignition/basil-resolver": ">=0.10,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilDataValidator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Validator for source data for basil language",
-            "homepage": "https://github.com/webignition/basil-data-validator",
-            "time": "2020-06-12T13:48:04+00:00"
-        },
-        {
-            "name": "webignition/basil-dom-identifier-factory",
-            "version": "0.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-dom-identifier-factory.git",
-                "reference": "d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-dom-identifier-factory/zipball/d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a",
-                "reference": "d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4",
-                "webignition/basil-value-extractor": ">=0.4,<1",
-                "webignition/php-dom-element-identifier": ">=0.14,<1",
-                "webignition/quoted-string-value-extractor": ">=0.2,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilDomIdentifierFactory\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-dom-identifier-factory",
-            "time": "2020-05-27T16:24:15+00:00"
-        },
-        {
-            "name": "webignition/basil-identifier-analyser",
-            "version": "0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-identifier-analyser.git",
-                "reference": "c2fd675db1adf9262cb6a98ca34ebd4f5e1e7f1c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-identifier-analyser/zipball/c2fd675db1adf9262cb6a98ca34ebd4f5e1e7f1c",
-                "reference": "c2fd675db1adf9262cb6a98ca34ebd4f5e1e7f1c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "webignition/basil-value-extractor": ">=0.4,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilIdentifierAnalyser\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-identifier-analyser",
-            "time": "2020-05-28T09:12:22+00:00"
-        },
-        {
-            "name": "webignition/basil-loader",
-            "version": "0.27",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-loader.git",
-                "reference": "59127a27f6c4b73de65a50e8971f41341729b48f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/59127a27f6c4b73de65a50e8971f41341729b48f",
-                "reference": "59127a27f6c4b73de65a50e8971f41341729b48f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4",
-                "symfony/yaml": "^4.4|^5.0",
-                "webignition/basil-data-validator": ">=0.14,<1",
-                "webignition/basil-model-provider": ">=0.8,<1",
-                "webignition/basil-models": ">=0.54,<1",
-                "webignition/basil-parser": ">=0.25,<1",
-                "webignition/basil-resolver": ">=0.10,<1",
-                "webignition/php-basil-context-aware-exception": ">=0.1,<1",
-                "webignition/php-path-resolver": ">=0.2,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilLoader\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Loader for basil language files",
-            "homepage": "https://github.com/webignition/basil-loader",
-            "time": "2020-06-12T13:57:37+00:00"
-        },
-        {
-            "name": "webignition/basil-model-provider",
-            "version": "0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-model-provider.git",
-                "reference": "13bd28a1011b3ae1f83011dc7a6e14beb1797430"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-model-provider/zipball/13bd28a1011b3ae1f83011dc7a6e14beb1797430",
-                "reference": "13bd28a1011b3ae1f83011dc7a6e14beb1797430",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "webignition/basil-models": ">=0.47,<1",
-                "webignition/php-basil-context-aware-exception": ">=0.3,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilModelProvider\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Providers for basil models",
-            "homepage": "https://github.com/webignition/basil-model-provider",
-            "time": "2020-05-28T15:02:21+00:00"
-        },
-        {
             "name": "webignition/basil-models",
             "version": "0.56",
             "source": {
@@ -3533,281 +3209,6 @@
             ],
             "homepage": "https://github.com/webignition/basil-models",
             "time": "2020-06-12T17:04:26+00:00"
-        },
-        {
-            "name": "webignition/basil-parser",
-            "version": "0.25",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-parser.git",
-                "reference": "10b7dfd65812f7f39ced19955aa777e3a9a4ea2a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-parser/zipball/10b7dfd65812f7f39ced19955aa777e3a9a4ea2a",
-                "reference": "10b7dfd65812f7f39ced19955aa777e3a9a4ea2a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4",
-                "webignition/basil-dom-identifier-factory": ">=0.13,<1",
-                "webignition/basil-models": ">=0.53,<1",
-                "webignition/basil-value-extractor": ">=0.4,<1",
-                "webignition/php-path-resolver": ">=0.2,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilParser\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Parses raw basil data into basic data structures",
-            "homepage": "https://github.com/webignition/basil-parser",
-            "time": "2020-06-12T10:03:28+00:00"
-        },
-        {
-            "name": "webignition/basil-resolver",
-            "version": "0.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-resolver.git",
-                "reference": "d246024b7d6739a36754786d1b6b68381548b225"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-resolver/zipball/d246024b7d6739a36754786d1b6b68381548b225",
-                "reference": "d246024b7d6739a36754786d1b6b68381548b225",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "webignition/basil-model-provider": ">=0.8,<1",
-                "webignition/basil-models": ">=0.53,<1",
-                "webignition/php-basil-context-aware-exception": ">=0.3,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/basil-parser": ">=0.25,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilResolver\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-resolver",
-            "time": "2020-06-12T13:18:09+00:00"
-        },
-        {
-            "name": "webignition/basil-validation-result",
-            "version": "0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-validation-result.git",
-                "reference": "d7d35e2b60c5f8aa8e6ad0dab12f6d937698c13d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-validation-result/zipball/d7d35e2b60c5f8aa8e6ad0dab12f6d937698c13d",
-                "reference": "d7d35e2b60c5f8aa8e6ad0dab12f6d937698c13d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~8.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilValidationResult\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Models for the result of basil validators",
-            "homepage": "https://github.com/webignition/basil-validation-result",
-            "time": "2019-11-20T10:51:00+00:00"
-        },
-        {
-            "name": "webignition/basil-value-extractor",
-            "version": "0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-value-extractor.git",
-                "reference": "dab3842bf31cd93a0cf7d2f440d4cbf4d2004900"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-value-extractor/zipball/dab3842bf31cd93a0cf7d2f440d4cbf4d2004900",
-                "reference": "dab3842bf31cd93a0cf7d2f440d4cbf4d2004900",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "php-mock/php-mock-mockery": "^1.3",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilValueExtractor\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-value-extractor",
-            "time": "2020-05-27T16:00:25+00:00"
-        },
-        {
-            "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.51",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "96b2cc06ec7c1791432dd7da6a326675fa65a753"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/96b2cc06ec7c1791432dd7da6a326675fa65a753",
-                "reference": "96b2cc06ec7c1791432dd7da6a326675fa65a753",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.4",
-                "webignition/basil-compilable-source": ">=0.42,<1",
-                "webignition/basil-dom-identifier-factory": ">=0.12,<1",
-                "webignition/basil-identifier-analyser": ">=0.6,<1",
-                "webignition/basil-models": ">=0.56,<1",
-                "webignition/php-dom-element-identifier": ">=0.13,<1",
-                "webignition/quoted-string-value-extractor": ">=0.2,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.19,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.4",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-basil-test-case": ">=0.27,<1",
-                "webignition/basil-parser": ">=0.25,<1",
-                "webignition/object-reflector": ">=0.1,<1",
-                "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilCompilableSourceFactory\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-06-12T17:20:43+00:00"
-        },
-        {
-            "name": "webignition/php-basil-context-aware-exception",
-            "version": "0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-basil-context-aware-exception.git",
-                "reference": "0ab78e23ccdeb5ada1a254f2c3510b6726a2329a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-context-aware-exception/zipball/0ab78e23ccdeb5ada1a254f2c3510b6726a2329a",
-                "reference": "0ab78e23ccdeb5ada1a254f2c3510b6726a2329a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.11.5",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilContextAwareException\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Models for basil language objects",
-            "homepage": "https://github.com/webignition/php-basil-context-aware-exception",
-            "time": "2020-05-28T10:45:08+00:00"
         },
         {
             "name": "webignition/php-dom-element-identifier",
@@ -3893,148 +3294,6 @@
             "description": "Model for identifying the location of an element within a DOM",
             "homepage": "https://github.com/webignition/php-dom-element-locator",
             "time": "2020-05-27T13:59:02+00:00"
-        },
-        {
-            "name": "webignition/php-path-resolver",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-path-resolver.git",
-                "reference": "cd42487b20a64b4d68f111657b1e5c6ac102140c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-path-resolver/zipball/cd42487b20a64b4d68f111657b1e5c6ac102140c",
-                "reference": "cd42487b20a64b4d68f111657b1e5c6ac102140c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\PathResolver\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Resolve a relative directory path against a base directory path",
-            "homepage": "https://github.com/webignition/php-path-resolver",
-            "keywords": [
-                "directory",
-                "path",
-                "resolver"
-            ],
-            "time": "2020-05-28T11:19:14+00:00"
-        },
-        {
-            "name": "webignition/quoted-string-value-extractor",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/quoted-string-value-extractor.git",
-                "reference": "56180135bb9d6b8da75ab53cb5703788e50b8c1b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/quoted-string-value-extractor/zipball/56180135bb9d6b8da75ab53cb5703788e50b8c1b",
-                "reference": "56180135bb9d6b8da75ab53cb5703788e50b8c1b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\QuotedStringValueExtractor\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/quoted-string-value-extractor",
-            "time": "2020-05-27T16:05:14+00:00"
-        },
-        {
-            "name": "webignition/symfony-console-typed-input",
-            "version": "0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/symfony-console-typed-input.git",
-                "reference": "e165406be31787564c6825ec1702b5521e861d86"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-console-typed-input/zipball/e165406be31787564c6825ec1702b5521e861d86",
-                "reference": "e165406be31787564c6825ec1702b5521e861d86",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "symfony/console": "^4.4|^5.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3",
-                "phpstan/phpstan": "^0.12.3",
-                "phpstan/phpstan-mockery": "^0.12.0",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "^3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\SymfonyConsole\\TypedInput\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "jon@webignition.net"
-                }
-            ],
-            "description": "Symfony InputInterface providing type-specific getters for options and arguments",
-            "homepage": "https://github.com/webignition/symfony-console-typed-input",
-            "keywords": [
-                "console",
-                "input",
-                "inputinterface",
-                "symfony",
-                "type",
-                "typed"
-            ],
-            "time": "2020-05-28T11:48:40+00:00"
         },
         {
             "name": "webignition/symfony-panther-dom-crawler-navigator",
@@ -7260,6 +6519,51 @@
             "time": "2020-06-25T16:39:17+00:00"
         },
         {
+            "name": "webignition/basil-dom-identifier-factory",
+            "version": "0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/basil-dom-identifier-factory.git",
+                "reference": "d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/basil-dom-identifier-factory/zipball/d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a",
+                "reference": "d1e7c9973ed5c4645d5cdf2e7918f8c21cc9dc3a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.4",
+                "webignition/basil-value-extractor": ">=0.4,<1",
+                "webignition/php-dom-element-identifier": ">=0.14,<1",
+                "webignition/quoted-string-value-extractor": ">=0.2,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilDomIdentifierFactory\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-dom-identifier-factory",
+            "time": "2020-05-27T16:24:15+00:00"
+        },
+        {
             "name": "webignition/basil-phpunit-result-printer",
             "version": "0.1",
             "source": {
@@ -7310,6 +6614,91 @@
             ],
             "homepage": "https://github.com/webignition/basil-phpunit-result-printer",
             "time": "2020-07-02T11:33:32+00:00"
+        },
+        {
+            "name": "webignition/basil-value-extractor",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/basil-value-extractor.git",
+                "reference": "dab3842bf31cd93a0cf7d2f440d4cbf4d2004900"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/basil-value-extractor/zipball/dab3842bf31cd93a0cf7d2f440d4cbf4d2004900",
+                "reference": "dab3842bf31cd93a0cf7d2f440d4cbf4d2004900",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "php-mock/php-mock-mockery": "^1.3",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilValueExtractor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-value-extractor",
+            "time": "2020-05-27T16:00:25+00:00"
+        },
+        {
+            "name": "webignition/quoted-string-value-extractor",
+            "version": "0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/quoted-string-value-extractor.git",
+                "reference": "56180135bb9d6b8da75ab53cb5703788e50b8c1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/quoted-string-value-extractor/zipball/56180135bb9d6b8da75ab53cb5703788e50b8c1b",
+                "reference": "56180135bb9d6b8da75ab53cb5703788e50b8c1b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\QuotedStringValueExtractor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/quoted-string-value-extractor",
+            "time": "2020-05-27T16:05:14+00:00"
         },
         {
             "name": "webignition/symfony-panther-webserver-runner",
