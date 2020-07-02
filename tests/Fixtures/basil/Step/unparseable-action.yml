@@ -1,5 +1,0 @@
-actions:
-  - click invalid-identifier
-
-assertions:
-  - $page.url is $page.url

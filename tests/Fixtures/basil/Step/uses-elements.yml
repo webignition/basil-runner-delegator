@@ -1,5 +1,0 @@
-actions:
-  - click $elements.submit_button
-
-assertions:
-  - $page.url is $page.url
