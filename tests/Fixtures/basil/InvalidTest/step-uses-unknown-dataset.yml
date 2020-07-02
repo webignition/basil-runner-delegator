@@ -1,9 +1,0 @@
-config:
-  browser: chrome
-  url: https://example.com
-
-"step name":
-  assertions:
-    - $page.url is $data.expected_title
-
-  data: unknown_data_provider_name

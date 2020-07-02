@@ -1,6 +1,0 @@
-config:
-  browser: chrome
-  url: https://example.com
-
-"non-array actions data":
-  actions: "not an array"

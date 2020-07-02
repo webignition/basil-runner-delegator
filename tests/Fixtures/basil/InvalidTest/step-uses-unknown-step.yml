@@ -1,6 +1,0 @@
-config:
-  browser: chrome
-  url: https://example.com
-
-"step name":
-  use: unknown_step
