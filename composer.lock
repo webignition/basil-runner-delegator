@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f87a93085b3d975f54166d9d99b770a",
+    "content-hash": "a05ac93ead77871f58e2762c0f769895",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -225,71 +225,6 @@
             ],
             "description": "Library for handling version information and constraints",
             "time": "2018-07-08T19:19:57+00:00"
-        },
-        {
-            "name": "php-webdriver/webdriver",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-webdriver/php-webdriver.git",
-                "reference": "3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab",
-                "reference": "3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-zip": "*",
-                "php": "^5.6 || ~7.0",
-                "symfony/polyfill-mbstring": "^1.12",
-                "symfony/process": "^2.8 || ^3.1 || ^4.0 || ^5.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "jakub-onderka/php-parallel-lint": "^1.0",
-                "php-coveralls/php-coveralls": "^2.0",
-                "php-mock/php-mock-phpunit": "^1.1",
-                "phpunit/phpunit": "^5.7",
-                "sebastian/environment": "^1.3.4 || ^2.0 || ^3.0",
-                "sminnee/phpunit-mock-objects": "^3.4",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symfony/var-dumper": "^3.3 || ^4.0 || ^5.0"
-            },
-            "suggest": {
-                "ext-SimpleXML": "For Firefox profile creation"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.8.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Facebook\\WebDriver\\": "lib/"
-                },
-                "files": [
-                    "lib/Exception/TimeoutException.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A PHP client for Selenium WebDriver. Previously facebook/webdriver.",
-            "homepage": "https://github.com/php-webdriver/php-webdriver",
-            "keywords": [
-                "Chromedriver",
-                "geckodriver",
-                "php",
-                "selenium",
-                "webdriver"
-            ],
-            "time": "2020-03-04T14:40:12+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -994,53 +929,6 @@
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
-            "name": "psr/log",
-            "version": "1.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/0f73288fd15629204f9d42b7055f72dacbe811fc",
-                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2020-03-23T09:12:05+00:00"
-        },
-        {
             "name": "sebastian/code-unit",
             "version": "1.0.2",
             "source": {
@@ -1723,79 +1611,6 @@
             "time": "2020-01-21T06:36:37+00:00"
         },
         {
-            "name": "symfony/browser-kit",
-            "version": "v5.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "b9adef763c4f98660d1f8b924f6d61718f8ae0bc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/b9adef763c4f98660d1f8b924f6d61718f8ae0bc",
-                "reference": "b9adef763c4f98660d1f8b924f6d61718f8ae0bc",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/dom-crawler": "^4.4|^5.0"
-            },
-            "require-dev": {
-                "symfony/css-selector": "^4.4|^5.0",
-                "symfony/http-client": "^4.4|^5.0",
-                "symfony/mime": "^4.4|^5.0",
-                "symfony/process": "^4.4|^5.0"
-            },
-            "suggest": {
-                "symfony/process": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\BrowserKit\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony BrowserKit Component",
-            "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-23T13:13:03+00:00"
-        },
-        {
             "name": "symfony/console",
             "version": "v5.1.2",
             "source": {
@@ -1887,371 +1702,6 @@
                 }
             ],
             "time": "2020-06-15T12:59:21+00:00"
-        },
-        {
-            "name": "symfony/deprecation-contracts",
-            "version": "v2.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
-                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-27T08:34:37+00:00"
-        },
-        {
-            "name": "symfony/dom-crawler",
-            "version": "v5.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "907187782c465a564f9030a0c6ace59e8821106f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/907187782c465a564f9030a0c6ace59e8821106f",
-                "reference": "907187782c465a564f9030a0c6ace59e8821106f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-mbstring": "~1.0",
-                "symfony/polyfill-php80": "^1.15"
-            },
-            "conflict": {
-                "masterminds/html5": "<2.6"
-            },
-            "require-dev": {
-                "masterminds/html5": "^2.6",
-                "symfony/css-selector": "^4.4|^5.0"
-            },
-            "suggest": {
-                "symfony/css-selector": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\DomCrawler\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony DomCrawler Component",
-            "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-23T13:08:13+00:00"
-        },
-        {
-            "name": "symfony/http-client",
-            "version": "v5.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client.git",
-                "reference": "aae28b613d7a88e529df46e617f046be0236ab54"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/aae28b613d7a88e529df46e617f046be0236ab54",
-                "reference": "aae28b613d7a88e529df46e617f046be0236ab54",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "psr/log": "^1.0",
-                "symfony/http-client-contracts": "^2.1.1",
-                "symfony/polyfill-php73": "^1.11",
-                "symfony/polyfill-php80": "^1.15",
-                "symfony/service-contracts": "^1.0|^2"
-            },
-            "provide": {
-                "php-http/async-client-implementation": "*",
-                "php-http/client-implementation": "*",
-                "psr/http-client-implementation": "1.0",
-                "symfony/http-client-implementation": "1.1"
-            },
-            "require-dev": {
-                "amphp/http-client": "^4.2.1",
-                "amphp/http-tunnel": "^1.0",
-                "amphp/socket": "^1.1",
-                "guzzlehttp/promises": "^1.3.1",
-                "nyholm/psr7": "^1.0",
-                "php-http/httplug": "^1.0|^2.0",
-                "psr/http-client": "^1.0",
-                "symfony/dependency-injection": "^4.4|^5.0",
-                "symfony/http-kernel": "^4.4|^5.0",
-                "symfony/process": "^4.4|^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\HttpClient\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony HttpClient component",
-            "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-06-11T21:20:02+00:00"
-        },
-        {
-            "name": "symfony/http-client-contracts",
-            "version": "v2.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "f8bed25edc964d015bcd87f1fec5734963931910"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/f8bed25edc964d015bcd87f1fec5734963931910",
-                "reference": "f8bed25edc964d015bcd87f1fec5734963931910",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5"
-            },
-            "suggest": {
-                "symfony/http-client-implementation": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\HttpClient\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to HTTP clients",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-25T17:37:45+00:00"
-        },
-        {
-            "name": "symfony/panther",
-            "version": "v0.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/panther.git",
-                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/panther/zipball/fcc7cfd2168db167daeb21ac5510fe06f2816a83",
-                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1",
-                "php-webdriver/webdriver": "^1.8.1",
-                "symfony/browser-kit": "^4.3 || ^5.0",
-                "symfony/dom-crawler": "^4.3 || ^5.0",
-                "symfony/http-client": "^4.3 || ^5.0",
-                "symfony/polyfill-php72": "^1.9",
-                "symfony/process": "^3.4 || ^4.0 || ^5.0"
-            },
-            "conflict": {
-                "symfony/framework-bundle": ">=4.3 <4.3.4"
-            },
-            "require-dev": {
-                "fabpot/goutte": "^3.2.3",
-                "guzzlehttp/guzzle": "^6.3",
-                "symfony/css-selector": "^3.4 || ^4.0 || ^5.0",
-                "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0",
-                "symfony/mime": "^4.3 || ^5.0",
-                "symfony/phpunit-bridge": "^4.3.3 || ^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Panther\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kévin Dunglas",
-                    "email": "dunglas@gmail.com",
-                    "homepage": "https://dunglas.fr"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A browser testing and web scraping library for PHP and Symfony.",
-            "homepage": "https://dunglas.fr",
-            "keywords": [
-                "e2e",
-                "scraping",
-                "selenium",
-                "symfony",
-                "testing",
-                "webdriver"
-            ],
-            "time": "2020-02-24T12:05:49+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2556,75 +2006,6 @@
                 }
             ],
             "time": "2020-06-06T08:46:27+00:00"
-        },
-        {
-            "name": "symfony/polyfill-php72",
-            "version": "v1.17.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php72.git",
-                "reference": "f048e612a3905f34931127360bdd2def19a5e582"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/f048e612a3905f34931127360bdd2def19a5e582",
-                "reference": "f048e612a3905f34931127360bdd2def19a5e582",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.17-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php72\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 7.2+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-12T16:47:27+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -3004,83 +2385,6 @@
             "time": "2020-05-20T17:43:50+00:00"
         },
         {
-            "name": "symfony/yaml",
-            "version": "v5.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "ea342353a3ef4f453809acc4ebc55382231d4d23"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/ea342353a3ef4f453809acc4ebc55382231d4d23",
-                "reference": "ea342353a3ef4f453809acc4ebc55382231d4d23",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-ctype": "~1.8"
-            },
-            "conflict": {
-                "symfony/console": "<4.4"
-            },
-            "require-dev": {
-                "symfony/console": "^4.4|^5.0"
-            },
-            "suggest": {
-                "symfony/console": "For validating YAML files using the lint command"
-            },
-            "bin": [
-                "Resources/bin/yaml-lint"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Yaml\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-05-20T17:43:50+00:00"
-        },
-        {
             "name": "theseer/tokenizer",
             "version": "1.1.3",
             "source": {
@@ -3119,390 +2423,6 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2019-06-13T22:48:21+00:00"
-        },
-        {
-            "name": "webignition/base-basil-test-case",
-            "version": "0.27",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "520b0344608081f81a32d4a54f2c0869994ed2bb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/520b0344608081f81a32d4a54f2c0869994ed2bb",
-                "reference": "520b0344608081f81a32d4a54f2c0869994ed2bb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "phpunit/phpunit": "~9.0",
-                "symfony/panther": "^0.7",
-                "webignition/basil-models": ">=0.54,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.19,<1",
-                "webignition/webdriver-element-inspector": ">=0.8,<1",
-                "webignition/webdriver-element-mutator": ">=0.4,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BaseBasilTestCase\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-06-12T16:30:01+00:00"
-        },
-        {
-            "name": "webignition/basil-models",
-            "version": "0.56",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/basil-models.git",
-                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
-                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/object-reflector": "^0.1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\BasilModels\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-06-12T17:04:26+00:00"
-        },
-        {
-            "name": "webignition/php-dom-element-identifier",
-            "version": "0.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-dom-element-identifier.git",
-                "reference": "f305800e74fd76e0ae4d87ea1908d4043e6b1c1c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-dom-element-identifier/zipball/f305800e74fd76e0ae4d87ea1908d4043e6b1c1c",
-                "reference": "f305800e74fd76e0ae4d87ea1908d4043e6b1c1c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=7.2",
-                "webignition/php-dom-element-locator": ">=0.4,<1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\DomElementIdentifier\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/php-dom-element-identifier",
-            "time": "2020-05-27T14:10:38+00:00"
-        },
-        {
-            "name": "webignition/php-dom-element-locator",
-            "version": "0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/php-dom-element-locator.git",
-                "reference": "d980f9323deb536de371e79e671e4b055f2bb8ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-dom-element-locator/zipball/d980f9323deb536de371e79e671e4b055f2bb8ac",
-                "reference": "d980f9323deb536de371e79e671e4b055f2bb8ac",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\DomElementLocator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Model for identifying the location of an element within a DOM",
-            "homepage": "https://github.com/webignition/php-dom-element-locator",
-            "time": "2020-05-27T13:59:02+00:00"
-        },
-        {
-            "name": "webignition/symfony-panther-dom-crawler-navigator",
-            "version": "0.19",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/symfony-panther-dom-crawler-navigator.git",
-                "reference": "358660a5c7834487bbf1b0bee10f211c84c807c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/358660a5c7834487bbf1b0bee10f211c84c807c0",
-                "reference": "358660a5c7834487bbf1b0bee10f211c84c807c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "php-webdriver/webdriver": "^1.8",
-                "symfony/panther": "^0.7",
-                "webignition/php-dom-element-identifier": ">=0.14,<1",
-                "webignition/php-dom-element-locator": ">=0.4,<1",
-                "webignition/web-driver-element-collection": ">=0.8,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-panther-test-case": ">=0.9,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\SymfonyDomCrawlerNavigator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Navigate around a symfony panther dom crawler using convenience methods",
-            "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
-            "time": "2020-06-01T16:09:58+00:00"
-        },
-        {
-            "name": "webignition/web-driver-element-collection",
-            "version": "0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/web-driver-element-collection.git",
-                "reference": "69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/web-driver-element-collection/zipball/69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6",
-                "reference": "69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "php-webdriver/webdriver": "^1.8"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.3",
-                "phpstan/phpstan": "^0.11.15",
-                "phpstan/phpstan-mockery": "^0.11.3",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\WebDriverElementCollection\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "A collection of Facebook\\WebDriver\\WebDriverElement",
-            "homepage": "https://github.com/webignition/web-driver-element-collection",
-            "time": "2020-05-27T13:44:23+00:00"
-        },
-        {
-            "name": "webignition/webdriver-element-inspector",
-            "version": "0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/webdriver-element-inspector.git",
-                "reference": "342e7a5e2b108df727f5a86fbde4b9a7124a9d43"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/342e7a5e2b108df727f5a86fbde4b9a7124a9d43",
-                "reference": "342e7a5e2b108df727f5a86fbde4b9a7124a9d43",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4",
-                "php-webdriver/webdriver": "^1.8",
-                "webignition/web-driver-element-collection": ">=0.8,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*",
-                "symfony/panther": "^0.7",
-                "webignition/base-panther-test-case": ">=0.9,<1",
-                "webignition/php-dom-element-identifier": ">=0.14,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.18,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\WebDriverElementInspector\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Convenience methods for getting information from a Facebook\\WebDriver\\WebDriverElement instance",
-            "homepage": "https://github.com/webignition/webdriver-element-inspector",
-            "keywords": [
-                "inspector",
-                "webdriver",
-                "webdriver-element"
-            ],
-            "time": "2020-05-27T15:02:04+00:00"
-        },
-        {
-            "name": "webignition/webdriver-element-mutator",
-            "version": "0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/webdriver-element-mutator.git",
-                "reference": "b8458a72213da4a0ac9b6348e1b6a534f0696b91"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/webdriver-element-mutator/zipball/b8458a72213da4a0ac9b6348e1b6a534f0696b91",
-                "reference": "b8458a72213da4a0ac9b6348e1b6a534f0696b91",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=7.4",
-                "php-webdriver/webdriver": "^1.8",
-                "webignition/web-driver-element-collection": ">=0.8,<1"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "webignition/base-panther-test-case": ">=0.9,<1",
-                "webignition/php-dom-element-locator": ">=0.4,<1",
-                "webignition/symfony-panther-dom-crawler-navigator": ">=0.18,<1",
-                "webignition/webdriver-element-inspector": ">=0.8,<1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\WebDriverElementMutator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "description": "Convenience methods for setting values on a Facebook\\WebDriver\\WebDriverElement instance",
-            "homepage": "https://github.com/webignition/webdriver-element-mutator",
-            "keywords": [
-                "mutator",
-                "webdriver",
-                "webdriver-element"
-            ],
-            "time": "2020-05-27T15:35:50+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -4388,6 +3308,71 @@
             "time": "2018-02-15T16:58:55+00:00"
         },
         {
+            "name": "php-webdriver/webdriver",
+            "version": "1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-webdriver/php-webdriver.git",
+                "reference": "3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab",
+                "reference": "3308a70be084d6d7fd1ee5787b4c2e6eb4b70aab",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-zip": "*",
+                "php": "^5.6 || ~7.0",
+                "symfony/polyfill-mbstring": "^1.12",
+                "symfony/process": "^2.8 || ^3.1 || ^4.0 || ^5.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "php-coveralls/php-coveralls": "^2.0",
+                "php-mock/php-mock-phpunit": "^1.1",
+                "phpunit/phpunit": "^5.7",
+                "sebastian/environment": "^1.3.4 || ^2.0 || ^3.0",
+                "sminnee/phpunit-mock-objects": "^3.4",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/var-dumper": "^3.3 || ^4.0 || ^5.0"
+            },
+            "suggest": {
+                "ext-SimpleXML": "For Firefox profile creation"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\WebDriver\\": "lib/"
+                },
+                "files": [
+                    "lib/Exception/TimeoutException.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A PHP client for Selenium WebDriver. Previously facebook/webdriver.",
+            "homepage": "https://github.com/php-webdriver/php-webdriver",
+            "keywords": [
+                "Chromedriver",
+                "geckodriver",
+                "php",
+                "selenium",
+                "webdriver"
+            ],
+            "time": "2020-03-04T14:40:12+00:00"
+        },
+        {
             "name": "phpstan/phpdoc-parser",
             "version": "0.4.4",
             "source": {
@@ -4585,6 +3570,53 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
+            "name": "psr/log",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/0f73288fd15629204f9d42b7055f72dacbe811fc",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2020-03-23T09:12:05+00:00"
+        },
+        {
             "name": "psr/simple-cache",
             "version": "1.0.1",
             "source": {
@@ -4739,6 +3771,79 @@
                 "standards"
             ],
             "time": "2020-04-17T01:09:41+00:00"
+        },
+        {
+            "name": "symfony/browser-kit",
+            "version": "v5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/browser-kit.git",
+                "reference": "b9adef763c4f98660d1f8b924f6d61718f8ae0bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/b9adef763c4f98660d1f8b924f6d61718f8ae0bc",
+                "reference": "b9adef763c4f98660d1f8b924f6d61718f8ae0bc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/dom-crawler": "^4.4|^5.0"
+            },
+            "require-dev": {
+                "symfony/css-selector": "^4.4|^5.0",
+                "symfony/http-client": "^4.4|^5.0",
+                "symfony/mime": "^4.4|^5.0",
+                "symfony/process": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/process": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\BrowserKit\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony BrowserKit Component",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-23T13:13:03+00:00"
         },
         {
             "name": "symfony/cache",
@@ -5074,6 +4179,142 @@
                 }
             ],
             "time": "2020-06-12T08:11:32+00:00"
+        },
+        {
+            "name": "symfony/deprecation-contracts",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
+                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "function.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A generic function and convention to trigger deprecation notices",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-27T08:34:37+00:00"
+        },
+        {
+            "name": "symfony/dom-crawler",
+            "version": "v5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dom-crawler.git",
+                "reference": "907187782c465a564f9030a0c6ace59e8821106f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/907187782c465a564f9030a0c6ace59e8821106f",
+                "reference": "907187782c465a564f9030a0c6ace59e8821106f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "conflict": {
+                "masterminds/html5": "<2.6"
+            },
+            "require-dev": {
+                "masterminds/html5": "^2.6",
+                "symfony/css-selector": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/css-selector": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\DomCrawler\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony DomCrawler Component",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-23T13:08:13+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -5432,6 +4673,163 @@
             "time": "2020-05-20T17:43:50+00:00"
         },
         {
+            "name": "symfony/http-client",
+            "version": "v5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-client.git",
+                "reference": "aae28b613d7a88e529df46e617f046be0236ab54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/aae28b613d7a88e529df46e617f046be0236ab54",
+                "reference": "aae28b613d7a88e529df46e617f046be0236ab54",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "psr/log": "^1.0",
+                "symfony/http-client-contracts": "^2.1.1",
+                "symfony/polyfill-php73": "^1.11",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/service-contracts": "^1.0|^2"
+            },
+            "provide": {
+                "php-http/async-client-implementation": "*",
+                "php-http/client-implementation": "*",
+                "psr/http-client-implementation": "1.0",
+                "symfony/http-client-implementation": "1.1"
+            },
+            "require-dev": {
+                "amphp/http-client": "^4.2.1",
+                "amphp/http-tunnel": "^1.0",
+                "amphp/socket": "^1.1",
+                "guzzlehttp/promises": "^1.3.1",
+                "nyholm/psr7": "^1.0",
+                "php-http/httplug": "^1.0|^2.0",
+                "psr/http-client": "^1.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/http-kernel": "^4.4|^5.0",
+                "symfony/process": "^4.4|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\HttpClient\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony HttpClient component",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-06-11T21:20:02+00:00"
+        },
+        {
+            "name": "symfony/http-client-contracts",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-client-contracts.git",
+                "reference": "f8bed25edc964d015bcd87f1fec5734963931910"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/f8bed25edc964d015bcd87f1fec5734963931910",
+                "reference": "f8bed25edc964d015bcd87f1fec5734963931910",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5"
+            },
+            "suggest": {
+                "symfony/http-client-implementation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\HttpClient\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to HTTP clients",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-25T17:37:45+00:00"
+        },
+        {
             "name": "symfony/http-foundation",
             "version": "v5.1.2",
             "source": {
@@ -5690,6 +5088,78 @@
             "time": "2020-05-23T13:08:13+00:00"
         },
         {
+            "name": "symfony/panther",
+            "version": "v0.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/panther.git",
+                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/panther/zipball/fcc7cfd2168db167daeb21ac5510fe06f2816a83",
+                "reference": "fcc7cfd2168db167daeb21ac5510fe06f2816a83",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "php-webdriver/webdriver": "^1.8.1",
+                "symfony/browser-kit": "^4.3 || ^5.0",
+                "symfony/dom-crawler": "^4.3 || ^5.0",
+                "symfony/http-client": "^4.3 || ^5.0",
+                "symfony/polyfill-php72": "^1.9",
+                "symfony/process": "^3.4 || ^4.0 || ^5.0"
+            },
+            "conflict": {
+                "symfony/framework-bundle": ">=4.3 <4.3.4"
+            },
+            "require-dev": {
+                "fabpot/goutte": "^3.2.3",
+                "guzzlehttp/guzzle": "^6.3",
+                "symfony/css-selector": "^3.4 || ^4.0 || ^5.0",
+                "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0",
+                "symfony/mime": "^4.3 || ^5.0",
+                "symfony/phpunit-bridge": "^4.3.3 || ^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Panther\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com",
+                    "homepage": "https://dunglas.fr"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A browser testing and web scraping library for PHP and Symfony.",
+            "homepage": "https://dunglas.fr",
+            "keywords": [
+                "e2e",
+                "scraping",
+                "selenium",
+                "symfony",
+                "testing",
+                "webdriver"
+            ],
+            "time": "2020-02-24T12:05:49+00:00"
+        },
+        {
             "name": "symfony/polyfill-php70",
             "version": "v1.17.1",
             "source": {
@@ -5765,6 +5235,75 @@
                 }
             ],
             "time": "2020-06-06T08:46:27+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php72",
+            "version": "v1.17.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php72.git",
+                "reference": "f048e612a3905f34931127360bdd2def19a5e582"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/f048e612a3905f34931127360bdd2def19a5e582",
+                "reference": "f048e612a3905f34931127360bdd2def19a5e582",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.17-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.2+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-12T16:47:27+00:00"
         },
         {
             "name": "symfony/stopwatch",
@@ -5994,6 +5533,83 @@
                 }
             ],
             "time": "2020-06-07T15:42:22+00:00"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "ea342353a3ef4f453809acc4ebc55382231d4d23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/ea342353a3ef4f453809acc4ebc55382231d4d23",
+                "reference": "ea342353a3ef4f453809acc4ebc55382231d4d23",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-ctype": "~1.8"
+            },
+            "conflict": {
+                "symfony/console": "<4.4"
+            },
+            "require-dev": {
+                "symfony/console": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command"
+            },
+            "bin": [
+                "Resources/bin/yaml-lint"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-20T17:43:50+00:00"
         },
         {
             "name": "symplify/auto-bind-parameter",
@@ -6519,6 +6135,53 @@
             "time": "2020-06-25T16:39:17+00:00"
         },
         {
+            "name": "webignition/base-basil-test-case",
+            "version": "0.27",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/base-basil-test-case.git",
+                "reference": "520b0344608081f81a32d4a54f2c0869994ed2bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/520b0344608081f81a32d4a54f2c0869994ed2bb",
+                "reference": "520b0344608081f81a32d4a54f2c0869994ed2bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "phpunit/phpunit": "~9.0",
+                "symfony/panther": "^0.7",
+                "webignition/basil-models": ">=0.54,<1",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.19,<1",
+                "webignition/webdriver-element-inspector": ">=0.8,<1",
+                "webignition/webdriver-element-mutator": ">=0.4,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BaseBasilTestCase\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/base-basil-test-case",
+            "time": "2020-06-12T16:30:01+00:00"
+        },
+        {
             "name": "webignition/basil-dom-identifier-factory",
             "version": "0.13",
             "source": {
@@ -6562,6 +6225,49 @@
             ],
             "homepage": "https://github.com/webignition/basil-dom-identifier-factory",
             "time": "2020-05-27T16:24:15+00:00"
+        },
+        {
+            "name": "webignition/basil-models",
+            "version": "0.56",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/basil-models.git",
+                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
+                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/object-reflector": "^0.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilModels\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-models",
+            "time": "2020-06-12T17:04:26+00:00"
         },
         {
             "name": "webignition/basil-phpunit-result-printer",
@@ -6659,6 +6365,91 @@
             "time": "2020-05-27T16:00:25+00:00"
         },
         {
+            "name": "webignition/php-dom-element-identifier",
+            "version": "0.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/php-dom-element-identifier.git",
+                "reference": "f305800e74fd76e0ae4d87ea1908d4043e6b1c1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/php-dom-element-identifier/zipball/f305800e74fd76e0ae4d87ea1908d4043e6b1c1c",
+                "reference": "f305800e74fd76e0ae4d87ea1908d4043e6b1c1c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2",
+                "webignition/php-dom-element-locator": ">=0.4,<1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\DomElementIdentifier\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/php-dom-element-identifier",
+            "time": "2020-05-27T14:10:38+00:00"
+        },
+        {
+            "name": "webignition/php-dom-element-locator",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/php-dom-element-locator.git",
+                "reference": "d980f9323deb536de371e79e671e4b055f2bb8ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/php-dom-element-locator/zipball/d980f9323deb536de371e79e671e4b055f2bb8ac",
+                "reference": "d980f9323deb536de371e79e671e4b055f2bb8ac",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\DomElementLocator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Model for identifying the location of an element within a DOM",
+            "homepage": "https://github.com/webignition/php-dom-element-locator",
+            "time": "2020-05-27T13:59:02+00:00"
+        },
+        {
             "name": "webignition/quoted-string-value-extractor",
             "version": "0.2",
             "source": {
@@ -6701,6 +6492,57 @@
             "time": "2020-05-27T16:05:14+00:00"
         },
         {
+            "name": "webignition/symfony-panther-dom-crawler-navigator",
+            "version": "0.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/symfony-panther-dom-crawler-navigator.git",
+                "reference": "358660a5c7834487bbf1b0bee10f211c84c807c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/symfony-panther-dom-crawler-navigator/zipball/358660a5c7834487bbf1b0bee10f211c84c807c0",
+                "reference": "358660a5c7834487bbf1b0bee10f211c84c807c0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "php-webdriver/webdriver": "^1.8",
+                "symfony/panther": "^0.7",
+                "webignition/php-dom-element-identifier": ">=0.14,<1",
+                "webignition/php-dom-element-locator": ">=0.4,<1",
+                "webignition/web-driver-element-collection": ">=0.8,<1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-mockery": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/base-panther-test-case": ">=0.9,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\SymfonyDomCrawlerNavigator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Navigate around a symfony panther dom crawler using convenience methods",
+            "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
+            "time": "2020-06-01T16:09:58+00:00"
+        },
+        {
             "name": "webignition/symfony-panther-webserver-runner",
             "version": "0.3",
             "source": {
@@ -6741,6 +6583,164 @@
             ],
             "homepage": "https://github.com/webignition/symfony-panther-webserver-runner",
             "time": "2020-05-27T14:22:32+00:00"
+        },
+        {
+            "name": "webignition/web-driver-element-collection",
+            "version": "0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/web-driver-element-collection.git",
+                "reference": "69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/web-driver-element-collection/zipball/69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6",
+                "reference": "69a80ebabef42b7bb8dbfb2942e03c12fe3a4de6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "php-webdriver/webdriver": "^1.8"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.3",
+                "phpstan/phpstan": "^0.11.15",
+                "phpstan/phpstan-mockery": "^0.11.3",
+                "phpunit/phpunit": "~9.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebDriverElementCollection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "A collection of Facebook\\WebDriver\\WebDriverElement",
+            "homepage": "https://github.com/webignition/web-driver-element-collection",
+            "time": "2020-05-27T13:44:23+00:00"
+        },
+        {
+            "name": "webignition/webdriver-element-inspector",
+            "version": "0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/webdriver-element-inspector.git",
+                "reference": "342e7a5e2b108df727f5a86fbde4b9a7124a9d43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-inspector/zipball/342e7a5e2b108df727f5a86fbde4b9a7124a9d43",
+                "reference": "342e7a5e2b108df727f5a86fbde4b9a7124a9d43",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "php-webdriver/webdriver": "^1.8",
+                "webignition/web-driver-element-collection": ">=0.8,<1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-mockery": "^0.12",
+                "phpunit/phpunit": "~9",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/panther": "^0.7",
+                "webignition/base-panther-test-case": ">=0.9,<1",
+                "webignition/php-dom-element-identifier": ">=0.14,<1",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.18,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebDriverElementInspector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Convenience methods for getting information from a Facebook\\WebDriver\\WebDriverElement instance",
+            "homepage": "https://github.com/webignition/webdriver-element-inspector",
+            "keywords": [
+                "inspector",
+                "webdriver",
+                "webdriver-element"
+            ],
+            "time": "2020-05-27T15:02:04+00:00"
+        },
+        {
+            "name": "webignition/webdriver-element-mutator",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/webdriver-element-mutator.git",
+                "reference": "b8458a72213da4a0ac9b6348e1b6a534f0696b91"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/webdriver-element-mutator/zipball/b8458a72213da4a0ac9b6348e1b6a534f0696b91",
+                "reference": "b8458a72213da4a0ac9b6348e1b6a534f0696b91",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.4",
+                "php-webdriver/webdriver": "^1.8",
+                "webignition/web-driver-element-collection": ">=0.8,<1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-mockery": "^0.12",
+                "phpunit/phpunit": "~9.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "webignition/base-panther-test-case": ">=0.9,<1",
+                "webignition/php-dom-element-locator": ">=0.4,<1",
+                "webignition/symfony-panther-dom-crawler-navigator": ">=0.18,<1",
+                "webignition/webdriver-element-inspector": ">=0.8,<1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\WebDriverElementMutator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Convenience methods for setting values on a Facebook\\WebDriver\\WebDriverElement instance",
+            "homepage": "https://github.com/webignition/webdriver-element-mutator",
+            "keywords": [
+                "mutator",
+                "webdriver",
+                "webdriver-element"
+            ],
+            "time": "2020-05-27T15:35:50+00:00"
         }
     ],
     "aliases": [],
