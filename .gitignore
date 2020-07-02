@@ -3,3 +3,5 @@
 .phpunit.result.cache
 /var/
 /.env*local
+compiler.phar
+runner.phar

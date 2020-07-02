@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
+use webignition\BasilPhpUnitResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 use webignition\BasilRunner\Tests\Services\ConsoleStyler;
@@ -110,7 +111,8 @@ class GenerateRunTest extends TestCase
 
     private function createGenerateCommand(string $source, string $target): string
     {
-        return './bin/basil-runner generate ' .
+        return
+            './compiler.phar ' .
             '--source=' . $source . ' ' .
             '--target=' . $target . ' ' .
             '--base-class="' . AbstractGeneratedTestCase::class . '"';
@@ -118,7 +120,6 @@ class GenerateRunTest extends TestCase
 
     private function createRunCommand(string $path): string
     {
-        return './bin/basil-runner run ' .
-            '--path=' . $path;
+        return './runner.phar --path=' . $path . ' --printer="' . ResultPrinter::class . '"';
     }
 }
