@@ -1,10 +1,10 @@
 <?php
 
-namespace webignition\BasilRunner\Generated;
+namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 
-class ExampleComVerifyOpenLiteralTest extends AbstractBaseTest
+class Generated0233b88be49ad918bec797dcba9b01afTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {

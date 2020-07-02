@@ -5,14 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services;
 
 use Symfony\Component\Console\Command\Command;
-use webignition\BasilCompiler\Compiler;
-use webignition\BasilLoader\SourceLoader;
 use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
-use webignition\BasilRunner\Services\Generator\Renderer;
 use webignition\BasilRunner\Services\RunCommand\ConsoleOutputFormatter;
 
 class CommandFactory
@@ -38,21 +32,7 @@ class CommandFactory
 
     public function createGenerateCommand(): GenerateCommand
     {
-        $externalVariableIdentifiers = ExternalVariableIdentifiersFactory::create();
-        $configurationValidator = new ConfigurationValidator();
-
-        return new GenerateCommand(
-            SourceLoader::createLoader(),
-            new TestGenerator(
-                Compiler::create($externalVariableIdentifiers),
-                new PhpFileCreator(),
-            ),
-            $this->projectRootPath,
-            new ConfigurationFactory($this->projectRootPath),
-            $configurationValidator,
-            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
-            new Renderer()
-        );
+        return new GenerateCommand();
     }
 
     /**
