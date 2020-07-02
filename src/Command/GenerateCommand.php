@@ -69,6 +69,11 @@ class GenerateCommand extends Command
         return $compilerCommandExitCode;
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return string
+     */
     private function createCommandOptionsString(array $options): string
     {
         $fooOptions = [];
