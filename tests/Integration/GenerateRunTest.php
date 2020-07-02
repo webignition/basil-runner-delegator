@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
@@ -19,18 +18,40 @@ class GenerateRunTest extends TestCase
     public function testGenerateAndRun(string $source, string $target, string $expectedOutputBody)
     {
         $generateCommand = $this->createGenerateCommand($source, $target);
-        $generateCommandOutput = SuccessOutput::fromJson((string) shell_exec($generateCommand));
+        $generateCommandOutputText = (string) shell_exec($generateCommand);
+
+        $generatedCommandOutput = json_decode($generateCommandOutputText, true);
+        $generateCommandOutputConfig = $generatedCommandOutput['config'] ?? [];
+        $baseTarget = $generateCommandOutputConfig['target'] ?? '';
+        $generateCommandOutputData = $generatedCommandOutput['output'] ?? [];
+
+        $generatedTestsToRemove = [];
+        foreach ($generateCommandOutputData as $generatedTestData) {
+            $generatedTestTarget = $generatedTestData['target'] ?? '';
+
+            $generatedCodePath = $baseTarget . '/' . $generatedTestTarget;
+
+            self::assertFileExists($generatedCodePath);
+            self::assertFileIsReadable($generatedCodePath);
+
+            $generatedTestsToRemove[] = $generatedCodePath;
+        }
 
         $runCommand = $this->createRunCommand($target);
 
         $runCommandOutput = (string) shell_exec($runCommand);
         $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
 
-        $this->assertSame($expectedOutputBody, $phpUnitOutput->getBody());
+        self::assertSame($expectedOutputBody, $phpUnitOutput->getBody());
 
-        foreach ($generateCommandOutput->getTestPaths() as $testPath) {
-            unlink($testPath);
+        foreach ($generatedTestsToRemove as $path) {
+            self::assertFileExists($path);
+            self::assertFileIsWritable($path);
+
+            unlink($path);
         }
+
+        self::assertTrue(true);
     }
 
     public function generateAndRunDataProvider(): array
@@ -110,7 +131,8 @@ class GenerateRunTest extends TestCase
 
     private function createGenerateCommand(string $source, string $target): string
     {
-        return './bin/basil-runner generate ' .
+        return
+            './bin/basil-runner generate ' .
             '--source=' . $source . ' ' .
             '--target=' . $target . ' ' .
             '--base-class="' . AbstractGeneratedTestCase::class . '"';
@@ -118,7 +140,6 @@ class GenerateRunTest extends TestCase
 
     private function createRunCommand(string $path): string
     {
-        return './bin/basil-runner run ' .
-            '--path=' . $path;
+        return './bin/basil-runner run --path=' . $path;
     }
 }

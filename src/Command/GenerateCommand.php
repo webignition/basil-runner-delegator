@@ -9,28 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompiler\UnresolvedPlaceholderException;
-use webignition\BasilLoader\Exception\EmptyTestException;
-use webignition\BasilLoader\Exception\InvalidPageException;
-use webignition\BasilLoader\Exception\InvalidTestException;
-use webignition\BasilLoader\Exception\NonRetrievableImportException;
-use webignition\BasilLoader\Exception\ParseException;
-use webignition\BasilLoader\Exception\UnknownTestException;
-use webignition\BasilLoader\Exception\YamlLoaderException;
-use webignition\BasilLoader\SourceLoader;
-use webignition\BasilModelProvider\Exception\UnknownItemException;
-use webignition\BasilResolver\CircularStepImportException;
-use webignition\BasilResolver\UnknownElementException;
-use webignition\BasilResolver\UnknownPageElementException;
-use webignition\BasilRunner\Model\GenerateCommand\OutputInterface as GenerateCommandOutputInterface;
-use webignition\BasilRunner\Model\GenerateCommand\SuccessOutput;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationFactory;
-use webignition\BasilRunner\Services\GenerateCommand\ConfigurationValidator;
-use webignition\BasilRunner\Services\GenerateCommand\ErrorOutputFactory;
-use webignition\BasilRunner\Services\Generator\Renderer;
-use webignition\BasilRunner\Services\TestGenerator;
-use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommand extends Command
 {
@@ -39,34 +17,6 @@ class GenerateCommand extends Command
     public const OPTION_BASE_CLASS = 'base-class';
 
     private const NAME = 'generate';
-
-    private SourceLoader $sourceLoader;
-    private TestGenerator $testGenerator;
-    private string $projectRootPath;
-    private ConfigurationFactory $configurationFactory;
-    private ConfigurationValidator $configurationValidator;
-    private ErrorOutputFactory $errorOutputFactory;
-    private Renderer $outputRenderer;
-
-    public function __construct(
-        SourceLoader $sourceLoader,
-        TestGenerator $testGenerator,
-        string $projectRootPath,
-        ConfigurationFactory $configurationFactory,
-        ConfigurationValidator $configurationValidator,
-        ErrorOutputFactory $errorOutputFactory,
-        Renderer $outputRenderer
-    ) {
-        parent::__construct();
-
-        $this->sourceLoader = $sourceLoader;
-        $this->testGenerator = $testGenerator;
-        $this->projectRootPath = $projectRootPath;
-        $this->configurationFactory = $configurationFactory;
-        $this->configurationValidator = $configurationValidator;
-        $this->errorOutputFactory = $errorOutputFactory;
-        $this->outputRenderer = $outputRenderer;
-    }
 
     protected function configure(): void
     {
@@ -106,121 +56,34 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->outputRenderer->setOutput($output);
+        $commandOptionsString = $this->createCommandOptionsString($input->getOptions());
 
-        $typedInput = new TypedInput($input);
+        $compilerCommand = './compiler.phar ' . $commandOptionsString;
+        $compilerCommandOutput = [];
+        $compilerCommandExitCode = null;
 
-        $rawSource = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_SOURCE));
-        $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
-        $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
+        exec($compilerCommand, $compilerCommandOutput, $compilerCommandExitCode);
 
-        $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
+        $output->write(implode("\n", $compilerCommandOutput));
 
-        if ('' === $rawSource) {
-            return $this->render($this->errorOutputFactory->createForEmptySource($configuration));
-        }
-
-        if ('' === $rawTarget) {
-            return $this->render($this->errorOutputFactory->createForEmptyTarget($configuration));
-        }
-
-        if (false === $this->configurationValidator->isValid($configuration)) {
-            return $this->render($this->errorOutputFactory->createFromInvalidConfiguration($configuration));
-        }
-
-        $sourcePaths = $this->createSourcePaths($configuration->getSource());
-
-        $generatedFiles = [];
-        foreach ($sourcePaths as $sourcePath) {
-            try {
-                $testSuite = $this->sourceLoader->load($sourcePath);
-            } catch (
-                CircularStepImportException |
-                EmptyTestException |
-                InvalidPageException |
-                InvalidTestException |
-                NonRetrievableImportException |
-                ParseException |
-                UnknownElementException |
-                UnknownItemException |
-                UnknownPageElementException |
-                UnknownTestException |
-                YamlLoaderException $exception
-            ) {
-                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
-
-                return $this->render($commandOutput);
-            }
-
-            try {
-                foreach ($testSuite->getTests() as $test) {
-                    $generatedFiles[] = $this->testGenerator->generate(
-                        $test,
-                        $configuration->getBaseClass(),
-                        $configuration->getTarget()
-                    );
-                }
-            } catch (
-                UnresolvedPlaceholderException |
-                UnsupportedStepException $exception
-            ) {
-                $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
-
-                return $this->render($commandOutput);
-            }
-        }
-
-        $commandOutput = new SuccessOutput($configuration, $generatedFiles);
-
-        return $this->render($commandOutput);
+        return $compilerCommandExitCode;
     }
 
     /**
-     * @param string $source
+     * @param array<mixed> $options
      *
-     * @return string[]
+     * @return string
      */
-    private function createSourcePaths(string $source): array
+    private function createCommandOptionsString(array $options): string
     {
-        $sourcePaths = [];
+        $fooOptions = [];
 
-        if (is_file($source)) {
-            $sourcePaths[] = $source;
-        }
-
-        if (is_dir($source)) {
-            return $this->findSourcePaths($source);
-        }
-
-        return $sourcePaths;
-    }
-
-    /**
-     * @param string $directorySource
-     *
-     * @return string[]
-     */
-    private function findSourcePaths(string $directorySource): array
-    {
-        $sourcePaths = [];
-
-        $directoryIterator = new \DirectoryIterator($directorySource);
-        foreach ($directoryIterator as $item) {
-            /* @var \DirectoryIterator $item */
-            if ($item->isFile() && 'yml' === $item->getExtension()) {
-                $sourcePaths[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
+        foreach ($options as $key => $value) {
+            if (is_string($value)) {
+                $fooOptions[] = '--' . $key . '=' . escapeshellarg($value);
             }
         }
 
-        sort($sourcePaths);
-
-        return $sourcePaths;
-    }
-
-    private function render(GenerateCommandOutputInterface $commandOutput): int
-    {
-        $this->outputRenderer->render($commandOutput);
-
-        return $commandOutput->getCode();
+        return implode(' ', $fooOptions);
     }
 }

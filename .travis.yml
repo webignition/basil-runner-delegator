@@ -8,6 +8,7 @@ addons:
 install:
   - composer install --prefer-dist
   - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
+  - composer setup
 
 script:
   - composer ci
