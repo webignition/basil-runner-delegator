@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Services\CommandFactory;
 
 class RunCommandTest extends \PHPUnit\Framework\TestCase
 {
@@ -17,7 +16,7 @@ class RunCommandTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->command = CommandFactory::createFactory()->createRunCommand();
+        $this->command = new RunCommand(__DIR__ . '/../..');
     }
 
     public function testRunFailurePathDoesNotExist()
