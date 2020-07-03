@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
@@ -74,8 +73,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     public function runSuccessDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
-
         return [
             'single test' => [
                 'input' => [
@@ -84,7 +81,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 ],
                 'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
                     'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                        __DIR__ . '/../../../tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
                 ]),
             ],
         ];
