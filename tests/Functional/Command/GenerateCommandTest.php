@@ -7,7 +7,6 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\BasilRunner\Command\GenerateCommand;
-use webignition\BasilRunner\Services\CommandFactory;
 use webignition\BasilRunner\Services\ProjectRootPathProvider;
 
 class GenerateCommandTest extends \PHPUnit\Framework\TestCase
@@ -18,7 +17,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->command = CommandFactory::createFactory()->createGenerateCommand();
+        $this->command = new GenerateCommand();
     }
 
     /**
