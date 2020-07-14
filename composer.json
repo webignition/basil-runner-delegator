@@ -36,7 +36,7 @@
         ],
         "compiler-remove": "rm -f compiler.phar",
         "compiler-fetch": [
-            "curl -L https://github.com/webignition/basil-cli-compiler/releases/download/0.3/compiler.phar --output compiler.phar",
+            "curl -L https://github.com/webignition/basil-cli-compiler/releases/download/0.4/compiler.phar --output compiler.phar",
             "chmod +x compiler.phar"
         ],
         "runner-remove": "rm -f runner.phar",
@@ -62,6 +62,7 @@
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "^9.2",
         "squizlabs/php_codesniffer": "3.*",
+        "symfony/yaml": "^5.1",
         "symplify/easy-coding-standard": "^8.1",
         "webignition/basil-phpunit-result-printer": "^0.1.0",
         "webignition/symfony-panther-webserver-runner": ">=0.3,<1"

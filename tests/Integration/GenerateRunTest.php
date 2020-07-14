@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 use webignition\BasilRunner\Tests\Services\ConsoleStyler;
 
@@ -20,7 +21,7 @@ class GenerateRunTest extends TestCase
         $generateCommand = $this->createGenerateCommand($source, $target);
         $generateCommandOutputText = (string) shell_exec($generateCommand);
 
-        $generatedCommandOutput = json_decode($generateCommandOutputText, true);
+        $generatedCommandOutput = Yaml::parse($generateCommandOutputText);
         $generateCommandOutputConfig = $generatedCommandOutput['config'] ?? [];
         $baseTarget = $generateCommandOutputConfig['target'] ?? '';
         $generateCommandOutputData = $generatedCommandOutput['output'] ?? [];
