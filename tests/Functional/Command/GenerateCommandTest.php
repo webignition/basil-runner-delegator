@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BasilRunner\Command\GenerateCommand;
 
 class GenerateCommandTest extends \PHPUnit\Framework\TestCase
@@ -33,7 +34,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         self::assertSame(0, $exitCode);
 
         $commandOutputText = $output->fetch();
-        $commandOutput = json_decode($commandOutputText, true);
+        $commandOutput = Yaml::parse($commandOutputText);
 
         $commandOutputConfig = $commandOutput['config'] ?? [];
         $baseTarget = $commandOutputConfig['target'] ?? '';
