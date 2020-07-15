@@ -45,11 +45,15 @@
             "chmod +x runner.phar"
         ],
         "setup": [
-            "@composer install --ansi",
+            "@composer install --ansi --prefer-dist --no-dev",
             "@compiler-remove",
             "@compiler-fetch",
             "@runner-remove",
             "@runner-fetch"
+        ],
+        "setup-dev": [
+            "@setup",
+            "@composer install --ansi"
         ]
     },
     "require": {
