@@ -16,9 +16,11 @@ install:
   - docker-compose -f docker-compose.yml -f docker-compose-test.yml build --no-cache
   - docker-compose -f docker-compose.yml -f docker-compose-test.yml up --detach
   - docker-compose exec basil-runner nohup php -S 0.0.0.0:9080 -t html/ > /dev/null 2>&1 &
+  - cd ..
 
 script:
   - composer ci
+  - docker-compose exec basil-runner curl http://127.0.0.1:9080/index.html
   - docker-compose exec basil-runner ./bin/basil-runner generate --source=basil-integration/Test --target=build
   - docker-compose exec basil-runner ./bin/basil-runner run --path=build
 

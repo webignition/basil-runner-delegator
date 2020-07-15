@@ -5,3 +5,4 @@ services:
     volumes:
       - ../tests/Fixtures/basil-integration:/app/basil-integration
       - ../tests/Fixtures/html:/app/html
+
