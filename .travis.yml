@@ -2,6 +2,9 @@ language: php
 php:
   - "7.4"
 
+services:
+  - docker
+
 addons:
   chrome: stable
 
@@ -9,9 +12,15 @@ install:
   - composer install --prefer-dist
   - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - composer setup-dev
+  - cd docker
+  - docker-compose -f docker-compose.yml -f docker-compose-test.yml build --no-cache
+  - docker-compose -f docker-compose.yml -f docker-compose-test.yml up --detach
+  - docker-compose exec basil-runner nohup php -S 0.0.0.0:9080 -t html/ > /dev/null 2>&1 &
 
 script:
   - composer ci
+  - docker-compose exec basil-runner ./bin/basil-runner generate --source=basil-integration/Test --target=build
+  - docker-compose exec basil-runner ./bin/basil-runner run --path=build
 
 cache:
   directories:

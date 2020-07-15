@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  basil-runner:
+    volumes:
+      - ../tests/Fixtures/basil-integration:/app/basil-integration
+      - ../tests/Fixtures/html:/app/html
