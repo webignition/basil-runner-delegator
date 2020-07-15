@@ -56,7 +56,8 @@
         "php": ">=7.4",
         "ext-json": "*",
         "symfony/console": "^5.1",
-        "symfony/process": "^5.1"
+        "symfony/process": "^5.1",
+        "webignition/basil-phpunit-result-printer": "0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.0",
@@ -64,7 +65,6 @@
         "squizlabs/php_codesniffer": "3.*",
         "symfony/yaml": "^5.1",
         "symplify/easy-coding-standard": "^8.1",
-        "webignition/basil-phpunit-result-printer": "^0.1.0",
         "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
     },
     "bin": [
