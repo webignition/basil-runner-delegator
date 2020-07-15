@@ -57,7 +57,7 @@
         "ext-json": "*",
         "symfony/console": "^5.1",
         "symfony/process": "^5.1",
-        "webignition/basil-phpunit-result-printer": "0.1"
+        "webignition/basil-phpunit-result-printer": "0.2"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.0",
