@@ -1,0 +1,58 @@
+---
+type: test
+path: tests/Fixtures/basil-integration/FailingTest/index-page-test.yml
+...
+---
+type: step
+name: 'verify page is open'
+status: passed
+statements:
+  -
+    type: assertion
+    source: '$page.url is "http://127.0.0.1:9080/index.html"'
+    status: passed
+  -
+    type: assertion
+    source: '$page.title is "Test fixture web server default document"'
+    status: passed
+...
+---
+type: step
+name: 'verify primary heading'
+status: passed
+statements:
+  -
+    type: assertion
+    source: '$"h1" exists'
+    status: passed
+    transformations:
+      -
+        type: derivation
+        source: '$"h1" is "Test fixture web server default document"'
+  -
+    type: assertion
+    source: '$"h1" is "Test fixture web server default document"'
+    status: passed
+...
+---
+type: step
+name: 'verify links are present'
+status: failed
+statements:
+  -
+    type: assertion
+    source: '$"a[id=link-to-assertions]" not-exists'
+    status: failed
+    summary:
+      operator: not-exists
+      source:
+        type: node
+        body:
+          type: element
+          identifier:
+            source: '$"a[id=link-to-assertions]"'
+            properties:
+              type: css
+              locator: 'a[id=link-to-assertions]'
+              position: 1
+...
