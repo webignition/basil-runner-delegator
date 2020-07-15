@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use webignition\BasilPhpUnitResultPrinter\ResultPrinter;
 
 class RunCommand extends Command
 {
@@ -49,7 +50,7 @@ class RunCommand extends Command
         $runnerCommand =
             './runner.phar ' .
             $commandOptionsString .
-            ' --printer="' . \webignition\BasilPhpUnitResultPrinter\ResultPrinter::class . '"';
+            ' --printer="' . ResultPrinter::class . '"';
 
         $process = Process::fromShellCommandline($runnerCommand);
         try {
