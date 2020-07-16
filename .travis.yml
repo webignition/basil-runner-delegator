@@ -9,9 +9,8 @@ addons:
   chrome: stable
 
 install:
-  - composer install --prefer-dist
-  - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - composer setup-dev
+  - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - cd docker && ./integration-build.sh && cd ..
 
 script:

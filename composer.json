@@ -36,7 +36,7 @@
         ],
         "compiler-remove": "rm -f compiler.phar",
         "compiler-fetch": [
-            "curl -L https://github.com/webignition/basil-cli-compiler/releases/download/0.4/compiler.phar --output compiler.phar",
+            "curl -L https://github.com/webignition/basil-cli-compiler/releases/download/0.5/compiler.phar --output compiler.phar",
             "chmod +x compiler.phar"
         ],
         "runner-remove": "rm -f runner.phar",
