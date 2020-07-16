@@ -22,6 +22,7 @@ script:
   - composer ci
   - cd docker
   - docker-compose exec basil-runner nohup php -S 0.0.0.0:9080 -t html/ > /dev/null 2>&1 &
+  - sleep 5
   - docker-compose exec basil-runner curl http://127.0.0.1:9080/index.html
   - docker-compose exec basil-runner ./bin/basil-runner generate --source=basil-integration/Test --target=build
   - docker-compose exec basil-runner ./bin/basil-runner run --path=build
