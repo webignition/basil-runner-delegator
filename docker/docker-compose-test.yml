@@ -1,8 +1,14 @@
 version: "3"
 
 services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+
   basil-runner:
+    depends_on:
+      - nginx
     volumes:
       - ../tests/Fixtures/basil-integration:/app/basil-integration
-      - ../tests/Fixtures/html:/app/html
-

@@ -12,20 +12,11 @@ install:
   - composer install --prefer-dist
   - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - composer setup-dev
-  - cd docker
-  - docker-compose -f docker-compose.yml -f docker-compose-test.yml build --no-cache
-  - docker-compose -f docker-compose.yml -f docker-compose-test.yml up --detach
-#  - docker-compose exec basil-runner nohup php -S 0.0.0.0:9080 -t html/ > /dev/null 2>&1 &
-  - cd ..
+  - cd docker && ./integration-prepare.sh && cd ..
 
 script:
   - composer ci
-  - cd docker
-  - docker-compose exec basil-runner nohup php -S 0.0.0.0:9080 -t html/ > /dev/null 2>&1 &
-  - sleep 5
-  - docker-compose exec basil-runner curl http://127.0.0.1:9080/index.html
-  - docker-compose exec basil-runner ./bin/basil-runner generate --source=basil-integration/Test --target=build
-  - docker-compose exec basil-runner ./bin/basil-runner run --path=build
+  - cd docker && ./integration-run.sh && cd ..
 
 cache:
   directories:
