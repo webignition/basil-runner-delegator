@@ -2,11 +2,10 @@ version: "3"
 
 services:
   basil-runner:
-    environment:
-      - PANTHER_NO_SANDBOX=1
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
+    image: runner
     container_name: basil-runner
     tty: true
     stdin_open: true
