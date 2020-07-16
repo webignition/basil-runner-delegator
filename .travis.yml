@@ -2,6 +2,9 @@ language: php
 php:
   - "7.4"
 
+services:
+  - docker
+
 addons:
   chrome: stable
 
@@ -9,9 +12,11 @@ install:
   - composer install --prefer-dist
   - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - composer setup-dev
+  - cd docker && ./integration-build.sh && cd ..
 
 script:
   - composer ci
+  - cd docker && ./integration-run.sh && cd ..
 
 cache:
   directories:
