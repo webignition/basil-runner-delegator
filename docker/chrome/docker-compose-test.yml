@@ -11,4 +11,4 @@ services:
     depends_on:
       - nginx
     volumes:
-      - ../tests/Fixtures/basil-integration:/app/basil-integration
+      - ../../tests/Fixtures/basil-integration:/app/basil-integration
