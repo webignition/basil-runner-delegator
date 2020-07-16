@@ -12,7 +12,7 @@ install:
   - composer install --prefer-dist
   - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
   - composer setup-dev
-  - cd docker && ./integration-prepare.sh && cd ..
+  - cd docker && ./integration-build.sh && cd ..
 
 script:
   - composer ci
