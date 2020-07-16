@@ -3195,16 +3195,16 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.28",
+            "version": "0.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "68532c536e27c977e5b5c29e2f7f6147dab67831"
+                "reference": "d1473fc801448798f9029db4bb6d0cb9f4480005"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/68532c536e27c977e5b5c29e2f7f6147dab67831",
-                "reference": "68532c536e27c977e5b5c29e2f7f6147dab67831",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/d1473fc801448798f9029db4bb6d0cb9f4480005",
+                "reference": "d1473fc801448798f9029db4bb6d0cb9f4480005",
                 "shasum": ""
             },
             "require": {
@@ -3239,7 +3239,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-07-09T10:56:52+00:00"
+            "time": "2020-07-16T13:35:05+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
