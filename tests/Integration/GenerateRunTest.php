@@ -78,7 +78,7 @@ class GenerateRunTest extends TestCase
     private function createGenerateCommand(string $source, string $target): string
     {
         return
-            './bin/basil-runner generate ' .
+            './compiler.phar ' .
             '--source=' . $source . ' ' .
             '--target=' . $target . ' ' .
             '--base-class="' . AbstractGeneratedTestCase::class . '"';

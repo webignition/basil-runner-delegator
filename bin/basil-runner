@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Bin;
 
 use Symfony\Component\Console\Application;
-use webignition\BasilRunner\Command\GenerateCommand;
 use webignition\BasilRunner\Command\RunCommand;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -17,7 +16,6 @@ $application->setName('Basil Runner');
 $application->setVersion('0.1-beta');
 
 $application->addCommands([
-    new GenerateCommand(),
     new RunCommand(realpath(__DIR__ . '/..'))
 ]);
 $application->run();
