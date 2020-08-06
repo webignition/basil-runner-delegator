@@ -16,6 +16,6 @@ $application->setName('Basil Runner');
 $application->setVersion('0.1-beta');
 
 $application->addCommands([
-    new RunCommand(realpath(__DIR__ . '/..'))
+    new RunCommand()
 ]);
 $application->run();

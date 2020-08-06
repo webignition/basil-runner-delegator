@@ -17,16 +17,6 @@ class RunCommand extends Command
     public const OPTION_PATH = 'path';
 
     private const NAME = 'run';
-    private const DEFAULT_RELATIVE_PATH = '/generated';
-
-    private string $projectRootPath;
-
-    public function __construct(string $projectRootPath)
-    {
-        $this->projectRootPath = $projectRootPath;
-
-        parent::__construct();
-    }
 
     protected function configure(): void
     {
@@ -37,8 +27,7 @@ class RunCommand extends Command
                 self::OPTION_PATH,
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Absolute path to the directory of tests to run.',
-                $this->projectRootPath . self::DEFAULT_RELATIVE_PATH
+                'Absolute path to the directory of tests to run.'
             )
         ;
     }
