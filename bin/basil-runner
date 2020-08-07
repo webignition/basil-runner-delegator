@@ -5,17 +5,14 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
-use Symfony\Component\Console\Application;
+const VERSION = 'dev-master';
+
 use webignition\BasilRunner\Command\RunCommand;
+use webignition\SingleCommandApplicationFactory\Factory;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$application = new Application();
+$command = new RunCommand();
 
-$application->setName('Basil Runner');
-$application->setVersion('0.1-beta');
-
-$application->addCommands([
-    new RunCommand()
-]);
+$application = (new Factory())->create($command, VERSION);
 $application->run();

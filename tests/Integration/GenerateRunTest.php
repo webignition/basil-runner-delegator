@@ -86,6 +86,6 @@ class GenerateRunTest extends TestCase
 
     private function createRunCommand(string $path): string
     {
-        return './bin/basil-runner run --path=' . $path;
+        return './bin/basil-runner --path=' . $path;
     }
 }
