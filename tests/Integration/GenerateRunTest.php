@@ -6,6 +6,8 @@ namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
+use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilPhpUnitResultPrinter\ResultPrinter;
 use webignition\BasilRunner\Tests\Model\PhpUnitOutput;
 
 class GenerateRunTest extends TestCase
@@ -21,55 +23,42 @@ class GenerateRunTest extends TestCase
         $generateCommandOutputText = (string) shell_exec($generateCommand);
 
         $generatedCommandOutput = Yaml::parse($generateCommandOutputText);
-        $generateCommandOutputConfig = $generatedCommandOutput['config'] ?? [];
-        $baseTarget = $generateCommandOutputConfig['target'] ?? '';
-        $generateCommandOutputData = $generatedCommandOutput['output'] ?? [];
+        $suiteManifest = SuiteManifest::fromArray($generatedCommandOutput);
 
-        $generatedTestsToRemove = [];
-        foreach ($generateCommandOutputData as $generatedTestData) {
-            $generatedTestTarget = $generatedTestData['target'] ?? '';
+        $testManifest = $suiteManifest->getTestManifests()[0];
 
-            $generatedCodePath = $baseTarget . '/' . $generatedTestTarget;
+        $testPath = $testManifest->getTarget();
+        self::assertFileExists($testPath);
+        self::assertFileIsReadable($testPath);
 
-            self::assertFileExists($generatedCodePath);
-            self::assertFileIsReadable($generatedCodePath);
-
-            $generatedTestsToRemove[] = $generatedCodePath;
-        }
-
-        $runCommand = $this->createRunCommand($target);
+        $runCommand = $this->createRunCommand($testPath);
 
         $runCommandOutput = (string) shell_exec($runCommand);
         $phpUnitOutput = new PhpUnitOutput($runCommandOutput);
-
         self::assertSame($expectedOutputBody, $phpUnitOutput->getBody());
 
-        foreach ($generatedTestsToRemove as $path) {
-            self::assertFileExists($path);
-            self::assertFileIsWritable($path);
-
-            unlink($path);
-        }
-
-        self::assertTrue(true);
+        self::assertFileIsWritable($testPath);
+        unlink($testPath);
     }
 
     public function generateAndRunDataProvider(): array
     {
+        $root = getcwd();
+
         return [
             'passing: single test' => [
-                'source' => './tests/Fixtures/basil-integration/Test/index-page-test.yml',
-                'target' => './tests/build/target',
+                'source' => $root . '/tests/Fixtures/basil-integration/Test/index-page-test.yml',
+                'target' => $root . '/tests/build/target',
                 'expectedOutputBody' => file_get_contents(__DIR__ . '/../Fixtures/Output/passing-index-page-test.yml'),
             ],
             'failing: single test' => [
-                'source' => './tests/Fixtures/basil-integration/FailingTest/index-page-test.yml',
-                'target' => './tests/build/target',
+                'source' => $root . '/tests/Fixtures/basil-integration/FailingTest/index-page-test.yml',
+                'target' => $root . '/tests/build/target',
                 'expectedOutputBody' => file_get_contents(__DIR__ . '/../Fixtures/Output/failing-index-page-test.yml'),
             ],
             'passing: page import with element de-referencing' => [
-                'source' => './tests/Fixtures/basil-integration/Test/form-page-test.yml',
-                'target' => './tests/build/target',
+                'source' => $root . '/tests/Fixtures/basil-integration/Test/form-page-test.yml',
+                'target' => $root . '/tests/build/target',
                 'expectedOutputBody' => file_get_contents(__DIR__ . '/../Fixtures/Output/passing-form-page-test.yml'),
             ],
         ];
@@ -86,6 +75,10 @@ class GenerateRunTest extends TestCase
 
     private function createRunCommand(string $path): string
     {
-        return './bin/basil-runner --path=' . $path;
+        return sprintf(
+            './vendor/bin/phpunit --stop-on-error --stop-on-failure --printer="%s" %s',
+            ResultPrinter::class,
+            $path
+        );
     }
 }

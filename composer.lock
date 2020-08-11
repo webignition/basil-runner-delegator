@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b39527e257c8340cea9a586e397af64",
+    "content-hash": "ed47c19918b4010512168c92e8cc7db1",
     "packages": [
         {
             "name": "clue/socket-raw",
@@ -3250,16 +3250,16 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.29",
+            "version": "0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "d1473fc801448798f9029db4bb6d0cb9f4480005"
+                "reference": "36c8f12f662ebf9c4df6975eedeee15838450226"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/d1473fc801448798f9029db4bb6d0cb9f4480005",
-                "reference": "d1473fc801448798f9029db4bb6d0cb9f4480005",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/36c8f12f662ebf9c4df6975eedeee15838450226",
+                "reference": "36c8f12f662ebf9c4df6975eedeee15838450226",
                 "shasum": ""
             },
             "require": {
@@ -3294,7 +3294,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-07-16T13:35:05+00:00"
+            "time": "2020-07-21T16:25:35+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
@@ -3385,16 +3385,16 @@
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.56",
+            "version": "0.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293"
+                "reference": "67d500daa092590652d3d93c33d8fa70dfd265e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
-                "reference": "9fd20dc9953d4e3395d3fbfde1104ca462ecf293",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/67d500daa092590652d3d93c33d8fa70dfd265e2",
+                "reference": "67d500daa092590652d3d93c33d8fa70dfd265e2",
                 "shasum": ""
             },
             "require": {
@@ -3405,6 +3405,7 @@
                 "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "~9.0",
                 "squizlabs/php_codesniffer": "3.*",
+                "symplify/easy-coding-standard": "^8.1",
                 "webignition/object-reflector": "^0.1.0"
             },
             "type": "library",
@@ -3424,7 +3425,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-06-12T17:04:26+00:00"
+            "time": "2020-07-29T13:22:30+00:00"
         },
         {
             "name": "webignition/basil-phpunit-result-printer",
@@ -7051,6 +7052,53 @@
                 }
             ],
             "time": "2020-06-25T16:39:17+00:00"
+        },
+        {
+            "name": "webignition/basil-compiler-models",
+            "version": "0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/basil-compiler-models.git",
+                "reference": "8d1ac3803ed747518366778cf382e92ed21052dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/8d1ac3803ed747518366778cf382e92ed21052dd",
+                "reference": "8d1ac3803ed747518366778cf382e92ed21052dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "webignition/basil-models": ">=0.57,<1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "php-mock/php-mock-mockery": "^1.3",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.0",
+                "phpstan/phpstan-mockery": "^0.12.7",
+                "phpunit/phpunit": "^9.2",
+                "squizlabs/php_codesniffer": "3.*",
+                "symplify/easy-coding-standard": "^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\BasilCompilerModels\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/webignition/basil-compiler-models",
+            "time": "2020-08-11T09:43:30+00:00"
         },
         {
             "name": "webignition/symfony-panther-webserver-runner",
