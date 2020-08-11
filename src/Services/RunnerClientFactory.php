@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services;
 
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
-use webignition\TcpCliProxyClient\Client;
 
 class RunnerClientFactory
 {
@@ -25,17 +24,14 @@ class RunnerClientFactory
     }
 
     /**
-     * @return Client[]
+     * @return RunnerClient[]
      */
     public function createClients(): array
     {
         $clients = [];
 
         foreach ($this->clientConfiguration as $configuration) {
-            $clients[$configuration->getName()] = new Client(
-                $configuration->getHost(),
-                $configuration->getPort()
-            );
+            $clients[$configuration->getName()] = new RunnerClient($configuration);
         }
 
         return $clients;

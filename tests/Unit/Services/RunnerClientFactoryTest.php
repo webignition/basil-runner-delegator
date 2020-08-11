@@ -6,6 +6,7 @@ namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\TcpCliProxyClient\Client;
 
@@ -24,6 +25,9 @@ class RunnerClientFactoryTest extends TestCase
 
     public function createClientsDataProvider(): array
     {
+        $chromeClientConfiguration = new RunnerClientConfiguration('chrome', 'chrome-runner', 9000);
+        $firefoxClientConfiguration = new RunnerClientConfiguration('firefox', 'firefox-runner', 9001);
+
         return [
             'empty' => [
                 'factory' => new RunnerClientFactory([]),
@@ -31,20 +35,20 @@ class RunnerClientFactoryTest extends TestCase
             ],
             'single client' => [
                 'factory' => new RunnerClientFactory([
-                    new RunnerClientConfiguration('chrome', 'chrome-runner', 9000),
+                    $chromeClientConfiguration,
                 ]),
                 'expectedClients' => [
-                    'chrome' => new Client('chrome-runner', 9000),
+                    'chrome' => new RunnerClient($chromeClientConfiguration),
                 ],
             ],
             'multiple clients' => [
                 'factory' => new RunnerClientFactory([
-                    new RunnerClientConfiguration('chrome', 'chrome-runner', 9000),
-                    new RunnerClientConfiguration('firefox', 'firefox-runner', 9001),
+                    $chromeClientConfiguration,
+                    $firefoxClientConfiguration,
                 ]),
                 'expectedClients' => [
-                    'chrome' => new Client('chrome-runner', 9000),
-                    'firefox' => new Client('firefox-runner', 9001),
+                    'chrome' => new RunnerClient($chromeClientConfiguration),
+                    'firefox' => new RunnerClient($firefoxClientConfiguration),
                 ],
             ],
         ];
