@@ -63,7 +63,7 @@
         "symfony/process": "^5.1",
         "webignition/basil-phpunit-result-printer": "0.2",
         "webignition/single-command-application-factory": "^0.1.0",
-        "webignition/tcp-cli-proxy-client": "^0.1.0"
+        "webignition/tcp-cli-proxy-client": "^0.3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12.0",
