@@ -6,7 +6,6 @@ namespace webignition\BasilRunner\Services;
 
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
 use webignition\TcpCliProxyClient\Client;
-use webignition\TcpCliProxyModels\Output;
 
 class RunnerClient extends Client
 {
@@ -20,11 +19,11 @@ class RunnerClient extends Client
         );
     }
 
-    public function request(string $target): Output
+    public function request(string $request, ?callable $filter = null): void
     {
-        return parent::request(sprintf(
+        parent::request(sprintf(
             self::RUNNER_COMMAND,
-            $target
+            $request
         ));
     }
 }

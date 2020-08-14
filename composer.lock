@@ -4,63 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed47c19918b4010512168c92e8cc7db1",
+    "content-hash": "bcf77ef22f933d3bdcdc19e77d0fa260",
     "packages": [
-        {
-            "name": "clue/socket-raw",
-            "version": "v1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/clue/php-socket-raw.git",
-                "reference": "00ab102d061f6cdb895e79dd4d69140c7bda31cc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/clue/php-socket-raw/zipball/00ab102d061f6cdb895e79dd4d69140c7bda31cc",
-                "reference": "00ab102d061f6cdb895e79dd4d69140c7bda31cc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-sockets": "*",
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0 || ^6.0 || ^5.2 || ^4.8.35"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Socket\\Raw\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christian Lück",
-                    "email": "christian@clue.engineering"
-                }
-            ],
-            "description": "Simple and lightweight OOP wrapper for PHP's low-level sockets extension (ext-sockets)",
-            "homepage": "https://github.com/clue/php-socket-raw",
-            "keywords": [
-                "Socket",
-                "client",
-                "datagram",
-                "dgram",
-                "icmp",
-                "ipv6",
-                "server",
-                "stream",
-                "tcp",
-                "udg",
-                "udp",
-                "unix"
-            ],
-            "time": "2019-10-28T12:32:07+00:00"
-        },
         {
             "name": "doctrine/instantiator",
             "version": "1.3.1",
@@ -910,6 +855,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-06-27T06:36:25+00:00"
         },
         {
@@ -3792,26 +3738,25 @@
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.1",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "56909bf4df9cb069fb36a6421edb5fbb2825afb6"
+                "reference": "63cc07a862087441632544a7dde6f7e45edbc5fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/56909bf4df9cb069fb36a6421edb5fbb2825afb6",
-                "reference": "56909bf4df9cb069fb36a6421edb5fbb2825afb6",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/63cc07a862087441632544a7dde6f7e45edbc5fb",
+                "reference": "63cc07a862087441632544a7dde6f7e45edbc5fb",
                 "shasum": ""
             },
             "require": {
-                "clue/socket-raw": "^1.4",
-                "ext-sockets": "*",
-                "php": ">=7.4",
-                "webignition/tcp-cli-proxy-models": ">=0.2,<1"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
+                "php-mock/php-mock": "^2.2",
+                "php-mock/php-mock-mockery": "^1.3",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.0",
                 "phpstan/phpstan-mockery": "^0.12.7",
@@ -3836,49 +3781,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-08-07T10:01:55+00:00"
-        },
-        {
-            "name": "webignition/tcp-cli-proxy-models",
-            "version": "0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webignition/tcp-cli-proxy-models.git",
-                "reference": "06da0bad547ffef8b8ddf8997621a39a30ce56e8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-models/zipball/06da0bad547ffef8b8ddf8997621a39a30ce56e8",
-                "reference": "06da0bad547ffef8b8ddf8997621a39a30ce56e8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^0.12.0",
-                "phpunit/phpunit": "^9.2",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "webignition\\TcpCliProxyModels\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jon Cram",
-                    "email": "webignition@gmail.com"
-                }
-            ],
-            "homepage": "https://github.com/webignition/tcp-cli-proxy-models",
-            "time": "2020-08-07T09:41:59+00:00"
+            "time": "2020-08-14T16:25:36+00:00"
         },
         {
             "name": "webignition/web-driver-element-collection",
@@ -4089,6 +3992,61 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "clue/socket-raw",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clue/php-socket-raw.git",
+                "reference": "00ab102d061f6cdb895e79dd4d69140c7bda31cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clue/php-socket-raw/zipball/00ab102d061f6cdb895e79dd4d69140c7bda31cc",
+                "reference": "00ab102d061f6cdb895e79dd4d69140c7bda31cc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sockets": "*",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0 || ^6.0 || ^5.2 || ^4.8.35"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Socket\\Raw\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@clue.engineering"
+                }
+            ],
+            "description": "Simple and lightweight OOP wrapper for PHP's low-level sockets extension (ext-sockets)",
+            "homepage": "https://github.com/clue/php-socket-raw",
+            "keywords": [
+                "Socket",
+                "client",
+                "datagram",
+                "dgram",
+                "icmp",
+                "ipv6",
+                "server",
+                "stream",
+                "tcp",
+                "udg",
+                "udp",
+                "unix"
+            ],
+            "time": "2019-10-28T12:32:07+00:00"
+        },
         {
             "name": "composer/package-versions-deprecated",
             "version": "1.8.1",
@@ -6910,6 +6868,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-06-25T16:39:17+00:00"
         },
         {
