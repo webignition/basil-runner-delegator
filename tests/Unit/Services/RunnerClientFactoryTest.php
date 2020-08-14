@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\RunnerClientFactory;
@@ -25,30 +26,41 @@ class RunnerClientFactoryTest extends TestCase
 
     public function createClientsDataProvider(): array
     {
+        $output = \Mockery::mock(OutputInterface::class);
+
         $chromeClientConfiguration = new RunnerClientConfiguration('chrome', 'chrome-runner', 9000);
         $firefoxClientConfiguration = new RunnerClientConfiguration('firefox', 'firefox-runner', 9001);
 
+        $chromeClient = (new RunnerClient($chromeClientConfiguration))->withOutput($output);
+        $firefoxClient = (new RunnerClient($firefoxClientConfiguration))->withOutput($output);
+
         return [
             'empty' => [
-                'factory' => new RunnerClientFactory([]),
+                'factory' => new RunnerClientFactory([], $output),
                 'expectedClients' => [],
             ],
             'single client' => [
-                'factory' => new RunnerClientFactory([
-                    $chromeClientConfiguration,
-                ]),
+                'factory' => new RunnerClientFactory(
+                    [
+                        $chromeClientConfiguration,
+                    ],
+                    $output
+                ),
                 'expectedClients' => [
-                    'chrome' => new RunnerClient($chromeClientConfiguration),
+                    'chrome' => $chromeClient,
                 ],
             ],
             'multiple clients' => [
-                'factory' => new RunnerClientFactory([
-                    $chromeClientConfiguration,
-                    $firefoxClientConfiguration,
-                ]),
+                'factory' => new RunnerClientFactory(
+                    [
+                        $chromeClientConfiguration,
+                        $firefoxClientConfiguration,
+                    ],
+                    $output
+                ),
                 'expectedClients' => [
-                    'chrome' => new RunnerClient($chromeClientConfiguration),
-                    'firefox' => new RunnerClient($firefoxClientConfiguration),
+                    'chrome' => $chromeClient,
+                    'firefox' => $firefoxClient,
                 ],
             ],
         ];
