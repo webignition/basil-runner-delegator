@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcf77ef22f933d3bdcdc19e77d0fa260",
+    "content-hash": "f671a61f1c0cf6097add6b74f1b0d863",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3738,20 +3738,21 @@
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.3",
+            "version": "0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "63cc07a862087441632544a7dde6f7e45edbc5fb"
+                "reference": "cfcc96196e727a893f2da6451cda054c70ed187e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/63cc07a862087441632544a7dde6f7e45edbc5fb",
-                "reference": "63cc07a862087441632544a7dde6f7e45edbc5fb",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/cfcc96196e727a893f2da6451cda054c70ed187e",
+                "reference": "cfcc96196e727a893f2da6451cda054c70ed187e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=7.4",
+                "symfony/console": "^5.1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
@@ -3781,7 +3782,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-08-14T16:25:36+00:00"
+            "time": "2020-08-14T17:15:33+00:00"
         },
         {
             "name": "webignition/web-driver-element-collection",
