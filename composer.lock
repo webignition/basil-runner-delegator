@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6de3b6351d66976138d4b65023001438",
+    "content-hash": "10a9aff57d54c8eefb5c0df35663420f",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -7229,16 +7229,16 @@
         },
         {
             "name": "webignition/basil-compiler-models",
-            "version": "0.8",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler-models.git",
-                "reference": "8d1ac3803ed747518366778cf382e92ed21052dd"
+                "reference": "e6bc20f7a2b08b3ccae6a8df711b2fd983f6de46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/8d1ac3803ed747518366778cf382e92ed21052dd",
-                "reference": "8d1ac3803ed747518366778cf382e92ed21052dd",
+                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/e6bc20f7a2b08b3ccae6a8df711b2fd983f6de46",
+                "reference": "e6bc20f7a2b08b3ccae6a8df711b2fd983f6de46",
                 "shasum": ""
             },
             "require": {
@@ -7272,7 +7272,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler-models",
-            "time": "2020-08-11T09:43:30+00:00"
+            "time": "2020-08-17T09:19:12+00:00"
         },
         {
             "name": "webignition/symfony-panther-webserver-runner",
