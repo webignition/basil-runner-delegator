@@ -11,10 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilCompilerModels\InvalidSuiteManifestException;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
-use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
-use webignition\TcpCliProxyClient\Client;
 
 class RunCommand extends Command
 {
@@ -28,16 +26,23 @@ class RunCommand extends Command
     private const NAME = 'run';
 
     /**
-     * @var array<string, Client>
+     * @var array<string, RunnerClient>
      */
     private array $runnerClients;
     private SuiteManifestFactory $suiteManifestFactory;
 
-    public function __construct(RunnerClientFactory $runnerClientFactory, SuiteManifestFactory $suiteManifestFactory)
+    /**
+     * @param RunnerClient[] $runnerClients
+     * @param SuiteManifestFactory $suiteManifestFactory
+     */
+    public function __construct(array $runnerClients, SuiteManifestFactory $suiteManifestFactory)
     {
         parent::__construct(self::NAME);
 
-        $this->runnerClients = $runnerClientFactory->createClients();
+        $this->runnerClients = array_filter($runnerClients, function ($item) {
+            return $item instanceof RunnerClient;
+        });
+
         $this->suiteManifestFactory = $suiteManifestFactory;
     }
 

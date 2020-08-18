@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -15,6 +16,8 @@ use webignition\BasilRunner\Services\SuiteManifestFactory;
 
 class SuiteManifestFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testCreateFromStringMalformedYamlException()
     {
         $content = 'malformed yaml fixture';
