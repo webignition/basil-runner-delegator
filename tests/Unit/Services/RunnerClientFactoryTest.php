@@ -4,65 +4,85 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Tests\Unit\Services;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\RunnerClientFactory;
-use webignition\TcpCliProxyClient\Client;
 
 class RunnerClientFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
-     * @dataProvider createClientsDataProvider
+     * @dataProvider loadSuccessDataProvider
      *
-     * @param RunnerClientFactory $factory
-     * @param Client[] $expectedClients
+     * @param mixed $clientData
+     * @param OutputInterface $output
+     * @param RunnerClient[] $expectedClients
      */
-    public function testCreateClients(RunnerClientFactory $factory, array $expectedClients)
+    public function testLoadSuccess($clientData, OutputInterface $output, array $expectedClients)
     {
-        self::assertEquals($expectedClients, $factory->createClients());
+        $yamlParser = \Mockery::mock(Parser::class);
+        $yamlParser
+            ->shouldReceive('parseFile')
+            ->andReturn($clientData);
+
+        $factory = new RunnerClientFactory($yamlParser, $output);
+
+        $path = 'path/to/clients.yaml';
+        $clients = $factory->load($path);
+
+        self::assertEquals($expectedClients, $clients);
     }
 
-    public function createClientsDataProvider(): array
+    public function loadSuccessDataProvider(): array
     {
         $output = \Mockery::mock(OutputInterface::class);
 
-        $chromeClientConfiguration = new RunnerClientConfiguration('chrome', 'chrome-runner', 9000);
-        $firefoxClientConfiguration = new RunnerClientConfiguration('firefox', 'firefox-runner', 9001);
-
-        $chromeClient = (new RunnerClient($chromeClientConfiguration))->withOutput($output);
-        $firefoxClient = (new RunnerClient($firefoxClientConfiguration))->withOutput($output);
-
         return [
-            'empty' => [
-                'factory' => new RunnerClientFactory([], $output),
+            'clients are loaded' => [
+                'clientData' => [
+                    'chrome' => [
+                        'host' => 'chrome-runner',
+                        'port' => 9000,
+                    ],
+                    'firefox' => [
+                        'host' => 'firefox-runner',
+                        'port' => 9001,
+                    ],
+                ],
+                'output' => $output,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient('chrome-runner', 9000))->withOutput($output),
+                    'firefox' => (new RunnerClient('firefox-runner', 9001))->withOutput($output),
+                ],
+            ],
+            'loaded data is not an array' => [
+                'clientData' => 'not an array',
+                'output' => $output,
                 'expectedClients' => [],
             ],
-            'single client' => [
-                'factory' => new RunnerClientFactory(
-                    [
-                        $chromeClientConfiguration,
-                    ],
-                    $output
-                ),
-                'expectedClients' => [
-                    'chrome' => $chromeClient,
-                ],
-            ],
-            'multiple clients' => [
-                'factory' => new RunnerClientFactory(
-                    [
-                        $chromeClientConfiguration,
-                        $firefoxClientConfiguration,
-                    ],
-                    $output
-                ),
-                'expectedClients' => [
-                    'chrome' => $chromeClient,
-                    'firefox' => $firefoxClient,
-                ],
-            ],
         ];
+    }
+
+    public function testLoadYamlParseException()
+    {
+        $parseException = new ParseException('parse error message');
+
+        $yamlParser = \Mockery::mock(Parser::class);
+        $yamlParser
+            ->shouldReceive('parseFile')
+            ->andThrow($parseException);
+
+        $output = \Mockery::mock(OutputInterface::class);
+        $factory = new RunnerClientFactory($yamlParser, $output);
+
+        $path = 'path/to/clients.yaml';
+        $clients = $factory->load($path);
+
+        self::assertEquals([], $clients);
     }
 }

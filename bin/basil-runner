@@ -8,8 +8,8 @@ namespace webignition\BasilRunner\Bin;
 const VERSION = 'dev-master';
 
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Model\RunnerClientConfiguration;
 use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
@@ -17,17 +17,13 @@ use webignition\SingleCommandApplicationFactory\Factory;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $output = new StreamOutput(STDOUT);
-
-$runnerClientFactory = new RunnerClientFactory(
-    [
-        new RunnerClientConfiguration('chrome', 'chrome-runner', 9000),
-        new RunnerClientConfiguration('firefox', 'firefox-runner', 9001)
-    ],
-    $output
-);
+$runnerClientFactory = new RunnerClientFactory(new Parser(), $output);
 
 $application = (new Factory())->create(
-    new RunCommand($runnerClientFactory, SuiteManifestFactory::createFactory()),
+    new RunCommand(
+        $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
+        SuiteManifestFactory::createFactory()
+    ),
     VERSION
 );
 

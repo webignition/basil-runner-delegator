@@ -5,45 +5,82 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Services;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
 
 class RunnerClientFactory
 {
-    /**
-     * @var RunnerClientConfiguration[]
-     */
-    private array $clientConfiguration;
+    private Parser $yamlParser;
     private OutputInterface $output;
 
-    /**
-     * @param array<mixed> $clientConfiguration
-     * @param OutputInterface $output
-     */
-    public function __construct(array $clientConfiguration, OutputInterface $output)
+    public function __construct(Parser $yamlParser, OutputInterface $output)
     {
-        $this->clientConfiguration = array_filter($clientConfiguration, function ($item) {
-            return $item instanceof RunnerClientConfiguration;
-        });
-
+        $this->yamlParser = $yamlParser;
         $this->output = $output;
     }
 
     /**
+     * @param string $path
+     *
      * @return RunnerClient[]
      */
-    public function createClients(): array
+    public function load(string $path): array
+    {
+        try {
+            $data = $this->yamlParser->parseFile($path);
+        } catch (ParseException $yamlParseException) {
+            // @todo: log yaml parse exceptions in #550
+            return [];
+        }
+
+        if (!is_array($data)) {
+            $data = [];
+        }
+
+        return $this->createFromArray($data);
+    }
+
+    /**
+     * @param array<mixed> $data
+     *
+     * @return RunnerClient[]
+     */
+    private function createFromArray(array $data): array
     {
         $clients = [];
 
-        foreach ($this->clientConfiguration as $configuration) {
-            $runnerClient = new RunnerClient($configuration);
-            $runnerClient = $runnerClient->withOutput($this->output);
+        foreach ($data as $name => $clientData) {
+            $configuration = $this->createRunnerClientConfiguration($clientData);
 
-            if ($runnerClient instanceof RunnerClient) {
-                $clients[$configuration->getName()] = $runnerClient;
+            $client = new RunnerClient($configuration->getHost(), $configuration->getPort());
+            $client = $client->withOutput($this->output);
+
+            if ($client instanceof RunnerClient) {
+                $clients[$name] = $client;
             }
         }
 
         return $clients;
+    }
+
+    /**
+     * @param array<mixed> $data
+     *
+     * @return RunnerClientConfiguration
+     */
+    private function createRunnerClientConfiguration(array $data): RunnerClientConfiguration
+    {
+        $host = $data['host'] ?? '';
+        if (!is_string($host)) {
+            $host = '';
+        }
+
+        $port = $data['port'] ?? 0;
+        if (!is_int($port)) {
+            $port = 0;
+        }
+
+        return new RunnerClientConfiguration('', $host, $port);
     }
 }

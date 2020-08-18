@@ -1,0 +1,7 @@
+chrome:
+  host: chrome-runner
+  port: 9000
+
+firefox:
+  host: firefox-runner
+  port: 9001

@@ -16,7 +16,6 @@ use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
-use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 
 class RunCommandTest extends TestCase
@@ -50,10 +49,7 @@ class RunCommandTest extends TestCase
                 'initializer' => function () {
                     $this->mockCommandFunction('is_file', 'not-a-file', false);
                 },
-                'runCommand' => new RunCommand(
-                    $this->createEmptyRunnerClientFactory(),
-                    SuiteManifestFactory::createFactory()
-                ),
+                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
                 'path' => 'not-a-file',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_A_FILE,
             ],
@@ -62,10 +58,7 @@ class RunCommandTest extends TestCase
                     $this->mockCommandFunction('is_file', 'not-readable', true);
                     $this->mockCommandFunction('is_readable', 'not-readable', false);
                 },
-                'runCommand' => new RunCommand(
-                    $this->createEmptyRunnerClientFactory(),
-                    SuiteManifestFactory::createFactory()
-                ),
+                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
                 'path' => 'not-readable',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_READABLE,
             ],
@@ -75,10 +68,7 @@ class RunCommandTest extends TestCase
                     $this->mockCommandFunction('is_readable', 'read-fail', true);
                     $this->mockCommandFunction('file_get_contents', 'read-fail', false);
                 },
-                'runCommand' => new RunCommand(
-                    $this->createEmptyRunnerClientFactory(),
-                    SuiteManifestFactory::createFactory()
-                ),
+                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
                 'path' => 'read-fail',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_FILE_READ_FAILED,
             ],
@@ -89,7 +79,7 @@ class RunCommandTest extends TestCase
                     $this->mockCommandFunction('file_get_contents', 'manifest.yml', 'invalid suite manifest fixture');
                 },
                 'runCommand' => new RunCommand(
-                    $this->createEmptyRunnerClientFactory(),
+                    [],
                     $this->createSuiteManifestFactoryThrowingException(new InvalidSuiteManifestException(
                         \Mockery::mock(SuiteManifest::class),
                         123
@@ -105,7 +95,7 @@ class RunCommandTest extends TestCase
                     $this->mockCommandFunction('file_get_contents', 'manifest.yml', 'invalid suite manifest fixture');
                 },
                 'runCommand' => new RunCommand(
-                    $this->createEmptyRunnerClientFactory(),
+                    [],
                     $this->createSuiteManifestFactoryThrowingException(new MalformedSuiteManifestException())
                 ),
                 'path' => 'manifest.yml',
@@ -132,18 +122,13 @@ class RunCommandTest extends TestCase
             '--path' => 'manifest.yml',
         ]);
 
-        $runnerClientFactory = \Mockery::mock(RunnerClientFactory::class);
-        $runnerClientFactory
-            ->shouldReceive('createClients')
-            ->andReturn($runnerClients);
-
         $suiteManifestFactory = \Mockery::mock(SuiteManifestFactory::class);
         $suiteManifestFactory
             ->shouldReceive('createFromString')
             ->with($suiteManifestFileContents)
             ->andReturn($suiteManifest);
 
-        $command = new RunCommand($runnerClientFactory, $suiteManifestFactory);
+        $command = new RunCommand($runnerClients, $suiteManifestFactory);
 
         $exitCode = $command->run($input, \Mockery::mock(OutputInterface::class));
 
@@ -222,16 +207,6 @@ class RunCommandTest extends TestCase
             ->with($expectedTarget);
 
         return $client;
-    }
-
-    private function createEmptyRunnerClientFactory(): RunnerClientFactory
-    {
-        $factory = \Mockery::mock(RunnerClientFactory::class);
-        $factory
-            ->shouldReceive('createClients')
-            ->andReturn([]);
-
-        return $factory;
     }
 
     private function createSuiteManifestFactoryThrowingException(\Exception $exception): SuiteManifestFactory
