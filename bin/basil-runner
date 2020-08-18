@@ -7,12 +7,29 @@ namespace webignition\BasilRunner\Bin;
 
 const VERSION = 'dev-master';
 
-use webignition\BasilRunner\Command\RunCommand;
-use webignition\SingleCommandApplicationFactory\Factory;
+use Symfony\Component\Console\Output\StreamOutput;
+use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use webignition\BasilRunner\Services\ApplicationFactory;
+use webignition\BasilRunner\Services\RunnerClientFactory;
+use webignition\BasilRunner\Services\SuiteManifestFactory;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$command = new RunCommand();
+$output = new StreamOutput(STDOUT);
 
-$application = (new Factory())->create($command, VERSION);
-$application->run();
+$runnerClientFactory = new RunnerClientFactory(
+    [
+        new RunnerClientConfiguration('chrome', 'chrome-runner', 9000),
+        new RunnerClientConfiguration('firefox', 'firefox-runner', 9001)
+    ],
+    $output
+);
+
+$applicationFactory = new ApplicationFactory(
+    $runnerClientFactory,
+    SuiteManifestFactory::createFactory()
+);
+
+$application = $applicationFactory->create(VERSION);
+
+$application->run(null, $output);

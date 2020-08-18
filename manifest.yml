@@ -1,0 +1,10 @@
+config:
+    source: tests/Fixtures/basil/Test
+    target: tests/build/target
+    base-class: webignition\BaseBasilTestCase\AbstractBaseTest
+error:
+    message: 'Unknown test "/tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml"'
+    code: 210
+    context:
+        import_name: /tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml
+

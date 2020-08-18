@@ -22,6 +22,14 @@ class SuiteManifestFactory
         $this->baseSuiteManifestFactory = $baseSuiteManifestFactory;
     }
 
+    public static function createFactory(): self
+    {
+        return new SuiteManifestFactory(
+            new Parser(),
+            new BaseSuiteManifestFactory()
+        );
+    }
+
     /**
      * @param string $content
      *
