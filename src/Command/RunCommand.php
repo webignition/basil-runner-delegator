@@ -8,15 +8,38 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-use webignition\BasilPhpUnitResultPrinter\ResultPrinter;
+use webignition\BasilCompilerModels\InvalidSuiteManifestException;
+use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunner\Services\RunnerClient;
+use webignition\BasilRunner\Services\RunnerClientFactory;
+use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\SymfonyConsole\TypedInput\TypedInput;
+use webignition\TcpCliProxyClient\Client;
 
 class RunCommand extends Command
 {
     public const OPTION_PATH = 'path';
+    public const EXIT_CODE_PATH_NOT_A_FILE = 100;
+    public const EXIT_CODE_PATH_NOT_READABLE = 101;
+    public const EXIT_CODE_MANIFEST_FILE_READ_FAILED = 200;
+    public const EXIT_CODE_MANIFEST_DATA_PARSE_FAILED = 300;
+    public const EXIT_CODE_MANIFEST_INVALID = 400;
 
     private const NAME = 'run';
+
+    /**
+     * @var array<string, Client>
+     */
+    private array $runnerClients;
+    private SuiteManifestFactory $suiteManifestFactory;
+
+    public function __construct(RunnerClientFactory $runnerClientFactory, SuiteManifestFactory $suiteManifestFactory)
+    {
+        parent::__construct(self::NAME);
+
+        $this->runnerClients = $runnerClientFactory->createClients();
+        $this->suiteManifestFactory = $suiteManifestFactory;
+    }
 
     protected function configure(): void
     {
@@ -27,48 +50,53 @@ class RunCommand extends Command
                 self::OPTION_PATH,
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Absolute path to the directory of tests to run.'
+                'Absolute path to the suite manifest'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $commandOptionsString = $this->createCommandOptionsString($input->getOptions());
+        $typedInput = new TypedInput($input);
+        $path = (string) $typedInput->getStringOption(self::OPTION_PATH);
 
-        $runnerCommand =
-            './runner.phar ' .
-            $commandOptionsString .
-            ' --printer="' . ResultPrinter::class . '"';
-
-        $process = Process::fromShellCommandline($runnerCommand);
-        try {
-            $process->mustRun(function ($type, $buffer) use ($output) {
-                if (Process::OUT === $type) {
-                    $output->write($buffer);
-                }
-            });
-        } catch (ProcessFailedException $processFailedException) {
+        if (!is_file($path)) {
+            return self::EXIT_CODE_PATH_NOT_A_FILE;
         }
 
-        return (int) $process->getExitCode();
-    }
+        if (!is_readable($path)) {
+            return self::EXIT_CODE_PATH_NOT_READABLE;
+        }
 
-    /**
-     * @param array<mixed> $options
-     *
-     * @return string
-     */
-    private function createCommandOptionsString(array $options): string
-    {
-        $fooOptions = [];
+        $manifestContent = file_get_contents($path);
+        if (false === $manifestContent) {
+            return self::EXIT_CODE_MANIFEST_FILE_READ_FAILED;
+        }
 
-        foreach ($options as $key => $value) {
-            if (is_string($value)) {
-                $fooOptions[] = '--' . $key . '=' . escapeshellarg($value);
+        try {
+            $suiteManifest = $this->suiteManifestFactory->createFromString($manifestContent);
+        } catch (InvalidSuiteManifestException $e) {
+            // @todo: Log validation state in #522
+            return self::EXIT_CODE_MANIFEST_INVALID;
+        } catch (MalformedSuiteManifestException $e) {
+            // @todo: Log yaml parsing exceptions in #521
+            return self::EXIT_CODE_MANIFEST_DATA_PARSE_FAILED;
+        }
+
+        foreach ($suiteManifest->getTestManifests() as $testManifest) {
+            $testConfiguration = $testManifest->getConfiguration();
+
+            $runnerClient = $this->runnerClients[$testConfiguration->getBrowser()] ?? null;
+
+            if ($runnerClient instanceof RunnerClient) {
+                $testPath = $testManifest->getTarget();
+                // @todo: handle below exceptions in #537
+                $runnerClient->request($testPath);
+            } else {
+                // @todo: handle in #531
             }
         }
 
-        return implode(' ', $fooOptions);
+        return 0;
     }
 }

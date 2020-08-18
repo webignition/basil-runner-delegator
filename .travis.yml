@@ -2,12 +2,8 @@ language: php
 php:
   - "7.4"
 
-addons:
-  chrome: stable
-
 install:
-  - composer setup-dev
-  - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
+  - composer install --prefer-dist
 
 script:
   - composer ci
