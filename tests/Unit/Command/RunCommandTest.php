@@ -7,6 +7,7 @@ namespace webignition\BasilRunner\Tests\Unit\Command;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use phpmock\mockery\PHPMockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilCompilerModels\Configuration;
@@ -47,58 +48,91 @@ class RunCommandTest extends TestCase
         return [
             'not a file' => [
                 'initializer' => function () {
-                    $this->mockCommandFunction('is_file', 'not-a-file', false);
+                    $this->mockCommandFunctions('not-a-file', false);
                 },
-                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
+                'runCommand' => new RunCommand(
+                    [],
+                    SuiteManifestFactory::createFactory(),
+                    \Mockery::mock(LoggerInterface::class)
+                ),
                 'path' => 'not-a-file',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_A_FILE,
             ],
             'not readable' => [
                 'initializer' => function () {
-                    $this->mockCommandFunction('is_file', 'not-readable', true);
-                    $this->mockCommandFunction('is_readable', 'not-readable', false);
+                    $this->mockCommandFunctions('not-readable', true, false);
                 },
-                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
+                'runCommand' => new RunCommand(
+                    [],
+                    SuiteManifestFactory::createFactory(),
+                    \Mockery::mock(LoggerInterface::class)
+                ),
                 'path' => 'not-readable',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_READABLE,
             ],
             'file read fail' => [
                 'initializer' => function () {
-                    $this->mockCommandFunction('is_file', 'read-fail', true);
-                    $this->mockCommandFunction('is_readable', 'read-fail', true);
-                    $this->mockCommandFunction('file_get_contents', 'read-fail', false);
+                    $this->mockCommandFunctions('read-fail', true, true, false);
                 },
-                'runCommand' => new RunCommand([], SuiteManifestFactory::createFactory()),
+                'runCommand' => new RunCommand(
+                    [],
+                    SuiteManifestFactory::createFactory(),
+                    \Mockery::mock(LoggerInterface::class)
+                ),
                 'path' => 'read-fail',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_FILE_READ_FAILED,
             ],
             'invalid suite manifest' => [
                 'initializer' => function () {
-                    $this->mockCommandFunction('is_file', 'manifest.yml', true);
-                    $this->mockCommandFunction('is_readable', 'manifest.yml', true);
-                    $this->mockCommandFunction('file_get_contents', 'manifest.yml', 'invalid suite manifest fixture');
+                    $this->mockCommandFunctions('invalid-manifest.yml', true, true, 'invalid suite manifest fixture');
                 },
                 'runCommand' => new RunCommand(
                     [],
                     $this->createSuiteManifestFactoryThrowingException(new InvalidSuiteManifestException(
-                        \Mockery::mock(SuiteManifest::class),
+                        $this->createSuiteManifest([
+                            'key1' => 'value1',
+                            'key2' => 'value2',
+                        ]),
                         123
-                    ))
+                    )),
+                    $this->createLogger(
+                        'Invalid suite manifest. Validation state 123',
+                        [
+                            'path' => 'invalid-manifest.yml',
+                            'validation-state' => 123,
+                            'manifest-data' => [
+                                'key1' => 'value1',
+                                'key2' => 'value2',
+                            ],
+                        ]
+                    ),
                 ),
-                'path' => 'manifest.yml',
+                'path' => 'invalid-manifest.yml',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_INVALID,
             ],
             'non-parsable suite manifest' => [
                 'initializer' => function () {
-                    $this->mockCommandFunction('is_file', 'manifest.yml', true);
-                    $this->mockCommandFunction('is_readable', 'manifest.yml', true);
-                    $this->mockCommandFunction('file_get_contents', 'manifest.yml', 'invalid suite manifest fixture');
+                    $this->mockCommandFunctions(
+                        'non-parsable-manifest.yml',
+                        true,
+                        true,
+                        'invalid suite manifest fixture'
+                    );
                 },
                 'runCommand' => new RunCommand(
                     [],
-                    $this->createSuiteManifestFactoryThrowingException(new MalformedSuiteManifestException())
+                    $this->createSuiteManifestFactoryThrowingException(
+                        MalformedSuiteManifestException::createMalformedYamlException('invalid suite manifest fixture')
+                    ),
+                    $this->createLogger(
+                        'Content is not parsable yaml',
+                        [
+                            'path' => 'non-parsable-manifest.yml',
+                            'content' => 'invalid suite manifest fixture',
+                        ]
+                    ),
                 ),
-                'path' => 'manifest.yml',
+                'path' => 'non-parsable-manifest.yml',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_DATA_PARSE_FAILED,
             ],
         ];
@@ -114,9 +148,7 @@ class RunCommandTest extends TestCase
     {
         $suiteManifestFileContents = 'valid manifest content';
 
-        $this->mockCommandFunction('is_file', 'manifest.yml', true);
-        $this->mockCommandFunction('is_readable', 'manifest.yml', true);
-        $this->mockCommandFunction('file_get_contents', 'manifest.yml', $suiteManifestFileContents);
+        $this->mockCommandFunctions('manifest.yml', true, true, $suiteManifestFileContents);
 
         $input = new ArrayInput([
             '--path' => 'manifest.yml',
@@ -128,7 +160,7 @@ class RunCommandTest extends TestCase
             ->with($suiteManifestFileContents)
             ->andReturn($suiteManifest);
 
-        $command = new RunCommand($runnerClients, $suiteManifestFactory);
+        $command = new RunCommand($runnerClients, $suiteManifestFactory, \Mockery::mock(LoggerInterface::class));
 
         $exitCode = $command->run($input, \Mockery::mock(OutputInterface::class));
 
@@ -220,17 +252,60 @@ class RunCommandTest extends TestCase
     }
 
     /**
-     * @param string $function
-     * @param string $argument
-     * @param mixed $return
+     * @param string $path
+     * @param bool $isFileReturn
+     * @param bool $isReadableReturn
+     * @param string|bool|null $fileGetContentsReturn
      */
-    private function mockCommandFunction(string $function, string $argument, $return): void
+    private function mockCommandFunctions(
+        string $path,
+        bool $isFileReturn,
+        bool $isReadableReturn = false,
+        $fileGetContentsReturn = null
+    ): void {
+        $namespace = 'webignition\\BasilRunner\\Command';
+
+        PHPMockery::mock($namespace, 'is_file')
+            ->with($path)
+            ->andReturn($isFileReturn);
+
+        PHPMockery::mock($namespace, 'is_readable')
+            ->with($path)
+            ->andReturn($isReadableReturn);
+
+        PHPMockery::mock($namespace, 'file_get_contents')
+            ->with($path)
+            ->andReturn($fileGetContentsReturn);
+    }
+
+    /**
+     * @param array<mixed> $data
+     *
+     * @return SuiteManifest
+     */
+    private function createSuiteManifest(array $data): SuiteManifest
     {
-        PHPMockery::mock(
-            'webignition\\BasilRunner\\Command',
-            $function
-        )
-            ->with($argument)
-            ->andReturn($return);
+        $manifest = \Mockery::mock(SuiteManifest::class);
+        $manifest
+            ->shouldReceive('getData')
+            ->andReturn($data);
+
+        return $manifest;
+    }
+
+    /**
+     * @param string $debugExceptionMessage
+     * @param array<mixed> $debugContext
+     *
+     * @return LoggerInterface
+     */
+    private function createLogger(string $debugExceptionMessage, array $debugContext): LoggerInterface
+    {
+        $logger = \Mockery::mock(LoggerInterface::class);
+        $logger
+            ->shouldReceive('debug')
+            ->with($debugExceptionMessage, $debugContext);
+
+        return $logger;
     }
 }

@@ -1,0 +1,29 @@
+config:
+  source: /home/jon/www/lib/webignition/basil-cli-compiler/tests/Fixtures/basil/Test
+  target: /home/jon/www/lib/webignition/basil-cli-compiler/tests/build/target
+  base-class: webignition\BaseBasilTestCase\AbstractBaseTest
+manifests:
+  -
+    config:
+      browser: chrome
+      url: 'https://example.com/'
+    source: /home/jon/www/lib/webignition/basil-cli-compiler/tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.follow-more-information.yml
+    target: /home/jon/www/lib/webignition/basil-cli-compiler/tests/build/target/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php
+  -
+    config:
+      browser: chrome
+      url: 'https://example.com/'
+    source: /home/jon/www/lib/webignition/basil-cli-compiler/tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml
+    target: /home/jon/www/lib/webignition/basil-cli-compiler/tests/build/target/Generated641755df3ae8af9eb1cd971239e161fbTest.php
+  -
+    config:
+      browser: chrome
+      url: 'https://example.com/'
+    source: /home/jon/www/lib/webignition/basil-cli-compiler/tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml
+    target: /home/jon/www/lib/webignition/basil-cli-compiler/tests/build/target/Generated6a67c4998bdf379738159830570c8ebeTest.php
+  -
+    config:
+      browser: chrome
+      url: 'https://example.com/'
+    source: /home/jon/www/lib/webignition/basil-cli-compiler/tests/Fixtures/basil/Test/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml
+    target: /home/jon/www/lib/webignition/basil-cli-compiler/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php

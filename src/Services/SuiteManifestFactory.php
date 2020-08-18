@@ -43,11 +43,11 @@ class SuiteManifestFactory
         try {
             $data = $this->yamlParser->parse($content);
         } catch (ParseException $yamlParseException) {
-            throw MalformedSuiteManifestException::createMalformedYamlException();
+            throw MalformedSuiteManifestException::createMalformedYamlException($content);
         }
 
         if (!is_array($data)) {
-            throw MalformedSuiteManifestException::createNonArrayContentException();
+            throw MalformedSuiteManifestException::createNonArrayContentException($content);
         }
 
         return $this->baseSuiteManifestFactory->createFromArray($data);

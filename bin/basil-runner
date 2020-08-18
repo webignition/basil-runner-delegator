@@ -7,6 +7,9 @@ namespace webignition\BasilRunner\Bin;
 
 const VERSION = 'dev-master';
 
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Command\RunCommand;
@@ -19,12 +22,33 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $output = new StreamOutput(STDOUT);
 $runnerClientFactory = new RunnerClientFactory(new Parser(), $output);
 
+$logger = new Logger('runner-logger');
+$handler = new StreamHandler(__DIR__ . '/debug.log');
+$handler->setFormatter(new JsonFormatter());
+
+$logger->pushHandler($handler);
+
 $application = (new Factory())->create(
     new RunCommand(
         $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
-        SuiteManifestFactory::createFactory()
+        SuiteManifestFactory::createFactory(),
+        $logger
     ),
     VERSION
 );
 
-$application->run(null, $output);
+try {
+    $foo = $application->run(null, $output);
+} catch (\Exception $e) {
+    var_dump('external exception');
+}
+
+
+
+exit(123);
+
+
+//
+
+//
+//$application->run(null, $output);
