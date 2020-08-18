@@ -104,15 +104,22 @@ class RunCommand extends Command
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
             $testConfiguration = $testManifest->getConfiguration();
+            $browser = $testConfiguration->getBrowser();
 
-            $runnerClient = $this->runnerClients[$testConfiguration->getBrowser()] ?? null;
+            $runnerClient = $this->runnerClients[$browser] ?? null;
 
             if ($runnerClient instanceof RunnerClient) {
                 $testPath = $testManifest->getTarget();
                 // @todo: handle below exceptions in #537
                 $runnerClient->request($testPath);
             } else {
-                // @todo: handle in #531
+                $this->logger->debug(
+                    'Unknown browser \'' . $browser . '\'',
+                    array_merge(['path' => $path], [
+                        'browser' => $browser,
+                        'manifest-data' => $testManifest->getData(),
+                    ])
+                );
             }
         }
 
