@@ -8,10 +8,11 @@ namespace webignition\BasilRunner\Bin;
 const VERSION = 'dev-master';
 
 use Symfony\Component\Console\Output\StreamOutput;
+use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
-use webignition\BasilRunner\Services\ApplicationFactory;
 use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\SingleCommandApplicationFactory\Factory;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -25,11 +26,9 @@ $runnerClientFactory = new RunnerClientFactory(
     $output
 );
 
-$applicationFactory = new ApplicationFactory(
-    $runnerClientFactory,
-    SuiteManifestFactory::createFactory()
+$application = (new Factory())->create(
+    new RunCommand($runnerClientFactory, SuiteManifestFactory::createFactory()),
+    VERSION
 );
-
-$application = $applicationFactory->create(VERSION);
 
 $application->run(null, $output);
