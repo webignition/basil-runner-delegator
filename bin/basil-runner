@@ -37,18 +37,4 @@ $application = (new Factory())->create(
     VERSION
 );
 
-try {
-    $foo = $application->run(null, $output);
-} catch (\Exception $e) {
-    var_dump('external exception');
-}
-
-
-
-exit(123);
-
-
-//
-
-//
-//$application->run(null, $output);
+$application->run(null, $output);
