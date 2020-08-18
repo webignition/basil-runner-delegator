@@ -34,7 +34,7 @@ class SuiteManifestFactoryTest extends TestCase
             \Mockery::mock(BaseSuiteManifestFactory::class)
         );
 
-        $this->expectExceptionObject(MalformedSuiteManifestException::createMalformedYamlException());
+        $this->expectExceptionObject(MalformedSuiteManifestException::createMalformedYamlException($content));
 
         $factory->createFromString($content);
     }
@@ -54,7 +54,7 @@ class SuiteManifestFactoryTest extends TestCase
             \Mockery::mock(BaseSuiteManifestFactory::class)
         );
 
-        $this->expectExceptionObject(MalformedSuiteManifestException::createNonArrayContentException());
+        $this->expectExceptionObject(MalformedSuiteManifestException::createNonArrayContentException($content));
 
         $factory->createFromString($content);
     }

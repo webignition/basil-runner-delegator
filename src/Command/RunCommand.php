@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Command;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,13 +31,18 @@ class RunCommand extends Command
      */
     private array $runnerClients;
     private SuiteManifestFactory $suiteManifestFactory;
+    private LoggerInterface $logger;
 
     /**
      * @param RunnerClient[] $runnerClients
      * @param SuiteManifestFactory $suiteManifestFactory
+     * @param LoggerInterface $logger
      */
-    public function __construct(array $runnerClients, SuiteManifestFactory $suiteManifestFactory)
-    {
+    public function __construct(
+        array $runnerClients,
+        SuiteManifestFactory $suiteManifestFactory,
+        LoggerInterface $logger
+    ) {
         parent::__construct(self::NAME);
 
         $this->runnerClients = array_filter($runnerClients, function ($item) {
@@ -44,6 +50,7 @@ class RunCommand extends Command
         });
 
         $this->suiteManifestFactory = $suiteManifestFactory;
+        $this->logger = $logger;
     }
 
     protected function configure(): void
@@ -81,10 +88,17 @@ class RunCommand extends Command
         try {
             $suiteManifest = $this->suiteManifestFactory->createFromString($manifestContent);
         } catch (InvalidSuiteManifestException $e) {
-            // @todo: Log validation state in #522
+            $this->logException($e, $path, [
+                'validation-state' => $e->getValidationState(),
+                'manifest-data' => $e->getSuiteManifest()->getData(),
+            ]);
+
             return self::EXIT_CODE_MANIFEST_INVALID;
         } catch (MalformedSuiteManifestException $e) {
-            // @todo: Log yaml parsing exceptions in #521
+            $this->logException($e, $path, [
+                'content' => $e->getContent(),
+            ]);
+
             return self::EXIT_CODE_MANIFEST_DATA_PARSE_FAILED;
         }
 
@@ -103,5 +117,18 @@ class RunCommand extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * @param \Exception $exception
+     * @param string $path
+     * @param array<mixed> $context
+     */
+    private function logException(\Exception $exception, string $path, array $context = []): void
+    {
+        $this->logger->debug(
+            $exception->getMessage(),
+            array_merge(['path' => $path], $context)
+        );
     }
 }

@@ -38,6 +38,8 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
+        "monolog/monolog": "^2.1",
+        "psr/log": "^1.1",
         "symfony/console": "^5.1",
         "symfony/process": "^5.1",
         "symfony/yaml": "^5.1",
