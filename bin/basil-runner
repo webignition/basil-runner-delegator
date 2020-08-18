@@ -37,4 +37,6 @@ $application = (new Factory())->create(
     VERSION
 );
 
-$application->run(null, $output);
+$exitCode = $application->run(null, $output);
+
+exit($exitCode);
