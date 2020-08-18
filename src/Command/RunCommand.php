@@ -19,9 +19,9 @@ class RunCommand extends Command
     public const OPTION_PATH = 'path';
     public const EXIT_CODE_PATH_NOT_A_FILE = 100;
     public const EXIT_CODE_PATH_NOT_READABLE = 101;
-    public const EXIT_CODE_MANIFEST_FILE_READ_FAILED = 200;
-    public const EXIT_CODE_MANIFEST_DATA_PARSE_FAILED = 300;
-    public const EXIT_CODE_MANIFEST_INVALID = 400;
+    public const EXIT_CODE_MANIFEST_FILE_READ_FAILED = 120;
+    public const EXIT_CODE_MANIFEST_DATA_PARSE_FAILED = 121;
+    public const EXIT_CODE_MANIFEST_INVALID = 130;
 
     private const NAME = 'run';
 
