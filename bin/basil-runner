@@ -19,12 +19,12 @@ use webignition\SingleCommandApplicationFactory\Factory;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$output = new StreamOutput(STDOUT);
-$runnerClientFactory = new RunnerClientFactory(new Parser(), $output);
-
 $logger = new Logger('runner-logger');
 $handler = new StreamHandler(__DIR__ . '/debug.log');
 $handler->setFormatter(new JsonFormatter());
+
+$output = new StreamOutput(STDOUT);
+$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $output);
 
 $logger->pushHandler($handler);
 

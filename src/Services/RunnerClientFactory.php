@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Services;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -12,11 +13,16 @@ use webignition\BasilRunner\Model\RunnerClientConfiguration;
 class RunnerClientFactory
 {
     private Parser $yamlParser;
+    private LoggerInterface $logger;
     private OutputInterface $output;
 
-    public function __construct(Parser $yamlParser, OutputInterface $output)
-    {
+    public function __construct(
+        Parser $yamlParser,
+        LoggerInterface $logger,
+        OutputInterface $output
+    ) {
         $this->yamlParser = $yamlParser;
+        $this->logger = $logger;
         $this->output = $output;
     }
 
@@ -30,7 +36,11 @@ class RunnerClientFactory
         try {
             $data = $this->yamlParser->parseFile($path);
         } catch (ParseException $yamlParseException) {
-            // @todo: log yaml parse exceptions in #550
+            $this->logger->debug(
+                $yamlParseException->getMessage(),
+                ['path' => $path]
+            );
+
             return [];
         }
 
