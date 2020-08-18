@@ -144,7 +144,7 @@ class RunCommandTest extends TestCase
      * @param RunnerClient[] $runnerClients
      * @param SuiteManifest $suiteManifest
      */
-    public function testRunSuccess(array $runnerClients, SuiteManifest $suiteManifest)
+    public function testRunSuccess(array $runnerClients, SuiteManifest $suiteManifest, ?LoggerInterface $logger = null)
     {
         $suiteManifestFileContents = 'valid manifest content';
 
@@ -160,7 +160,9 @@ class RunCommandTest extends TestCase
             ->with($suiteManifestFileContents)
             ->andReturn($suiteManifest);
 
-        $command = new RunCommand($runnerClients, $suiteManifestFactory, \Mockery::mock(LoggerInterface::class));
+        $logger = $logger ?? \Mockery::mock(LoggerInterface::class);
+
+        $command = new RunCommand($runnerClients, $suiteManifestFactory, $logger);
 
         $exitCode = $command->run($input, \Mockery::mock(OutputInterface::class));
 
@@ -227,6 +229,46 @@ class RunCommandTest extends TestCase
                         'target' => '/target/GeneratedFireFoxTest.php',
                     ]),
                 ]),
+            ],
+            'has runner clients, single chrome test, single test for unknown browser' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient(
+                        '/target/GeneratedChromeTest.php'
+                    ),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    TestManifest::fromArray([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com',
+                        ],
+                        'source' => '/basil/Test/test.yml',
+                        'target' => '/target/GeneratedChromeTest.php',
+                    ]),
+                    TestManifest::fromArray([
+                        'config' => [
+                            'browser' => 'unknown',
+                            'url' => 'http://example.com',
+                        ],
+                        'source' => '/basil/Test/test.yml',
+                        'target' => '/target/GeneratedChromeTest.php',
+                    ]),
+                ]),
+                'logger' => $this->createLogger(
+                    'Unknown browser \'unknown\'',
+                    [
+                        'path' => 'manifest.yml',
+                        'browser' => 'unknown',
+                        'manifest-data' => [
+                            'config' => [
+                                'browser' => 'unknown',
+                                'url' => 'http://example.com',
+                            ],
+                            'source' => '/basil/Test/test.yml',
+                            'target' => '/target/GeneratedChromeTest.php',
+                        ],
+                    ]
+                ),
             ],
         ];
     }
