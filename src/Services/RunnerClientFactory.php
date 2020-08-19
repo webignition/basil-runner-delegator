@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactory
 {
@@ -58,12 +59,17 @@ class RunnerClientFactory
      */
     private function createFromArray(array $data): array
     {
+        $connectionStringFactory = new ConnectionStringFactory();
         $clients = [];
 
         foreach ($data as $name => $clientData) {
             $configuration = $this->createRunnerClientConfiguration($clientData);
 
-            $client = new RunnerClient($configuration->getHost(), $configuration->getPort());
+            $client = new RunnerClient($connectionStringFactory->createFromHostAndPort(
+                $configuration->getHost(),
+                $configuration->getPort()
+            ));
+
             $client = $client->withOutput($this->output);
 
             if ($client instanceof RunnerClient) {

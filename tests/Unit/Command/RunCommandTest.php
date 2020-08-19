@@ -18,6 +18,8 @@ use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
 class RunCommandTest extends TestCase
 {
@@ -143,6 +145,7 @@ class RunCommandTest extends TestCase
      *
      * @param RunnerClient[] $runnerClients
      * @param SuiteManifest $suiteManifest
+     * @param LoggerInterface|null $logger
      */
     public function testRunSuccess(array $runnerClients, SuiteManifest $suiteManifest, ?LoggerInterface $logger = null)
     {
@@ -270,15 +273,68 @@ class RunCommandTest extends TestCase
                     ]
                 ),
             ],
+            'client request throws SocketErrorException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient(
+                        '/target/GeneratedChromeTest.php',
+                        new SocketErrorException(
+                            new \ErrorException('socket error exception message')
+                        )
+                    ),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    TestManifest::fromArray([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com/chrome',
+                        ],
+                        'source' => '/basil/Test/test.yml',
+                        'target' => '/target/GeneratedChromeTest.php',
+                    ]),
+                ]),
+                'logger' => $this->createLogger('socket error exception message', [
+                    'path' => 'manifest.yml',
+                ]),
+            ],
+            'client request throws ClientCreationException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient(
+                        '/target/GeneratedChromeTest.php',
+                        new ClientCreationException('connection string', 'client creation exception message', 123)
+                    ),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    TestManifest::fromArray([
+                        'config' => [
+                            'browser' => 'chrome',
+                            'url' => 'http://example.com/chrome',
+                        ],
+                        'source' => '/basil/Test/test.yml',
+                        'target' => '/target/GeneratedChromeTest.php',
+                    ]),
+                ]),
+                'logger' => $this->createLogger('client creation exception message', [
+                    'path' => 'manifest.yml',
+                    'connection-string' => 'connection string',
+                ]),
+            ],
         ];
     }
 
-    private function createRunnerClient(string $expectedTarget): RunnerClient
+    private function createRunnerClient(string $expectedTarget, ?\Exception $throwable = null): RunnerClient
     {
         $client = \Mockery::mock(RunnerClient::class);
-        $client
-            ->shouldReceive('request')
-            ->with($expectedTarget);
+
+        if ($throwable instanceof \Throwable) {
+            $client
+                ->shouldReceive('request')
+                ->with($expectedTarget)
+                ->andThrow($throwable);
+        } else {
+            $client
+                ->shouldReceive('request')
+                ->with($expectedTarget);
+        }
 
         return $client;
     }

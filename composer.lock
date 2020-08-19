@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f940d89a31ea1b3d0f8ce2b799b46261",
+    "content-hash": "a0b579c9206d60c93be02cf0326ff477",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1208,6 +1208,54 @@
             "time": "2020-07-29T13:22:30+00:00"
         },
         {
+            "name": "webignition/error-handler",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/error-handler.git",
+                "reference": "fbdd0c72194bad7547258049c49a0b1a77deea86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/error-handler/zipball/fbdd0c72194bad7547258049c49a0b1a77deea86",
+                "reference": "fbdd0c72194bad7547258049c49a0b1a77deea86",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.0",
+                "phpstan/phpstan-mockery": "^0.12.0",
+                "phpunit/phpunit": "^9.2",
+                "squizlabs/php_codesniffer": "3.*",
+                "symplify/easy-coding-standard": "^8.0",
+                "webignition/object-reflector": "^0.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\ErrorHandler\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "PHP error handler",
+            "homepage": "https://github.com/webignition/error-handler",
+            "time": "2020-08-19T14:12:52+00:00"
+        },
+        {
             "name": "webignition/single-command-application-factory",
             "version": "0.1",
             "source": {
@@ -1307,21 +1355,22 @@
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.4",
+            "version": "0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "cfcc96196e727a893f2da6451cda054c70ed187e"
+                "reference": "c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/cfcc96196e727a893f2da6451cda054c70ed187e",
-                "reference": "cfcc96196e727a893f2da6451cda054c70ed187e",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967",
+                "reference": "c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4",
-                "symfony/console": "^5.1"
+                "symfony/console": "^5.1",
+                "webignition/error-handler": "^0.1.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
@@ -1332,7 +1381,8 @@
                 "phpstan/phpstan-mockery": "^0.12.7",
                 "phpunit/phpunit": "^9.2",
                 "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0"
+                "symplify/easy-coding-standard": "^8.0",
+                "webignition/object-reflector": "^0.2.0"
             },
             "type": "library",
             "autoload": {
@@ -1351,7 +1401,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-08-14T17:15:33+00:00"
+            "time": "2020-08-19T16:16:10+00:00"
         }
     ],
     "packages-dev": [

@@ -14,6 +14,8 @@ use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 
 class RunCommand extends Command
 {
@@ -110,8 +112,16 @@ class RunCommand extends Command
 
             if ($runnerClient instanceof RunnerClient) {
                 $testPath = $testManifest->getTarget();
-                // @todo: handle below exceptions in #537
-                $runnerClient->request($testPath);
+
+                try {
+                    $runnerClient->request($testPath);
+                } catch (SocketErrorException $e) {
+                    $this->logException($e, $path);
+                } catch (ClientCreationException $e) {
+                    $this->logException($e, $path, [
+                        'connection-string' => $e->getConnectionString(),
+                    ]);
+                }
             } else {
                 $this->logger->debug(
                     'Unknown browser \'' . $browser . '\'',
