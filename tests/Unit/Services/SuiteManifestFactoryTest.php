@@ -8,9 +8,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
-use webignition\BasilCompilerModels\InvalidSuiteManifestException;
 use webignition\BasilCompilerModels\SuiteManifest;
-use webignition\BasilCompilerModels\SuiteManifestFactory as BaseSuiteManifestFactory;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 
@@ -29,10 +27,7 @@ class SuiteManifestFactoryTest extends TestCase
             ->with($content)
             ->andThrow($exception);
 
-        $factory = new SuiteManifestFactory(
-            $yamlParser,
-            \Mockery::mock(BaseSuiteManifestFactory::class)
-        );
+        $factory = new SuiteManifestFactory($yamlParser);
 
         $this->expectExceptionObject(MalformedSuiteManifestException::createMalformedYamlException($content));
 
@@ -49,39 +44,34 @@ class SuiteManifestFactoryTest extends TestCase
             ->with($content)
             ->andReturn('');
 
-        $factory = new SuiteManifestFactory(
-            $yamlParser,
-            \Mockery::mock(BaseSuiteManifestFactory::class)
-        );
+        $factory = new SuiteManifestFactory($yamlParser);
 
         $this->expectExceptionObject(MalformedSuiteManifestException::createNonArrayContentException($content));
 
         $factory->createFromString($content);
     }
 
-    public function testCreateFromStringThrowsInvalidSuiteManifestException()
-    {
-        $exception = \Mockery::mock(InvalidSuiteManifestException::class);
-        $baseFactory = \Mockery::mock(BaseSuiteManifestFactory::class);
-        $baseFactory
-            ->shouldReceive('createFromArray')
-            ->with([])
-            ->andThrow($exception);
-
-        $factory = new SuiteManifestFactory(new Parser(), $baseFactory);
-
-        $this->expectException(InvalidSuiteManifestException::class);
-
-        $factory->createFromString('[]');
-    }
-
     public function testCreateFromStringSuccess()
     {
         $content = 'valid content';
         $data = [
-            'valid data',
+            'config' => [
+                'source' => '/source',
+                'target' => '/target',
+                'base-class' => 'BaseClass',
+            ],
+            'manifests' => [
+                [
+                    'config' => [
+                        'browser' => 'chrome',
+                        'url' => 'http://example.com',
+                    ],
+                    'source' => '/source/test.yml',
+                    'target' => '/target/GeneratedTest.php',
+                ],
+            ],
+
         ];
-        $suiteManifest = \Mockery::mock(SuiteManifest::class);
 
         $yamlParser = \Mockery::mock(Parser::class);
         $yamlParser
@@ -89,14 +79,8 @@ class SuiteManifestFactoryTest extends TestCase
             ->with($content)
             ->andReturn($data);
 
-        $baseFactory = \Mockery::mock(BaseSuiteManifestFactory::class);
-        $baseFactory
-            ->shouldReceive('createFromArray')
-            ->with($data)
-            ->andReturn($suiteManifest);
+        $factory = new SuiteManifestFactory($yamlParser);
 
-        $factory = new SuiteManifestFactory($yamlParser, $baseFactory);
-
-        self::assertSame($suiteManifest, $factory->createFromString($content));
+        self::assertEquals(SuiteManifest::fromArray($data), $factory->createFromString($content));
     }
 }

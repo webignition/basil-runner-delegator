@@ -11,7 +11,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilCompilerModels\Configuration;
-use webignition\BasilCompilerModels\InvalidSuiteManifestException;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Command\RunCommand;
@@ -83,34 +82,6 @@ class RunCommandTest extends TestCase
                 ),
                 'path' => 'read-fail',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_FILE_READ_FAILED,
-            ],
-            'invalid suite manifest' => [
-                'initializer' => function () {
-                    $this->mockCommandFunctions('invalid-manifest.yml', true, true, 'invalid suite manifest fixture');
-                },
-                'runCommand' => new RunCommand(
-                    [],
-                    $this->createSuiteManifestFactoryThrowingException(new InvalidSuiteManifestException(
-                        $this->createSuiteManifest([
-                            'key1' => 'value1',
-                            'key2' => 'value2',
-                        ]),
-                        123
-                    )),
-                    $this->createLogger(
-                        'Invalid suite manifest. Validation state 123',
-                        [
-                            'path' => 'invalid-manifest.yml',
-                            'validation-state' => 123,
-                            'manifest-data' => [
-                                'key1' => 'value1',
-                                'key2' => 'value2',
-                            ],
-                        ]
-                    ),
-                ),
-                'path' => 'invalid-manifest.yml',
-                'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_INVALID,
             ],
             'non-parsable suite manifest' => [
                 'initializer' => function () {
@@ -374,21 +345,6 @@ class RunCommandTest extends TestCase
         PHPMockery::mock($namespace, 'file_get_contents')
             ->with($path)
             ->andReturn($fileGetContentsReturn);
-    }
-
-    /**
-     * @param array<mixed> $data
-     *
-     * @return SuiteManifest
-     */
-    private function createSuiteManifest(array $data): SuiteManifest
-    {
-        $manifest = \Mockery::mock(SuiteManifest::class);
-        $manifest
-            ->shouldReceive('getData')
-            ->andReturn($data);
-
-        return $manifest;
     }
 
     /**
