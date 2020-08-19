@@ -9,7 +9,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilCompilerModels\InvalidSuiteManifestException;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
@@ -89,13 +88,6 @@ class RunCommand extends Command
 
         try {
             $suiteManifest = $this->suiteManifestFactory->createFromString($manifestContent);
-        } catch (InvalidSuiteManifestException $e) {
-            $this->logException($e, $path, [
-                'validation-state' => $e->getValidationState(),
-                'manifest-data' => $e->getSuiteManifest()->getData(),
-            ]);
-
-            return self::EXIT_CODE_MANIFEST_INVALID;
         } catch (MalformedSuiteManifestException $e) {
             $this->logException($e, $path, [
                 'content' => $e->getContent(),
