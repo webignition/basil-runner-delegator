@@ -12,6 +12,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\RunnerClientFactory;
+use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactoryTest extends TestCase
 {
@@ -42,6 +43,7 @@ class RunnerClientFactoryTest extends TestCase
     public function loadSuccessDataProvider(): array
     {
         $output = \Mockery::mock(OutputInterface::class);
+        $connectionStringFactory = new ConnectionStringFactory();
 
         return [
             'clients are loaded' => [
@@ -57,8 +59,12 @@ class RunnerClientFactoryTest extends TestCase
                 ],
                 'output' => $output,
                 'expectedClients' => [
-                    'chrome' => (new RunnerClient('chrome-runner', 9000))->withOutput($output),
-                    'firefox' => (new RunnerClient('firefox-runner', 9001))->withOutput($output),
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000)
+                    ))->withOutput($output),
+                    'firefox' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('firefox-runner', 9001)
+                    ))->withOutput($output),
                 ],
             ],
             'loaded data is not an array' => [
