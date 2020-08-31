@@ -138,7 +138,12 @@ class RunCommandTest extends TestCase
 
         $command = new RunCommand($runnerClients, $suiteManifestFactory, $logger);
 
-        $exitCode = $command->run($input, \Mockery::mock(OutputInterface::class));
+        $output = \Mockery::mock(OutputInterface::class);
+        $output
+            ->shouldReceive('writeln')
+            ->with('');
+
+        $exitCode = $command->run($input, $output);
 
         self::assertSame(0, $exitCode);
     }
