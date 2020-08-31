@@ -10,16 +10,17 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunner\Model\Test;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class RunCommandTest extends TestCase
 {
@@ -55,7 +56,8 @@ class RunCommandTest extends TestCase
                 'runCommand' => new RunCommand(
                     [],
                     SuiteManifestFactory::createFactory(),
-                    \Mockery::mock(LoggerInterface::class)
+                    \Mockery::mock(LoggerInterface::class),
+                    \Mockery::mock(YamlGenerator::class)
                 ),
                 'path' => 'not-a-file',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_A_FILE,
@@ -67,7 +69,8 @@ class RunCommandTest extends TestCase
                 'runCommand' => new RunCommand(
                     [],
                     SuiteManifestFactory::createFactory(),
-                    \Mockery::mock(LoggerInterface::class)
+                    \Mockery::mock(LoggerInterface::class),
+                    \Mockery::mock(YamlGenerator::class)
                 ),
                 'path' => 'not-readable',
                 'expectedExitCode' => RunCommand::EXIT_CODE_PATH_NOT_READABLE,
@@ -79,7 +82,8 @@ class RunCommandTest extends TestCase
                 'runCommand' => new RunCommand(
                     [],
                     SuiteManifestFactory::createFactory(),
-                    \Mockery::mock(LoggerInterface::class)
+                    \Mockery::mock(LoggerInterface::class),
+                    \Mockery::mock(YamlGenerator::class)
                 ),
                 'path' => 'read-fail',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_FILE_READ_FAILED,
@@ -105,6 +109,7 @@ class RunCommandTest extends TestCase
                             'content' => 'invalid suite manifest fixture',
                         ]
                     ),
+                    \Mockery::mock(YamlGenerator::class)
                 ),
                 'path' => 'non-parsable-manifest.yml',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_DATA_PARSE_FAILED,
@@ -141,7 +146,7 @@ class RunCommandTest extends TestCase
 
         $logger = $logger ?? \Mockery::mock(LoggerInterface::class);
 
-        $command = new RunCommand($runnerClients, $suiteManifestFactory, $logger);
+        $command = new RunCommand($runnerClients, $suiteManifestFactory, $logger, new YamlGenerator());
         $exitCode = $command->run($input, $commandOutput);
 
         self::assertSame(0, $exitCode);
@@ -178,6 +183,8 @@ class RunCommandTest extends TestCase
             'target' => '/target/GeneratedChromeTest.php',
         ]);
 
+        $yamlGenerator = new YamlGenerator();
+
         return [
             'no runner clients, empty manifest, nothing written to output' => [
                 'runnerClients' => [],
@@ -202,7 +209,7 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
                     ''
                 ]),
             ],
@@ -220,9 +227,9 @@ class RunCommandTest extends TestCase
                     $firefoxTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
                     '',
-                    Yaml::dump(array_merge(['type' => 'test'], $firefoxTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($firefoxTestManifest)),
                     '',
                 ]),
             ],
@@ -237,9 +244,9 @@ class RunCommandTest extends TestCase
                     $unknownBrowserTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
                     '',
-                    Yaml::dump(array_merge(['type' => 'test'], $unknownBrowserTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($unknownBrowserTestManifest)),
                     '',
                 ]),
                 'logger' => $this->createLogger(
@@ -271,7 +278,7 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
                 ]),
                 'logger' => $this->createLogger('socket error exception message', [
                     'path' => 'manifest.yml',
@@ -288,7 +295,7 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
                 ]),
                 'logger' => $this->createLogger('client creation exception message', [
                     'path' => 'manifest.yml',

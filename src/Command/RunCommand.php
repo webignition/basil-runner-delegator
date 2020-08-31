@@ -9,14 +9,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
-use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunner\Model\Test;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\YamlDocumentGenerator\YamlGenerator;
 
 class RunCommand extends Command
 {
@@ -25,7 +25,6 @@ class RunCommand extends Command
     public const EXIT_CODE_PATH_NOT_READABLE = 101;
     public const EXIT_CODE_MANIFEST_FILE_READ_FAILED = 120;
     public const EXIT_CODE_MANIFEST_DATA_PARSE_FAILED = 121;
-    public const EXIT_CODE_MANIFEST_INVALID = 130;
 
     private const NAME = 'run';
 
@@ -35,16 +34,19 @@ class RunCommand extends Command
     private array $runnerClients;
     private SuiteManifestFactory $suiteManifestFactory;
     private LoggerInterface $logger;
+    private YamlGenerator $yamlGenerator;
 
     /**
      * @param RunnerClient[] $runnerClients
      * @param SuiteManifestFactory $suiteManifestFactory
      * @param LoggerInterface $logger
+     * @param YamlGenerator $yamlGenerator
      */
     public function __construct(
         array $runnerClients,
         SuiteManifestFactory $suiteManifestFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        YamlGenerator $yamlGenerator
     ) {
         parent::__construct(self::NAME);
 
@@ -54,6 +56,7 @@ class RunCommand extends Command
 
         $this->suiteManifestFactory = $suiteManifestFactory;
         $this->logger = $logger;
+        $this->yamlGenerator = $yamlGenerator;
     }
 
     protected function configure(): void
@@ -99,7 +102,9 @@ class RunCommand extends Command
         }
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $output->writeln(Yaml::dump($this->createTestData($testManifest)));
+            $output->writeln($this->yamlGenerator->generate(
+                Test::fromTestManifest($testManifest)
+            ));
 
             $testConfiguration = $testManifest->getConfiguration();
             $browser = $testConfiguration->getBrowser();
@@ -143,21 +148,6 @@ class RunCommand extends Command
         $this->logger->debug(
             $exception->getMessage(),
             array_merge(['path' => $path], $context)
-        );
-    }
-
-    /**
-     * @param TestManifest $testManifest
-     *
-     * @return array<mixed>
-     */
-    private function createTestData(TestManifest $testManifest): array
-    {
-        return array_merge(
-            [
-                'type' => 'test',
-            ],
-            $testManifest->getData()
         );
     }
 }
