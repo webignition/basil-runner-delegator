@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
@@ -118,8 +119,12 @@ class RunCommandTest extends TestCase
      * @param SuiteManifest $suiteManifest
      * @param LoggerInterface|null $logger
      */
-    public function testRunSuccess(array $runnerClients, SuiteManifest $suiteManifest, ?LoggerInterface $logger = null)
-    {
+    public function testRunSuccess(
+        array $runnerClients,
+        SuiteManifest $suiteManifest,
+        OutputInterface $commandOutput,
+        ?LoggerInterface $logger = null
+    ) {
         $suiteManifestFileContents = 'valid manifest content';
 
         $this->mockCommandFunctions('manifest.yml', true, true, $suiteManifestFileContents);
@@ -137,13 +142,7 @@ class RunCommandTest extends TestCase
         $logger = $logger ?? \Mockery::mock(LoggerInterface::class);
 
         $command = new RunCommand($runnerClients, $suiteManifestFactory, $logger);
-
-        $output = \Mockery::mock(OutputInterface::class);
-        $output
-            ->shouldReceive('writeln')
-            ->with('');
-
-        $exitCode = $command->run($input, $output);
+        $exitCode = $command->run($input, $commandOutput);
 
         self::assertSame(0, $exitCode);
     }
@@ -152,10 +151,38 @@ class RunCommandTest extends TestCase
     {
         $suiteManifestConfiguration = new Configuration('/source', '/target', 'BaseClass');
 
+        $chromeTestManifest = TestManifest::fromArray([
+            'config' => [
+                'browser' => 'chrome',
+                'url' => 'http://example.com/chrome',
+            ],
+            'source' => '/basil/Test/test.yml',
+            'target' => '/target/GeneratedChromeTest.php',
+        ]);
+
+        $firefoxTestManifest = TestManifest::fromArray([
+            'config' => [
+                'browser' => 'firefox',
+                'url' => 'http://example.com',
+            ],
+            'source' => '/basil/Test/test.yml',
+            'target' => '/target/GeneratedFireFoxTest.php',
+        ]);
+
+        $unknownBrowserTestManifest = TestManifest::fromArray([
+            'config' => [
+                'browser' => 'unknown',
+                'url' => 'http://example.com',
+            ],
+            'source' => '/basil/Test/test.yml',
+            'target' => '/target/GeneratedChromeTest.php',
+        ]);
+
         return [
             'no runner clients, empty manifest, nothing written to output' => [
                 'runnerClients' => [],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, []),
+                'commandOutput' => \Mockery::mock(OutputInterface::class),
             ],
             'has runner clients, empty manifest, nothing written to output' => [
                 'runnerClients' => [
@@ -163,6 +190,7 @@ class RunCommandTest extends TestCase
                     'firefox' => \Mockery::mock(RunnerClient::class),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, []),
+                'commandOutput' => \Mockery::mock(OutputInterface::class),
             ],
             'has runner client, single chrome test' => [
                 'runnerClients' => [
@@ -171,14 +199,11 @@ class RunCommandTest extends TestCase
                     ),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://example.com/chrome',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
+                    $chromeTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    ''
                 ]),
             ],
             'has runner clients, single chrome test, single firefox test' => [
@@ -191,22 +216,14 @@ class RunCommandTest extends TestCase
                     ),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://example.com',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'firefox',
-                            'url' => 'http://example.com',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedFireFoxTest.php',
-                    ]),
+                    $chromeTestManifest,
+                    $firefoxTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    '',
+                    Yaml::dump(array_merge(['type' => 'test'], $firefoxTestManifest->getData())),
+                    '',
                 ]),
             ],
             'has runner clients, single chrome test, single test for unknown browser' => [
@@ -216,22 +233,14 @@ class RunCommandTest extends TestCase
                     ),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://example.com',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'unknown',
-                            'url' => 'http://example.com',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
+                    $chromeTestManifest,
+                    $unknownBrowserTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
+                    '',
+                    Yaml::dump(array_merge(['type' => 'test'], $unknownBrowserTestManifest->getData())),
+                    '',
                 ]),
                 'logger' => $this->createLogger(
                     'Unknown browser \'unknown\'',
@@ -259,14 +268,10 @@ class RunCommandTest extends TestCase
                     ),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://example.com/chrome',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
+                    $chromeTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
                 ]),
                 'logger' => $this->createLogger('socket error exception message', [
                     'path' => 'manifest.yml',
@@ -280,14 +285,10 @@ class RunCommandTest extends TestCase
                     ),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    TestManifest::fromArray([
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://example.com/chrome',
-                        ],
-                        'source' => '/basil/Test/test.yml',
-                        'target' => '/target/GeneratedChromeTest.php',
-                    ]),
+                    $chromeTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    Yaml::dump(array_merge(['type' => 'test'], $chromeTestManifest->getData())),
                 ]),
                 'logger' => $this->createLogger('client creation exception message', [
                     'path' => 'manifest.yml',
@@ -366,5 +367,23 @@ class RunCommandTest extends TestCase
             ->with($debugExceptionMessage, $debugContext);
 
         return $logger;
+    }
+
+    /**
+     * @param string[] $writeLnCallArgs
+     *
+     * @return OutputInterface
+     */
+    private function createCommandOutput(array $writeLnCallArgs): OutputInterface
+    {
+        $output = \Mockery::mock(OutputInterface::class);
+
+        foreach ($writeLnCallArgs as $arg) {
+            $output
+                ->shouldReceive('writeln')
+                ->with($arg);
+        }
+
+        return $output;
     }
 }

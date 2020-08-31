@@ -9,6 +9,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
+use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
@@ -97,6 +99,8 @@ class RunCommand extends Command
         }
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
+            $output->writeln(Yaml::dump($this->createTestData($testManifest)));
+
             $testConfiguration = $testManifest->getConfiguration();
             $browser = $testConfiguration->getBrowser();
 
@@ -139,6 +143,21 @@ class RunCommand extends Command
         $this->logger->debug(
             $exception->getMessage(),
             array_merge(['path' => $path], $context)
+        );
+    }
+
+    /**
+     * @param TestManifest $testManifest
+     *
+     * @return array<mixed>
+     */
+    private function createTestData(TestManifest $testManifest): array
+    {
+        return array_merge(
+            [
+                'type' => 'test',
+            ],
+            $testManifest->getData()
         );
     }
 }
