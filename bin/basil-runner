@@ -16,6 +16,7 @@ use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
+use webignition\YamlDocumentGenerator\YamlGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -32,7 +33,8 @@ $application = (new Factory())->create(
     new RunCommand(
         $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
         SuiteManifestFactory::createFactory(),
-        $logger
+        $logger,
+        new YamlGenerator()
     ),
     VERSION
 );

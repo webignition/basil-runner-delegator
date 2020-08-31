@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0b579c9206d60c93be02cf0326ff477",
+    "content-hash": "84cd34f6b1af31572c0700751c06a0f3",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1118,16 +1118,16 @@
         },
         {
             "name": "webignition/basil-compiler-models",
-            "version": "0.11",
+            "version": "0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler-models.git",
-                "reference": "96991a19f904ca95ba7332d4d2f839bfcb6a0989"
+                "reference": "29071576c53a8c08892307b7f9c1218d957c1c59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/96991a19f904ca95ba7332d4d2f839bfcb6a0989",
-                "reference": "96991a19f904ca95ba7332d4d2f839bfcb6a0989",
+                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/29071576c53a8c08892307b7f9c1218d957c1c59",
+                "reference": "29071576c53a8c08892307b7f9c1218d957c1c59",
                 "shasum": ""
             },
             "require": {
@@ -1161,7 +1161,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler-models",
-            "time": "2020-08-17T09:43:22+00:00"
+            "time": "2020-08-31T17:09:50+00:00"
         },
         {
             "name": "webignition/basil-models",
@@ -1402,6 +1402,59 @@
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
             "time": "2020-08-19T16:16:10+00:00"
+        },
+        {
+            "name": "webignition/yaml-document-generator",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/yaml-document-generator.git",
+                "reference": "04d77f8e41637e61641319d5cddda0b2fa56f55a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/yaml-document-generator/zipball/04d77f8e41637e61641319d5cddda0b2fa56f55a",
+                "reference": "04d77f8e41637e61641319d5cddda0b2fa56f55a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "symfony/yaml": "^5.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.40",
+                "phpstan/phpstan-mockery": "^0.12.7",
+                "phpunit/phpunit": "^9.3",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\YamlDocumentGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Generate a yaml document from an array of data",
+            "homepage": "https://github.com/webignition/yaml-document-generator",
+            "keywords": [
+                "collection",
+                "parser",
+                "set",
+                "yaml"
+            ],
+            "time": "2020-08-31T16:38:39+00:00"
         }
     ],
     "packages-dev": [
