@@ -107,6 +107,7 @@ class RunCommand extends Command
 
                 try {
                     $runnerClient->request($testPath);
+                    $output->writeln('');
                 } catch (SocketErrorException $e) {
                     $this->logException($e, $path);
                 } catch (ClientCreationException $e) {
