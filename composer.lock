@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee50528c5f3c313b4aa15c7ec1ffdb06",
+    "content-hash": "7eac59288d3c5632e93d591cc2d1ed22",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1209,16 +1209,16 @@
         },
         {
             "name": "webignition/basil-runner-documents",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-runner-documents.git",
-                "reference": "aa578c063ff08bdde8146ab963db9d1a0ba6c3cd"
+                "reference": "4115721ca7ff9f86a91549b2d3800cf710a98f08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-runner-documents/zipball/aa578c063ff08bdde8146ab963db9d1a0ba6c3cd",
-                "reference": "aa578c063ff08bdde8146ab963db9d1a0ba6c3cd",
+                "url": "https://api.github.com/repos/webignition/basil-runner-documents/zipball/4115721ca7ff9f86a91549b2d3800cf710a98f08",
+                "reference": "4115721ca7ff9f86a91549b2d3800cf710a98f08",
                 "shasum": ""
             },
             "require": {
@@ -1251,7 +1251,7 @@
             ],
             "description": "Models for documents that can be output by the runner",
             "homepage": "https://github.com/webignition/basil-runner-documents",
-            "time": "2020-09-01T13:52:09+00:00"
+            "time": "2020-09-01T16:29:54+00:00"
         },
         {
             "name": "webignition/error-handler",
