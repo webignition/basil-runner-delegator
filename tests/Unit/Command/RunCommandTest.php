@@ -209,8 +209,12 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
-                    ''
+                    'write' => [
+                        $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                    ],
+                    'writeln' => [
+                        ''
+                    ],
                 ]),
             ],
             'has runner clients, single chrome test, single firefox test' => [
@@ -227,10 +231,14 @@ class RunCommandTest extends TestCase
                     $firefoxTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
-                    '',
-                    $yamlGenerator->generate(Test::fromTestManifest($firefoxTestManifest)),
-                    '',
+                    'write' => [
+                        $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate(Test::fromTestManifest($firefoxTestManifest)),
+                    ],
+                    'writeln' => [
+                        '',
+                        '',
+                    ],
                 ]),
             ],
             'has runner clients, single chrome test, single test for unknown browser' => [
@@ -244,10 +252,14 @@ class RunCommandTest extends TestCase
                     $unknownBrowserTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
-                    '',
-                    $yamlGenerator->generate(Test::fromTestManifest($unknownBrowserTestManifest)),
-                    '',
+                    'write' => [
+                        $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate(Test::fromTestManifest($unknownBrowserTestManifest)),
+                    ],
+                    'writeln' => [
+                        '',
+                        '',
+                    ],
                 ]),
                 'logger' => $this->createLogger(
                     'Unknown browser \'unknown\'',
@@ -278,7 +290,9 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                    'write' => [
+                        $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                    ],
                 ]),
                 'logger' => $this->createLogger('socket error exception message', [
                     'path' => 'manifest.yml',
@@ -295,7 +309,9 @@ class RunCommandTest extends TestCase
                     $chromeTestManifest,
                 ]),
                 'commandOutput' => $this->createCommandOutput([
-                    $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                    'write' => [
+                        $yamlGenerator->generate(Test::fromTestManifest($chromeTestManifest)),
+                    ],
                 ]),
                 'logger' => $this->createLogger('client creation exception message', [
                     'path' => 'manifest.yml',
@@ -377,18 +393,20 @@ class RunCommandTest extends TestCase
     }
 
     /**
-     * @param string[] $writeLnCallArgs
+     * @param array<string, string[]> $calls
      *
      * @return OutputInterface
      */
-    private function createCommandOutput(array $writeLnCallArgs): OutputInterface
+    private function createCommandOutput(array $calls): OutputInterface
     {
         $output = \Mockery::mock(OutputInterface::class);
 
-        foreach ($writeLnCallArgs as $arg) {
-            $output
-                ->shouldReceive('writeln')
-                ->with($arg);
+        foreach ($calls as $methodName => $argumentCollection) {
+            foreach ($argumentCollection as $argument) {
+                $output
+                    ->shouldReceive($methodName)
+                    ->with($argument);
+            }
         }
 
         return $output;

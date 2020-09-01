@@ -102,7 +102,7 @@ class RunCommand extends Command
         }
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $output->writeln($this->yamlGenerator->generate(
+            $output->write($this->yamlGenerator->generate(
                 Test::fromTestManifest($testManifest)
             ));
 
