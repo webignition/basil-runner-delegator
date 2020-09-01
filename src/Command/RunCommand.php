@@ -9,10 +9,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use webignition\BasilRunner\Exception\InvalidRemotePathException;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunner\Exception\NonExecutableRemoteTestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\BasilRunner\Services\TestFactory;
+use webignition\BasilRunnerDocuments\Exception;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -126,6 +129,13 @@ class RunCommand extends Command
                     $this->logException($e, $path, [
                         'connection-string' => $e->getConnectionString(),
                     ]);
+                } catch (InvalidRemotePathException | NonExecutableRemoteTestException $remoteTestExecutionException) {
+                    $this->logException($remoteTestExecutionException, $path, [
+                        'test-manifest' => $testManifest->getData(),
+                    ]);
+
+                    $exception = Exception::createFromThrowable($remoteTestExecutionException)->withoutTrace();
+                    $output->write($this->yamlGenerator->generate($exception));
                 }
             } else {
                 $this->logger->debug(
