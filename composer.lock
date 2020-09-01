@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74758b339945fe1f04b451a2698a454a",
+    "content-hash": "ee50528c5f3c313b4aa15c7ec1ffdb06",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1401,16 +1401,16 @@
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.7",
+            "version": "0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967"
+                "reference": "4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967",
-                "reference": "c4b8cf26cc5028c3a9fb831cede8d5bfa54f5967",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af",
+                "reference": "4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af",
                 "shasum": ""
             },
             "require": {
@@ -1447,7 +1447,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-08-19T16:16:10+00:00"
+            "time": "2020-09-01T15:57:04+00:00"
         },
         {
             "name": "webignition/yaml-document-generator",
