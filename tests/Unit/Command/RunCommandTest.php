@@ -14,10 +14,13 @@ use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunner\Command\RunCommand;
+use webignition\BasilRunner\Exception\InvalidRemotePathException;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunner\Exception\NonExecutableRemoteTestException;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
 use webignition\BasilRunner\Services\TestFactory;
+use webignition\BasilRunnerDocuments\Exception;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
 use webignition\YamlDocumentGenerator\YamlGenerator;
@@ -166,13 +169,16 @@ class RunCommandTest extends TestCase
     {
         $suiteManifestConfiguration = new Configuration('/source', '/target', 'BaseClass');
 
+        $chromeTestPath = '/target/GeneratedChromeTest.php';
+        $firefoxTestPath = '/target/GeneratedFireFoxTest.php';
+
         $chromeTestManifest = TestManifest::fromArray([
             'config' => [
                 'browser' => 'chrome',
                 'url' => 'http://example.com/chrome',
             ],
             'source' => '/basil/Test/test.yml',
-            'target' => '/target/GeneratedChromeTest.php',
+            'target' => $chromeTestPath,
         ]);
 
         $firefoxTestManifest = TestManifest::fromArray([
@@ -181,7 +187,7 @@ class RunCommandTest extends TestCase
                 'url' => 'http://example.com',
             ],
             'source' => '/basil/Test/test.yml',
-            'target' => '/target/GeneratedFireFoxTest.php',
+            'target' => $firefoxTestPath,
         ]);
 
         $unknownBrowserTestManifest = TestManifest::fromArray([
@@ -190,8 +196,14 @@ class RunCommandTest extends TestCase
                 'url' => 'http://example.com',
             ],
             'source' => '/basil/Test/test.yml',
-            'target' => '/target/GeneratedChromeTest.php',
+            'target' => $chromeTestPath,
         ]);
+
+        $chromeInvalidRemotePathException = new InvalidRemotePathException($chromeTestPath);
+        $firefoxInvalidRemotePathException = new InvalidRemotePathException($firefoxTestPath);
+
+        $chromeNonExecutableTestException = new NonExecutableRemoteTestException($chromeTestPath);
+        $firefoxNonExecutableTestException = new NonExecutableRemoteTestException($firefoxTestPath);
 
         $yamlGenerator = new YamlGenerator();
         $testFactory = new TestFactory();
@@ -212,9 +224,7 @@ class RunCommandTest extends TestCase
             ],
             'has runner client, single chrome test' => [
                 'runnerClients' => [
-                    'chrome' => $this->createRunnerClient(
-                        '/target/GeneratedChromeTest.php'
-                    ),
+                    'chrome' => $this->createRunnerClient($chromeTestPath),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
                     $chromeTestManifest,
@@ -230,12 +240,8 @@ class RunCommandTest extends TestCase
             ],
             'has runner clients, single chrome test, single firefox test' => [
                 'runnerClients' => [
-                    'chrome' => $this->createRunnerClient(
-                        '/target/GeneratedChromeTest.php'
-                    ),
-                    'firefox' => $this->createRunnerClient(
-                        '/target/GeneratedFireFoxTest.php'
-                    ),
+                    'chrome' => $this->createRunnerClient($chromeTestPath),
+                    'firefox' => $this->createRunnerClient($firefoxTestPath),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
                     $chromeTestManifest,
@@ -254,9 +260,7 @@ class RunCommandTest extends TestCase
             ],
             'has runner clients, single chrome test, single test for unknown browser' => [
                 'runnerClients' => [
-                    'chrome' => $this->createRunnerClient(
-                        '/target/GeneratedChromeTest.php'
-                    ),
+                    'chrome' => $this->createRunnerClient($chromeTestPath),
                 ],
                 'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
                     $chromeTestManifest,
@@ -283,7 +287,7 @@ class RunCommandTest extends TestCase
                                 'url' => 'http://example.com',
                             ],
                             'source' => '/basil/Test/test.yml',
-                            'target' => '/target/GeneratedChromeTest.php',
+                            'target' => $chromeTestPath,
                         ],
                     ]
                 ),
@@ -291,7 +295,7 @@ class RunCommandTest extends TestCase
             'client request throws SocketErrorException' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient(
-                        '/target/GeneratedChromeTest.php',
+                        $chromeTestPath,
                         new SocketErrorException(
                             new \ErrorException('socket error exception message')
                         )
@@ -312,7 +316,7 @@ class RunCommandTest extends TestCase
             'client request throws ClientCreationException' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient(
-                        '/target/GeneratedChromeTest.php',
+                        $chromeTestPath,
                         new ClientCreationException('connection string', 'client creation exception message', 123)
                     ),
                 ],
@@ -328,6 +332,118 @@ class RunCommandTest extends TestCase
                     'path' => 'manifest.yml',
                     'connection-string' => 'connection string',
                 ]),
+            ],
+            'has runner clients, single test, throws InvalidRemotePathException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient($chromeTestPath, $chromeInvalidRemotePathException),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    $chromeTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    'write' => [
+                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate(
+                            Exception::createFromThrowable($chromeInvalidRemotePathException)->withoutTrace()
+                        ),
+                    ],
+                    'writeln' => [
+                        '',
+                    ],
+                ]),
+                'logger' => $this->createLogger(
+                    'Path "/target/GeneratedChromeTest.php" not present on runner',
+                    [
+                        'path' => 'manifest.yml',
+                        'test-manifest' => $chromeTestManifest->getData(),
+                    ]
+                ),
+            ],
+            'has runner clients, two tests, second test throws InvalidRemotePathException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient($chromeTestPath),
+                    'firefox' => $this->createRunnerClient($firefoxTestPath, $firefoxInvalidRemotePathException),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    $chromeTestManifest,
+                    $firefoxTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    'write' => [
+                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate($testFactory->fromTestManifest($firefoxTestManifest)),
+                        $yamlGenerator->generate(
+                            Exception::createFromThrowable($firefoxInvalidRemotePathException)->withoutTrace()
+                        ),
+                    ],
+                    'writeln' => [
+                        '',
+                        '',
+                    ],
+                ]),
+                'logger' => $this->createLogger(
+                    'Path "/target/GeneratedFireFoxTest.php" not present on runner',
+                    [
+                        'path' => 'manifest.yml',
+                        'test-manifest' => $firefoxTestManifest->getData(),
+                    ]
+                ),
+            ],
+            'has runner clients, single test, throws NonExecutableRemoteTestException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient($chromeTestPath, $chromeNonExecutableTestException),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    $chromeTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    'write' => [
+                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate(
+                            Exception::createFromThrowable($chromeNonExecutableTestException)->withoutTrace()
+                        ),
+                    ],
+                    'writeln' => [
+                        '',
+                    ],
+                ]),
+                'logger' => $this->createLogger(
+                    'Failed to execute test "/target/GeneratedChromeTest.php"',
+                    [
+                        'path' => 'manifest.yml',
+                        'test-manifest' => $chromeTestManifest->getData(),
+                    ]
+                ),
+            ],
+            'has runner clients, two tests, second test throws NonExecutableRemoteTestException' => [
+                'runnerClients' => [
+                    'chrome' => $this->createRunnerClient($chromeTestPath),
+                    'firefox' => $this->createRunnerClient($firefoxTestPath, $firefoxNonExecutableTestException),
+                ],
+                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
+                    $chromeTestManifest,
+                    $firefoxTestManifest,
+                ]),
+                'commandOutput' => $this->createCommandOutput([
+                    'write' => [
+                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
+                        $yamlGenerator->generate($testFactory->fromTestManifest($firefoxTestManifest)),
+                        $yamlGenerator->generate(
+                            Exception::createFromThrowable($firefoxNonExecutableTestException)->withoutTrace()
+                        ),
+                    ],
+                    'writeln' => [
+                        '',
+                        '',
+                    ],
+                ]),
+                'logger' => $this->createLogger(
+                    'Failed to execute test "/target/GeneratedFireFoxTest.php"',
+                    [
+                        'path' => 'manifest.yml',
+                        'test-manifest' => $firefoxTestManifest->getData(),
+                    ]
+                ),
             ],
         ];
     }
