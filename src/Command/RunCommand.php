@@ -10,9 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
-use webignition\BasilRunner\Model\Test;
 use webignition\BasilRunner\Services\RunnerClient;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\BasilRunner\Services\TestFactory;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -35,6 +35,7 @@ class RunCommand extends Command
     private SuiteManifestFactory $suiteManifestFactory;
     private LoggerInterface $logger;
     private YamlGenerator $yamlGenerator;
+    private TestFactory $testFactory;
 
     /**
      * @param RunnerClient[] $runnerClients
@@ -46,7 +47,8 @@ class RunCommand extends Command
         array $runnerClients,
         SuiteManifestFactory $suiteManifestFactory,
         LoggerInterface $logger,
-        YamlGenerator $yamlGenerator
+        YamlGenerator $yamlGenerator,
+        TestFactory $testFactory
     ) {
         parent::__construct(self::NAME);
 
@@ -57,6 +59,7 @@ class RunCommand extends Command
         $this->suiteManifestFactory = $suiteManifestFactory;
         $this->logger = $logger;
         $this->yamlGenerator = $yamlGenerator;
+        $this->testFactory = $testFactory;
     }
 
     protected function configure(): void
@@ -103,7 +106,7 @@ class RunCommand extends Command
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
             $output->write($this->yamlGenerator->generate(
-                Test::fromTestManifest($testManifest)
+                $this->testFactory->fromTestManifest($testManifest)
             ));
 
             $testConfiguration = $testManifest->getConfiguration();

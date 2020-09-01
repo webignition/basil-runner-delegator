@@ -44,10 +44,11 @@
         "symfony/process": "^5.1",
         "symfony/yaml": "^5.1",
         "webignition/basil-compiler-models": "^0.12.0",
+        "webignition/basil-runner-documents": ">=0.1,<1",
         "webignition/single-command-application-factory": "^0.1.0",
         "webignition/symfony-console-typed-input": "^0.5.0",
         "webignition/tcp-cli-proxy-client": "^0.7.0",
-        "webignition/yaml-document-generator": "^0.1.0"
+        "webignition/yaml-document-generator": ">=0.2,<1"
     },
     "require-dev": {
         "mockery/mockery": "^1.4",

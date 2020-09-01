@@ -15,6 +15,7 @@ use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Command\RunCommand;
 use webignition\BasilRunner\Services\RunnerClientFactory;
 use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\BasilRunner\Services\TestFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
@@ -34,7 +35,8 @@ $application = (new Factory())->create(
         $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
         SuiteManifestFactory::createFactory(),
         $logger,
-        new YamlGenerator()
+        new YamlGenerator(),
+        new TestFactory()
     ),
     VERSION
 );
