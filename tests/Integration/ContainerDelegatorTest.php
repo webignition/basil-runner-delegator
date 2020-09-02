@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use webignition\TcpCliProxyClient\Client;
 use webignition\YamlDocumentSetParser\Parser;
 
-class ContainerRunnerTest extends TestCase
+class ContainerDelegatorTest extends TestCase
 {
     /**
      * @dataProvider runnerDataProvider

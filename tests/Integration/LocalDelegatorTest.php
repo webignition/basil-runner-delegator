@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 use webignition\TcpCliProxyClient\Client;
 use webignition\YamlDocumentSetParser\Parser;
 
-class LocalRunnerTest extends TestCase
+class LocalDelegatorTest extends TestCase
 {
     /**
      * @dataProvider runnerDataProvider
