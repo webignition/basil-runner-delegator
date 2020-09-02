@@ -25,7 +25,7 @@ class ContainerDelegatorTest extends AbstractDelegatorTest
         $delegatorClient = Client::createFromHostAndPort('localhost', 9003);
         $delegatorClient = $delegatorClient->withOutput($delegatorClientOutput);
 
-        $delegatorClient->request('./bin/basil-runner --path=' . $manifestPath);
+        $delegatorClient->request('./bin/delegator --path=' . $manifestPath);
 
         $delegatorClientOutputLines = explode("\n", $delegatorClientOutput->fetch());
         $delegatorExitCode = (int) array_pop($delegatorClientOutputLines);
