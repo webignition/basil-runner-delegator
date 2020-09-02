@@ -2,11 +2,15 @@ language: php
 php:
   - "7.4"
 
+services:
+  - docker
+
 install:
   - composer install --prefer-dist
 
 script:
   - composer ci
+  - composer test-integration
 
 cache:
   directories:

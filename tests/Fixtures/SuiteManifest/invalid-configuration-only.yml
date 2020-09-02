@@ -1,4 +1,0 @@
-config:
-  source: /non-existent
-  target: /non-existent
-  base-class: webignition\BaseBasilTestCase\AbstractBaseTest

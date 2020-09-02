@@ -1,0 +1,4 @@
+- '../Test/index-open-chrome.yml'
+- '../Test/index-open-firefox.yml'
+- '../Test/form-open-chrome.yml'
+- '../Test/form-open-firefox.yml'
