@@ -34,12 +34,12 @@
             "@composer static-analysis",
             "@composer test"
         ],
-        "integration-test-setup": "docker-compose -f tests/docker-compose.yml up -d",
+        "integration-test-setup": "docker-compose -f tests/docker-compose.yml -f tests/docker-compose-self.yml up -d",
         "integration-test-run": [
             "./vendor/bin/phpunit tests/Integration/LocalDelegatorTest.php",
             "./vendor/bin/phpunit tests/Integration/ContainerDelegatorTest.php"
         ],
-        "integration-test-teardown": "docker-compose -f tests/docker-compose.yml down",
+        "integration-test-teardown": "docker-compose -f tests/docker-compose.yml -f tests/docker-compose-self.yml down",
         "test-integration": [
             "@composer integration-test-setup",
             "@composer integration-test-run",
