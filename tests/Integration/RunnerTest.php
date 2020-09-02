@@ -14,6 +14,11 @@ class RunnerTest extends TestCase
 {
     /**
      * @dataProvider runnerDataProvider
+     *
+     * @param string $source
+     * @param string $target
+     * @param string $manifestPath
+     * @param array<mixed> $expectedOutputDocuments
      */
     public function testRunner(string $source, string $target, string $manifestPath, array $expectedOutputDocuments)
     {
