@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Integration;
+namespace webignition\BasilRunnerDelegator\Tests\Integration;
 
 use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\TcpCliProxyClient\Client;

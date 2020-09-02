@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Command;
+namespace webignition\BasilRunnerDelegator\Command;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilRunner\Exception\InvalidRemotePathException;
-use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
-use webignition\BasilRunner\Exception\NonExecutableRemoteTestException;
-use webignition\BasilRunner\Services\RunnerClient;
-use webignition\BasilRunner\Services\SuiteManifestFactory;
-use webignition\BasilRunner\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
+use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
+use webignition\BasilRunnerDelegator\Services\RunnerClient;
+use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
+use webignition\BasilRunnerDelegator\Services\TestFactory;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;

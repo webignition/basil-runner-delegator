@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilCompilerModels\SuiteManifest;
-use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
-use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
 
 class SuiteManifestFactoryTest extends TestCase
 {

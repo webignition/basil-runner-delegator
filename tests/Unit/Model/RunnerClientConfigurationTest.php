@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Model;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use webignition\BasilRunnerDelegator\Model\RunnerClientConfiguration;
 
 class RunnerClientConfigurationTest extends TestCase
 {

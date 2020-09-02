@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Services;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -10,8 +10,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
-use webignition\BasilRunner\Services\RunnerClient;
-use webignition\BasilRunner\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\Services\RunnerClient;
+use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactoryTest extends TestCase

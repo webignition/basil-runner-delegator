@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Tests\Unit\Command;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\Command;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use phpmock\mockery\PHPMockery;
@@ -13,13 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
-use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Exception\InvalidRemotePathException;
-use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
-use webignition\BasilRunner\Exception\NonExecutableRemoteTestException;
-use webignition\BasilRunner\Services\RunnerClient;
-use webignition\BasilRunner\Services\SuiteManifestFactory;
-use webignition\BasilRunner\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Command\RunCommand;
+use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
+use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
+use webignition\BasilRunnerDelegator\Services\RunnerClient;
+use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
+use webignition\BasilRunnerDelegator\Services\TestFactory;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -488,7 +488,7 @@ class RunCommandTest extends TestCase
         bool $isReadableReturn = false,
         $fileGetContentsReturn = null
     ): void {
-        $namespace = 'webignition\\BasilRunner\\Command';
+        $namespace = 'webignition\\BasilRunnerDelegator\\Command';
 
         PHPMockery::mock($namespace, 'is_file')
             ->with($path)
