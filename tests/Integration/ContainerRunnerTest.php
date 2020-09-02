@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Process\Process;
 use webignition\TcpCliProxyClient\Client;
 use webignition\YamlDocumentSetParser\Parser;
 
-class RunnerTest extends TestCase
+class ContainerRunnerTest extends TestCase
 {
     /**
      * @dataProvider runnerDataProvider
@@ -31,19 +31,23 @@ class RunnerTest extends TestCase
             $manifestPath
         ));
 
-        $runnerProcess = Process::fromShellCommandline(
-            './bin/basil-runner --path=' . getcwd() . '/tests/build/manifests/manifest.yml'
-        );
+        $delegatorClientOutput = new BufferedOutput();
+        $delegatorClient = Client::createFromHostAndPort('localhost', 9003);
+        $delegatorClient = $delegatorClient->withOutput($delegatorClientOutput);
 
-        $runnerExitCode = $runnerProcess->run();
+        $delegatorClient->request('./bin/basil-runner --path=' . $manifestPath);
+
+        $delegatorClientOutputLines = explode("\n", $delegatorClientOutput->fetch());
+        $delegatorExitCode = (int) array_pop($delegatorClientOutputLines);
+        $delegatorClientOutputContent = implode("\n", $delegatorClientOutputLines);
 
         $compilerClient->request(sprintf('rm %s', $manifestPath));
         $compilerClient->request(sprintf('rm %s/*.php', $target));
 
-        self::assertSame(0, $runnerExitCode);
+        self::assertSame(0, $delegatorExitCode);
 
         $yamlDocumentSetParser = new Parser();
-        $outputDocuments = $yamlDocumentSetParser->parse($runnerProcess->getOutput());
+        $outputDocuments = $yamlDocumentSetParser->parse($delegatorClientOutputContent);
 
         self::assertSame($expectedOutputDocuments, $outputDocuments);
     }
