@@ -5,25 +5,27 @@ declare(strict_types=1);
 namespace webignition\BasilRunner\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use webignition\TcpCliProxyClient\Client;
 use webignition\YamlDocumentSetParser\Parser;
 
-class RunnerTest extends TestCase
+abstract class AbstractDelegatorTest extends TestCase
 {
-    /**
-     * @dataProvider runnerDataProvider
-     *
-     * @param string $source
-     * @param string $target
-     * @param string $manifestPath
-     * @param array<mixed> $expectedOutputDocuments
-     */
-    public function testRunner(string $source, string $target, string $manifestPath, array $expectedOutputDocuments)
+    private Client $compilerClient;
+
+    protected function setUp(): void
     {
-        $compilerClient = Client::createFromHostAndPort('localhost', 9000);
-        $compilerClient = $compilerClient->withOutput(new NullOutput());
+        parent::setUp();
+
+        $this->compilerClient = Client::createFromHostAndPort('localhost', 9000);
+    }
+
+    protected function compile(string $source, string $target, string $manifestPath): OutputInterface
+    {
+        $output = new BufferedOutput();
+        $compilerClient = $this->compilerClient->withOutput($output);
+
         $compilerClient->request(sprintf(
             './compiler --source=%s --target=%s 1>%s',
             $source,
@@ -31,24 +33,33 @@ class RunnerTest extends TestCase
             $manifestPath
         ));
 
-        $runnerProcess = Process::fromShellCommandline(
-            './bin/basil-runner --path=' . getcwd() . '/tests/build/manifests/manifest.yml'
-        );
+        return $output;
+    }
 
-        $runnerExitCode = $runnerProcess->run();
+    protected function removeCompiledArtifacts(string $target, string $manifestPath): OutputInterface
+    {
+        $output = new BufferedOutput();
+        $compilerClient = $this->compilerClient->withOutput($output);
 
         $compilerClient->request(sprintf('rm %s', $manifestPath));
         $compilerClient->request(sprintf('rm %s/*.php', $target));
 
-        self::assertSame(0, $runnerExitCode);
+        return $output;
+    }
 
+    /**
+     * @param array<mixed> $expectedOutputDocuments
+     * @param string $content
+     */
+    protected static function assertDelegatorOutput(array $expectedOutputDocuments, string $content): void
+    {
         $yamlDocumentSetParser = new Parser();
-        $outputDocuments = $yamlDocumentSetParser->parse($runnerProcess->getOutput());
+        $outputDocuments = $yamlDocumentSetParser->parse($content);
 
         self::assertSame($expectedOutputDocuments, $outputDocuments);
     }
 
-    public function runnerDataProvider(): array
+    public function delegatorDataProvider(): array
     {
         return [
             'index open form open chrome firefox' => [
