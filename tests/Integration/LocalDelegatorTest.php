@@ -21,7 +21,7 @@ class LocalDelegatorTest extends AbstractDelegatorTest
         $this->compile($source, $target, $manifestPath);
 
         $runnerProcess = Process::fromShellCommandline(
-            './bin/basil-runner --path=' . getcwd() . '/tests/build/manifests/manifest.yml'
+            './bin/delegator --path=' . getcwd() . '/tests/build/manifests/manifest.yml'
         );
 
         $runnerExitCode = $runnerProcess->run();
