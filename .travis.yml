@@ -10,6 +10,8 @@ install:
 
 script:
   - composer ci
+  - ./build/build.sh
+  - ./build/test_image_exists.sh
   - composer test-integration
 
 cache:

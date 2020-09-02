@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunnerDelegator\Services;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilCompilerModels\SuiteManifest;
-use webignition\BasilRunner\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
 
 class SuiteManifestFactory
 {

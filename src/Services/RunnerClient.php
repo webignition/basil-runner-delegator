@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunnerDelegator\Services;
 
-use webignition\BasilRunner\Exception\InvalidRemotePathException;
-use webignition\BasilRunner\Exception\NonExecutableRemoteTestException;
+use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
+use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
 use webignition\TcpCliProxyClient\Client;
 
 class RunnerClient extends Client

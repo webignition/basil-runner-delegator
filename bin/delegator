@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Bin;
+namespace webignition\BasilRunnerDelegator\Bin;
 
 const VERSION = 'dev-master';
 
@@ -12,10 +12,10 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Yaml\Parser;
-use webignition\BasilRunner\Command\RunCommand;
-use webignition\BasilRunner\Services\RunnerClientFactory;
-use webignition\BasilRunner\Services\SuiteManifestFactory;
-use webignition\BasilRunner\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Command\RunCommand;
+use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
+use webignition\BasilRunnerDelegator\Services\TestFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 

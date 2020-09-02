@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunnerDelegator\Services;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
-use webignition\BasilRunner\Model\RunnerClientConfiguration;
+use webignition\BasilRunnerDelegator\Model\RunnerClientConfiguration;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactory

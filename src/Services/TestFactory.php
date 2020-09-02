@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunner\Services;
+namespace webignition\BasilRunnerDelegator\Services;
 
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunnerDocuments\Test;
