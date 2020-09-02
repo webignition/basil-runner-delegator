@@ -17,3 +17,16 @@ script:
 cache:
   directories:
     - $HOME/.composer/cache/files
+
+deploy:
+  - provider: script
+    script: ./deploy/docker_hub_push.sh
+    on:
+      tags: true
+    skip_cleanup: 'true'
+
+  - provider: script
+    script: ./deploy/docker_hub_push.sh
+    on:
+      branch: "master"
+    skip_cleanup: 'true'
