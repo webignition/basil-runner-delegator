@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7eac59288d3c5632e93d591cc2d1ed22",
+    "content-hash": "d3d1de775af7befc816fbedb5724fd0f",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -6643,6 +6643,57 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2019-06-13T22:48:21+00:00"
+        },
+        {
+            "name": "webignition/yaml-document-set-parser",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/yaml-document-set-parser.git",
+                "reference": "f701e75b3754d593c76d4ae22ced2ddeca5f2e49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/yaml-document-set-parser/zipball/f701e75b3754d593c76d4ae22ced2ddeca5f2e49",
+                "reference": "f701e75b3754d593c76d4ae22ced2ddeca5f2e49",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "symfony/yaml": "^5.1"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.40",
+                "phpunit/phpunit": "^9.3",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\YamlDocumentSetParser\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "description": "Like symfony/yaml parsing but for when you have many documents in the same file/string",
+            "homepage": "https://github.com/webignition/yaml-document-set-parser",
+            "keywords": [
+                "collection",
+                "parser",
+                "set",
+                "yaml"
+            ],
+            "time": "2020-08-27T15:26:42+00:00"
         },
         {
             "name": "webmozart/assert",

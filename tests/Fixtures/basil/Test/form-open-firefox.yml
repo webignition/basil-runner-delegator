@@ -1,0 +1,12 @@
+config:
+  browser: firefox
+  url: $form_page.url
+
+imports:
+  pages:
+    form_page: "../Page/form.yml"
+
+"verify page is open":
+  assertions:
+    - $page.url is "http://nginx/form.html"
+    - $page.title is "Form"

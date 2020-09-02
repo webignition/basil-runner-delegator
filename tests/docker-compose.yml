@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx
+    container_name: test-nginx-container
+    volumes:
+      - ../tests/Fixtures/html:/usr/share/nginx/html
+
+  compiler:
+    image: smartassert/basil-compiler:0.21
+    container_name: test-compiler-container
+    volumes:
+      - ../tests/Fixtures/basil:/app/source
+      - ../tests/build/tests:/app/tests
+      - ../tests/build/manifests:/app/manifests
+    ports:
+      - 9000:8000
+
+  chrome-runner:
+    image: smartassert/chrome-runner:0.13
+    container_name: test-chrome-runner-container
+    volumes:
+      - ../tests/build/tests:/app/tests
+    ports:
+      - 9001:8000
+
+  firefox-runner:
+    image: smartassert/firefox-runner:0.13
+    container_name: test-firefox-runner-container
+    volumes:
+      - ../tests/build/tests:/app/tests
+    ports:
+      - 9002:8000

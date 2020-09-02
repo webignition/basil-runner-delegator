@@ -1,0 +1,12 @@
+config:
+  browser: chrome
+  url: http://nginx/index.html
+
+"verify page is open":
+  assertions:
+    - $page.url is "http://nginx/index.html"
+
+"verify links are present":
+  assertions:
+    - $"a[id=link-to-assertions]" not-exists
+    - $"a[id=link-to-form]" exists
