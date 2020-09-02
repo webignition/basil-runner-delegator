@@ -1,0 +1,7 @@
+chrome:
+  host: chrome-runner
+  port: 8000
+
+firefox:
+  host: firefox-runner
+  port: 8000

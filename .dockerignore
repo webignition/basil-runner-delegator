@@ -1,0 +1,12 @@
+/build
+/deploy
+/tests
+/vendor
+.gitignore
+.phpcs.xml
+.travis.yml
+ecs.yaml
+LICENSE
+phpstan.neon
+phpunit.xml.dist
+README.md

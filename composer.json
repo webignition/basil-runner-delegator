@@ -34,42 +34,44 @@
             "@composer static-analysis",
             "@composer test"
         ],
-        "compiler-remove": "rm -f compiler.phar",
-        "compiler-fetch": [
-            "curl -L https://github.com/webignition/basil-cli-compiler/releases/download/0.5/compiler.phar --output compiler.phar",
-            "chmod +x compiler.phar"
+        "integration-test-setup": "docker-compose -f tests/docker-compose.yml -f tests/docker-compose-self.yml up -d",
+        "integration-test-run": [
+            "./vendor/bin/phpunit tests/Integration/LocalDelegatorTest.php",
+            "./vendor/bin/phpunit tests/Integration/ContainerDelegatorTest.php"
         ],
-        "runner-remove": "rm -f runner.phar",
-        "runner-fetch": [
-            "curl -L https://github.com/webignition/basil-cli-runner/releases/download/0.2/runner.phar --output runner.phar",
-            "chmod +x runner.phar"
-        ],
-        "setup": [
-            "@composer install --ansi --prefer-dist --no-dev",
-            "@compiler-remove",
-            "@compiler-fetch",
-            "@runner-remove",
-            "@runner-fetch"
-        ],
-        "setup-dev": [
-            "@setup",
-            "@composer install --ansi"
+        "integration-test-teardown": "docker-compose -f tests/docker-compose.yml -f tests/docker-compose-self.yml down",
+        "test-integration": [
+            "@composer integration-test-setup",
+            "@composer integration-test-run",
+            "@composer integration-test-teardown"
         ]
     },
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
+        "monolog/monolog": "^2.1",
+        "psr/log": "^1.1",
         "symfony/console": "^5.1",
         "symfony/process": "^5.1",
-        "webignition/basil-phpunit-result-printer": "0.2"
+        "symfony/yaml": "^5.1",
+        "webignition/basil-compiler-models": "^0.12.0",
+        "webignition/basil-runner-documents": ">=0.2,<1",
+        "webignition/single-command-application-factory": "^0.1.0",
+        "webignition/symfony-console-typed-input": "^0.5.0",
+        "webignition/tcp-cli-proxy-client": "^0.8.0",
+        "webignition/yaml-document-generator": ">=0.2,<1"
     },
     "require-dev": {
+        "mockery/mockery": "^1.4",
+        "php-mock/php-mock": "^2.2",
+        "php-mock/php-mock-mockery": "^1.3",
+        "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.0",
+        "phpstan/phpstan-mockery": "^0.12.7",
         "phpunit/phpunit": "^9.2",
         "squizlabs/php_codesniffer": "3.*",
-        "symfony/yaml": "^5.1",
         "symplify/easy-coding-standard": "^8.1",
-        "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
+        "webignition/yaml-document-set-parser": "^0.1.0"
     },
     "bin": [
         "bin/basil-runner"

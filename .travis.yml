@@ -5,17 +5,12 @@ php:
 services:
   - docker
 
-addons:
-  chrome: stable
-
 install:
-  - composer setup-dev
-  - cd vendor/symfony/panther/chromedriver-bin && ./update.sh && cd ../../../..
-  - cd docker && ./integration-build.sh && cd ..
+  - composer install --prefer-dist
 
 script:
   - composer ci
-  - cd docker && ./integration-run.sh && cd ..
+  - composer test-integration
 
 cache:
   directories:

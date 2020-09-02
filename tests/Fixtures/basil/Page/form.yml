@@ -1,0 +1,5 @@
+url: "http://nginx/form.html"
+elements:
+  form_one: $"form[action='/action1']"
+  input_with_value: $form_one >> $"input[name='input-with-value']"
+  textarea_within_form_one: $form_one >> $".textarea-non-empty"

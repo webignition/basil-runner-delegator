@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  delegator:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: test-delegator-container
+    volumes:
+      - ../tests/build/manifests:/app/manifests
+      - ../tests/config:/app/config
+    ports:
+      - 9003:8000

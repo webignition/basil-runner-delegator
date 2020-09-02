@@ -5,19 +5,42 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
-use Symfony\Component\Console\Application;
-use webignition\BasilRunner\Command\GenerateCommand;
+const VERSION = 'dev-master';
+
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunner\Command\RunCommand;
+use webignition\BasilRunner\Services\RunnerClientFactory;
+use webignition\BasilRunner\Services\SuiteManifestFactory;
+use webignition\BasilRunner\Services\TestFactory;
+use webignition\SingleCommandApplicationFactory\Factory;
+use webignition\YamlDocumentGenerator\YamlGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$application = new Application();
+$logger = new Logger('runner-logger');
+$handler = new StreamHandler(__DIR__ . '/debug.log');
+$handler->setFormatter(new JsonFormatter());
 
-$application->setName('Basil Runner');
-$application->setVersion('0.1-beta');
+$output = new StreamOutput(STDOUT);
+$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $output);
 
-$application->addCommands([
-    new GenerateCommand(),
-    new RunCommand(realpath(__DIR__ . '/..'))
-]);
-$application->run();
+$logger->pushHandler($handler);
+
+$application = (new Factory())->create(
+    new RunCommand(
+        $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
+        SuiteManifestFactory::createFactory(),
+        $logger,
+        new YamlGenerator(),
+        new TestFactory()
+    ),
+    VERSION
+);
+
+$exitCode = $application->run(null, $output);
+
+exit($exitCode);

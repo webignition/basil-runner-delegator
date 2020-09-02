@@ -1,0 +1,7 @@
+chrome:
+  host: localhost
+  port: 9001
+
+firefox:
+  host: localhost
+  port: 9002
