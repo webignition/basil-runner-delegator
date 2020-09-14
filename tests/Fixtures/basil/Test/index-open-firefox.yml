@@ -1,5 +1,6 @@
 config:
-  browser: firefox
+  browsers:
+    - firefox
   url: http://nginx/index.html
 
 "verify page is open":

@@ -1,5 +1,6 @@
 config:
-  browser: firefox
+  browsers:
+    - firefox
   url: $form_page.url
 
 imports:
