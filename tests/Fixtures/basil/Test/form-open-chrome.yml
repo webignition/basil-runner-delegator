@@ -1,5 +1,6 @@
 config:
-  browser: chrome
+  browsers:
+    - chrome
   url: $form_page.url
 
 imports:
