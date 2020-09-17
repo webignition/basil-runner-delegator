@@ -62,14 +62,14 @@ abstract class AbstractDelegatorTest extends TestCase
     public function delegatorDataProvider(): array
     {
         return [
-            'index open form open chrome firefox' => [
-                'source' => '/app/source/TestSuite/index-open-form-open-chrome-firefox.yml',
+            'index open chrome firefox' => [
+                'source' => '/app/source/Test/index-open-chrome-firefox.yml',
                 'target' => '/app/tests',
                 'manifestPath' => '/app/manifests/manifest.yml',
                 'expectedOutputDocuments' => [
                     [
                         'type' => 'test',
-                        'path' => '/app/source/Test/index-open-chrome.yml',
+                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
                         'config' => [
                             'browser' => 'chrome',
                             'url' => 'http://nginx/index.html',
@@ -94,7 +94,7 @@ abstract class AbstractDelegatorTest extends TestCase
                     ],
                     [
                         'type' => 'test',
-                        'path' => '/app/source/Test/index-open-firefox.yml',
+                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
                         'config' => [
                             'browser' => 'firefox',
                             'url' => 'http://nginx/index.html',
@@ -113,56 +113,6 @@ abstract class AbstractDelegatorTest extends TestCase
                             [
                                 'type' => 'assertion',
                                 'source' => '$page.title is "Test fixture web server default document"',
-                                'status' => 'passed',
-                            ],
-                        ],
-                    ],
-                    [
-                        'type' => 'test',
-                        'path' => '/app/source/Test/form-open-chrome.yml',
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://nginx/form.html',
-                        ],
-                    ],
-                    [
-                        'type' => 'step',
-                        'name' => 'verify page is open',
-                        'status' => 'passed',
-                        'statements' => [
-                            [
-                                'type' => 'assertion',
-                                'source' => '$page.url is "http://nginx/form.html"',
-                                'status' => 'passed',
-                            ],
-                            [
-                                'type' => 'assertion',
-                                'source' => '$page.title is "Form"',
-                                'status' => 'passed',
-                            ],
-                        ],
-                    ],
-                    [
-                        'type' => 'test',
-                        'path' => '/app/source/Test/form-open-firefox.yml',
-                        'config' => [
-                            'browser' => 'firefox',
-                            'url' => 'http://nginx/form.html',
-                        ],
-                    ],
-                    [
-                        'type' => 'step',
-                        'name' => 'verify page is open',
-                        'status' => 'passed',
-                        'statements' => [
-                            [
-                                'type' => 'assertion',
-                                'source' => '$page.url is "http://nginx/form.html"',
-                                'status' => 'passed',
-                            ],
-                            [
-                                'type' => 'assertion',
-                                'source' => '$page.title is "Form"',
                                 'status' => 'passed',
                             ],
                         ],
