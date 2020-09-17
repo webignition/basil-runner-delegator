@@ -8,7 +8,7 @@ services:
       - ../tests/Fixtures/html:/usr/share/nginx/html
 
   compiler:
-    image: smartassert/basil-compiler:0.22
+    image: smartassert/basil-compiler:0.23
     container_name: test-compiler-container
     volumes:
       - ../tests/Fixtures/basil:/app/source
