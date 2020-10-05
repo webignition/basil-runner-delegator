@@ -10,11 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
-use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Exception\MalformedManifestException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
 use webignition\BasilRunnerDelegator\Services\RunnerClient;
-use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
 use webignition\BasilRunnerDelegator\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Services\TestManifestFactory;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
@@ -35,20 +35,21 @@ class RunCommand extends Command
      * @var array<string, RunnerClient>
      */
     private array $runnerClients;
-    private SuiteManifestFactory $suiteManifestFactory;
+    private TestManifestFactory $testManifestFactory;
     private LoggerInterface $logger;
     private YamlGenerator $yamlGenerator;
     private TestFactory $testFactory;
 
     /**
      * @param RunnerClient[] $runnerClients
-     * @param SuiteManifestFactory $suiteManifestFactory
+     * @param TestManifestFactory $testManifestFactory
      * @param LoggerInterface $logger
      * @param YamlGenerator $yamlGenerator
+     * @param TestFactory $testFactory
      */
     public function __construct(
         array $runnerClients,
-        SuiteManifestFactory $suiteManifestFactory,
+        TestManifestFactory $testManifestFactory,
         LoggerInterface $logger,
         YamlGenerator $yamlGenerator,
         TestFactory $testFactory
@@ -59,7 +60,7 @@ class RunCommand extends Command
             return $item instanceof RunnerClient;
         });
 
-        $this->suiteManifestFactory = $suiteManifestFactory;
+        $this->testManifestFactory = $testManifestFactory;
         $this->logger = $logger;
         $this->yamlGenerator = $yamlGenerator;
         $this->testFactory = $testFactory;
@@ -74,7 +75,7 @@ class RunCommand extends Command
                 self::OPTION_PATH,
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Absolute path to the suite manifest'
+                'Absolute path to the test manifest'
             )
         ;
     }
@@ -98,8 +99,8 @@ class RunCommand extends Command
         }
 
         try {
-            $suiteManifest = $this->suiteManifestFactory->createFromString($manifestContent);
-        } catch (MalformedSuiteManifestException $e) {
+            $testManifest = $this->testManifestFactory->createFromString($manifestContent);
+        } catch (MalformedManifestException $e) {
             $this->logException($e, $path, [
                 'content' => $e->getContent(),
             ]);
@@ -107,45 +108,43 @@ class RunCommand extends Command
             return self::EXIT_CODE_MANIFEST_DATA_PARSE_FAILED;
         }
 
-        foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $output->write($this->yamlGenerator->generate(
-                $this->testFactory->fromTestManifest($testManifest)
-            ));
+        $output->write($this->yamlGenerator->generate(
+            $this->testFactory->fromTestManifest($testManifest)
+        ));
 
-            $testConfiguration = $testManifest->getConfiguration();
-            $browser = $testConfiguration->getBrowser();
+        $testConfiguration = $testManifest->getConfiguration();
+        $browser = $testConfiguration->getBrowser();
 
-            $runnerClient = $this->runnerClients[$browser] ?? null;
+        $runnerClient = $this->runnerClients[$browser] ?? null;
 
-            if ($runnerClient instanceof RunnerClient) {
-                $testPath = $testManifest->getTarget();
+        if ($runnerClient instanceof RunnerClient) {
+            $testPath = $testManifest->getTarget();
 
-                try {
-                    $runnerClient->request($testPath);
-                    $output->writeln('');
-                } catch (SocketErrorException $e) {
-                    $this->logException($e, $path);
-                } catch (ClientCreationException $e) {
-                    $this->logException($e, $path, [
-                        'connection-string' => $e->getConnectionString(),
-                    ]);
-                } catch (InvalidRemotePathException | NonExecutableRemoteTestException $remoteTestExecutionException) {
-                    $this->logException($remoteTestExecutionException, $path, [
-                        'test-manifest' => $testManifest->getData(),
-                    ]);
+            try {
+                $runnerClient->request($testPath);
+                $output->writeln('');
+            } catch (SocketErrorException $e) {
+                $this->logException($e, $path);
+            } catch (ClientCreationException $e) {
+                $this->logException($e, $path, [
+                    'connection-string' => $e->getConnectionString(),
+                ]);
+            } catch (InvalidRemotePathException | NonExecutableRemoteTestException $remoteTestExecutionException) {
+                $this->logException($remoteTestExecutionException, $path, [
+                    'test-manifest' => $testManifest->getData(),
+                ]);
 
-                    $exception = Exception::createFromThrowable($remoteTestExecutionException)->withoutTrace();
-                    $output->write($this->yamlGenerator->generate($exception));
-                }
-            } else {
-                $this->logger->debug(
-                    'Unknown browser \'' . $browser . '\'',
-                    array_merge(['path' => $path], [
-                        'browser' => $browser,
-                        'manifest-data' => $testManifest->getData(),
-                    ])
-                );
+                $exception = Exception::createFromThrowable($remoteTestExecutionException)->withoutTrace();
+                $output->write($this->yamlGenerator->generate($exception));
             }
+        } else {
+            $this->logger->debug(
+                'Unknown browser \'' . $browser . '\'',
+                array_merge(['path' => $path], [
+                    'browser' => $browser,
+                    'manifest-data' => $testManifest->getData(),
+                ])
+            );
         }
 
         return 0;

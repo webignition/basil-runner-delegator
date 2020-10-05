@@ -10,16 +10,14 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use webignition\BasilCompilerModels\Configuration;
-use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
-use webignition\BasilRunnerDelegator\Exception\MalformedSuiteManifestException;
+use webignition\BasilRunnerDelegator\Exception\MalformedManifestException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
 use webignition\BasilRunnerDelegator\Services\RunnerClient;
-use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
 use webignition\BasilRunnerDelegator\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Services\TestManifestFactory;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -58,7 +56,7 @@ class RunCommandTest extends TestCase
                 },
                 'runCommand' => new RunCommand(
                     [],
-                    SuiteManifestFactory::createFactory(),
+                    TestManifestFactory::createFactory(),
                     \Mockery::mock(LoggerInterface::class),
                     \Mockery::mock(YamlGenerator::class),
                     \Mockery::mock(TestFactory::class)
@@ -72,7 +70,7 @@ class RunCommandTest extends TestCase
                 },
                 'runCommand' => new RunCommand(
                     [],
-                    SuiteManifestFactory::createFactory(),
+                    TestManifestFactory::createFactory(),
                     \Mockery::mock(LoggerInterface::class),
                     \Mockery::mock(YamlGenerator::class),
                     \Mockery::mock(TestFactory::class)
@@ -86,7 +84,7 @@ class RunCommandTest extends TestCase
                 },
                 'runCommand' => new RunCommand(
                     [],
-                    SuiteManifestFactory::createFactory(),
+                    TestManifestFactory::createFactory(),
                     \Mockery::mock(LoggerInterface::class),
                     \Mockery::mock(YamlGenerator::class),
                     \Mockery::mock(TestFactory::class)
@@ -94,25 +92,25 @@ class RunCommandTest extends TestCase
                 'path' => 'read-fail',
                 'expectedExitCode' => RunCommand::EXIT_CODE_MANIFEST_FILE_READ_FAILED,
             ],
-            'non-parsable suite manifest' => [
+            'non-parsable test manifest' => [
                 'initializer' => function () {
                     $this->mockCommandFunctions(
                         'non-parsable-manifest.yml',
                         true,
                         true,
-                        'invalid suite manifest fixture'
+                        'invalid test manifest fixture'
                     );
                 },
                 'runCommand' => new RunCommand(
                     [],
-                    $this->createSuiteManifestFactoryThrowingException(
-                        MalformedSuiteManifestException::createMalformedYamlException('invalid suite manifest fixture')
+                    $this->createTestManifestFactoryThrowingException(
+                        MalformedManifestException::createMalformedYamlException('invalid test manifest fixture')
                     ),
                     $this->createLogger(
                         'Content is not parsable yaml',
                         [
                             'path' => 'non-parsable-manifest.yml',
-                            'content' => 'invalid suite manifest fixture',
+                            'content' => 'invalid test manifest fixture',
                         ]
                     ),
                     \Mockery::mock(YamlGenerator::class),
@@ -128,34 +126,34 @@ class RunCommandTest extends TestCase
      * @dataProvider runSuccessDataProvider
      *
      * @param RunnerClient[] $runnerClients
-     * @param SuiteManifest $suiteManifest
+     * @param TestManifest $testManifest
      * @param LoggerInterface|null $logger
      */
     public function testRunSuccess(
         array $runnerClients,
-        SuiteManifest $suiteManifest,
+        TestManifest $testManifest,
         OutputInterface $commandOutput,
         ?LoggerInterface $logger = null
     ) {
-        $suiteManifestFileContents = 'valid manifest content';
+        $testManifestFileContents = 'valid manifest content';
 
-        $this->mockCommandFunctions('manifest.yml', true, true, $suiteManifestFileContents);
+        $this->mockCommandFunctions('manifest.yml', true, true, $testManifestFileContents);
 
         $input = new ArrayInput([
             '--path' => 'manifest.yml',
         ]);
 
-        $suiteManifestFactory = \Mockery::mock(SuiteManifestFactory::class);
-        $suiteManifestFactory
+        $testManifestFactory = \Mockery::mock(TestManifestFactory::class);
+        $testManifestFactory
             ->shouldReceive('createFromString')
-            ->with($suiteManifestFileContents)
-            ->andReturn($suiteManifest);
+            ->with($testManifestFileContents)
+            ->andReturn($testManifest);
 
         $logger = $logger ?? \Mockery::mock(LoggerInterface::class);
 
         $command = new RunCommand(
             $runnerClients,
-            $suiteManifestFactory,
+            $testManifestFactory,
             $logger,
             new YamlGenerator(),
             new TestFactory()
@@ -167,8 +165,6 @@ class RunCommandTest extends TestCase
 
     public function runSuccessDataProvider(): array
     {
-        $suiteManifestConfiguration = new Configuration('/source', '/target', 'BaseClass');
-
         $chromeTestPath = '/target/GeneratedChromeTest.php';
         $firefoxTestPath = '/target/GeneratedFireFoxTest.php';
 
@@ -200,35 +196,17 @@ class RunCommandTest extends TestCase
         ]);
 
         $chromeInvalidRemotePathException = new InvalidRemotePathException($chromeTestPath);
-        $firefoxInvalidRemotePathException = new InvalidRemotePathException($firefoxTestPath);
-
         $chromeNonExecutableTestException = new NonExecutableRemoteTestException($chromeTestPath);
-        $firefoxNonExecutableTestException = new NonExecutableRemoteTestException($firefoxTestPath);
 
         $yamlGenerator = new YamlGenerator();
         $testFactory = new TestFactory();
 
         return [
-            'no runner clients, empty manifest, nothing written to output' => [
-                'runnerClients' => [],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, []),
-                'commandOutput' => \Mockery::mock(OutputInterface::class),
-            ],
-            'has runner clients, empty manifest, nothing written to output' => [
-                'runnerClients' => [
-                    'chrome' => \Mockery::mock(RunnerClient::class),
-                    'firefox' => \Mockery::mock(RunnerClient::class),
-                ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, []),
-                'commandOutput' => \Mockery::mock(OutputInterface::class),
-            ],
-            'has runner client, single chrome test' => [
+            'has runner client, chrome test' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient($chromeTestPath),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                ]),
+                'testManifest' => $chromeTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -238,15 +216,11 @@ class RunCommandTest extends TestCase
                     ],
                 ]),
             ],
-            'has runner clients, single chrome test, single firefox test' => [
+            'has runner clients, firefox test' => [
                 'runnerClients' => [
-                    'chrome' => $this->createRunnerClient($chromeTestPath),
                     'firefox' => $this->createRunnerClient($firefoxTestPath),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                    $firefoxTestManifest,
-                ]),
+                'testManifest' => $firefoxTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -258,14 +232,11 @@ class RunCommandTest extends TestCase
                     ],
                 ]),
             ],
-            'has runner clients, single chrome test, single test for unknown browser' => [
+            'has runner clients, test for unknown browser' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient($chromeTestPath),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                    $unknownBrowserTestManifest,
-                ]),
+                'testManifest' => $unknownBrowserTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -301,9 +272,7 @@ class RunCommandTest extends TestCase
                         )
                     ),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                ]),
+                'testManifest' => $chromeTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -320,9 +289,7 @@ class RunCommandTest extends TestCase
                         new ClientCreationException('connection string', 'client creation exception message', 123)
                     ),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                ]),
+                'testManifest' => $chromeTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -333,13 +300,11 @@ class RunCommandTest extends TestCase
                     'connection-string' => 'connection string',
                 ]),
             ],
-            'has runner clients, single test, throws InvalidRemotePathException' => [
+            'has runner clients, throws InvalidRemotePathException' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient($chromeTestPath, $chromeInvalidRemotePathException),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                ]),
+                'testManifest' => $chromeTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -359,43 +324,11 @@ class RunCommandTest extends TestCase
                     ]
                 ),
             ],
-            'has runner clients, two tests, second test throws InvalidRemotePathException' => [
-                'runnerClients' => [
-                    'chrome' => $this->createRunnerClient($chromeTestPath),
-                    'firefox' => $this->createRunnerClient($firefoxTestPath, $firefoxInvalidRemotePathException),
-                ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                    $firefoxTestManifest,
-                ]),
-                'commandOutput' => $this->createCommandOutput([
-                    'write' => [
-                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
-                        $yamlGenerator->generate($testFactory->fromTestManifest($firefoxTestManifest)),
-                        $yamlGenerator->generate(
-                            Exception::createFromThrowable($firefoxInvalidRemotePathException)->withoutTrace()
-                        ),
-                    ],
-                    'writeln' => [
-                        '',
-                        '',
-                    ],
-                ]),
-                'logger' => $this->createLogger(
-                    'Path "/target/GeneratedFireFoxTest.php" not present on runner',
-                    [
-                        'path' => 'manifest.yml',
-                        'test-manifest' => $firefoxTestManifest->getData(),
-                    ]
-                ),
-            ],
-            'has runner clients, single test, throws NonExecutableRemoteTestException' => [
+            'has runner clients, throws NonExecutableRemoteTestException' => [
                 'runnerClients' => [
                     'chrome' => $this->createRunnerClient($chromeTestPath, $chromeNonExecutableTestException),
                 ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                ]),
+                'testManifest' => $chromeTestManifest,
                 'commandOutput' => $this->createCommandOutput([
                     'write' => [
                         $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
@@ -412,36 +345,6 @@ class RunCommandTest extends TestCase
                     [
                         'path' => 'manifest.yml',
                         'test-manifest' => $chromeTestManifest->getData(),
-                    ]
-                ),
-            ],
-            'has runner clients, two tests, second test throws NonExecutableRemoteTestException' => [
-                'runnerClients' => [
-                    'chrome' => $this->createRunnerClient($chromeTestPath),
-                    'firefox' => $this->createRunnerClient($firefoxTestPath, $firefoxNonExecutableTestException),
-                ],
-                'suiteManifest' => new SuiteManifest($suiteManifestConfiguration, [
-                    $chromeTestManifest,
-                    $firefoxTestManifest,
-                ]),
-                'commandOutput' => $this->createCommandOutput([
-                    'write' => [
-                        $yamlGenerator->generate($testFactory->fromTestManifest($chromeTestManifest)),
-                        $yamlGenerator->generate($testFactory->fromTestManifest($firefoxTestManifest)),
-                        $yamlGenerator->generate(
-                            Exception::createFromThrowable($firefoxNonExecutableTestException)->withoutTrace()
-                        ),
-                    ],
-                    'writeln' => [
-                        '',
-                        '',
-                    ],
-                ]),
-                'logger' => $this->createLogger(
-                    'Failed to execute test "/target/GeneratedFireFoxTest.php"',
-                    [
-                        'path' => 'manifest.yml',
-                        'test-manifest' => $firefoxTestManifest->getData(),
                     ]
                 ),
             ],
@@ -466,9 +369,9 @@ class RunCommandTest extends TestCase
         return $client;
     }
 
-    private function createSuiteManifestFactoryThrowingException(\Exception $exception): SuiteManifestFactory
+    private function createTestManifestFactoryThrowingException(\Exception $exception): TestManifestFactory
     {
-        $factory = \Mockery::mock(SuiteManifestFactory::class);
+        $factory = \Mockery::mock(TestManifestFactory::class);
         $factory
             ->shouldReceive('createFromString')
             ->andThrow($exception);
