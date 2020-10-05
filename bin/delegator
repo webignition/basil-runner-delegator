@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
-use webignition\BasilRunnerDelegator\Services\SuiteManifestFactory;
 use webignition\BasilRunnerDelegator\Services\TestFactory;
+use webignition\BasilRunnerDelegator\Services\TestManifestFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
@@ -33,7 +33,7 @@ $logger->pushHandler($handler);
 $application = (new Factory())->create(
     new RunCommand(
         $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
-        SuiteManifestFactory::createFactory(),
+        TestManifestFactory::createFactory(),
         $logger,
         new YamlGenerator(),
         new TestFactory()
