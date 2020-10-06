@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunnerDelegator\Tests\Integration;
 
-use Symfony\Component\Console\Output\BufferedOutput;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Handler;
 use webignition\YamlDocumentSetParser\Parser;
 
 class ContainerDelegatorTest extends AbstractDelegatorTest
@@ -26,19 +26,24 @@ class ContainerDelegatorTest extends AbstractDelegatorTest
         $yamlDocumentSetParser = new Parser();
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $delegatorClientOutput = new BufferedOutput();
+            $delegatorClientOutput = '';
             $delegatorClient = Client::createFromHostAndPort('localhost', 9003);
-            $delegatorClient = $delegatorClient->withOutput($delegatorClientOutput);
 
-            $delegatorClient->request(sprintf(
+            $delegatorClientHandler = (new Handler())
+                ->addCallback(function (string $buffer) use (&$delegatorClientOutput) {
+                    $delegatorClientOutput .= $buffer;
+                });
+
+            $delegatorClient->request(
                 sprintf(
                     './bin/delegator --browser %s %s',
                     $testManifest->getConfiguration()->getBrowser(),
                     $testManifest->getTarget()
-                )
-            ));
+                ),
+                $delegatorClientHandler
+            );
 
-            $delegatorClientOutputLines = explode("\n", $delegatorClientOutput->fetch());
+            $delegatorClientOutputLines = explode("\n", $delegatorClientOutput);
             $delegatorExitCode = (int) array_pop($delegatorClientOutputLines);
             $delegatorClientOutputContent = implode("\n", $delegatorClientOutputLines);
 

@@ -7,40 +7,36 @@ namespace webignition\BasilRunnerDelegator\Services;
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Exception\ClientCreationException;
+use webignition\TcpCliProxyClient\Exception\SocketErrorException;
+use webignition\TcpCliProxyClient\Handler;
 
 class RunnerClient extends Client
 {
     private const RUNNER_COMMAND = './bin/runner --path=%s';
+    private Handler $handler;
+
+    public function __construct(string $connectionString, Handler $handler)
+    {
+        parent::__construct($connectionString);
+
+        $this->handler = $handler;
+    }
 
     /**
      * @param string $request
-     * @param callable|null $filter
-     * @throws \webignition\TcpCliProxyClient\Exception\ClientCreationException
-     * @throws \webignition\TcpCliProxyClient\Exception\SocketErrorException
+     * @param Handler|null $handler
+     *
+     * @throws ClientCreationException
+     * @throws SocketErrorException
      * @throws InvalidRemotePathException
      * @throws NonExecutableRemoteTestException
      */
-    public function request(string $request, ?callable $filter = null): void
+    public function request(string $request, Handler $handler = null): void
     {
         parent::request(
             sprintf(self::RUNNER_COMMAND, $request),
-            function (string $line) use ($request) {
-                if (ctype_digit($line)) {
-                    $exitCode = (int) $line;
-
-                    if (0 !== $exitCode) {
-                        if (100 === $exitCode) {
-                            throw new InvalidRemotePathException($request);
-                        }
-
-                        throw new NonExecutableRemoteTestException($request);
-                    }
-
-                    return null;
-                } else {
-                    return $line;
-                }
-            }
+            $this->handler
         );
     }
 }

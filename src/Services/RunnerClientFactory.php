@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace webignition\BasilRunnerDelegator\Services;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Model\RunnerClientConfiguration;
+use webignition\TcpCliProxyClient\Handler;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactory
 {
     private Parser $yamlParser;
     private LoggerInterface $logger;
-    private OutputInterface $output;
+    private Handler $handler;
 
     public function __construct(
         Parser $yamlParser,
         LoggerInterface $logger,
-        OutputInterface $output
+        Handler $handler
     ) {
         $this->yamlParser = $yamlParser;
         $this->logger = $logger;
-        $this->output = $output;
+        $this->handler = $handler;
     }
 
     /**
@@ -65,12 +65,13 @@ class RunnerClientFactory
         foreach ($data as $name => $clientData) {
             $configuration = $this->createRunnerClientConfiguration($clientData);
 
-            $client = new RunnerClient($connectionStringFactory->createFromHostAndPort(
-                $configuration->getHost(),
-                $configuration->getPort()
-            ));
-
-            $client = $client->withOutput($this->output);
+            $client = new RunnerClient(
+                $connectionStringFactory->createFromHostAndPort(
+                    $configuration->getHost(),
+                    $configuration->getPort()
+                ),
+                $this->handler
+            );
 
             if ($client instanceof RunnerClient) {
                 $clients[$name] = $client;

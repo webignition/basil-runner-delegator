@@ -14,19 +14,22 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $logger = new Logger('runner-logger');
-$handler = new StreamHandler(__DIR__ . '/debug.log');
-$handler->setFormatter(new JsonFormatter());
+$logHandler = new StreamHandler(__DIR__ . '/debug.log');
+$logHandler->setFormatter(new JsonFormatter());
 
 $output = new StreamOutput(STDOUT);
-$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $output);
 
-$logger->pushHandler($handler);
+$runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
+$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $runnerClientHandler);
+
+$logger->pushHandler($logHandler);
 
 $application = (new Factory())->create(
     new RunCommand(

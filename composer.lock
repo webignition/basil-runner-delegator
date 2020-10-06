@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3d1de775af7befc816fbedb5724fd0f",
+    "content-hash": "b8c03bb936a5dcd69b795baaa3ee147f",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1401,21 +1401,20 @@
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.8",
+            "version": "0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af"
+                "reference": "05ae01168e8310ddc7399a9a4a1c85132136359c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af",
-                "reference": "4b1c6fd1d6d746d1c281ad9d62b65d80d39b44af",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/05ae01168e8310ddc7399a9a4a1c85132136359c",
+                "reference": "05ae01168e8310ddc7399a9a4a1c85132136359c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4",
-                "symfony/console": "^5.1",
                 "webignition/error-handler": "^0.1.0"
             },
             "require-dev": {
@@ -1447,7 +1446,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-09-01T15:57:04+00:00"
+            "time": "2020-10-06T15:38:47+00:00"
         },
         {
             "name": "webignition/yaml-document-generator",
@@ -6126,6 +6125,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": "symplify/package-builder",
             "time": "2020-06-25T17:01:55+00:00"
         },
         {
