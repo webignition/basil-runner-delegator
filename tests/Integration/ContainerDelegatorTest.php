@@ -19,25 +19,24 @@ class ContainerDelegatorTest extends AbstractDelegatorTest
      */
     public function testDelegator(string $source, string $target, array $expectedOutputDocuments)
     {
-        $manifestReadDirectory = '/app/manifests';
-
         $outputDocuments = [];
 
         $suiteManifest = $this->compile($source, $target);
-        $manifestFilenames = $this->storeTestManifests($suiteManifest, $this->manifestWriteDirectory);
-        $manifestReadPaths = $this->createManifestReadPaths($manifestReadDirectory, $manifestFilenames);
 
         $yamlDocumentSetParser = new Parser();
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $manifestHash = $this->generateManifestHash($testManifest);
-            $manifestReadPath = $manifestReadPaths[$manifestHash];
-
             $delegatorClientOutput = new BufferedOutput();
             $delegatorClient = Client::createFromHostAndPort('localhost', 9003);
             $delegatorClient = $delegatorClient->withOutput($delegatorClientOutput);
 
-            $delegatorClient->request('./bin/delegator --path=' . $manifestReadPath);
+            $delegatorClient->request(sprintf(
+                sprintf(
+                    './bin/delegator --browser %s %s',
+                    $testManifest->getConfiguration()->getBrowser(),
+                    $testManifest->getTarget()
+                )
+            ));
 
             $delegatorClientOutputLines = explode("\n", $delegatorClientOutput->fetch());
             $delegatorExitCode = (int) array_pop($delegatorClientOutputLines);
@@ -53,6 +52,6 @@ class ContainerDelegatorTest extends AbstractDelegatorTest
 
         self::assertEquals($expectedOutputDocuments, $outputDocuments);
 
-        $this->removeCompiledArtifacts($target, $this->manifestWriteDirectory);
+        $this->removeCompiledArtifacts($target);
     }
 }

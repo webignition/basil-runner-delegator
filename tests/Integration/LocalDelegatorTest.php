@@ -18,22 +18,19 @@ class LocalDelegatorTest extends AbstractDelegatorTest
      */
     public function testDelegator(string $source, string $target, array $expectedOutputDocuments)
     {
-        $manifestReadDirectory = $this->manifestWriteDirectory;
-
         $outputDocuments = [];
 
         $suiteManifest = $this->compile($source, $target);
-        $manifestFilenames = $this->storeTestManifests($suiteManifest, $this->manifestWriteDirectory);
-        $manifestReadPaths = $this->createManifestReadPaths($manifestReadDirectory, $manifestFilenames);
 
         $yamlDocumentSetParser = new Parser();
 
         foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $manifestHash = $this->generateManifestHash($testManifest);
-            $manifestReadPath = $manifestReadPaths[$manifestHash];
-
             $runnerProcess = Process::fromShellCommandline(
-                './bin/delegator --path=' . $manifestReadPath
+                sprintf(
+                    './bin/delegator --browser %s %s',
+                    $testManifest->getConfiguration()->getBrowser(),
+                    $testManifest->getTarget()
+                )
             );
 
             $runnerExitCode = $runnerProcess->run();
@@ -47,6 +44,6 @@ class LocalDelegatorTest extends AbstractDelegatorTest
 
         self::assertEquals($expectedOutputDocuments, $outputDocuments);
 
-        $this->removeCompiledArtifacts($target, $this->manifestWriteDirectory);
+        $this->removeCompiledArtifacts($target);
     }
 }

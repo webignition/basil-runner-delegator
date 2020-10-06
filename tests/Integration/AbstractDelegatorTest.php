@@ -8,21 +8,18 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCompilerModels\SuiteManifest;
-use webignition\BasilCompilerModels\TestManifest;
 use webignition\TcpCliProxyClient\Client;
 use webignition\YamlDocumentSetParser\Parser;
 
 abstract class AbstractDelegatorTest extends TestCase
 {
     private Client $compilerClient;
-    protected string $manifestWriteDirectory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->compilerClient = Client::createFromHostAndPort('localhost', 9000);
-        $this->manifestWriteDirectory = getcwd() . '/tests/build/manifests';
     }
 
     protected function compile(string $source, string $target): SuiteManifest
@@ -47,14 +44,12 @@ abstract class AbstractDelegatorTest extends TestCase
         return SuiteManifest::fromArray($suiteManifestData);
     }
 
-    protected function removeCompiledArtifacts(string $target, string $manifestWriteDirectory): void
+    protected function removeCompiledArtifacts(string $target): void
     {
         $output = new BufferedOutput();
         $compilerClient = $this->compilerClient->withOutput($output);
 
         $compilerClient->request(sprintf('rm %s/*.php', $target));
-
-        shell_exec(sprintf('rm %s/*.yml', $manifestWriteDirectory));
     }
 
     /**
@@ -76,14 +71,14 @@ abstract class AbstractDelegatorTest extends TestCase
                 'source' => '/app/source/Test/index-open-chrome-firefox.yml',
                 'target' => '/app/tests',
                 'expectedOutputDocuments' => [
-                    [
-                        'type' => 'test',
-                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://nginx/index.html',
-                        ],
-                    ],
+//                    [
+//                        'type' => 'test',
+//                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
+//                        'config' => [
+//                            'browser' => 'chrome',
+//                            'url' => 'http://nginx/index.html',
+//                        ],
+//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
@@ -101,14 +96,14 @@ abstract class AbstractDelegatorTest extends TestCase
                             ],
                         ],
                     ],
-                    [
-                        'type' => 'test',
-                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
-                        'config' => [
-                            'browser' => 'firefox',
-                            'url' => 'http://nginx/index.html',
-                        ],
-                    ],
+//                    [
+//                        'type' => 'test',
+//                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
+//                        'config' => [
+//                            'browser' => 'firefox',
+//                            'url' => 'http://nginx/index.html',
+//                        ],
+//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
@@ -132,14 +127,14 @@ abstract class AbstractDelegatorTest extends TestCase
                 'source' => '/app/source/FailingTest/index-failing.yml',
                 'target' => '/app/tests',
                 'expectedOutputDocuments' => [
-                    [
-                        'type' => 'test',
-                        'path' => '/app/source/FailingTest/index-failing.yml',
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'http://nginx/index.html',
-                        ],
-                    ],
+//                    [
+//                        'type' => 'test',
+//                        'path' => '/app/source/FailingTest/index-failing.yml',
+//                        'config' => [
+//                            'browser' => 'chrome',
+//                            'url' => 'http://nginx/index.html',
+//                        ],
+//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
@@ -184,49 +179,5 @@ abstract class AbstractDelegatorTest extends TestCase
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param SuiteManifest $suiteManifest
-     *
-     * @return string[]
-     */
-    protected function storeTestManifests(SuiteManifest $suiteManifest, string $manifestWriteDirectory): array
-    {
-        $paths = [];
-
-        foreach ($suiteManifest->getTestManifests() as $testManifest) {
-            $manifestHash = $this->generateManifestHash($testManifest);
-            $manifestFilename = 'manifest' . $manifestHash . '.yml';
-            $manifestPath = $manifestWriteDirectory . '/' . $manifestFilename;
-
-            file_put_contents($manifestPath, Yaml::dump($testManifest->getData()));
-
-            $paths[$manifestHash] = $manifestFilename;
-        }
-
-        return $paths;
-    }
-
-    protected function generateManifestHash(TestManifest $testManifest): string
-    {
-        return md5((string) json_encode($testManifest->getData()));
-    }
-
-    /**
-     * @param string $manifestReadDirectory
-     * @param string[] $manifestFilenames
-     *
-     * @return string[]
-     */
-    protected function createManifestReadPaths(string $manifestReadDirectory, array $manifestFilenames): array
-    {
-        $manifestReadPaths = [];
-
-        foreach ($manifestFilenames as $index => $filename) {
-            $manifestReadPaths[$index] = $manifestReadDirectory . '/' . $filename;
-        }
-
-        return $manifestReadPaths;
     }
 }
