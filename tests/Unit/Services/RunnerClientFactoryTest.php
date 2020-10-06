@@ -7,11 +7,11 @@ namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Services\RunnerClient;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\TcpCliProxyClient\Handler;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
 class RunnerClientFactoryTest extends TestCase
@@ -22,17 +22,20 @@ class RunnerClientFactoryTest extends TestCase
      * @dataProvider loadSuccessDataProvider
      *
      * @param mixed $clientData
-     * @param OutputInterface $output
      * @param RunnerClient[] $expectedClients
      */
-    public function testLoadSuccess($clientData, OutputInterface $output, array $expectedClients)
+    public function testLoadSuccess($clientData, Handler $handler, array $expectedClients)
     {
         $yamlParser = \Mockery::mock(Parser::class);
         $yamlParser
             ->shouldReceive('parseFile')
             ->andReturn($clientData);
 
-        $factory = new RunnerClientFactory($yamlParser, \Mockery::mock(LoggerInterface::class), $output);
+        $factory = new RunnerClientFactory(
+            $yamlParser,
+            \Mockery::mock(LoggerInterface::class),
+            $handler
+        );
 
         $path = 'path/to/clients.yaml';
         $clients = $factory->load($path);
@@ -42,8 +45,8 @@ class RunnerClientFactoryTest extends TestCase
 
     public function loadSuccessDataProvider(): array
     {
-        $output = \Mockery::mock(OutputInterface::class);
         $connectionStringFactory = new ConnectionStringFactory();
+        $handler = \Mockery::mock(Handler::class);
 
         return [
             'clients are loaded' => [
@@ -57,19 +60,21 @@ class RunnerClientFactoryTest extends TestCase
                         'port' => 9001,
                     ],
                 ],
-                'output' => $output,
+                'handler' => $handler,
                 'expectedClients' => [
                     'chrome' => (new RunnerClient(
-                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000)
-                    ))->withOutput($output),
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000),
+                        $handler
+                    )),
                     'firefox' => (new RunnerClient(
-                        $connectionStringFactory->createFromHostAndPort('firefox-runner', 9001)
-                    ))->withOutput($output),
+                        $connectionStringFactory->createFromHostAndPort('firefox-runner', 9001),
+                        $handler
+                    )),
                 ],
             ],
             'loaded data is not an array' => [
                 'clientData' => 'not an array',
-                'output' => $output,
+                'handler' => $handler,
                 'expectedClients' => [],
             ],
         ];
@@ -92,8 +97,7 @@ class RunnerClientFactoryTest extends TestCase
             ->shouldReceive('parseFile')
             ->andThrow($parseException);
 
-        $output = \Mockery::mock(OutputInterface::class);
-        $factory = new RunnerClientFactory($yamlParser, $logger, $output);
+        $factory = new RunnerClientFactory($yamlParser, $logger, \Mockery::mock(Handler::class));
 
         $clients = $factory->load($path);
 

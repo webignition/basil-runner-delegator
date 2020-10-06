@@ -84,7 +84,6 @@ class RunCommand extends Command
         if ($runnerClient instanceof RunnerClient) {
             try {
                 $runnerClient->request($path);
-                $output->writeln('');
             } catch (SocketErrorException $e) {
                 $this->logException($e);
             } catch (ClientCreationException $e) {

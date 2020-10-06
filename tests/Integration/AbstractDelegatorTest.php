@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace webignition\BasilRunnerDelegator\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\TcpCliProxyClient\Client;
+use webignition\TcpCliProxyClient\Handler;
 use webignition\YamlDocumentSetParser\Parser;
 
 abstract class AbstractDelegatorTest extends TestCase
@@ -24,17 +24,19 @@ abstract class AbstractDelegatorTest extends TestCase
 
     protected function compile(string $source, string $target): SuiteManifest
     {
-        $output = new BufferedOutput();
-        $compilerClient = $this->compilerClient->withOutput($output);
+        $output = '';
 
-        $compilerClient->request(sprintf(
-            './compiler --source=%s --target=%s',
-            $source,
-            $target
-        ));
+        $handler = (new Handler())
+            ->addCallback(function (string $buffer) use (&$output) {
+                $output .= $buffer;
+            });
 
-        $outputContent = $output->fetch();
-        $outputContentLines = explode("\n", $outputContent);
+        $this->compilerClient->request(
+            sprintf('./compiler --source=%s --target=%s', $source, $target),
+            $handler
+        );
+
+        $outputContentLines = explode("\n", $output);
 
         $exitCode = (int) array_pop($outputContentLines);
         self::assertSame(0, $exitCode);
@@ -46,10 +48,7 @@ abstract class AbstractDelegatorTest extends TestCase
 
     protected function removeCompiledArtifacts(string $target): void
     {
-        $output = new BufferedOutput();
-        $compilerClient = $this->compilerClient->withOutput($output);
-
-        $compilerClient->request(sprintf('rm %s/*.php', $target));
+        $this->compilerClient->request(sprintf('rm %s/*.php', $target));
     }
 
     /**
