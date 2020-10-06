@@ -13,7 +13,6 @@ services:
     volumes:
       - ../tests/Fixtures/basil:/app/source
       - ../tests/build/tests:/app/tests
-      - ../tests/build/manifests:/app/manifests
     ports:
       - 9000:8000
 
