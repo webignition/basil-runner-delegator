@@ -12,6 +12,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
+use webignition\BasilRunnerDelegator\Services\RunnerClientConfigurationFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
@@ -27,7 +28,11 @@ $logHandler->setFormatter(new JsonFormatter());
 $output = new StreamOutput(STDOUT);
 
 $runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
-$runnerClientFactory = new RunnerClientFactory(new ConnectionStringFactory(), $runnerClientHandler);
+$runnerClientFactory = new RunnerClientFactory(
+        new RunnerClientConfigurationFactory(),
+        new ConnectionStringFactory(),
+        $runnerClientHandler
+);
 
 $logger->pushHandler($logHandler);
 
