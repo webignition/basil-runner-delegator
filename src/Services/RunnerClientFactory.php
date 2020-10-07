@@ -27,6 +27,18 @@ class RunnerClientFactory
      */
     public function loadFromEnv(array $env): array
     {
+        $configurations = $this->extractConfigurationDataFromEnv($env);
+
+        return $this->createCollectionFromArray($configurations);
+    }
+
+    /**
+     * @param array<mixed> $env
+     *
+     * @return array<mixed>
+     */
+    private function extractConfigurationDataFromEnv(array $env): array
+    {
         $configurations = [];
 
         foreach ($env as $key => $value) {
@@ -34,40 +46,47 @@ class RunnerClientFactory
                 continue;
             }
 
-            $this->matchRunnerConfigurationComponent($configurations, self::ENV_HOST_SUFFIX, 'host', $key, $value);
-            $this->matchRunnerConfigurationComponent($configurations, self::ENV_PORT_SUFFIX, 'port', $key, $value);
+            $hostMatch = $this->findRunnerConfigurationComponent(self::ENV_HOST_SUFFIX, 'host', $key, $value);
+            if ([] !== $hostMatch) {
+                $configurations = array_merge_recursive($configurations, $hostMatch);
+            }
+
+            $portMatch = $this->findRunnerConfigurationComponent(self::ENV_PORT_SUFFIX, 'port', $key, $value);
+            if ([] !== $portMatch) {
+                $configurations = array_merge_recursive($configurations, $portMatch);
+            }
         }
 
-        return $this->createFromArray($configurations);
+        return $configurations;
     }
 
     /**
-     * @param array<array<int, string>> $configurations
      * @param string $suffix
      * @param string $component
      * @param string $key
      * @param string $value
+     *
+     * @return array<mixed>
      */
-    private function matchRunnerConfigurationComponent(
-        array &$configurations,
+    private function findRunnerConfigurationComponent(
         string $suffix,
         string $component,
         string $key,
         string $value
-    ): void {
-        $matches = [];
-        $matchPattern = '/^[A-Z]+' . $suffix . '$/';
+    ): array {
+        $result = [];
 
-        if (preg_match($matchPattern, $key, $matches)) {
-            $identifier = (string) preg_replace('/' . $suffix . '$/', '', $key);
+        $matchPattern = '/^[A-Z]+' . $suffix . '$/';
+        if (preg_match($matchPattern, $key)) {
+            $replacePattern = '/' . $suffix . '$/';
+
+            $identifier = (string) preg_replace($replacePattern, '', $key);
             $identifier = strtolower($identifier);
 
-            if (false === array_key_exists($identifier, $configurations)) {
-                $configurations[$identifier] = [];
-            }
-
-            $configurations[$identifier][$component] = $value;
+            $result[$identifier][$component] = $value;
         }
+
+        return $result;
     }
 
     /**
@@ -75,25 +94,12 @@ class RunnerClientFactory
      *
      * @return RunnerClient[]
      */
-    private function createFromArray(array $data): array
+    private function createCollectionFromArray(array $data): array
     {
-        $connectionStringFactory = new ConnectionStringFactory();
         $clients = [];
 
         foreach ($data as $name => $clientData) {
-            $configuration = $this->createRunnerClientConfiguration($clientData);
-
-            $client = new RunnerClient(
-                $connectionStringFactory->createFromHostAndPort(
-                    $configuration->getHost(),
-                    $configuration->getPort()
-                ),
-                $this->handler
-            );
-
-            if ($client instanceof RunnerClient) {
-                $clients[$name] = $client;
-            }
+            $clients[$name] = $this->createFromArray($clientData);
         }
 
         return $clients;
@@ -102,25 +108,20 @@ class RunnerClientFactory
     /**
      * @param array<mixed> $data
      *
-     * @return RunnerClientConfiguration
+     * @return RunnerClient
      */
-    private function createRunnerClientConfiguration(array $data): RunnerClientConfiguration
+    private function createFromArray(array $data): RunnerClient
     {
-        $host = $data['host'] ?? '';
-        if (!is_string($host)) {
-            $host = '';
-        }
+        $connectionStringFactory = new ConnectionStringFactory();
 
-        $port = $data['port'] ?? 0;
+        $configuration = RunnerClientConfiguration::fromArray($data);
 
-        if (ctype_digit($port)) {
-            $port = (int) $port;
-        }
-
-        if (!is_int($port)) {
-            $port = 0;
-        }
-
-        return new RunnerClientConfiguration('', $host, $port);
+        return new RunnerClient(
+            $connectionStringFactory->createFromHostAndPort(
+                $configuration->getHost(),
+                $configuration->getPort()
+            ),
+            $this->handler
+        );
     }
 }

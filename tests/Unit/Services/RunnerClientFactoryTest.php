@@ -42,6 +42,30 @@ class RunnerClientFactoryTest extends TestCase
                 'handler' => $handler,
                 'expectedClients' => [],
             ],
+            'single client, host only' => [
+                'env' => [
+                    'CHROME_RUNNER_HOST' => 'chrome-runner',
+                ],
+                'handler' => $handler,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 0),
+                        $handler
+                    )),
+                ],
+            ],
+            'single client, port only' => [
+                'env' => [
+                    'CHROME_RUNNER_PORT' => '9000',
+                ],
+                'handler' => $handler,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('', 9000),
+                        $handler
+                    )),
+                ],
+            ],
             'single client, host then port' => [
                 'env' => [
                     'CHROME_RUNNER_HOST' => 'chrome-runner',
