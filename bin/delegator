@@ -11,11 +11,12 @@ use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
-use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\ConfigurationFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\Factory as RunnerClientFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
-use webignition\SingleCommandApplicationFactory\Factory;
+use webignition\SingleCommandApplicationFactory\Factory as SingleCommandApplicationFactory;
+use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -27,13 +28,17 @@ $logHandler->setFormatter(new JsonFormatter());
 $output = new StreamOutput(STDOUT);
 
 $runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
-$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $runnerClientHandler);
+$runnerClientFactory = new RunnerClientFactory(
+        new ConfigurationFactory(),
+        new ConnectionStringFactory(),
+        $runnerClientHandler
+);
 
 $logger->pushHandler($logHandler);
 
-$application = (new Factory())->create(
+$application = (new SingleCommandApplicationFactory())->create(
     new RunCommand(
-        $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
+        $runnerClientFactory->loadFromEnv($_SERVER),
         $logger,
         new YamlGenerator()
     ),

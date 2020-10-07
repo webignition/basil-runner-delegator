@@ -6,7 +6,10 @@ services:
       context: ..
       dockerfile: Dockerfile
     container_name: test-delegator-container
-    volumes:
-      - ../tests/config:/app/config
     ports:
       - 9003:8000
+    environment:
+      CHROME_RUNNER_HOST: chrome-runner
+      CHROME_RUNNER_PORT: 8000
+      FIREFOX_RUNNER_HOST: firefox-runner
+      FIREFOX_RUNNER_PORT: 8000

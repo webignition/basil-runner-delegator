@@ -36,6 +36,9 @@ class LocalDelegatorTest extends AbstractDelegatorTest
             $runnerExitCode = $runnerProcess->run();
             self::assertSame(0, $runnerExitCode);
 
+//            echo "\n\n" . $runnerProcess->getOutput() . "\n\n";
+//            exit();
+
             $outputDocuments = array_merge(
                 $outputDocuments,
                 $yamlDocumentSetParser->parse($runnerProcess->getOutput())

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
-use webignition\BasilRunnerDelegator\Services\RunnerClient;
+use webignition\BasilRunnerDelegator\RunnerClient\RunnerClient;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\SymfonyConsole\TypedInput\TypedInput;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
