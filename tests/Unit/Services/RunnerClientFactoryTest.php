@@ -24,7 +24,7 @@ class RunnerClientFactoryTest extends TestCase
      */
     public function testLoadFromEnv(array $env, Handler $handler, array $expectedClients)
     {
-        $factory = new RunnerClientFactory($handler);
+        $factory = new RunnerClientFactory(new ConnectionStringFactory(), $handler);
 
         $clients = $factory->loadFromEnv($env);
 

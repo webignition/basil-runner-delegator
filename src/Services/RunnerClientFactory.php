@@ -13,10 +13,12 @@ class RunnerClientFactory
     public const ENV_HOST_SUFFIX = '_RUNNER_HOST';
     public const ENV_PORT_SUFFIX = '_RUNNER_PORT';
 
+    private ConnectionStringFactory $connectionStringFactory;
     private Handler $handler;
 
-    public function __construct(Handler $handler)
+    public function __construct(ConnectionStringFactory $connectionStringFactory, Handler $handler)
     {
+        $this->connectionStringFactory = $connectionStringFactory;
         $this->handler = $handler;
     }
 
@@ -112,12 +114,10 @@ class RunnerClientFactory
      */
     private function createFromArray(array $data): RunnerClient
     {
-        $connectionStringFactory = new ConnectionStringFactory();
-
         $configuration = RunnerClientConfiguration::fromArray($data);
 
         return new RunnerClient(
-            $connectionStringFactory->createFromHostAndPort(
+            $this->connectionStringFactory->createFromHostAndPort(
                 $configuration->getHost(),
                 $configuration->getPort()
             ),

@@ -15,6 +15,7 @@ use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
+use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -26,7 +27,7 @@ $logHandler->setFormatter(new JsonFormatter());
 $output = new StreamOutput(STDOUT);
 
 $runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
-$runnerClientFactory = new RunnerClientFactory($runnerClientHandler);
+$runnerClientFactory = new RunnerClientFactory(new ConnectionStringFactory(), $runnerClientHandler);
 
 $logger->pushHandler($logHandler);
 
