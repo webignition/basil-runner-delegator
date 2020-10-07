@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Services;
+namespace webignition\BasilRunnerDelegator\RunnerClient;
 
 use webignition\TcpCliProxyClient\Handler;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
-class RunnerClientFactory
+class Factory
 {
-    private RunnerClientConfigurationFactory $runnerClientConfigurationFactory;
+    private ConfigurationFactory $runnerClientConfigurationFactory;
     private ConnectionStringFactory $connectionStringFactory;
     private Handler $handler;
 
     public function __construct(
-        RunnerClientConfigurationFactory $runnerClientConfigurationFactory,
+        ConfigurationFactory $runnerClientConfigurationFactory,
         ConnectionStringFactory $connectionStringFactory,
         Handler $handler
     ) {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Model;
+namespace webignition\BasilRunnerDelegator\RunnerClient;
 
-class RunnerClientConfiguration
+class Configuration
 {
     public const KEY_HOST = 'host';
     public const KEY_PORT = 'port';
@@ -40,7 +40,7 @@ class RunnerClientConfiguration
             $port = 0;
         }
 
-        return new RunnerClientConfiguration($host, $port);
+        return new Configuration($host, $port);
     }
 
     public function getHost(): string

@@ -12,10 +12,10 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
-use webignition\BasilRunnerDelegator\Services\RunnerClientConfigurationFactory;
-use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\ConfigurationFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\Factory as RunnerClientFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
-use webignition\SingleCommandApplicationFactory\Factory;
+use webignition\SingleCommandApplicationFactory\Factory as SingleCommandApplicationFactory;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 use webignition\YamlDocumentGenerator\YamlGenerator;
 
@@ -29,14 +29,14 @@ $output = new StreamOutput(STDOUT);
 
 $runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
 $runnerClientFactory = new RunnerClientFactory(
-        new RunnerClientConfigurationFactory(),
+        new ConfigurationFactory(),
         new ConnectionStringFactory(),
         $runnerClientHandler
 );
 
 $logger->pushHandler($logHandler);
 
-$application = (new Factory())->create(
+$application = (new SingleCommandApplicationFactory())->create(
     new RunCommand(
         $runnerClientFactory->loadFromEnv($_SERVER),
         $logger,

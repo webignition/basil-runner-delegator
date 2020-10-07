@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\RunnerClient;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunnerDelegator\Model\RunnerClientConfiguration;
-use webignition\BasilRunnerDelegator\Services\RunnerClientConfigurationFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\Configuration;
+use webignition\BasilRunnerDelegator\RunnerClient\ConfigurationFactory;
 
-class RunnerClientConfigurationFactoryTest extends TestCase
+class ConfigurationFactoryTest extends TestCase
 {
     /**
      * @dataProvider createCollectionFromEnvDataProvider
      *
      * @param array<mixed> $env
-     * @param RunnerClientConfiguration[] $expectedConfigurations
+     * @param Configuration[] $expectedConfigurations
      */
     public function testCreateCollectionFromEnv(array $env, array $expectedConfigurations)
     {
-        $factory = new RunnerClientConfigurationFactory();
+        $factory = new ConfigurationFactory();
 
         $configurations = $factory->createCollectionFromEnv($env);
 
@@ -37,7 +37,7 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'CHROME_RUNNER_HOST' => 'chrome-runner',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('chrome-runner', 0),
+                    'chrome' => new Configuration('chrome-runner', 0),
                 ],
             ],
             'single client, port only' => [
@@ -45,7 +45,7 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'CHROME_RUNNER_PORT' => '9000',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('', 9000),
+                    'chrome' => new Configuration('', 9000),
                 ],
             ],
             'single client, host then port' => [
@@ -54,7 +54,7 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'CHROME_RUNNER_PORT' => '9000',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('chrome-runner', 9000),
+                    'chrome' => new Configuration('chrome-runner', 9000),
                 ],
             ],
             'single client, junk host then junk then port' => [
@@ -66,7 +66,7 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'CHROME_RUNNER_PORT' => '9000',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('chrome-runner', 9000),
+                    'chrome' => new Configuration('chrome-runner', 9000),
                 ],
             ],
             'single client, port then host' => [
@@ -75,7 +75,7 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'CHROME_RUNNER_HOST' => 'chrome-runner',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('chrome-runner', 9000),
+                    'chrome' => new Configuration('chrome-runner', 9000),
                 ],
             ],
             'two clients' => [
@@ -86,8 +86,8 @@ class RunnerClientConfigurationFactoryTest extends TestCase
                     'FIREFOX_RUNNER_PORT' => '9001',
                 ],
                 'expectedConfigurations' => [
-                    'chrome' => new RunnerClientConfiguration('chrome-runner', 9000),
-                    'firefox' => new RunnerClientConfiguration('firefox-runner', 9001),
+                    'chrome' => new Configuration('chrome-runner', 9000),
+                    'firefox' => new Configuration('firefox-runner', 9001),
                 ],
             ],
         ];

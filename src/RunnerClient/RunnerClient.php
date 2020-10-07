@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Services;
+namespace webignition\BasilRunnerDelegator\RunnerClient;
 
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;

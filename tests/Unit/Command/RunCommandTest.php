@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Exception\InvalidRemotePathException;
 use webignition\BasilRunnerDelegator\Exception\NonExecutableRemoteTestException;
-use webignition\BasilRunnerDelegator\Services\RunnerClient;
+use webignition\BasilRunnerDelegator\RunnerClient\RunnerClient;
 use webignition\BasilRunnerDocuments\Exception;
 use webignition\TcpCliProxyClient\Exception\ClientCreationException;
 use webignition\TcpCliProxyClient\Exception\SocketErrorException;
@@ -25,7 +25,7 @@ class RunCommandTest extends TestCase
     /**
      * @dataProvider runSuccessDataProvider
      *
-     * @param RunnerClient[] $runnerClients
+     * @param \webignition\BasilRunnerDelegator\RunnerClient\RunnerClient[] $runnerClients
      * @param string $browser
      * @param string $path
      * @param LoggerInterface|null $logger

@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Services;
+namespace webignition\BasilRunnerDelegator\RunnerClient;
 
-use webignition\BasilRunnerDelegator\Model\RunnerClientConfiguration;
-
-class RunnerClientConfigurationFactory
+class ConfigurationFactory
 {
     public const ENV_HOST_SUFFIX = '_RUNNER_HOST';
     public const ENV_PORT_SUFFIX = '_RUNNER_PORT';
@@ -14,7 +12,7 @@ class RunnerClientConfigurationFactory
     /**
      * @param array<mixed> $env
      *
-     * @return RunnerClientConfiguration[]
+     * @return Configuration[]
      */
     public function createCollectionFromEnv(array $env): array
     {
@@ -22,7 +20,7 @@ class RunnerClientConfigurationFactory
         $configurations = [];
 
         foreach ($configurationData as $name => $clientData) {
-            $configurations[$name] = RunnerClientConfiguration::fromArray($clientData);
+            $configurations[$name] = Configuration::fromArray($clientData);
         }
 
         return $configurations;

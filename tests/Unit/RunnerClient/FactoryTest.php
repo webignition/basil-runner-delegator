@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
+namespace webignition\BasilRunnerDelegator\Tests\Unit\RunnerClient;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use webignition\BasilRunnerDelegator\Services\RunnerClient;
-use webignition\BasilRunnerDelegator\Services\RunnerClientConfigurationFactory;
-use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\ConfigurationFactory;
+use webignition\BasilRunnerDelegator\RunnerClient\Factory;
+use webignition\BasilRunnerDelegator\RunnerClient\RunnerClient;
 use webignition\TcpCliProxyClient\Handler;
 use webignition\TcpCliProxyClient\Services\ConnectionStringFactory;
 
-class RunnerClientFactoryTest extends TestCase
+class FactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -25,8 +25,8 @@ class RunnerClientFactoryTest extends TestCase
      */
     public function testLoadFromEnv(array $env, Handler $handler, array $expectedClients)
     {
-        $factory = new RunnerClientFactory(
-            new RunnerClientConfigurationFactory(),
+        $factory = new Factory(
+            new ConfigurationFactory(),
             new ConnectionStringFactory(),
             $handler
         );
