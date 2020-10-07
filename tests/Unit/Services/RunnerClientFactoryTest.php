@@ -6,9 +6,6 @@ namespace webignition\BasilRunnerDelegator\Tests\Unit\Services;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Services\RunnerClient;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
 use webignition\TcpCliProxyClient\Handler;
@@ -19,46 +16,80 @@ class RunnerClientFactoryTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @dataProvider loadSuccessDataProvider
+     * @dataProvider loadFromEnvDataProvider
      *
-     * @param mixed $clientData
+     * @param array<mixed> $env
+     * @param Handler $handler
      * @param RunnerClient[] $expectedClients
      */
-    public function testLoadSuccess($clientData, Handler $handler, array $expectedClients)
+    public function testLoadFromEnv(array $env, Handler $handler, array $expectedClients)
     {
-        $yamlParser = \Mockery::mock(Parser::class);
-        $yamlParser
-            ->shouldReceive('parseFile')
-            ->andReturn($clientData);
+        $factory = new RunnerClientFactory($handler);
 
-        $factory = new RunnerClientFactory(
-            $yamlParser,
-            \Mockery::mock(LoggerInterface::class),
-            $handler
-        );
-
-        $path = 'path/to/clients.yaml';
-        $clients = $factory->load($path);
+        $clients = $factory->loadFromEnv($env);
 
         self::assertEquals($expectedClients, $clients);
     }
 
-    public function loadSuccessDataProvider(): array
+    public function loadFromEnvDataProvider(): array
     {
         $connectionStringFactory = new ConnectionStringFactory();
         $handler = \Mockery::mock(Handler::class);
 
         return [
-            'clients are loaded' => [
-                'clientData' => [
-                    'chrome' => [
-                        'host' => 'chrome-runner',
-                        'port' => 9000,
-                    ],
-                    'firefox' => [
-                        'host' => 'firefox-runner',
-                        'port' => 9001,
-                    ],
+            'empty' => [
+                'env' => [],
+                'handler' => $handler,
+                'expectedClients' => [],
+            ],
+            'single client, host then port' => [
+                'env' => [
+                    'CHROME_RUNNER_HOST' => 'chrome-runner',
+                    'CHROME_RUNNER_PORT' => '9000',
+                ],
+                'handler' => $handler,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000),
+                        $handler
+                    )),
+                ],
+            ],
+            'single client, junk host then junk then port' => [
+                'env' => [
+                    1,
+                    'CHROME_RUNNER_HOST' => 'chrome-runner',
+                    true,
+                    'CHROME_RUNNER_JUNK01' => 'red-herring-1',
+                    'CHROME_RUNNER_PORT' => '9000',
+                ],
+                'handler' => $handler,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000),
+                        $handler
+                    )),
+                ],
+            ],
+            'single client, port then' => [
+                'env' => [
+                    'CHROME_RUNNER_PORT' => '9000',
+                    'CHROME_RUNNER_HOST' => 'chrome-runner',
+                ],
+                'handler' => $handler,
+                'expectedClients' => [
+                    'chrome' => (new RunnerClient(
+                        $connectionStringFactory->createFromHostAndPort('chrome-runner', 9000),
+                        $handler
+                    )),
+                ],
+            ],
+            'two clients' => [
+                'env' => [
+                    'CHROME_RUNNER_HOST' => 'chrome-runner',
+                    'CHROME_RUNNER_PORT' => '9000',
+                    'FIREFOX_RUNNER_HOST' => 'firefox-runner',
+                    'FIREFOX_RUNNER_PORT' => '9001',
                 ],
                 'handler' => $handler,
                 'expectedClients' => [
@@ -72,35 +103,6 @@ class RunnerClientFactoryTest extends TestCase
                     )),
                 ],
             ],
-            'loaded data is not an array' => [
-                'clientData' => 'not an array',
-                'handler' => $handler,
-                'expectedClients' => [],
-            ],
         ];
-    }
-
-    public function testLoadYamlParseException()
-    {
-        $path = 'path/to/clients.yaml';
-        $parseException = new ParseException('parse error message');
-
-        $logger = \Mockery::mock(LoggerInterface::class);
-        $logger
-            ->shouldReceive('debug')
-            ->with('parse error message', [
-                'path' => $path,
-            ]);
-
-        $yamlParser = \Mockery::mock(Parser::class);
-        $yamlParser
-            ->shouldReceive('parseFile')
-            ->andThrow($parseException);
-
-        $factory = new RunnerClientFactory($yamlParser, $logger, \Mockery::mock(Handler::class));
-
-        $clients = $factory->load($path);
-
-        self::assertEquals([], $clients);
     }
 }

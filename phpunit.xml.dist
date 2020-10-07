@@ -12,6 +12,13 @@
     stopOnFailure               = "false"
     bootstrap                   = "vendor/autoload.php" >
 
+    <php>
+        <env name="CHROME_RUNNER_HOST" value="localhost" />
+        <env name="CHROME_RUNNER_PORT" value="9001" />
+        <env name="FIREFOX_RUNNER_HOST" value="localhost" />
+        <env name="FIREFOX_RUNNER_PORT" value="9002" />
+    </php>
+
     <testsuites>
         <testsuite name="Default Test Suite">
             <directory>tests/Unit</directory>

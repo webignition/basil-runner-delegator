@@ -11,7 +11,6 @@ use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Yaml\Parser;
 use webignition\BasilRunnerDelegator\Command\RunCommand;
 use webignition\BasilRunnerDelegator\Services\RunnerClientFactory;
 use webignition\BasilRunnerDelegator\Services\RunnerClientHandlerFactory;
@@ -27,13 +26,13 @@ $logHandler->setFormatter(new JsonFormatter());
 $output = new StreamOutput(STDOUT);
 
 $runnerClientHandler = (new RunnerClientHandlerFactory())->create($output);
-$runnerClientFactory = new RunnerClientFactory(new Parser(), $logger, $runnerClientHandler);
+$runnerClientFactory = new RunnerClientFactory($runnerClientHandler);
 
 $logger->pushHandler($logHandler);
 
 $application = (new Factory())->create(
     new RunCommand(
-        $runnerClientFactory->load(dirname(__DIR__) . '/config/runners.yaml'),
+        $runnerClientFactory->loadFromEnv($_SERVER),
         $logger,
         new YamlGenerator()
     ),
