@@ -16,7 +16,7 @@ class LocalDelegatorTest extends AbstractDelegatorTest
      * @param string $target
      * @param array<mixed> $expectedOutputDocuments
      */
-    public function testDelegator(string $source, string $target, array $expectedOutputDocuments)
+    public function testDelegator(string $source, string $target, array $expectedOutputDocuments): void
     {
         $outputDocuments = [];
 
@@ -35,9 +35,6 @@ class LocalDelegatorTest extends AbstractDelegatorTest
 
             $runnerExitCode = $runnerProcess->run();
             self::assertSame(0, $runnerExitCode);
-
-//            echo "\n\n" . $runnerProcess->getOutput() . "\n\n";
-//            exit();
 
             $outputDocuments = array_merge(
                 $outputDocuments,

@@ -9,7 +9,7 @@ use webignition\BasilRunnerDelegator\RunnerClient\Configuration;
 
 class ConfigurationTest extends TestCase
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         $host = 'chrome-runner';
         $port = 9000;
@@ -26,11 +26,14 @@ class ConfigurationTest extends TestCase
      * @param array<mixed> $data
      * @param Configuration $expectedConfiguration
      */
-    public function testCreateFromArray(array $data, Configuration $expectedConfiguration)
+    public function testCreateFromArray(array $data, Configuration $expectedConfiguration): void
     {
         self::assertEquals($expectedConfiguration, Configuration::fromArray($data));
     }
 
+    /**
+     * @return array[]
+     */
     public function fromArrayDataProvider(): array
     {
         return [

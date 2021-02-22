@@ -63,6 +63,9 @@ abstract class AbstractDelegatorTest extends TestCase
         self::assertSame($expectedOutputDocuments, $outputDocuments);
     }
 
+    /**
+     * @return array[]
+     */
     public function delegatorDataProvider(): array
     {
         return [
@@ -70,14 +73,6 @@ abstract class AbstractDelegatorTest extends TestCase
                 'source' => '/app/source/Test/index-open-chrome-firefox.yml',
                 'target' => '/app/tests',
                 'expectedOutputDocuments' => [
-//                    [
-//                        'type' => 'test',
-//                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
-//                        'config' => [
-//                            'browser' => 'chrome',
-//                            'url' => 'http://nginx/index.html',
-//                        ],
-//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
@@ -95,14 +90,6 @@ abstract class AbstractDelegatorTest extends TestCase
                             ],
                         ],
                     ],
-//                    [
-//                        'type' => 'test',
-//                        'path' => '/app/source/Test/index-open-chrome-firefox.yml',
-//                        'config' => [
-//                            'browser' => 'firefox',
-//                            'url' => 'http://nginx/index.html',
-//                        ],
-//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
@@ -126,14 +113,6 @@ abstract class AbstractDelegatorTest extends TestCase
                 'source' => '/app/source/FailingTest/index-failing.yml',
                 'target' => '/app/tests',
                 'expectedOutputDocuments' => [
-//                    [
-//                        'type' => 'test',
-//                        'path' => '/app/source/FailingTest/index-failing.yml',
-//                        'config' => [
-//                            'browser' => 'chrome',
-//                            'url' => 'http://nginx/index.html',
-//                        ],
-//                    ],
                     [
                         'type' => 'step',
                         'name' => 'verify page is open',
