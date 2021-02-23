@@ -16,7 +16,7 @@ class ConfigurationFactoryTest extends TestCase
      * @param array<mixed> $env
      * @param Configuration[] $expectedConfigurations
      */
-    public function testCreateCollectionFromEnv(array $env, array $expectedConfigurations)
+    public function testCreateCollectionFromEnv(array $env, array $expectedConfigurations): void
     {
         $factory = new ConfigurationFactory();
 
@@ -25,6 +25,9 @@ class ConfigurationFactoryTest extends TestCase
         self::assertEquals($expectedConfigurations, $configurations);
     }
 
+    /**
+     * @return array[]
+     */
     public function createCollectionFromEnvDataProvider(): array
     {
         return [

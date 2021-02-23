@@ -25,7 +25,7 @@ class RunCommandTest extends TestCase
     /**
      * @dataProvider runSuccessDataProvider
      *
-     * @param \webignition\BasilRunnerDelegator\RunnerClient\RunnerClient[] $runnerClients
+     * @param RunnerClient[] $runnerClients
      * @param string $browser
      * @param string $path
      * @param LoggerInterface|null $logger
@@ -36,7 +36,7 @@ class RunCommandTest extends TestCase
         string $path,
         OutputInterface $commandOutput,
         ?LoggerInterface $logger = null
-    ) {
+    ): void {
         $input = new ArrayInput([
             '--browser' => $browser,
             'path' => $path,
@@ -54,6 +54,9 @@ class RunCommandTest extends TestCase
         self::assertSame(0, $exitCode);
     }
 
+    /**
+     * @return array[]
+     */
     public function runSuccessDataProvider(): array
     {
         $testPath = '/target/GeneratedChromeTest.php';
