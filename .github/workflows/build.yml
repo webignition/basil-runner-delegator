@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
   release:
     types:
       - published
@@ -37,5 +36,5 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
-          push: false
+          push: true
           tags: smartassert/basil-runner-delegator:${{ steps.image_tag_name.outputs.value }}
