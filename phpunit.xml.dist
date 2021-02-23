@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
-    backupGlobals               = "false"
-    backupStaticAttributes      = "false"
-    colors                      = "true"
-    convertErrorsToExceptions   = "true"
-    convertNoticesToExceptions  = "true"
-    convertWarningsToExceptions = "true"
-    processIsolation            = "false"
-    stopOnFailure               = "false"
-    bootstrap                   = "vendor/autoload.php" >
-
-    <php>
-        <env name="CHROME_RUNNER_HOST" value="localhost" />
-        <env name="CHROME_RUNNER_PORT" value="9001" />
-        <env name="FIREFOX_RUNNER_HOST" value="localhost" />
-        <env name="FIREFOX_RUNNER_PORT" value="9002" />
-    </php>
-
-    <testsuites>
-        <testsuite name="Default Test Suite">
-            <directory>tests/Unit</directory>
-            <directory>tests/Functional</directory>
-            <exclude>tests/build/</exclude>
-            <exclude>tests/Fixtures/</exclude>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="false" addUncoveredFilesFromWhitelist="false">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        processIsolation="false"
+        stopOnFailure="false"
+        bootstrap="vendor/autoload.php"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+>
+  <coverage includeUncoveredFiles="false" processUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </coverage>
+  <php>
+    <env name="CHROME_RUNNER_HOST" value="localhost"/>
+    <env name="CHROME_RUNNER_PORT" value="9001"/>
+    <env name="FIREFOX_RUNNER_HOST" value="localhost"/>
+    <env name="FIREFOX_RUNNER_PORT" value="9002"/>
+  </php>
+  <testsuites>
+    <testsuite name="Default Test Suite">
+      <directory>tests/Unit</directory>
+      <exclude>tests/build/</exclude>
+    </testsuite>
+  </testsuites>
 </phpunit>
