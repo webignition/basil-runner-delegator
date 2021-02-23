@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1d5ea80ac8852c6de69af0624911083",
+    "content-hash": "5aa0ed9b2afb012967c62c1a15511e55",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1149,31 +1149,31 @@
         },
         {
             "name": "webignition/basil-compiler-models",
-            "version": "0.12",
+            "version": "0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler-models.git",
-                "reference": "29071576c53a8c08892307b7f9c1218d957c1c59"
+                "reference": "8e6e0271e1cec4ee6b03a903fec37e01a706e8da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/29071576c53a8c08892307b7f9c1218d957c1c59",
-                "reference": "29071576c53a8c08892307b7f9c1218d957c1c59",
+                "url": "https://api.github.com/repos/webignition/basil-compiler-models/zipball/8e6e0271e1cec4ee6b03a903fec37e01a706e8da",
+                "reference": "8e6e0271e1cec4ee6b03a903fec37e01a706e8da",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4",
-                "webignition/basil-models": ">=0.57,<1"
+                "php": ">=7.4|^8",
+                "webignition/basil-models": ">=0.58,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
                 "php-mock/php-mock-mockery": "^1.3",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.0",
-                "phpstan/phpstan-mockery": "^0.12.7",
-                "phpunit/phpunit": "^9.2",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0"
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.77",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.1"
             },
             "type": "library",
             "autoload": {
@@ -1192,31 +1192,35 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler-models",
-            "time": "2020-08-31T17:09:50+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/basil-compiler-models/issues",
+                "source": "https://github.com/webignition/basil-compiler-models/tree/0.15"
+            },
+            "time": "2021-02-19T10:12:32+00:00"
         },
         {
             "name": "webignition/basil-models",
-            "version": "0.57",
+            "version": "0.58",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-models.git",
-                "reference": "67d500daa092590652d3d93c33d8fa70dfd265e2"
+                "reference": "2184f3719e5cd91a9029f30b6e84114d22f29e20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-models/zipball/67d500daa092590652d3d93c33d8fa70dfd265e2",
-                "reference": "67d500daa092590652d3d93c33d8fa70dfd265e2",
+                "url": "https://api.github.com/repos/webignition/basil-models/zipball/2184f3719e5cd91a9029f30b6e84114d22f29e20",
+                "reference": "2184f3719e5cd91a9029f30b6e84114d22f29e20",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.4"
+                "php": ">=7.4|^8"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "~9.0",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.1",
+                "phpstan/phpstan": "^0.12.77",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.1",
                 "webignition/object-reflector": "^0.1.0"
             },
             "type": "library",
@@ -1236,33 +1240,37 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
-            "time": "2020-07-29T13:22:30+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/basil-models/issues",
+                "source": "https://github.com/webignition/basil-models/tree/0.58"
+            },
+            "time": "2021-02-18T15:16:57+00:00"
         },
         {
             "name": "webignition/basil-runner-documents",
-            "version": "0.2",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-runner-documents.git",
-                "reference": "4115721ca7ff9f86a91549b2d3800cf710a98f08"
+                "reference": "7a9e5ab84c6f2120b12fb0ac4377d54ffbf1dec6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-runner-documents/zipball/4115721ca7ff9f86a91549b2d3800cf710a98f08",
-                "reference": "4115721ca7ff9f86a91549b2d3800cf710a98f08",
+                "url": "https://api.github.com/repos/webignition/basil-runner-documents/zipball/7a9e5ab84c6f2120b12fb0ac4377d54ffbf1dec6",
+                "reference": "7a9e5ab84c6f2120b12fb0ac4377d54ffbf1dec6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=7.4|^8"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.40",
-                "phpstan/phpstan-mockery": "^0.12.7",
-                "phpunit/phpunit": "^9.3",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.77",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^8.2"
+                "symplify/easy-coding-standard": "^9.1"
             },
             "type": "library",
             "autoload": {
@@ -1282,35 +1290,39 @@
             ],
             "description": "Models for documents that can be output by the runner",
             "homepage": "https://github.com/webignition/basil-runner-documents",
-            "time": "2020-09-01T16:29:54+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/basil-runner-documents/issues",
+                "source": "https://github.com/webignition/basil-runner-documents/tree/0.3"
+            },
+            "time": "2021-02-19T18:28:56+00:00"
         },
         {
             "name": "webignition/error-handler",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/error-handler.git",
-                "reference": "fbdd0c72194bad7547258049c49a0b1a77deea86"
+                "reference": "9dfc4079c174385ac9a79bf5cde020360e0c71ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/error-handler/zipball/fbdd0c72194bad7547258049c49a0b1a77deea86",
-                "reference": "fbdd0c72194bad7547258049c49a0b1a77deea86",
+                "url": "https://api.github.com/repos/webignition/error-handler/zipball/9dfc4079c174385ac9a79bf5cde020360e0c71ce",
+                "reference": "9dfc4079c174385ac9a79bf5cde020360e0c71ce",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4",
+                "php": ">=7.4|^8",
                 "psr/log": "^1.1"
             },
             "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.0",
-                "phpstan/phpstan-mockery": "^0.12.0",
-                "phpunit/phpunit": "^9.2",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0",
-                "webignition/object-reflector": "^0.2.0"
+                "mockery/mockery": "^1.4",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.1",
+                "webignition/object-reflector": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1330,33 +1342,37 @@
             ],
             "description": "PHP error handler",
             "homepage": "https://github.com/webignition/error-handler",
-            "time": "2020-08-19T14:12:52+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/error-handler/issues",
+                "source": "https://github.com/webignition/error-handler/tree/0.2"
+            },
+            "time": "2021-02-22T10:10:26+00:00"
         },
         {
             "name": "webignition/single-command-application-factory",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/single-command-application-factory.git",
-                "reference": "cb406d7b55b7fdc1631668088d57dc3743e7f510"
+                "reference": "97d467eb7be460641c6dc8186bfa6c09d88fe64e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/single-command-application-factory/zipball/cb406d7b55b7fdc1631668088d57dc3743e7f510",
-                "reference": "cb406d7b55b7fdc1631668088d57dc3743e7f510",
+                "url": "https://api.github.com/repos/webignition/single-command-application-factory/zipball/97d467eb7be460641c6dc8186bfa6c09d88fe64e",
+                "reference": "97d467eb7be460641c6dc8186bfa6c09d88fe64e",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.4",
-                "symfony/console": "^5.1"
+                "php": ">=7.4|^8",
+                "symfony/console": "^5.2"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.0",
-                "phpunit/phpunit": "^9.2",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0",
-                "webignition/object-reflector": ">=0.2,<1"
+                "phpstan/phpstan": "^0.12.77",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.1",
+                "webignition/object-reflector": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1375,32 +1391,38 @@
                 }
             ],
             "homepage": "https://github.com/webignition/single-command-application-factory",
-            "time": "2020-07-02T09:23:12+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/single-command-application-factory/issues",
+                "source": "https://github.com/webignition/single-command-application-factory/tree/0.2"
+            },
+            "time": "2021-02-19T16:09:52+00:00"
         },
         {
             "name": "webignition/symfony-console-typed-input",
-            "version": "0.5",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/symfony-console-typed-input.git",
-                "reference": "e165406be31787564c6825ec1702b5521e861d86"
+                "reference": "ec4976828ef7647b00ae63ce47060cc035307fc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/symfony-console-typed-input/zipball/e165406be31787564c6825ec1702b5521e861d86",
-                "reference": "e165406be31787564c6825ec1702b5521e861d86",
+                "url": "https://api.github.com/repos/webignition/symfony-console-typed-input/zipball/ec4976828ef7647b00ae63ce47060cc035307fc1",
+                "reference": "ec4976828ef7647b00ae63ce47060cc035307fc1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4",
+                "php": ">=7.4|^8",
                 "symfony/console": "^4.4|^5.0"
             },
             "require-dev": {
-                "mockery/mockery": "^1.3",
-                "phpstan/phpstan": "^0.12.3",
-                "phpstan/phpstan-mockery": "^0.12.0",
-                "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "^3"
+                "mockery/mockery": "^1.4",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.77",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.1"
             },
             "type": "library",
             "autoload": {
@@ -1428,37 +1450,41 @@
                 "type",
                 "typed"
             ],
-            "time": "2020-05-28T11:48:40+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/symfony-console-typed-input/issues",
+                "source": "https://github.com/webignition/symfony-console-typed-input/tree/0.6"
+            },
+            "time": "2021-02-18T14:29:52+00:00"
         },
         {
             "name": "webignition/tcp-cli-proxy-client",
-            "version": "0.10",
+            "version": "0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/tcp-cli-proxy-client.git",
-                "reference": "05ae01168e8310ddc7399a9a4a1c85132136359c"
+                "reference": "c28acc31bb96d2c709837ab1bf7d3a004d87dd7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/05ae01168e8310ddc7399a9a4a1c85132136359c",
-                "reference": "05ae01168e8310ddc7399a9a4a1c85132136359c",
+                "url": "https://api.github.com/repos/webignition/tcp-cli-proxy-client/zipball/c28acc31bb96d2c709837ab1bf7d3a004d87dd7f",
+                "reference": "c28acc31bb96d2c709837ab1bf7d3a004d87dd7f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4",
-                "webignition/error-handler": "^0.1.0"
+                "php": ">=7.4|^8",
+                "webignition/error-handler": "^0.2.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
-                "php-mock/php-mock": "^2.2",
+                "php-mock/php-mock": "^2.3",
                 "php-mock/php-mock-mockery": "^1.3",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.0",
-                "phpstan/phpstan-mockery": "^0.12.7",
-                "phpunit/phpunit": "^9.2",
-                "squizlabs/php_codesniffer": "3.*",
-                "symplify/easy-coding-standard": "^8.0",
-                "webignition/object-reflector": "^0.2.0"
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.78",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symplify/easy-coding-standard": "^9.2",
+                "webignition/object-reflector": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1477,35 +1503,39 @@
                 }
             ],
             "homepage": "https://github.com/webignition/tcp-cli-proxy-client",
-            "time": "2020-10-06T15:38:47+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/tcp-cli-proxy-client/issues",
+                "source": "https://github.com/webignition/tcp-cli-proxy-client/tree/0.12"
+            },
+            "time": "2021-02-22T17:16:57+00:00"
         },
         {
             "name": "webignition/yaml-document-generator",
-            "version": "0.2",
+            "version": "0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/yaml-document-generator.git",
-                "reference": "a341ec846ef93684d0b5ce5b577491ec83f8faab"
+                "reference": "14b1d66c431b2fc98d0a506d06e088ebb724b0a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/yaml-document-generator/zipball/a341ec846ef93684d0b5ce5b577491ec83f8faab",
-                "reference": "a341ec846ef93684d0b5ce5b577491ec83f8faab",
+                "url": "https://api.github.com/repos/webignition/yaml-document-generator/zipball/14b1d66c431b2fc98d0a506d06e088ebb724b0a3",
+                "reference": "14b1d66c431b2fc98d0a506d06e088ebb724b0a3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4",
-                "symfony/yaml": "^5.1",
-                "webignition/basil-runner-documents": ">=0.1,<1"
+                "php": ">=7.4|^8",
+                "symfony/yaml": "^5.2",
+                "webignition/basil-runner-documents": ">=0.2,<1"
             },
             "require-dev": {
                 "mockery/mockery": "^1.4",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.40",
-                "phpstan/phpstan-mockery": "^0.12.7",
-                "phpunit/phpunit": "^9.3",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^0.12.77",
+                "phpstan/phpstan-mockery": "^0.12.12",
+                "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.5",
-                "symplify/easy-coding-standard": "^8.2"
+                "symplify/easy-coding-standard": "^9.1"
             },
             "type": "library",
             "autoload": {
@@ -1531,7 +1561,11 @@
                 "set",
                 "yaml"
             ],
-            "time": "2020-09-01T14:03:54+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/yaml-document-generator/issues",
+                "source": "https://github.com/webignition/yaml-document-generator/tree/0.3"
+            },
+            "time": "2021-02-19T18:37:59+00:00"
         }
     ],
     "packages-dev": [
