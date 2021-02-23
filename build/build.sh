@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
 
-CURRENT_DIRECTORY="$(dirname "$0")"
-source ${CURRENT_DIRECTORY}/.image_data.sh
-
-docker build -f Dockerfile -t ${IMAGE_NAME} .
+docker build -t "smartassert/basil-runner-delegator:${TAG_NAME:-master}" .
