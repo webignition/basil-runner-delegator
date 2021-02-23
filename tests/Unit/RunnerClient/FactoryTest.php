@@ -23,7 +23,7 @@ class FactoryTest extends TestCase
      * @param Handler $handler
      * @param RunnerClient[] $expectedClients
      */
-    public function testLoadFromEnv(array $env, Handler $handler, array $expectedClients)
+    public function testLoadFromEnv(array $env, Handler $handler, array $expectedClients): void
     {
         $factory = new Factory(
             new ConfigurationFactory(),
@@ -36,6 +36,9 @@ class FactoryTest extends TestCase
         self::assertEquals($expectedClients, $clients);
     }
 
+    /**
+     * @return array[]
+     */
     public function loadFromEnvDataProvider(): array
     {
         $connectionStringFactory = new ConnectionStringFactory();

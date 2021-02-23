@@ -17,7 +17,7 @@ class ContainerDelegatorTest extends AbstractDelegatorTest
      * @param string $target
      * @param array<mixed> $expectedOutputDocuments
      */
-    public function testDelegator(string $source, string $target, array $expectedOutputDocuments)
+    public function testDelegator(string $source, string $target, array $expectedOutputDocuments): void
     {
         $outputDocuments = [];
 
